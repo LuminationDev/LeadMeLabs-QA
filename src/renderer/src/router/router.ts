@@ -1,4 +1,5 @@
 import Home from '@renderer/views/Home.vue'
+import TcpTest from '@renderer/views/TcpTest.vue'
 import Settings from '@renderer/views/Settings.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -14,6 +15,11 @@ const router = createRouter({
             path: '/settings',
             name: 'settings',
             component: Settings
+        },
+        {
+            path: '/tcp',
+            name: 'tcp',
+            component: TcpTest
         }
     ]
 })

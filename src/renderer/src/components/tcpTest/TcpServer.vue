@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import * as CONSTANT from "../../assets/constants";
-import { ref } from "vue";
-import { useStateStore } from "../../store/stateStore";
+import { ref } from 'vue';
+import * as CONSTANT from '../../assets/constants';
+import { useStateStore } from '../../store/stateStore';
 
 const stateStore = useStateStore();
 
