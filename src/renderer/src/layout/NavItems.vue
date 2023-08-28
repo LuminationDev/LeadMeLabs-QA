@@ -22,7 +22,7 @@ const active = computed(() => {
 <template>
     <router-link class="hover:no-underline" :to="props.target">
         <div
-            class="nav-items-container p-5 hover:text-black items-center"
+            class="nav-items-container px-5 hover:text-black items-center"
             :class="active ? 'text-black' : 'text-inactive'"
         >
             <div
