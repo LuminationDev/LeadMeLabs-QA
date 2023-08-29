@@ -1,10 +1,15 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import { NetworkInfo } from "../interfaces";
 
 export const useStateStore = defineStore({
     id: 'state',
     state: () => ({
-        version: '', //Current version of the application
-        key: '', //Encryption key for TCP server and client
+        //Current version of the application
+        version: '',
+        //Encryption key for TCP server and client
+        key: '',
+        //Local network information
+        network: {} as NetworkInfo,
     }),
     actions: {
 

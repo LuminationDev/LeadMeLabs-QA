@@ -6,6 +6,7 @@ import * as CONSTANT from './assets/constants/index';
 import { useStateStore } from './store/stateStore';
 import { ref } from 'vue';
 import * as Sentry from '@sentry/electron';
+import {NETWORK_INTERFACE_CHANNEL} from "./assets/constants/_channel";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -23,12 +24,20 @@ api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
 // @ts-ignore
 api.ipcRenderer.on('backend_message', (event, info) => {
   switch(info.channelType) {
+    case CONSTANT.CHANNEL.APPLICATION_CHANNEL:
+      updateApplicationSettings(info); //Software version number
+      break;
+
     case CONSTANT.CHANNEL.TCP_SERVER_CHANNEL:
       console.log(info); //Message from the TCP server
       break;
 
-    case CONSTANT.CHANNEL.APPLICATION_CHANNEL:
-      updateApplicationSettings(info);
+    case CONSTANT.CHANNEL.NETWORK_INTERFACE_CHANNEL:
+      stateStore.network = info.data; // Data sent back as a NetworkInfo interface object
+      break;
+
+    case CONSTANT.CHANNEL.NETWORK_PORT_CHANNEL:
+      stateStore.network.PortDetails = info.data; // Data sent back as port details
       break;
 
     case CONSTANT.CHANNEL.ERROR_CHANNEL:
@@ -36,7 +45,7 @@ api.ipcRenderer.on('backend_message', (event, info) => {
       break;
 
     case CONSTANT.CHANNEL.UPDATE_CHANNEL:
-      console.log(info); //Details about the electron update check
+      console.log(info);
       break;
 
     default:
