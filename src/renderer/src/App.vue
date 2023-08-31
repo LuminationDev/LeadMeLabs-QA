@@ -6,7 +6,7 @@ import * as CONSTANT from './assets/constants/index';
 import { useStateStore } from './store/stateStore';
 import { ref } from 'vue';
 import * as Sentry from '@sentry/electron';
-import {NETWORK_INTERFACE_CHANNEL} from "./assets/constants/_channel";
+import {SOFTWARE_CHANNEL} from "./assets/constants/_channel";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -14,15 +14,10 @@ import {NETWORK_INTERFACE_CHANNEL} from "./assets/constants/_channel";
 
 const stateStore = useStateStore();
 
-//First this to do is check if any applications are installed - only register and trigger it on start up.
-// @ts-ignore
-api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-  channelType: CONSTANT.MESSAGE.QUERY_INSTALLED
-});
-
 //Backend listener
 // @ts-ignore
 api.ipcRenderer.on('backend_message', (event, info) => {
+  // @ts-ignore
   switch(info.channelType) {
     case CONSTANT.CHANNEL.APPLICATION_CHANNEL:
       updateApplicationSettings(info); //Software version number
@@ -38,6 +33,14 @@ api.ipcRenderer.on('backend_message', (event, info) => {
 
     case CONSTANT.CHANNEL.NETWORK_PORT_CHANNEL:
       stateStore.network.PortDetails = info.data; // Data sent back as port details
+      break;
+
+    case CONSTANT.CHANNEL.WINDOW_CHANNEL:
+      stateStore.windows = info.data; // Data sent back as a Windows interface object
+      break;
+
+    case CONSTANT.CHANNEL.SOFTWARE_CHANNEL:
+      stateStore.software = info.data; // Data sent back as a Software interface object
       break;
 
     case CONSTANT.CHANNEL.ERROR_CHANNEL:

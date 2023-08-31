@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { NetworkInfo } from "../interfaces";
+import { NetworkInfo, SoftwareInfo, WindowsInfo } from "../interfaces";
 
 export const useStateStore = defineStore({
     id: 'state',
@@ -10,9 +10,15 @@ export const useStateStore = defineStore({
         key: '',
         //Local network information
         network: {} as NetworkInfo,
+        //Local windows information
+        windows: {} as WindowsInfo,
+        //Local software information
+        software: {} as SoftwareInfo,
     }),
     actions: {
-
+        insertSpaceBetweenCapitalLetters(str: string) {
+            return str.replace(/([a-z])([A-Z])/g, '$1 $2');
+        },
     },
     getters: {
 

@@ -1,7 +1,7 @@
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
 import * as Sentry from '@sentry/electron'
-import Helpers from "./util/Helpers";
+import Helpers from "./Helpers";
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 

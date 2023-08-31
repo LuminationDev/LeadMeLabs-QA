@@ -17,7 +17,7 @@ defineProps({
 <template>
   <div class="my-2">
     <span class="w-48 font-semibold">{{title}}</span>
-    <span class="w-48">{{value}}</span>
+    <span class="w-72">{{value}}</span>
 
     <div class="mr-6 font-semibold">Correct?</div>
     <div v-on:click="selected = 'yes'"
