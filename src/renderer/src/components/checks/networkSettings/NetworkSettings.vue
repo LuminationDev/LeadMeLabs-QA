@@ -3,7 +3,7 @@ import {onBeforeMount, ref} from "vue";
 import * as CONSTANT from "../../../assets/constants";
 import { useStateStore } from "../../../store/stateStore";
 import { storeToRefs } from "pinia";
-import NetworkRow from "./NetworkRow.vue";
+import NetworkRow from "../InformationRow.vue";
 
 const stateStore = useStateStore();
 const { network } = storeToRefs(stateStore);
@@ -19,10 +19,6 @@ const CheckPort = () => {
   });
 }
 
-const insertSpaceBetweenCapitalLetters = (str: string) => {
-  return str.replace(/([a-z])([A-Z])/g, '$1 $2');
-}
-
 onBeforeMount(() => {
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -34,7 +30,7 @@ onBeforeMount(() => {
 <template>
   <div class="flex flex-col">
     <div v-for="(value, key) in network" :key="key">
-      <NetworkRow v-if="key !== `PortDetails`" :title="insertSpaceBetweenCapitalLetters(key)" :value="value ?? `Unknown`"/>
+      <NetworkRow v-if="key !== `PortDetails`" :title="stateStore.insertSpaceBetweenCapitalLetters(key)" :value="value ?? `Unknown`"/>
     </div>
 
     <hr class="my-4">

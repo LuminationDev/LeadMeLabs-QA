@@ -1,1 +1,0 @@
-export const QUERY_INSTALLED = 'query_installed_applications'

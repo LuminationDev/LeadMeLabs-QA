@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import NetworkSettings from '../checks/networkSettings/NetworkSettings.vue';
+import WindowSettings from "../checks/windowSettings/WindowSettings.vue";
+import SoftwareSettings from "../checks/softwareSettings/SoftwareSettings.vue";
 </script>
 
 <template>
@@ -10,6 +12,8 @@ import NetworkSettings from '../checks/networkSettings/NetworkSettings.vue';
         <hr class="my-4">
 
         <!--<NetworkSettings />-->
+        <!--<WindowSettings />-->
+        <SoftwareSettings />
       </div>
     </div>
 </template>

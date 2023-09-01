@@ -1,6 +1,8 @@
-import TcpServer from './TcpServer';
-import TcpClient from './TcpClient';
-import {CheckOpenPort, CollectNetworkInformation} from "./Network";
+import TcpServer from './tcp/TcpServer';
+import TcpClient from './tcp/TcpClient';
+import { CheckOpenPort, CollectNetworkInformation } from "./util/Network";
+import {CollectWindowInformation} from "./util/Windows";
+import {CollectSoftwareInformation} from "./util/Software";
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -48,7 +50,16 @@ export default class Helpers {
                     void CheckOpenPort(this.ipcMain, this.mainWindow, info);
                     break;
 
+                case "window_settings":
+                    void CollectWindowInformation(this.ipcMain, this.mainWindow);
+                    break;
+
+                case "software_settings":
+                    void CollectSoftwareInformation(this.ipcMain, this.mainWindow);
+                    break;
+
                 default:
+                    console.log(`Unknown helper call: ${JSON.stringify(info)}`)
                     break;
             }
         });

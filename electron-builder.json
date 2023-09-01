@@ -7,9 +7,10 @@
         "oneClick": false,
         "perMachine": false,
         "allowToChangeInstallationDirectory": true,
-        "shortcutName": "LeadMe Launcher"
+        "shortcutName": "LeadMe QA"
     },
     "win": {
+        "requestedExecutionLevel": "requireAdministrator",
         "target": "nsis",
         "publish": [
             {
