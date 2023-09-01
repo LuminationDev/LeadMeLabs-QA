@@ -1,8 +1,6 @@
 import TcpServer from './tcp/TcpServer';
 import TcpClient from './tcp/TcpClient';
-import { CheckOpenPort, CollectNetworkInformation } from "./util/Network";
-import {CollectWindowInformation} from "./util/Windows";
-import {CollectSoftwareInformation} from "./util/Software";
+import { CheckOpenPort } from "./util/Network";
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -42,20 +40,8 @@ export default class Helpers {
                     new TcpClient(info);
                     break;
 
-                case "network_interface_settings":
-                    void CollectNetworkInformation(this.ipcMain, this.mainWindow);
-                    break;
-
                 case "network_port_settings":
                     void CheckOpenPort(this.ipcMain, this.mainWindow, info);
-                    break;
-
-                case "window_settings":
-                    void CollectWindowInformation(this.ipcMain, this.mainWindow);
-                    break;
-
-                case "software_settings":
-                    void CollectSoftwareInformation(this.ipcMain, this.mainWindow);
                     break;
 
                 default:

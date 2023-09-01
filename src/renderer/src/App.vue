@@ -27,20 +27,8 @@ api.ipcRenderer.on('backend_message', (event, info) => {
       console.log(info); //Message from the TCP server
       break;
 
-    case CONSTANT.CHANNEL.NETWORK_INTERFACE_CHANNEL:
-      stateStore.network = info.data; // Data sent back as a NetworkInfo interface object
-      break;
-
     case CONSTANT.CHANNEL.NETWORK_PORT_CHANNEL:
-      stateStore.network.PortDetails = info.data; // Data sent back as port details
-      break;
-
-    case CONSTANT.CHANNEL.WINDOW_CHANNEL:
-      stateStore.windows = info.data; // Data sent back as a Windows interface object
-      break;
-
-    case CONSTANT.CHANNEL.SOFTWARE_CHANNEL:
-      stateStore.software = info.data; // Data sent back as a Software interface object
+      stateStore.PortDetails = info.data; // Data sent back as port details
       break;
 
     case CONSTANT.CHANNEL.ERROR_CHANNEL:

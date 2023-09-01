@@ -28,8 +28,15 @@ export default function runTcpClient(info: any) {
             Buffer.from(encryptedData)          // Encrypted data
         ]);
 
-        // Set the correct header length in the message in big-endian format
-        headerAndData.writeUInt32BE(headerLength, 0); // Write in big-endian format
+        // Set the correct header length in the message in big-endian format or little depending on if the message
+        // is sent to the NUC or a Station.
+        if(serverPort == 55556) {
+            headerAndData.writeUInt32BE(headerLength, 0); // Write in big-endian format
+        } else if (serverPort == 55557) {
+
+            headerAndData.writeUInt32LE(headerLength, 0); // Write in little-endian format
+        }
+        //TODO work out the format for Tablets
 
         sendDataInChunks(headerAndData, client, () => {
             console.log('Data sent successfully.');

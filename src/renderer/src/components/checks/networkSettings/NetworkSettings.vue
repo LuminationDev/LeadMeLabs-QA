@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {onBeforeMount, ref} from "vue";
+import { ref } from "vue";
 import * as CONSTANT from "../../../assets/constants";
 import { useStateStore } from "../../../store/stateStore";
 import { storeToRefs } from "pinia";
-import NetworkRow from "../InformationRow.vue";
 
 const stateStore = useStateStore();
-const { network } = storeToRefs(stateStore);
+const { PortDetails } = storeToRefs(stateStore);
 
 const address = ref("");
 const port = ref();
@@ -18,25 +17,12 @@ const CheckPort = () => {
     port: port.value
   });
 }
-
-onBeforeMount(() => {
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.NETWORK_INTERFACE_CHANNEL,
-  });
-});
 </script>
 
 <template>
   <div class="flex flex-col">
-    <div v-for="(value, key) in network" :key="key">
-      <NetworkRow v-if="key !== `PortDetails`" :title="stateStore.insertSpaceBetweenCapitalLetters(key)" :value="value ?? `Unknown`"/>
-    </div>
-
-    <hr class="my-4">
-
     <div class="mb-4">
-      Response: {{network.PortDetails}}
+      Response: {{PortDetails}}
     </div>
 
     <input v-model="address" class="bg-gray-100 w-56 h-8 mb-4 px-4 rounded" placeholder="Destination IP address"/>
