@@ -20,7 +20,8 @@ export default class TcpServer {
      * @param info An object containing the command and any necessary data.
      */
     handleCommand(info: any): void {
-        switch(info.command) {
+        const { command } = info;
+        switch(command) {
             case "start":
                 this.startServer(info.address ?? null, info.port ?? null, info.key);
                 break;
@@ -53,7 +54,10 @@ export default class TcpServer {
                 const buffer = Buffer.from(data);
 
                 // Parse the header length from the first 4 bytes (big-endian)
-                const headerLength = buffer.readUInt32LE(0);
+                let headerLength = buffer.readUInt32LE(0); //messages from NUC
+                if(headerLength > 16) {
+                    headerLength = buffer.readUInt32BE(0); //messages from Station
+                }
 
                 // Parse the header message from the buffer
                 const headerMessage = buffer.slice(4, 4 + headerLength).toString('utf8');
@@ -62,19 +66,20 @@ export default class TcpServer {
                 const encryptedMainText = buffer.slice(4 + headerLength);
 
                 // Decrypt the encrypted main text
-                const decryptedMainText = decrypt(encryptedMainText.toString('utf8'), key);
+                const mainText = decrypt(encryptedMainText.toString('utf8'), key);
 
                 // Send to the frontend via Electron.IpcMain
                 this.mainWindow.webContents.send('backend_message', {
                     channelType: "tcp_server_message",
                     headerMessage,
-                    decryptedMainText
+                    mainText
                 });
             });
 
             // Handle TCP client disconnections
             socket.on('end', () => {
-                console.log('TCP client disconnected');
+                console.log('TCP server stopped');
+                this.sendStatus("false");
             });
 
             // Handle TCP client errors
@@ -92,6 +97,7 @@ export default class TcpServer {
         // Start the TCP server
         this.tcpServer.listen(options, () => {
             console.log('TCP server started, listening on ', this.tcpServer?.address());
+            this.sendStatus("true");
         });
     }
 
@@ -100,6 +106,19 @@ export default class TcpServer {
      */
     stopServer(): void {
         this.tcpServer?.close();
+        this.sendStatus("false");
         console.log('TCP server stopped');
+    }
+
+    /**
+     * Send the status of the TCP server to the frontend.
+     * @param status A string that is either 'true' (server running) or 'false' (server stopped)
+     */
+    sendStatus(status: string): void {
+        this.mainWindow.webContents.send('backend_message', {
+            channelType: "tcp_server_message",
+            headerMessage:"status",
+            mainText:`ServerStatus:${status}`
+        });
     }
 }

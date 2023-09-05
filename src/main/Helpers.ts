@@ -37,7 +37,7 @@ export default class Helpers {
                     break;
 
                 case "tcp_client_message":
-                    new TcpClient(info);
+                    new TcpClient(this.mainWindow, info);
                     break;
 
                 case "network_port_settings":

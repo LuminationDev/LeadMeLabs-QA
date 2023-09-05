@@ -3,10 +3,10 @@ import { RouterView } from 'vue-router';
 import Header from './layout/Header.vue';
 import Notification from './modals/Notification.vue';
 import * as CONSTANT from './assets/constants/index';
+import { TCPMessage } from "@renderer/interfaces";
 import { useStateStore } from './store/stateStore';
 import { ref } from 'vue';
 import * as Sentry from '@sentry/electron';
-import {SOFTWARE_CHANNEL} from "./assets/constants/_channel";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -24,7 +24,11 @@ api.ipcRenderer.on('backend_message', (event, info) => {
       break;
 
     case CONSTANT.CHANNEL.TCP_SERVER_CHANNEL:
-      console.log(info); //Message from the TCP server
+      handleTCPMessage(info as TCPMessage); //Message from the TCP server
+      break;
+
+    case CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL:
+      handleTCPClientError(info as TCPMessage); //Message from the TCP client (Error states)
       break;
 
     case CONSTANT.CHANNEL.NETWORK_PORT_CHANNEL:
@@ -44,6 +48,43 @@ api.ipcRenderer.on('backend_message', (event, info) => {
       break;
   }
 });
+
+/**
+ * The NUC or Station has sent a message via the TCP server, determine what it is and how to handle it.
+ */
+const handleTCPMessage = (info: any) => {
+  //[0]Message type | [1]Message details
+  const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
+
+  switch(message[0]) {
+    case "ServerStatus":
+      stateStore.isServerRunning = JSON.parse(message[1]);
+      break;
+
+    case "StationList":
+      stateStore.NucStationList = JSON.parse(message[1]);
+      break;
+
+    case "StationDetails":
+      stateStore.StationList.push(JSON.parse(message[1]));
+      break;
+
+    default:
+      console.log(`Unknown type: ${message[0]}. Data: ${message[1]}`);
+      break;
+  }
+}
+
+/**
+ * The electron Socket client has encountered an error, handle the type and required flow.
+ */
+const handleTCPClientError = (info: any) => {
+  switch(info.headerMessage) {
+    case "TimedOut":
+      console.log(`Socket timed out on: ${info.mainText}`);
+      break;
+  }
+}
 
 /**
  * Update the Library store's details, these are shown on the settings page.
