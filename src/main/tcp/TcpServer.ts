@@ -78,13 +78,14 @@ export default class TcpServer {
 
             // Handle TCP client disconnections
             socket.on('end', () => {
-                console.log('TCP server stopped');
-                this.sendStatus("false");
+                console.log('TCP client disconnected');
             });
 
             // Handle TCP client errors
             socket.on('error', (error) => {
                 console.error('TCP client error:', error);
+                //Unsure if the error will cause a server stoppage
+                //this.sendStatus("false");
             });
         });
 

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import {computed, ref} from "vue";
-import { useStateStore } from "@renderer/store/stateStore";
+import StationView from "@renderer/components/fullCheck/StationView.vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
-import StationView from "@renderer/components/checks/nucSettings/StationView.vue";
+import { useFullStore } from "@renderer/store/fullStore";
 
-const stateStore = useStateStore();
-const { NucStationList } = storeToRefs(stateStore);
-const { StationList } = storeToRefs(stateStore);
+const fullStore = useFullStore();
+const { NucStationList } = storeToRefs(fullStore);
+const { StationList } = storeToRefs(fullStore);
 
 const sameLocation = computed(() => {
-  if (stateStore.StationList.length > 0) {
-    return stateStore.StationList.every((station) => station.room === stateStore.StationList[0].room);
+  if (fullStore.StationList.length > 0) {
+    return fullStore.StationList.every((station) => station.room === fullStore.StationList[0].room);
   } else {
     return true;
   }
@@ -20,7 +20,7 @@ const sameLocation = computed(() => {
 const uniqueID = computed(() => {
   const encounteredIds: Set<number> = new Set();
 
-  for (const station of stateStore.StationList) {
+  for (const station of fullStore.StationList) {
     if (encounteredIds.has(station.id)) {
       // This ID has been encountered before, not unique
       return false;
@@ -33,21 +33,21 @@ const uniqueID = computed(() => {
 })
 
 const sameNucAddress = computed(() => {
-  if (stateStore.StationList.length > 0) {
-    return stateStore.StationList.every((station) => station.nucIpAddress === stateStore.nucAddress);
+  if (fullStore.StationList.length > 0) {
+    return fullStore.StationList.every((station) => station.nucIpAddress === fullStore.nucAddress);
   } else {
     return true;
   }
 });
 
-const address = ref(stateStore.nucAddress);
+const address = ref(fullStore.nucAddress);
 
 /**
  * Request the NUC to send over the station_list.json
  */
-const RequestStationsFromNuc = () => {
+const requestStationsFromNuc = () => {
   //Save the IP address as the NUC address
-  stateStore.nucAddress = address.value;
+  fullStore.nucAddress = address.value;
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -62,8 +62,8 @@ const RequestStationsFromNuc = () => {
 /**
  * Cycle through the list of Stations that the NUC has provided and ask each one for their details.
  */
-const RequestFromStations = () => {
-  stateStore.NucStationList.forEach(station => {
+const requestFromStations = () => {
+  fullStore.NucStationList.forEach(station => {
     //@ts-ignore
     api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
       channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
@@ -79,7 +79,7 @@ const RequestFromStations = () => {
 <template>
   <input v-model="address" class="bg-gray-100 w-56 h-8 mb-4 px-4 rounded" placeholder="NUC IP address"/>
   <div class="flex flex-row justify-between">
-    <div v-on:click="RequestStationsFromNuc"
+    <div v-on:click="requestStationsFromNuc"
          class="w-32 h-8 mb-5 flex items-center justify-center rounded-lg"
          :class="{
                     'bg-blue-500 text-white cursor-pointer hover:bg-blue-400': address.length > 0,
@@ -87,7 +87,7 @@ const RequestFromStations = () => {
                  }">
       Check
     </div>
-    <div v-on:click="RequestFromStations"
+    <div v-on:click="requestFromStations"
          class="w-32 h-8 mb-5 flex items-center justify-center rounded-lg"
          :class="{
                     'bg-blue-500 text-white cursor-pointer hover:bg-blue-400': NucStationList.length > 0,
@@ -129,7 +129,7 @@ const RequestFromStations = () => {
     <div class="flex flex-col">
       <div class="font-bold mb-4">Saved NUC details ({{NucStationList.length}})</div>
       <div v-for="(station, index) in NucStationList" :key="index">
-        <StationView :station="station" :nuc-address="stateStore.nucAddress"/>
+        <StationView :station="station" :nuc-address="fullStore.nucAddress"/>
         <hr/>
       </div>
     </div>

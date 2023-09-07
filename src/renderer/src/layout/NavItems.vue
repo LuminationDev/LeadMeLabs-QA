@@ -14,7 +14,7 @@ const active = computed(() => {
     const name = useRoute().name // current path
     let path = props.target.replace('/', '') // check it's this
     if (path === '') {
-        path = 'home'
+        path = 'welcome'
     }
     return name === path
 })
@@ -26,7 +26,7 @@ const active = computed(() => {
             :class="active ? 'text-black' : 'text-inactive'"
         >
             <div
-                class="nav-icons grayscale drop-shadow-xl p-1 mr-4 rounded-lg"
+                class="nav-icons grayscale drop-shadow-xl p-1 mr-3 rounded-lg"
                 :class="active ? 'nav-icons-active' : 'nav-icons-inactive'"
             >
                 <img

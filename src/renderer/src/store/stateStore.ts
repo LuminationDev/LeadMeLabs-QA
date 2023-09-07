@@ -1,29 +1,34 @@
 import { defineStore } from 'pinia';
-import { Station } from "../interfaces/index";
 
+/**
+ * Used to store the general state of the QA tool. This store provides variables and functions that are used across
+ * different Tools with anything specific being placed into that Tool's own store to reduce overall clutter.
+ */
 export const useStateStore = defineStore({
     id: 'state',
     state: () => ({
         //Current version of the application
         version: '',
+        //The address of the local computer
+        ipAddress: '',
         //Encryption key for TCP server and client
         key: '',
+        //Default blocker for if a user has not completed the required information before proceeding with a work flow
+        canProceed: false,
         //Is the backend TCP server running
         isServerRunning: false,
         //Details of the electron server that is running in the backend
         serverDetails: {address: "", port: null},
-        //The IP address entered by a user that should be the NUC
-        nucAddress: '',
         //Local network information
         PortDetails: String,
-        //List of the Station detail's from the NUC
-        NucStationList: Array<Station>(),
-        //List of the Station detail's from the Stations
-        StationList: Array<Station>()
     }),
     actions: {
-        insertSpaceBetweenCapitalLetters(str: string) {
+        insertSpaceBetweenCapitalLetters(str: string): string {
             return str.replace(/([a-z])([A-Z])/g, '$1 $2');
+        },
+
+        capitalizeFirstLetter(inputString: string): string {
+            return inputString.charAt(0).toUpperCase() + inputString.slice(1);
         },
 
         splitStringWithLimit(input: string, delimiter: string, limit: number): string[] {
