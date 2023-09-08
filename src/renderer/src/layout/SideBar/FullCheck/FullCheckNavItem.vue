@@ -3,15 +3,32 @@ import { useFullStore } from "@renderer/store/fullStore";
 import { QaCheck } from "@renderer/interfaces";
 import { computed } from "vue";
 
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  objectNames: {
+    type: Array,
+    required: true
+  }
+});
+
 const fullStore = useFullStore();
 
 const completed = computed(() => {
-  const reportTracker: QaCheck[] = fullStore.reportTracker["CABLING"];
-  const progress = reportTracker.filter(item => item.passedCheck !== null).length;
+  let progress = 0;
+  let total = 0;
+
+  props.objectNames.forEach(type => {
+    const reportTracker: QaCheck[] = fullStore.reportTracker[type];
+    progress += reportTracker.filter(item => item.passedCheck !== null).length;
+    total += fullStore.reportTracker[type].length;
+  })
 
   if(progress === 0) { //Not started
     return 'pending'
-  } else if (progress < reportTracker.length) { //Not finished
+  } else if (progress < total) { //Not finished
     return 'incomplete'
   } else { //Complete
     return 'complete'
@@ -21,15 +38,15 @@ const completed = computed(() => {
 
 <template>
   <div class="flex flex-row items-center">
-    <div class="w-4 h-4"
+    <div class="w-3 h-3 rounded-xl mr-1"
          :class="{
-            'bg-amber-400': completed === 'pending',
+            'border-2 border-gray-400': completed === 'pending',
             'bg-red-400': completed === 'incomplete',
             'bg-green-400': completed === 'complete',
           }"
     />
     <div>
-      Cabling & Routing
+      {{title}}
     </div>
   </div>
 </template>
