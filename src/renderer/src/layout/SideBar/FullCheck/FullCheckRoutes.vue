@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import FullCheckNavItem from "@renderer/layout/SideBar/FullCheck/FullCheckNavItem.vue";
+import FullCheckItem from "@renderer/layout/SideBar/FullCheck/FullCheckItem.vue";
+
+const networkNav = [
+  { title: "Cabling & Routing", objectName: "CABLING" },
+  { title: "Network", objectName: "NETWORK" },
+  { title: "CBus options", objectName: "CBUS" },
+  { title: "Security", objectName: "SECURITY" }
+]
+
+const windowsNav = [
+  { title: "BIOS", objectName: "BIOS" },
+  { title: "Settings", objectName: "WINDOWS" },
+]
 </script>
 
 <template>
   <nav
     class="flex flex-col w-full h-full text-black border-y-gray-100 border-y-2 overflow-y-auto gray-scrollbar"
   >
-    <FullCheckNavItem title="Networking" :object-names="['CABLING', 'NETWORK', 'CBUS', 'SECURITY']"/>
-    <div class="ml-5 flex flex-col">
-      <FullCheckNavItem title="Cabling & Routing" :object-names="['CABLING']"/>
-      <FullCheckNavItem title="Network" :object-names="['NETWORK']"/>
-      <FullCheckNavItem title="CBus options" :object-names="['CBUS']"/>
-      <FullCheckNavItem title="Security" :object-names="['SECURITY']"/>
-    </div>
-
-    <FullCheckNavItem title="Windows" :object-names="['BIOS', 'WINDOWS']"/>
-    <div class="ml-5 flex flex-col">
-      <FullCheckNavItem title="BIOS" :object-names="['BIOS']"/>
-      <FullCheckNavItem title="Settings" :object-names="['WINDOWS']"/>
-    </div>
+    <!--Navbar Title with sub-categories below-->
+    <FullCheckItem title="Networking" :object-values="networkNav"/>
+    <FullCheckItem title="Windows" :object-values="windowsNav"/>
 
     <div>
       IMVR Stations
@@ -32,12 +34,7 @@ import FullCheckNavItem from "@renderer/layout/SideBar/FullCheck/FullCheckNavIte
       </div>
     </div>
 
-    <div>
-      LeadMe
-    </div>
-
-    <div>
-      Security
-    </div>
+    <FullCheckItem title="LeadMe" :object-values="[]"/>
+    <FullCheckItem title="Security" :object-values="[]"/>
   </nav>
 </template>
