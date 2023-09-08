@@ -24,9 +24,16 @@ export const SECURITY = {
 }
 
 export const BIOS = {
-
+    "Wake on LAN": "Wake on LAN or Resume by pcie device is enabled",
+    "Restore Power": "Restore Power after AC loss is set to 'Power On'"
 }
 
 export const WINDOWS = {
-
+    "Windows Updates": "Windows is up-to-date: Confirm via Settings > Update & Security > check for updates",
+    "Device Manager": "Control Panel > Device Manager - any drivers with warning symbols have been resolved",
+    "Motherboard": "The motherboard drivers and firmware are up to date",
+    "AMD Adrenalin": "AMD Adrenalin is set to only run recommended updates, not recommended + optional",
+    "Hostname": "Hostname is set and recorded in Lab Handover doc",
+    "MAC Address": "MAC Address is set and recorded in Lab Handover doc",
+    "LeadMe": "Station.exe / NUC.exe launches on start up each time after rebooting 3 times consecutively",
 }

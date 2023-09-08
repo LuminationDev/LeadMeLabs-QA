@@ -21,7 +21,7 @@ export const useFullStore = defineStore({
         NucStationList: Array<Station>(),
         //List of the Station detail's from the Stations
         StationList: Array<Station>(),
-        //Track the progress of the checks as an overall report object
+        //Track the progress of the checks as an overall report object - populated in App.vue
         reportTracker: {} as ReportTrackerItem,
 
         //TEMPORARY ITEMS
