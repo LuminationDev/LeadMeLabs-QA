@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LauncherDetails from "@renderer/components/settings/LauncherDetails.vue";
+import LauncherDetails from "@renderer/components/_generic/settings/LauncherDetails.vue";
 </script>
 
 <template>

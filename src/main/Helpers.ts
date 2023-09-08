@@ -1,6 +1,7 @@
 import TcpServer from './tcp/TcpServer';
 import TcpClient from './tcp/TcpClient';
-import { CheckOpenPort } from "./util/Network";
+import { CheckOpenPort, GetIPAddress } from "./util/Network";
+import { app } from "electron";
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -42,6 +43,14 @@ export default class Helpers {
 
                 case "network_port_settings":
                     void CheckOpenPort(this.ipcMain, this.mainWindow, info);
+                    break;
+
+                case "refresh_details":
+                    this.mainWindow.webContents.send('backend_message', {
+                        channelType: "application_settings",
+                        version: app.getVersion(),
+                        ipAddress: GetIPAddress()
+                    });
                     break;
 
                 default:

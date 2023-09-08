@@ -35,14 +35,15 @@ const asyncCall = (): Promise<void> => {
   }).then()
 }
 </script>
+
 <template>
   <button
       :id="buttonId"
       :class="{
-            'rounded-lg text-base': true,
-            'w-32 bg-primary text-white hover:bg-blue-400': type === 'primary',
-            'w-32 bg-primary hover:bg-blue-400 font-semibold': type === 'secondary',
-            'w-32 bg-white  border-2 border-primary hover:bg-primary hover:text-white text-primary':
+            'h-auto rounded-lg text-base': true,
+            'w-32 bg-primary text-white mb-3 hover:bg-blue-400': type === 'primary',
+            'w-32 bg-primary text-white hover:bg-blue-400 font-semibold': type === 'secondary',
+            'w-32 bg-white border-2 border-primary hover:bg-primary hover:text-white text-primary':
                 type === 'white',
             'w-32 bg-white border-gray-200 disabled:bg-gray-200 disabled:text-black border-2 hover:bg-gray-100 text-blue-500 font-semibold':
                 type === 'light',

@@ -1,7 +1,8 @@
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
-import * as Sentry from '@sentry/electron'
 import Helpers from "./Helpers";
+import { GetIPAddress } from "./util/Network";
+import * as Sentry from '@sentry/electron'
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 
@@ -11,7 +12,7 @@ const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } =
 
 autoUpdater.autoDownload = false;
 // autoUpdater.setFeedURL({
-//   provider: 'generic',
+//   provider: '_generic',
 //   url: ''
 // })
 
@@ -176,7 +177,8 @@ async function sendApplicationDetails(): Promise<void> {
   // Send through the current version number
   mainWindow.webContents.send('backend_message', {
     channelType: "application_settings",
-    version: app.getVersion()
+    version: app.getVersion(),
+    ipAddress: GetIPAddress()
   });
 }
 

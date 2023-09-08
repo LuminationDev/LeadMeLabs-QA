@@ -1,23 +1,31 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
-import Header from './layout/Header.vue';
 import Notification from './modals/Notification.vue';
+import BottomBar from "@renderer/layout/BottomBar.vue";
+import Sidebar from "@renderer/layout/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
 import { TCPMessage } from "@renderer/interfaces";
-import { useStateStore } from './store/stateStore';
+import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
+import { useQuickStore } from "@renderer/store/quickStore";
+import { useStateStore } from './store/stateStore';
+import { useFullStore } from "@renderer/store/fullStore";
 import * as Sentry from '@sentry/electron';
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
 // });
 
+const route = useRoute()
 const stateStore = useStateStore();
+const quickStore = useQuickStore();
+const fullStore = useFullStore();
 
-//Backend listener
+/**
+ * Backend listener, any messages from the node backend are directed to this listener and then
+ * triaged for the appropriate follow through.
+ */
 // @ts-ignore
 api.ipcRenderer.on('backend_message', (event, info) => {
-  // @ts-ignore
   switch(info.channelType) {
     case CONSTANT.CHANNEL.APPLICATION_CHANNEL:
       updateApplicationSettings(info); //Software version number
@@ -61,12 +69,35 @@ const handleTCPMessage = (info: any) => {
       stateStore.isServerRunning = JSON.parse(message[1]);
       break;
 
+    case "ApplianceList":
+      fullStore.ApplianceList = JSON.parse(message[1]);
+      break;
+
     case "StationList":
-      stateStore.NucStationList = JSON.parse(message[1]);
+      fullStore.NucStationList = JSON.parse(message[1]);
       break;
 
     case "StationDetails":
-      stateStore.StationList.push(JSON.parse(message[1]));
+      fullStore.StationList.push(JSON.parse(message[1]));
+      break;
+
+    case "StationWindows":
+    case "StationNetwork":
+    case "StationSoftware":
+    case "StationConfig":
+      quickStore.stationDetails = JSON.parse(message[1]);
+      break;
+
+    case "StationAll":
+      const data = message[1].split("::::");
+      console.log(data);
+      const combinedObject = data.reduce((result, jsonStr) => {
+        const parsedObject = JSON.parse(jsonStr);
+        return { ...result, ...parsedObject };
+      }, {});
+
+      console.log(combinedObject);
+      quickStore.stationDetails = combinedObject;
       break;
 
     default:
@@ -92,6 +123,7 @@ const handleTCPClientError = (info: any) => {
  */
 const updateApplicationSettings = (info: any) => {
   stateStore.version = info.version;
+  stateStore.ipAddress = info.ipAddress;
 }
 
 const title = ref("");
@@ -105,11 +137,20 @@ const openNotificationModal = (title: string, message: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col bg-white rounded-3xl mb-2">
-    <Header />
-  </div>
-  <div class="content flex flex-row w-full">
-    <RouterView />
+  <div class="flex flex-row w-full justify-between max-h-[95vh] h-[95vh]">
+    <div class="flex-col bg-white min-w-[220px] rounded-3xl">
+      <Sidebar />
+    </div>
+    <div
+        class="content flex-col bg-white ml-2 rounded-3xl w-full min-w-[30rem] justify-between overflow-auto pt-0"
+    >
+      <RouterView class="px-4" />
+      <div
+          class="sticky bottom-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white"
+      >
+        <BottomBar :meta="route.meta" />
+      </div>
+    </div>
   </div>
 
   <!--Modal to handle error messages from the backend-->

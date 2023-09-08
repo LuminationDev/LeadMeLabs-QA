@@ -7,4 +7,4 @@ export const TCP_COMMAND_CHANNEL = 'tcp_server_command' //Control the TCP server
 export const TCP_SERVER_CHANNEL = 'tcp_server_message' //Receiving messages
 export const TCP_CLIENT_CHANNEL = 'tcp_client_message' //Sending messages
 export const NETWORK_PORT_CHANNEL = 'network_port_settings'; //Collect the computer's network settings
-export const LOAD_STATIONS = "load_nuc_stations"; //Request the station_list.json from the NUC
+export const REFRESH_LAUNCHER_DETAILS = 'refresh_details'; //Recollect the launcher details from the backend

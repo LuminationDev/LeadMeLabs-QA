@@ -1,25 +1,35 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 const selected = ref();
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
   },
-  value: {
-    type: String,
+  text: {
+    type: [String, Number, null],
     required: true
+  },
+  correct: {
+    type: Boolean,
+    required: false
+  }
+});
+
+onBeforeMount(() => {
+  if(props.correct) {
+    selected.value = 'yes';
   }
 })
 </script>
 
 <template>
   <div class="my-2">
-    <span class="w-48 font-semibold">{{title}}</span>
-    <span class="w-72">{{value}}</span>
+    <span class="w-52 font-semibold">{{title}}</span>
+    <span class="w-72">{{text ?? 'Not found'}}</span>
 
-    <div class="mr-6 font-semibold">Correct?</div>
+    <div class="mx-6 font-semibold">Correct?</div>
     <div v-on:click="selected = 'yes'"
       class="w-12 h-6 mr-2 flex items-center justify-center cursor-pointer text-white rounded-lg"
       :class="{

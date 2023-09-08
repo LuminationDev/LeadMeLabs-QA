@@ -6,8 +6,8 @@ import { useStateStore } from '../../store/stateStore';
 const stateStore = useStateStore();
 
 //Server details
-const serverAddress = ref("");
-const serverPort = ref();
+const serverAddress = ref(stateStore.ipAddress);
+const serverPort = ref(stateStore.serverDetails.port);
 const key = ref("");
 
 const startServer = () => {
