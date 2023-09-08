@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import StationView from "@renderer/components/fullCheck/StationView.vue";
+import StationView from "@renderer/components/fullCheck/IMVR/StationView.vue";
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useFullStore } from "@renderer/store/fullStore";

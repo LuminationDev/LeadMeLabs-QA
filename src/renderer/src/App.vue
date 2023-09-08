@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import Notification from './modals/Notification.vue';
+import NotificationModal from "@renderer/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
-import Sidebar from "@renderer/layout/Sidebar.vue";
+import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
-import { TCPMessage } from "@renderer/interfaces";
+import * as FULL from './assets/checks/_fullcheckValues';
+import { QaCheck, TCPMessage } from "@renderer/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
 import { useQuickStore } from "@renderer/store/quickStore";
 import { useStateStore } from './store/stateStore';
 import { useFullStore } from "@renderer/store/fullStore";
-import * as Sentry from '@sentry/electron';
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -19,6 +19,36 @@ const route = useRoute()
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
 const fullStore = useFullStore();
+
+/**
+ * Function to transform key-value pairs into QaCheck objects
+  */
+const transformToObject = (key: string, value: string): QaCheck => {
+  return {
+    passedCheck: null, // Default to null
+    message: value,
+    checkId: key,
+  };
+}
+
+/**
+ * Read the static _fullCheckValues and load them into the fullStore's reportTracker variable
+ */
+const populateReportTracker = () => {
+  const objectValuesArray: { ReportTrackerItem } = {};
+
+  // Iterate through the exported objects in index.ts
+  for (const variableName in FULL) {
+    if (Object.prototype.hasOwnProperty.call(FULL, variableName)) {
+      const object = FULL[variableName];
+      objectValuesArray[variableName] = Object.keys(object).map((key) =>
+          transformToObject(key, object[key])
+      );
+    }
+  }
+  fullStore.reportTracker = objectValuesArray;
+}
+populateReportTracker();
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then
@@ -128,7 +158,7 @@ const updateApplicationSettings = (info: any) => {
 
 const title = ref("");
 const message = ref("");
-const notificationRef = ref<InstanceType<typeof Notification> | null>(null)
+const notificationRef = ref<InstanceType<typeof NotificationModal> | null>(null)
 const openNotificationModal = (title: string, message: string) => {
   this.title.value = title;
   this.message.value = message;
@@ -154,7 +184,7 @@ const openNotificationModal = (title: string, message: string) => {
   </div>
 
   <!--Modal to handle error messages from the backend-->
-  <Notification ref="notificationRef" :title="title" :message="message"/>
+  <NotificationModal ref="notificationRef" :title="title" :message="message"/>
 </template>
 
 <style lang="less">

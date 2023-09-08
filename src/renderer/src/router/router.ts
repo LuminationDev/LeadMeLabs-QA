@@ -6,6 +6,9 @@ import FullCheck from "@renderer/views/FullCheck.vue";
 
 import Appliances from '@renderer/views/Appliances.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import TheNetwork from "../components/fullCheck/Network/TheNetwork.vue";
+import TheWindows from "../components/fullCheck/Windows/TheWindows.vue";
+import TheIMVR from "../components/fullCheck/IMVR/TheIMVR.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -51,26 +54,112 @@ const fullRoutes = [
         component: FullCheck,
         meta: {
             userInput: true, //Requires user input to proceed to the next page
-            next: '/check/full/tcp',
+            next: '/check/full/networking',
             prev: '/selection'
         }
     },
+
+    //Networking Routes
     {
-        path: '/check/full/tcp',
-        name: 'full-tcp',
-        component: FullCheck,
+        path: '/check/full/networking',
+        name: 'full-networking',
+        component: TheNetwork,
         meta: {
-            userInput: true, //Requires user input to proceed to the next page
-            next: '/check/full/request',
+            next: '/check/full/networking/cabling',
             prev: '/check/full'
         }
     },
     {
-        path: '/check/full/request',
-        name: 'full-request',
-        component: FullCheck,
+        path: '/check/full/networking/cabling',
+        name: 'full-cabling',
+        component: TheNetwork,
         meta: {
-            prev: '/check/full/tcp'
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true, //The user can skip the page but requires a comment
+            next: '/check/full/networking/network',
+            prev: '/check/full/networking'
+        }
+    },
+    {
+        path: '/check/full/networking/network',
+        name: 'full-network',
+        component: TheNetwork,
+        meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
+            next: '/check/full/networking/cbus',
+            prev: '/check/full/networking/cabling'
+        }
+    },
+    {
+        path: '/check/full/networking/cbus',
+        name: 'full-cbus',
+        component: TheNetwork,
+        meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
+            next: '/check/full/networking/security',
+            prev: '/check/full/networking/network'
+        }
+    },
+    {
+        path: '/check/full/networking/security',
+        name: 'full-security',
+        component: TheNetwork,
+        meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
+            next: '/check/full/windows',
+            prev: '/check/full/networking/cbus'
+        }
+    },
+
+    //Windows Routes
+    {
+        path: '/check/full/windows',
+        name: 'full-windows',
+        component: TheWindows,
+        meta: {
+            next: '/check/full/windows/bios',
+            prev: '/check/full/networking/cbus'
+        }
+    },
+    {
+        path: '/check/full/windows/bios',
+        name: 'full-bios',
+        component: TheWindows,
+        meta: {
+            next: '/check/full/windows/settings',
+            prev: '/check/full/windows'
+        }
+    },
+    {
+        path: '/check/full/windows/settings',
+        name: 'full-windows-settings',
+        component: TheWindows,
+        meta: {
+            next: '/check/full/imvr/tcp',
+            prev: '/check/full/windows/bios'
+        }
+    },
+
+    //IMVR Station Routes
+    {
+        path: '/check/full/imvr/tcp',
+        name: 'full-tcp',
+        component: TheIMVR,
+        meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            next: '/check/full/imvr/stations',
+            prev: '/check/full/windows/settings'
+        }
+    },
+    {
+        path: '/check/full/imvr/stations',
+        name: 'full-stations',
+        component: TheIMVR,
+        meta: {
+            prev: '/check/full/imvr/tcp'
         }
     }
 ];
