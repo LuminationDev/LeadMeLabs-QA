@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import StationParameters from "@renderer/components/quickCheck/StationParameters.vue";
-import StationRequest from "@renderer/components/quickCheck/TheStation/StationRequest.vue";
-import TcpSetup from "@renderer/components/tcp/TcpSetup.vue";
 import { useRoute } from "vue-router";
 import Description from "@renderer/components/checks/Description.vue";
 
