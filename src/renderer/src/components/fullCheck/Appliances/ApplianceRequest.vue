@@ -2,17 +2,19 @@
 import * as CONSTANT from "@renderer/assets/constants";
 import { useStateStore } from "@renderer/store/stateStore";
 import { ref } from "vue";
+import { useFullStore } from "@renderer/store/fullStore";
 
 const stateStore = useStateStore();
+const fullStore = useFullStore();
 
-const address = ref(stateStore.nucAddress);
+const address = ref(fullStore.nucAddress);
 
 /**
  * Request the NUC to send over the station_list.json
  */
 const requestAppliancesFromNuc = () => {
   //Save the IP address as the NUC address
-  stateStore.nucAddress = address.value;
+  fullStore.nucAddress = address.value;
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {

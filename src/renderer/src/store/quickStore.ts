@@ -6,8 +6,7 @@ import { defineStore } from 'pinia';
 export const useQuickStore = defineStore({
     id: 'quick',
     state: () => ({
-        labType: "Select", //The type of lab to check (online or offline)
-        experienceTier: "Select", //Determines the amount of experiences tested
+        stationNumber: 0,
         stationDetails: String //Object of strings or list of objects
     }),
     actions: {

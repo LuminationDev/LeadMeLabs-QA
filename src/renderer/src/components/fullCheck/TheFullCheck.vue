@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LabParameters from "@renderer/components/fullCheck/LabParameters.vue";
-import GenericLayout from "@renderer/components/fullCheck/GenericLayout.vue";
+import Description from "@renderer/components/checks/Description.vue";
+import GenericLayout from "@renderer/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -20,7 +20,7 @@ const route = useRoute();
       <img alt="title" src="../../assets/deleteLater/placeholder.png" class="w-full mb-4"/>
 
       <!--Set the station parameters-->
-      <LabParameters v-if="route.name === 'full-setup'" />
+      <Description v-if="route.name === 'full-description'"/>
     </template>
   </GenericLayout>
 </template>

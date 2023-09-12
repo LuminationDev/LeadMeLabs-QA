@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import NavItems from '../NavItems.vue'
-import logo from '@renderer/assets/icons/leadmeLabsLogo.svg'
 import welcome from '@renderer/assets/images/sidebar_welcome.svg'
 import { useRoute } from 'vue-router'
 import FullCheckRoutes from "@renderer/layout/SideBar/FullCheck/FullCheckRoutes.vue";

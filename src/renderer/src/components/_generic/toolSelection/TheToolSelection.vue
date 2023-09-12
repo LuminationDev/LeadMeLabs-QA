@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import CheckSelection from "@renderer/components/_generic/toolSelection/CheckSelection.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 </script>
 
 <template>
@@ -12,17 +16,24 @@ import { RouterLink } from "vue-router";
     <div class="w-full h-auto mb-4 flex flex-col">
       <hr class="my-4">
 
-      <router-link class="hover:no-underline" to="/check/quick">
-        <img @click="" class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/qsc.png">
-      </router-link>
+      <div v-if="route.name === 'selection'" class="flex flex-row">
+        <!--Setup tool (Config tool)-->
+        <router-link class="hover:no-underline" to="/selection">
+          <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/setupToolButton.png">
+        </router-link>
 
-      <router-link class="hover:no-underline" to="/check/full">
-        <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/flc.png">
-      </router-link>
+        <div class="flex flex-col">
+          <!--QA tool choice-->
+          <router-link class="hover:no-underline" to="/check/selection">
+            <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/qaToolButton.png">
+          </router-link>
 
-      <div>
-        <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/lct.png">
+          <!--Generate Handover Doc-->
+          <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/generateHandButton.png">
+        </div>
       </div>
+
+      <CheckSelection v-else-if="route.name === 'check-selection'" />
     </div>
   </div>
 </template>

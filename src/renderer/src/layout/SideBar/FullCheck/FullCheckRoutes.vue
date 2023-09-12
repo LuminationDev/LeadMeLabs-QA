@@ -21,7 +21,23 @@ const windowsNav = [
     <!--Navbar Title with sub-categories below-->
     <FullCheckItem title="Networking" :object-values="networkNav"/>
     <FullCheckItem title="Windows" :object-values="windowsNav"/>
+    <FullCheckItem title="LeadMe" :object-values="[]"/>
+    <FullCheckItem title="Security" :object-values="[]"/>
 
+    <!--Appliances are handled differently-->
+    <div>
+      Appliances
+    </div>
+    <div class="ml-5 flex flex-col">
+      <div>
+        TCP Setup
+      </div>
+      <div>
+        Appliance list
+      </div>
+    </div>
+
+    <!--Stations are handled differently-->
     <div>
       IMVR Stations
     </div>
@@ -33,8 +49,5 @@ const windowsNav = [
         Stations
       </div>
     </div>
-
-    <FullCheckItem title="LeadMe" :object-values="[]"/>
-    <FullCheckItem title="Security" :object-values="[]"/>
   </nav>
 </template>

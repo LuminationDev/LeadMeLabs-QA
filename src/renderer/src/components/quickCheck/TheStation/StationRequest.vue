@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as CHECK from "../../assets/checks/index"
+import * as CHECK from "../../../assets/checks"
 import * as CONSTANT from "@renderer/assets/constants";
 import GenericDropdown from "@renderer/components/_generic/dropdowns/GenericDropdown.vue";
 import InformationRow from "@renderer/components/checks/InformationRow.vue";

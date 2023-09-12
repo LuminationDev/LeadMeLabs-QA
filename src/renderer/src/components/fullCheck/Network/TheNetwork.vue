@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Description from "@renderer/components/checks/Description.vue";
-import BasicFullCheck from "@renderer/components/checks/BasicFullCheck.vue";
-import GenericLayout from "@renderer/components/fullCheck/GenericLayout.vue";
+import BasicFullCheck from "@renderer/components/fullCheck/BasicFullCheck.vue";
+import GenericLayout from "@renderer/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

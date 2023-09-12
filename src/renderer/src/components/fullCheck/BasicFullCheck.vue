@@ -22,7 +22,7 @@ const stateStore = useStateStore();
 
 const currentlyAnswered = computed(() => {
   return fullStore.reportTracker[props.objectName].filter(item => item.passedCheck !== null).length;
-})
+});
 
 const keyAnswered = (key: string, value: boolean) => {
   const reportTracker: QaCheck[] = fullStore.reportTracker[props.objectName];
