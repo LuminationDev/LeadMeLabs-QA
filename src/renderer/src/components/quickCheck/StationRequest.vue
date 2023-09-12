@@ -2,10 +2,10 @@
 import * as CHECK from "../../assets/checks/index"
 import * as CONSTANT from "@renderer/assets/constants";
 import GenericDropdown from "@renderer/components/_generic/dropdowns/GenericDropdown.vue";
+import InformationRow from "@renderer/components/checks/InformationRow.vue";
 import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/store/stateStore";
 import { useQuickStore } from "@renderer/store/quickStore";
-import InformationRow from "@renderer/components/checks/InformationRow.vue";
 
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
