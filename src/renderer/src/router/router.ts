@@ -21,7 +21,7 @@ const quickRoutes = [
         component: QuickCheck,
         meta: {
             next: '/check/quick/tcp',
-            prev: '/selection'
+            prev: '/check/selection'
         }
     },
     {
@@ -54,7 +54,7 @@ const fullRoutes = [
         component: FullCheck,
         meta: {
             next: '/check/full/networking',
-            prev: '/selection'
+            prev: '/check/selection'
         }
     },
 
