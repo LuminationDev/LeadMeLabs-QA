@@ -65,6 +65,31 @@ const checks = ['All', 'Network', 'Windows', 'Software', 'Config'];
 const keyAnswered = (key: string, value: boolean) => {
   quickStore.stationDetails[key].passedCheck = value;
 }
+
+/**
+ * Return the correct value or undefined for the supplied key.
+ * @param key
+ */
+const correctValue = (key: string) => {
+  switch (key) {
+    case "id":
+      return quickStore.correctStationValues['StationId'];
+
+    case "Name":
+    case "name":
+      return `Station ${quickStore.correctStationValues['StationId']}`;
+
+    case "LabLocation":
+    case "labLocation":
+      return stateStore.labLocation;
+  }
+
+  if (quickStore.correctStationValues[key] === undefined) {
+    return undefined;
+  }
+
+  return quickStore.correctStationValues[key];
+}
 </script>
 
 <template>
@@ -98,11 +123,21 @@ const keyAnswered = (key: string, value: boolean) => {
         :current-keys="currentlyAnswered"
         :total-keys="numberOfChecks"/>
 
-    <InformationRow
-        v-for="(check, index) in quickStore.stationDetails as ReportTrackerItem" :key="index"
-        @answered="keyAnswered"
-        :title="check.checkId"
-        :text="check.message"
-        :correct="check.passedCheck"/>
+    <div v-for="(check, index) in quickStore.stationDetails as ReportTrackerItem" :key="index" class="flex flex-col">
+      <InformationRow
+          @answered="keyAnswered"
+          :title="check.checkId"
+          :text="check.message"
+          :correct="check.passedCheck"/>
+
+      <div v-if="correctValue(check.checkId) !== undefined && correctValue(check.checkId) !== check.message">
+        <div class="w-52 text-red-500">
+          Expected value:
+        </div>
+        <div class="text-red-500">
+          {{correctValue(check.checkId)}}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
