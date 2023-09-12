@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ReportTrackerItem, Station } from "../interfaces";
+import {Appliance, ReportTrackerItem, Station} from "../interfaces";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -7,12 +7,6 @@ import { ReportTrackerItem, Station } from "../interfaces";
 export const useFullStore = defineStore({
     id: 'full',
     state: () => ({
-        //The type of lab to check (online or offline)
-        labType: "Select",
-        //Determines the amount of experiences tested
-        experienceTier: "Select",
-        //Compared against the Station results
-        schoolName: "",
         //Compared against the number of Station's contacted
         numberOfStations: 0,
         //The IP address entered by a user that should be the NUC
@@ -26,7 +20,7 @@ export const useFullStore = defineStore({
 
         //TEMPORARY ITEMS
         //List of appliance objects
-        ApplianceList: [],
+        ApplianceList: Array<Appliance>(),
     }),
     actions: {
 

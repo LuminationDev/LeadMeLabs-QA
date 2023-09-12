@@ -21,6 +21,15 @@ export const useStateStore = defineStore({
         serverDetails: {address: "", port: null},
         //Local network information
         PortDetails: String,
+
+        //The device type that is using the tool
+        deviceType: "Select",
+        //The type of lab to check (online or offline)
+        labType: "Select",
+        //Determines the amount of experiences tested
+        experienceTier: "Select",
+        //Compared against the Station results
+        schoolName: "",
     }),
     actions: {
         insertSpaceBetweenCapitalLetters(str: string): string {

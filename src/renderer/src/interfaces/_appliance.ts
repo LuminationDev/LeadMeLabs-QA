@@ -18,4 +18,5 @@ export default interface Appliance {
     stations: string[] | null;
     appliances: string[] | null;
     options: string[] | null;
+    correct: boolean | null;
 }

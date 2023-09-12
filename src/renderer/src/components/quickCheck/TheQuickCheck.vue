@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import StationParameters from "@renderer/components/quickCheck/StationParameters.vue";
-import StationRequest from "@renderer/components/quickCheck/StationRequest.vue";
+import StationRequest from "@renderer/components/quickCheck/TheStation/StationRequest.vue";
 import TcpSetup from "@renderer/components/tcp/TcpSetup.vue";
 import { useRoute } from "vue-router";
+import Description from "@renderer/components/checks/Description.vue";
 
 const route = useRoute();
 </script>
@@ -20,14 +21,7 @@ const route = useRoute();
       <!--Text describing the process?-->
       <img alt="title" src="../../assets/deleteLater/placeholder.png" class="w-full mb-4"/>
 
-      <!--Set the station parameters-->
-      <StationParameters v-if="route.name === 'quick-setup'" />
-
-      <!--Start up the TCP server-->
-      <TcpSetup v-if="route.name === 'quick-tcp'"/>
-
-      <!--Enter the Station IP address-->
-      <StationRequest v-if="route.name === 'quick-request'"/>
+      <Description v-if="route.name === 'quick-description'"/>
     </div>
   </div>
 </template>

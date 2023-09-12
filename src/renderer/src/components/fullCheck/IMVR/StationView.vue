@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Station } from "@renderer/interfaces";
-import { useStateStore } from "@renderer/store/stateStore";
+import { useFullStore } from "@renderer/store/fullStore";
 
-const stateStore = useStateStore();
+const fullStore = useFullStore();
 
 defineProps({
   station: Object as () => Station,
@@ -43,7 +43,7 @@ defineProps({
     </div>
 
     <!--Show the Station's set NUC address or load the saved NUC address-->
-    <div :class="{'text-red-500': nucAddress.length === 0 && stateStore.nucAddress !== station.nucIpAddress}">
+    <div :class="{'text-red-500': nucAddress.length === 0 && fullStore.nucAddress !== station.nucIpAddress}">
       <span class="w-32 font-semibold">NUC Address:</span>
       {{nucAddress.length === 0 ? station.nucIpAddress : nucAddress}}
     </div>

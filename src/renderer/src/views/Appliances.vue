@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheAppliances from '../components/appliances/TheAppliances.vue'
+import TheAppliances from '../components/fullCheck/Appliances/TheAppliances.vue'
 </script>
 
 <template>

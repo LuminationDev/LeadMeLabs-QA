@@ -9,6 +9,8 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import TheNetwork from "../components/fullCheck/Network/TheNetwork.vue";
 import TheWindows from "../components/fullCheck/Windows/TheWindows.vue";
 import TheIMVR from "../components/fullCheck/IMVR/TheIMVR.vue";
+import TheAppliances from "../components/fullCheck/Appliances/TheAppliances.vue";
+import TheStation from "../components/quickCheck/TheStation/TheStation.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -16,10 +18,9 @@ import TheIMVR from "../components/fullCheck/IMVR/TheIMVR.vue";
 const quickRoutes = [
     {
         path: '/check/quick',
-        name: 'quick-setup',
+        name: 'quick-description',
         component: QuickCheck,
         meta: {
-            userInput: true, //Requires user input to proceed to the next page
             next: '/check/quick/tcp',
             prev: '/selection'
         }
@@ -27,7 +28,7 @@ const quickRoutes = [
     {
         path: '/check/quick/tcp',
         name: 'quick-tcp',
-        component: QuickCheck,
+        component: TheStation,
         meta: {
             userInput: true, //Requires user input to proceed to the next page
             next: '/check/quick/request',
@@ -37,7 +38,7 @@ const quickRoutes = [
     {
         path: '/check/quick/request',
         name: 'quick-request',
-        component: QuickCheck,
+        component: TheStation,
         meta: {
             prev: '/check/quick/tcp'
         }
@@ -50,10 +51,9 @@ const quickRoutes = [
 const fullRoutes = [
     {
         path: '/check/full',
-        name: 'full-setup',
+        name: 'full-description',
         component: FullCheck,
         meta: {
-            userInput: true, //Requires user input to proceed to the next page
             next: '/check/full/networking',
             prev: '/selection'
         }
@@ -129,6 +129,8 @@ const fullRoutes = [
         name: 'full-bios',
         component: TheWindows,
         meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
             next: '/check/full/windows/settings',
             prev: '/check/full/windows'
         }
@@ -138,25 +140,67 @@ const fullRoutes = [
         name: 'full-windows-settings',
         component: TheWindows,
         meta: {
-            next: '/check/full/imvr/tcp',
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
+            next: '/check/full/appliances',
             prev: '/check/full/windows/bios'
+        }
+    },
+
+    //Appliance Routes
+    {
+        path: '/check/full/appliances',
+        name: 'full-appliances',
+        component: TheAppliances,
+        meta: {
+            next: '/check/full/appliances/tcp',
+            prev: '/check/full/windows/settings'
+        }
+    },
+    {
+        path: '/check/full/appliances/tcp',
+        name: 'full-appliance-tcp',
+        component: TheAppliances,
+        meta: {
+            next: '/check/full/appliances/list',
+            prev: '/check/full/appliances'
+        }
+    },
+    {
+        path: '/check/full/appliances/list',
+        name: 'full-appliance-list',
+        component: TheAppliances,
+        meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
+            next: '/check/full/imvr',
+            prev: '/check/full/appliances/tcp'
         }
     },
 
     //IMVR Station Routes
     {
+        path: '/check/full/imvr',
+        name: 'full-stations',
+        component: TheIMVR,
+        meta: {
+            next: '/check/full/imvr/tcp',
+            prev: '/check/full/appliances/list'
+        }
+    },
+    {
         path: '/check/full/imvr/tcp',
-        name: 'full-tcp',
+        name: 'full-imvr-tcp',
         component: TheIMVR,
         meta: {
             userInput: true, //Requires user input to proceed to the next page
             next: '/check/full/imvr/stations',
-            prev: '/check/full/windows/settings'
+            prev: '/check/full/imvr'
         }
     },
     {
         path: '/check/full/imvr/stations',
-        name: 'full-stations',
+        name: 'full-station-comparison',
         component: TheIMVR,
         meta: {
             prev: '/check/full/imvr/tcp'
@@ -172,6 +216,7 @@ const router = createRouter({
             name: 'welcome',
             component: Welcome,
             meta: {
+                userInput: true, //Requires user input to proceed to the next page
                 next: '/selection'
             }
         },

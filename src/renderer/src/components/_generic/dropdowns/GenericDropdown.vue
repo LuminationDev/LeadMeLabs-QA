@@ -21,8 +21,8 @@ defineProps({
 
 <template>
   <div class="dropdown relative">
-    <button @click="isOpen = !isOpen" class="w-32 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white rounded">{{title}}</button>
-    <ul v-if="isOpen" class="mt-8 absolute left-0 w-32 bg-white border rounded shadow-md z-10">
+    <button @click="isOpen = !isOpen" class="w-40 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white rounded">{{title}}</button>
+    <ul v-if="isOpen" class="mt-8 absolute left-0 w-40 bg-white border rounded shadow-md z-10">
       <li v-for="(value) in items" :key="value" @click="$emit('update', value); isOpen = false;" class="py-2 px-4 cursor-pointer hover:bg-gray-200">
         {{value}}
       </li>
