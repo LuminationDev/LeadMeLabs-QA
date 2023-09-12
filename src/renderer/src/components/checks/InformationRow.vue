@@ -1,39 +1,65 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-const selected = ref();
+import { onBeforeMount, ref } from 'vue';
 
-defineProps({
+const emit = defineEmits<{
+    (e: 'answered', key: string, value: boolean): void
+}>();
+
+const props = defineProps({
   title: {
     type: String,
     required: true
   },
-  value: {
-    type: String,
+  text: {
+    type: [String, Number, null],
     required: true
+  },
+  correct: {
+    type: Boolean,
+    required: false
+  }
+});
+
+const selected = ref();
+
+/**
+ * Change the currently selected answer, if the answer was undefined emit answered for the 'key' count.
+ * @param selection A string of 'yes' or 'no'.
+ */
+const changeSelection = (selection: boolean) => {
+  emit('answered', props.title, selection);
+  selected.value = selection;
+}
+
+onBeforeMount(() => {
+  if(props.correct !== undefined && props.correct !== null) {
+    changeSelection(props.correct);
   }
 })
 </script>
 
 <template>
-  <div class="my-2">
-    <span class="w-48 font-semibold">{{title}}</span>
-    <span class="w-72">{{value}}</span>
+  <div class="my-2 w-full">
+    <span class="w-52 flex-shrink-0 font-semibold">{{title}}</span>
+    <span class="flex-grow">{{text ?? 'Not found'}}</span>
 
-    <div class="mr-6 font-semibold">Correct?</div>
-    <div v-on:click="selected = 'yes'"
-      class="w-12 h-6 mr-2 flex items-center justify-center cursor-pointer text-white rounded-lg"
-      :class="{
-        'bg-green-500 hover:bg-green-400': selected === 'yes',
-        'bg-gray-400 hover:bg-gray-300': selected !== 'yes'
-      }"
-    >Yes</div>
+    <div class="w-52">
+      <div class="mx-6 font-semibold">Correct?</div>
+      <div v-on:click="changeSelection(true)"
+        class="w-12 h-6 mr-2 flex items-center justify-center cursor-pointer text-white rounded-lg"
+        :class="{
+          'bg-green-500 hover:bg-green-400': selected === true,
+          'bg-gray-400 hover:bg-gray-300': selected === false || selected === undefined
+        }"
+      >Yes</div>
 
-    <div v-on:click="selected = 'no'"
-      class="w-12 h-6 flex items-center justify-center cursor-pointer text-white rounded-lg"
-      :class="{
-        'bg-red-500 hover:bg-red-400': selected === 'no',
-        'bg-gray-400 hover:bg-gray-300': selected !== 'no'
-      }"
-    >No</div>
+      <div v-on:click="changeSelection(false)"
+        class="w-12 h-6 flex items-center justify-center cursor-pointer text-white rounded-lg"
+        :class="{
+          'bg-red-500 hover:bg-red-400': selected === false,
+          'bg-gray-400 hover:bg-gray-300': selected === true || selected === undefined
+        }"
+      >No</div>
+    </div>
   </div>
 </template>

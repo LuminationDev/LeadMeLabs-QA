@@ -1,91 +1,6 @@
-import { exec } from "child_process";
 import net from "net";
-
-interface NetworkInfo {
-    NetworkInterface: string;
-    SubnetMask: string;
-    DefaultGateway: string;
-    DnsServer: string | null;
-    AltDnsServer: string | null;
-    PortDetails: string | null;
-}
-
-/**
- * Collect the local computer's network settings, sending them to the frontend for visual comparison.
- */
-export async function CollectNetworkInformation(ipcMain: Electron.IpcMain, mainWindow: Electron.BrowserWindow) {
-    const details = await CollectDetailsAsync();
-
-    // Send to the frontend via Electron.IpcMain
-    mainWindow.webContents.send('backend_message', {
-        channelType: "network_interface_settings",
-        data: details,
-    });
-}
-
-/**
- * Collects network details, including the network interface, subnet mask,
- * default gateway, primary DNS server, and alternate DNS server information.
- * Executes system commands to retrieve network information and resolves
- * a Promise with the gathered network details.
- * @returns {Promise<NetworkInfo>} A Promise that resolves with the network information.
- */
-const CollectDetailsAsync = (): Promise<NetworkInfo> => {
-    return new Promise((resolve, reject) => {
-        exec('netstat -rn | findstr "0.0.0.0"', (error, stdout, stderr) => {
-            if (error) {
-                reject(`Error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                reject(`stderr: ${stderr}`);
-                return;
-            }
-
-            const outputLines = stdout.trim().split('\n');
-            if (outputLines.length > 0) {
-                const parts = outputLines[0].split(/\s+/);
-                const gateway = parts[2];
-                const ipAddress = parts[3];
-
-                exec('ipconfig /all', (dnsError, dnsStdout) => {
-                    if (dnsError) {
-                        reject(`Error: ${dnsError.message}`);
-                        return;
-                    }
-
-                    const dnsMatches = dnsStdout.match(/DNS Servers[^:]*:\s+([\d.]+)/g);
-                    const dnsServers = dnsMatches?.map(match => match.split(':')[1].trim());
-
-                    const interfaceDetails = dnsStdout.split('\n\r\n');
-                    const interfaceDetail = interfaceDetails.find(detail => detail.includes(ipAddress));
-                    const subnetMatch = interfaceDetail?.match(/Subnet Mask[^:]*:\s+([\d.]+)/);
-                    const subnetMask = subnetMatch ? subnetMatch[1] : 'Unknown';
-
-                    const networkInfo: NetworkInfo = {
-                        NetworkInterface: ipAddress,
-                        SubnetMask: subnetMask,
-                        DefaultGateway: gateway,
-                        DnsServer: null,
-                        AltDnsServer: null,
-                        PortDetails: null
-                    };
-
-                    //Primary DNS
-                    if(dnsServers != null && dnsServers.length > 0) {
-                        networkInfo.DnsServer = dnsServers[0];
-                    }
-                    //Alternate DNS
-                    if(dnsServers != null && dnsServers.length > 1) {
-                        networkInfo.AltDnsServer = dnsServers[1];
-                    }
-
-                    resolve(networkInfo);
-                });
-            }
-        });
-    });
-}
+import os from 'os';
+const networkInterfaces = os.networkInterfaces();
 
 /**
  * Check a destination IP address and port to see if a connection can be established.
@@ -133,3 +48,28 @@ const CheckPortAsync = async (portToCheck: number, ipAddress: string = '127.0.0.
         client.connect(portToCheck, ipAddress);
     });
 };
+
+/**
+ * Loop through all network interfaces on the computer and find the first non-internal (external) IPv4 address.
+ */
+export function GetIPAddress(): string {
+    // Iterate through network interfaces to find the IP address
+    let ipAddress: string = "";
+    for (const interfaceName of Object.keys(networkInterfaces)) {
+        const networkInterface = networkInterfaces[interfaceName];
+        if(networkInterface === undefined) continue;
+        for (const entry of networkInterface) {
+            if (!entry.internal && entry.family === 'IPv4') {
+                ipAddress = entry.address;
+                break;
+            }
+        }
+        if (ipAddress) break;
+    }
+
+    if (ipAddress) {
+        return ipAddress;
+    } else {
+        return 'Unable to determine IP address.';
+    }
+}
