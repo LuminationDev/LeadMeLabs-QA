@@ -30,9 +30,9 @@ const SelectExperienceTier = (type: string) => {
 const calcProceed = () => {
   const labTypeIsValid = stateStore.labType !== 'Select';
   const experienceTierIsValid = stateStore.experienceTier !== 'Select';
-  const schoolNameIsValid = stateStore.schoolName.length !== 0;
+  const schoolNameIsValid = stateStore.labLocation.length !== 0;
   const numberOfStationsIsValid = fullStore.numberOfStations > 0;
-  const stationNumberIsValid = quickStore.stationNumber > 0 || stateStore.deviceType !== 'Station PC';
+  const stationNumberIsValid = quickStore.correctStationValues['StationId'] > 0 || stateStore.deviceType !== 'Station PC';
 
   stateStore.canProceed = labTypeIsValid && experienceTierIsValid && schoolNameIsValid && numberOfStationsIsValid && stationNumberIsValid;
 }
@@ -80,7 +80,7 @@ onBeforeMount(() => {
             <div class="flex flex-row my-4 justify-between">
               <div v-if="stateStore.deviceType === 'Station PC'" class="flex flex-col">
                 <div class="text-lg mb-2">Station Number</div>
-                <input v-model="quickStore.stationNumber" type="number" class="w-40 h-8 px-2 py-1 border-gray-700 border-2 rounded"/>
+                <input v-model="quickStore.correctStationValues['StationId']" type="number" class="w-40 h-8 px-2 py-1 border-gray-700 border-2 rounded"/>
               </div>
 
               <div class="flex flex-col">
@@ -103,7 +103,7 @@ onBeforeMount(() => {
             </div>
 
             <div class="mt-8 mb-2 text-lg">School</div>
-            <input v-model="stateStore.schoolName" class="w-96 h-8 px-2 py-1 border-gray-700 border-2 rounded"/>
+            <input v-model="stateStore.labLocation" class="w-96 h-8 px-2 py-1 border-gray-700 border-2 rounded"/>
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ const transformToObject = (key: string, value: string): QaCheck => {
 /**
  * Read the static _fullCheckValues and load them into the fullStore's reportTracker variable
  */
-const populateReportTracker = () => {
+const populateFullReportTracker = () => {
   const objectValuesArray: { ReportTrackerItem } = {};
 
   // Iterate through the exported objects in index.ts
@@ -48,7 +48,52 @@ const populateReportTracker = () => {
   }
   fullStore.reportTracker = objectValuesArray;
 }
-populateReportTracker();
+populateFullReportTracker();
+
+
+/**
+ * Populate the stationDetails in the quickStore with the data from a Station in the QaCheck interface format.
+ * @param data An array of object strings.
+ */
+const populateQuickReportTracker = (data: string[]) => {
+  const objectValuesArray: { ReportTrackerItem } = {};
+  const combinedObject = data.reduce((result, jsonStr) => {
+    const parsedObject = JSON.parse(jsonStr);
+    return { ...result, ...parsedObject };
+  }, {});
+
+  for (const variableName in combinedObject) {
+    objectValuesArray[variableName] = transformToObject(variableName, combinedObject[variableName]);
+    objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, combinedObject[variableName]);
+  }
+  quickStore.stationDetails = objectValuesArray;
+};
+
+/**
+ * Check the value of a Station's key against the known correct values.
+ * @param key A string of the object's key
+ * @param value The current value to check if correct.
+ */
+const isCorrectValue = (key: string, value: any) => {
+  switch (key) {
+    case "id":
+      return value === quickStore.correctStationValues['StationId'];
+
+    case "Name":
+    case "name":
+      return value === `Station ${quickStore.correctStationValues['StationId']}`;
+
+    case "LabLocation":
+    case "labLocation":
+      return value === stateStore.labLocation;
+  }
+
+  if (quickStore.correctStationValues[key] === undefined) {
+    return undefined;
+  }
+
+  return quickStore.correctStationValues[key] === value
+}
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then
@@ -115,19 +160,18 @@ const handleTCPMessage = (info: any) => {
     case "StationNetwork":
     case "StationSoftware":
     case "StationConfig":
-      quickStore.stationDetails = JSON.parse(message[1]);
+      const objectValuesArray: { ReportTrackerItem } = {};
+      const dataObject = JSON.parse(message[1]);
+      for (const variableName in dataObject) {
+        objectValuesArray[variableName] = transformToObject(variableName, dataObject[variableName]);
+        objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, dataObject[variableName]);
+      }
+      quickStore.stationDetails = objectValuesArray;
       break;
 
     case "StationAll":
       const data = message[1].split("::::");
-      console.log(data);
-      const combinedObject = data.reduce((result, jsonStr) => {
-        const parsedObject = JSON.parse(jsonStr);
-        return { ...result, ...parsedObject };
-      }, {});
-
-      console.log(combinedObject);
-      quickStore.stationDetails = combinedObject;
+      populateQuickReportTracker(data);
       break;
 
     default:
