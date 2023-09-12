@@ -4,7 +4,6 @@ import Settings from '@renderer/views/_generic/Settings.vue';
 import QuickCheck from "@renderer/views/QuickCheck.vue";
 import FullCheck from "@renderer/views/FullCheck.vue";
 
-import Appliances from '@renderer/views/Appliances.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import TheNetwork from "../components/fullCheck/Network/TheNetwork.vue";
 import TheWindows from "../components/fullCheck/Windows/TheWindows.vue";
@@ -229,9 +228,12 @@ const router = createRouter({
             }
         },
         {
-            path: '/appliances',
-            name: 'appliances',
-            component: Appliances
+            path: '/check/selection',
+            name: 'check-selection',
+            component: ToolSelection,
+            meta: {
+                prev: '/selection'
+            }
         },
         {
             path: '/settings',
