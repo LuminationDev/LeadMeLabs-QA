@@ -238,7 +238,7 @@ const router = createRouter({
         {
             path: '/settings',
             name: 'settings',
-            component: Settings
+            component: Settings,
         },
         ...quickRoutes, // Merge quickRoutes into the existing routes
         ...fullRoutes, // Merge fullRoutes into the existing routes

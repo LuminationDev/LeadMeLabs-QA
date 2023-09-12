@@ -5,7 +5,7 @@ import InformationRow from "@renderer/components/checks/InformationRow.vue";
 import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/store/stateStore";
 import { useQuickStore } from "@renderer/store/quickStore";
-import {QaCheck, ReportTrackerItem} from "@renderer/interfaces";
+import { ReportTrackerItem } from "@renderer/interfaces";
 import InformationTitle from "@renderer/components/checks/InformationTitle.vue";
 
 const stateStore = useStateStore();

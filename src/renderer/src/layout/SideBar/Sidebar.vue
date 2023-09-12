@@ -9,9 +9,12 @@ const route = useRoute();
 <template>
     <div class="flex flex-col h-full overflow-hidden scrollbar-hide">
         <div class="flex justify-center h-20 mt-5 mb-5 sticky flex-shrink-0">
-            <!--TODO replace with the proper section below when design is ready-->
-            <!--<img class="h-full" :src="logo" alt="LeadMe Labs Logo" />-->
+          <!--TODO replace with the proper section below when design is ready-->
+          <!--<img class="h-full" :src="logo" alt="LeadMe Labs Logo" />-->
+
+          <router-link to="/settings">
             <img class="h-full" src="../../assets/deleteLater/logo.png" alt="LeadMe Labs Logo" />
+          </router-link>
         </div>
         <div
             v-if="route.name === 'welcome' || route.name === 'selection'
@@ -20,7 +23,7 @@ const route = useRoute();
         >
             <!--TODO replace with the proper section below when design is ready-->
             <!--<img class="h-full w-full object-cover" :src="welcome" alt="LeadMe Labs Logo" />-->
-            <img class="h-full w-full object-cover" src="../../assets/deleteLater/sideBar.png" alt="LeadMe Labs Logo" />
+            <img class="h-full w-60 object-cover" src="../../assets/deleteLater/sideBar.png" alt="LeadMe Labs Logo" />
         </div>
 
         <!--Full check routes-->
