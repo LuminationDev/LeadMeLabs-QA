@@ -75,16 +75,16 @@ const populateQuickReportTracker = (data: string[]) => {
  * @param value The current value to check if correct.
  */
 const isCorrectValue = (key: string, value: any) => {
-  switch (key) {
+  const temp = key.toLowerCase();
+
+  switch (temp) {
     case "id":
       return value === quickStore.correctStationValues['StationId'];
 
-    case "Name":
     case "name":
       return value === `Station ${quickStore.correctStationValues['StationId']}`;
 
-    case "LabLocation":
-    case "labLocation":
+    case "lablocation":
       return value === stateStore.labLocation;
   }
 
