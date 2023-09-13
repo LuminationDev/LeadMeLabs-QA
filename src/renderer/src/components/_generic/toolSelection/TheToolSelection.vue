@@ -9,9 +9,7 @@ const route = useRoute();
 <template>
   <div class="w-full h-auto my-4 flex flex-col">
 
-    <!--TODO replace with the proper section below when design is ready-->
-    <!--<p class="text-lg text-black mb-3">Select you Setup Tool</p>-->
-    <img alt="title" src="../../../assets/deleteLater/toolSelection.png" class="w-96"/>
+    <p class="text-xl text-black font-semibold mb-3">Select you Setup Tool</p>
 
     <div class="w-full h-auto mb-4 flex flex-col">
       <hr class="my-4">

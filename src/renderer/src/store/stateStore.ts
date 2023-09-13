@@ -21,7 +21,8 @@ export const useStateStore = defineStore({
         serverDetails: {address: "", port: null},
         //Local network information
         PortDetails: String,
-
+        //Flag for if the tool is awaiting a response from a TCP client request
+        isAwaitingResponse: false,
         //The device type that is using the tool
         deviceType: "Select",
         //The type of lab to check (online or offline)
@@ -57,6 +58,21 @@ export const useStateStore = defineStore({
 
             return result;
         },
+
+        formattedDate(): string {
+            const currentDate = new Date();
+
+            const months = [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ];
+
+            const day = currentDate.getDate();
+            const month = months[currentDate.getMonth()];
+            const year = currentDate.getFullYear();
+
+            return `${month}, ${day}, ${year}`;
+        }
     },
     getters: {
         getServerDetails: (state) => {

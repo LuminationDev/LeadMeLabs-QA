@@ -21,7 +21,7 @@ defineProps({
       {{title}}
     </div>
     <div>
-      {{currentKeys}}/{{totalKeys}}
+      Individual checks passed: {{currentKeys}}/{{totalKeys}}
     </div>
   </div>
 </template>
