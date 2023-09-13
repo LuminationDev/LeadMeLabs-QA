@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import LauncherDetails from "@renderer/components/_generic/settings/LauncherDetails.vue";
+import GenericButton from "@renderer/components/_generic/buttons/GenericButton.vue";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+
+const goBack = () => {
+  router.back();
+}
 </script>
 
 <template>
@@ -10,6 +18,12 @@ import LauncherDetails from "@renderer/components/_generic/settings/LauncherDeta
       <hr class="my-4">
 
       <LauncherDetails />
+    </div>
+
+    <div class="flex justify-end">
+      <GenericButton type="primary" :callback="goBack">
+        Return
+      </GenericButton>
     </div>
   </div>
 </template>

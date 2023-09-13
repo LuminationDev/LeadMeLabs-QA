@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia';
+import * as CHECK from "../assets/checks"
+import {ReportTrackerItem} from "../interfaces";
 
 /**
  * Used to store values for the Lab's Quick Check method only.
@@ -6,8 +8,10 @@ import { defineStore } from 'pinia';
 export const useQuickStore = defineStore({
     id: 'quick',
     state: () => ({
-        stationNumber: 0,
-        stationDetails: String //Object of strings or list of objects
+        //Object of strings or list of objects
+        stationDetails: {} as ReportTrackerItem,
+        //Known values that are correct for a Station
+        correctStationValues: CHECK.QUICK.VALUES
     }),
     actions: {
 

@@ -2,6 +2,7 @@ import TcpServer from './tcp/TcpServer';
 import TcpClient from './tcp/TcpClient';
 import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
+import { DetermineReportType } from "./util/Report";
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -51,6 +52,10 @@ export default class Helpers {
                         version: app.getVersion(),
                         ipAddress: GetIPAddress()
                     });
+                    break;
+
+                case "generate_report":
+                    void DetermineReportType(info);
                     break;
 
                 default:

@@ -29,7 +29,7 @@ export const useStateStore = defineStore({
         //Determines the amount of experiences tested
         experienceTier: "Select",
         //Compared against the Station results
-        schoolName: "",
+        labLocation: "",
     }),
     actions: {
         insertSpaceBetweenCapitalLetters(str: string): string {

@@ -15,7 +15,7 @@ export const VALUES = {
     "MagicPacket": "WiFi:Wake on Magic Packet:Enabled",
     "AmdInstalled": "Installed",
     "OpensslEnv": "~0x20000000",
-    "WallPaper": "JamesWebb_Space_Telescope.jpg",
+    "WallPaper": "Lumination.jpg",
     // "TimeZone": "(UTC+09:30) Adelaide",
     "SystemTime": "System time is accurate.",
     "Firewall": "Allowed",

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import {Appliance, ReportTrackerItem, Station} from "../interfaces";
+import { Appliance, ReportTrackerItem, Station } from "../interfaces";
 
 /**
  * Used to store values for the Lab's Full Check method only.

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import * as CHECK from "../../../assets/checks"
 import * as CONSTANT from "@renderer/assets/constants";
 import GenericDropdown from "@renderer/components/_generic/dropdowns/GenericDropdown.vue";
 import InformationRow from "@renderer/components/checks/InformationRow.vue";
 import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/store/stateStore";
 import { useQuickStore } from "@renderer/store/quickStore";
+import { ReportTrackerItem } from "@renderer/interfaces";
+import InformationTitle from "@renderer/components/checks/InformationTitle.vue";
 
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
@@ -18,6 +19,12 @@ const SelectCheckType = (type: string) => {
 
 const numberOfChecks = computed(() => {
   return Object.keys(quickStore.stationDetails).length;
+});
+
+const currentlyAnswered = computed(() => {
+  return Object.values(quickStore.stationDetails)
+      .filter(item => item.passedCheck !== null && item.passedCheck !== undefined)
+      .length;
 });
 
 /**
@@ -54,6 +61,35 @@ const DetermineRequest = (): string => {
  * List of checks that can be made against a Station
  */
 const checks = ['All', 'Network', 'Windows', 'Software', 'Config'];
+
+const keyAnswered = (key: string, value: boolean) => {
+  quickStore.stationDetails[key].passedCheck = value;
+}
+
+/**
+ * Return the correct value or undefined for the supplied key.
+ * @param key
+ */
+const correctValue = (key: string) => {
+  switch (key) {
+    case "id":
+      return quickStore.correctStationValues['StationId'];
+
+    case "Name":
+    case "name":
+      return `Station ${quickStore.correctStationValues['StationId']}`;
+
+    case "LabLocation":
+    case "labLocation":
+      return stateStore.labLocation;
+  }
+
+  if (quickStore.correctStationValues[key] === undefined) {
+    return undefined;
+  }
+
+  return quickStore.correctStationValues[key];
+}
 </script>
 
 <template>
@@ -81,12 +117,27 @@ const checks = ['All', 'Network', 'Windows', 'Software', 'Config'];
 
   <!--Display the Station response below/check against correct values-->
   <div class="flex flex-col">
-    <div v-if="numberOfChecks > 0">Number of checks performed: {{numberOfChecks}}</div>
+    <InformationTitle
+        class="mb-4"
+        :title="`Number of checks performed: ${numberOfChecks}`"
+        :current-keys="currentlyAnswered"
+        :total-keys="numberOfChecks"/>
 
-    <InformationRow
-        v-for="(value, key) in quickStore.stationDetails" :key="key"
-        :title="stateStore.capitalizeFirstLetter(stateStore.insertSpaceBetweenCapitalLetters(key))"
-        :text="value"
-        :correct="CHECK.QUICK.VALUES[key] === value"/>
+    <div v-for="(check, index) in quickStore.stationDetails as ReportTrackerItem" :key="index" class="flex flex-col">
+      <InformationRow
+          @answered="keyAnswered"
+          :title="check.checkId"
+          :text="check.message"
+          :correct="check.passedCheck"/>
+
+      <div v-if="correctValue(check.checkId) !== undefined && correctValue(check.checkId) !== check.message">
+        <div class="w-52 text-red-500">
+          Expected value:
+        </div>
+        <div class="text-red-500">
+          {{correctValue(check.checkId)}}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
