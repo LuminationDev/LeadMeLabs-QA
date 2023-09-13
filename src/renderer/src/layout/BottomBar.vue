@@ -43,26 +43,19 @@ const openSkipCheckModal = () => {
 }
 </script>
 <template>
-  <!--TODO replace with the proper section below when design is ready-->
-  <img class="w-32 cursor-pointer hover:bg-blue-400" v-if="props.meta['prev']" @click="goPrevLink" alt="previous" src="../assets/deleteLater/back.png">
+  <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
+   >Previous
+  </GenericButton>
 
   <div class="grow"></div>
 
-  <img v-if="props.meta['canSkip'] !== undefined && props.meta['next']" @click="goNextLinkWithComment" class="w-32 cursor-pointer bg-gray-600 hover:bg-blue-500" alt="previous" src="../assets/deleteLater/skip.png">
-  <img v-if="props.meta['next'] && canProceed" @click="goNextLink" class="w-32 cursor-pointer hover:bg-blue-400" alt="previous" src="../assets/deleteLater/next.png">
-  <img v-if="props.meta['next'] && !canProceed" class="w-32" alt="previous" src="../assets/deleteLater/next_disabled.png">
+  <GenericButton v-if="props.meta['canSkip'] !== undefined && props.meta['next']" type="secondary" :callback="goNextLinkWithComment"
+   >Skip
+  </GenericButton>
 
-
-  <!--<GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"-->
-  <!-- >Previous-->
-  <!--</GenericButton>-->
-  <!--<div class="grow"></div>-->
-  <!--<GenericButton v-if="props.meta['canSkip'] !== undefined && props.meta['next']" type="secondary" :callback="goNextLinkWithComment"-->
-  <!-- >Skip-->
-  <!--</GenericButton>-->
-  <!--<GenericButton v-if="props.meta['next'] && !canProceed" type="secondary" :callback="goNextLink"-->
-  <!-- >Next-->
-  <!--</GenericButton>-->
+  <GenericButton v-if="props.meta['next']" type="secondary" :disabled="!canProceed" :callback="goNextLink"
+   >Next
+  </GenericButton>
 
   <!--Modal to handle the skip check comment-->
   <SkipCheckModal ref="skipCheckRef" :callback="goNextLink"/>

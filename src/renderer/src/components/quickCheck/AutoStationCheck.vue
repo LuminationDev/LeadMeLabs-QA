@@ -1,0 +1,133 @@
+<script setup lang="ts">
+import * as CONSTANT from "@renderer/assets/constants";
+import InformationTitle from "@renderer/components/checks/InformationTitle.vue";
+import BasicQuickCheck from "@renderer/components/quickCheck/BasicQuickCheck.vue";
+import { computed, onMounted, ref } from "vue";
+import { useStateStore } from "@renderer/store/stateStore";
+import { useQuickStore } from "@renderer/store/quickStore";
+import Spinner from "@renderer/components/_generic/buttons/Spinner.vue";
+
+const stateStore = useStateStore();
+const quickStore = useQuickStore();
+const checkType = ref('');
+const checkCount = ref(0);
+
+const numberOfChecks = computed(() => {
+  return Object.keys(quickStore.stationNetworkDetails).length +
+   Object.keys(quickStore.stationWindowsDetails).length +
+   Object.keys(quickStore.stationSoftwareDetails).length +
+   Object.keys(quickStore.stationConfigDetails).length;
+});
+
+const currentlyCorrect = computed(() => {
+  return Object.values(quickStore.stationNetworkDetails).filter(item => item['passedCheck'] === true).length +
+   Object.values(quickStore.stationWindowsDetails).filter(item => item['passedCheck'] === true).length +
+   Object.values(quickStore.stationSoftwareDetails).filter(item => item['passedCheck'] === true).length +
+   Object.values(quickStore.stationConfigDetails).filter(item => item['passedCheck'] === true).length;
+});
+
+/**
+ * Request information from
+ * @constructor
+ */
+const requestFromStation = () => {
+  stateStore.isAwaitingResponse = true;
+
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: stateStore.key,
+    address: quickStore.stationAddress,
+    port: 55557,
+    data: determineRequest() + stateStore.getServerDetails
+  });
+}
+
+const retest = async (type: string) => {
+  checkType.value = checks[checks.indexOf(type)];
+  checkCount.value = checks.indexOf(type);
+
+  requestFromStation();
+
+  while (stateStore.isAwaitingResponse) {
+    await new Promise(resolve => setTimeout(resolve, 3000));
+  }
+
+  checkCount.value = -1;
+}
+
+const determineRequest = (): string => {
+  switch (checkType.value) {
+    case "Windows":
+      return CONSTANT.MESSAGE.REQUEST_STATION_DETAILS_WINDOWS;
+    case "Software":
+      return CONSTANT.MESSAGE.REQUEST_STATION_DETAILS_SOFTWARE;
+    case "Network":
+      return CONSTANT.MESSAGE.REQUEST_STATION_DETAILS_NETWORK;
+    case "Config":
+      return CONSTANT.MESSAGE.REQUEST_STATION_DETAILS_CONFIG;
+    default:
+      return CONSTANT.MESSAGE.REQUEST_STATION_DETAILS_ALL;
+  }
+}
+
+/**
+ * List of checks that can be made against a Station
+ */
+const checks = ['Network', 'Windows', 'Software', 'Config'];
+
+const beginChecks = async () => {
+  for (let i = 0; i < checks.length; i++) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    checkType.value = checks[i];
+    checkCount.value = i;
+    requestFromStation();
+
+    while (stateStore.isAwaitingResponse) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+
+  checkCount.value = -1;
+}
+
+/**
+ * Start the first check when the component is mounted
+ */
+onMounted(() =>{
+  beginChecks();
+});
+</script>
+
+<template>
+  <!--Display the Station response below/check against correct values-->
+  <div class="flex flex-col">
+    <InformationTitle
+        class="mb-4"
+        :title="`Number of checks performed: ${numberOfChecks}`"
+        :current-keys="currentlyCorrect"
+        :total-keys="numberOfChecks"/>
+
+    <div v-if="checkCount !== -1" class="flex flex-row items-center mb-4">
+      Now checking.... {{checks[checkCount]}} <Spinner />
+    </div>
+
+    <BasicQuickCheck v-if="Object.keys(quickStore.stationNetworkDetails).length > 0"
+                     title="Network"
+                     :details="quickStore.stationNetworkDetails"
+                     @retest="retest"/>
+
+    <BasicQuickCheck v-if="Object.keys(quickStore.stationWindowsDetails).length > 0"
+                     title="Windows"
+                     :details="quickStore.stationWindowsDetails"/>
+
+    <BasicQuickCheck v-if="Object.keys(quickStore.stationSoftwareDetails).length > 0"
+                     title="Software"
+                     :details="quickStore.stationSoftwareDetails"/>
+
+    <BasicQuickCheck v-if="Object.keys(quickStore.stationConfigDetails).length > 0"
+                     title="Config"
+                     :details="quickStore.stationConfigDetails"/>
+  </div>
+</template>

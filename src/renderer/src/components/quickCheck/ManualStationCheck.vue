@@ -10,7 +10,6 @@ import InformationTitle from "@renderer/components/checks/InformationTitle.vue";
 
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
-const address = ref("");
 const checkType = ref("All");
 
 const SelectCheckType = (type: string) => {
@@ -36,7 +35,7 @@ const RequestFromStation = () => {
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
     key: stateStore.key,
-    address: address.value,
+    address: quickStore.stationAddress,
     port: 55557,
     data: DetermineRequest() + stateStore.getServerDetails
   });
@@ -71,16 +70,16 @@ const keyAnswered = (key: string, value: boolean) => {
  * @param key
  */
 const correctValue = (key: string) => {
-  switch (key) {
+  const temp = key.toLowerCase();
+
+  switch (temp) {
     case "id":
       return quickStore.correctStationValues['StationId'];
 
-    case "Name":
     case "name":
       return `Station ${quickStore.correctStationValues['StationId']}`;
 
-    case "LabLocation":
-    case "labLocation":
+    case "lablocation":
       return stateStore.labLocation;
   }
 
@@ -93,13 +92,12 @@ const correctValue = (key: string) => {
 </script>
 
 <template>
-  <input v-model="address" class="bg-gray-100 w-56 h-8 mb-4 px-4 rounded" placeholder="Station IP address"/>
   <div class="flex flex-row items-center justify-between mb-5">
     <div v-on:click="RequestFromStation"
          class="w-32 h-8 flex items-center justify-center rounded-lg"
          :class="{
-                    'bg-blue-500 text-white cursor-pointer hover:bg-blue-400': address.length > 0,
-                    'bg-gray-300 text-white': address.length === 0,
+                    'bg-blue-500 text-white cursor-pointer hover:bg-blue-400': quickStore.stationAddress.length > 0,
+                    'bg-gray-300 text-white': quickStore.stationAddress.length === 0,
                  }">
       Check
     </div>

@@ -8,8 +8,13 @@ import {ReportTrackerItem} from "../interfaces";
 export const useQuickStore = defineStore({
     id: 'quick',
     state: () => ({
+        //IP address of the Station currently being checked
+        stationAddress: '',
         //Object of strings or list of objects
-        stationDetails: {} as ReportTrackerItem,
+        stationNetworkDetails: {} as ReportTrackerItem,
+        stationWindowsDetails: {} as ReportTrackerItem,
+        stationSoftwareDetails: {} as ReportTrackerItem,
+        stationConfigDetails: {} as ReportTrackerItem,
         //Known values that are correct for a Station
         correctStationValues: CHECK.QUICK.VALUES
     }),

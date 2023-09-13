@@ -136,6 +136,8 @@ api.ipcRenderer.on('backend_message', (event, info) => {
  * The NUC or Station has sent a message via the TCP server, determine what it is and how to handle it.
  */
 const handleTCPMessage = (info: any) => {
+  stateStore.isAwaitingResponse = false;
+
   //[0]Message type | [1]Message details
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
 
@@ -160,13 +162,15 @@ const handleTCPMessage = (info: any) => {
     case "StationNetwork":
     case "StationSoftware":
     case "StationConfig":
+      const dataArray = message[1].split("::::");
+
       const objectValuesArray: { ReportTrackerItem } = {};
-      const dataObject = JSON.parse(message[1]);
+      const dataObject = JSON.parse(dataArray[1]);
       for (const variableName in dataObject) {
         objectValuesArray[variableName] = transformToObject(variableName, dataObject[variableName]);
         objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, dataObject[variableName]);
       }
-      quickStore.stationDetails = objectValuesArray;
+      quickStore[`station${dataArray[0]}Details`] = objectValuesArray;
       break;
 
     case "StationAll":
@@ -184,6 +188,8 @@ const handleTCPMessage = (info: any) => {
  * The electron Socket client has encountered an error, handle the type and required flow.
  */
 const handleTCPClientError = (info: any) => {
+  stateStore.isAwaitingResponse = false;
+
   switch(info.headerMessage) {
     case "TimedOut":
       console.log(`Socket timed out on: ${info.mainText}`);

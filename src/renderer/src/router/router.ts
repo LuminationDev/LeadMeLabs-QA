@@ -9,7 +9,6 @@ import TheNetwork from "../components/fullCheck/Network/TheNetwork.vue";
 import TheWindows from "../components/fullCheck/Windows/TheWindows.vue";
 import TheIMVR from "../components/fullCheck/IMVR/TheIMVR.vue";
 import TheAppliances from "../components/fullCheck/Appliances/TheAppliances.vue";
-import TheStation from "../components/quickCheck/TheStation/TheStation.vue";
 import TheReport from "../components/reports/TheReport.vue";
 
 /**
@@ -18,29 +17,18 @@ import TheReport from "../components/reports/TheReport.vue";
 const quickRoutes = [
     {
         path: '/check/quick',
-        name: 'quick-description',
+        name: 'quick-setup',
         component: QuickCheck,
         meta: {
-            next: '/check/quick/tcp',
             prev: '/check/selection'
         }
     },
     {
-        path: '/check/quick/tcp',
-        name: 'quick-tcp',
-        component: TheStation,
+        path: '/check/quick/auto',
+        name: 'quick-auto',
+        component: QuickCheck,
         meta: {
-            userInput: true, //Requires user input to proceed to the next page
-            next: '/check/quick/request',
             prev: '/check/quick'
-        }
-    },
-    {
-        path: '/check/quick/request',
-        name: 'quick-request',
-        component: TheStation,
-        meta: {
-            prev: '/check/quick/tcp'
         }
     }
 ];
@@ -241,7 +229,7 @@ const router = createRouter({
             name: 'report-handover',
             component: TheReport,
             meta: {
-                prev: '/check/selection'
+                prev: '/selection'
             }
         },
         {

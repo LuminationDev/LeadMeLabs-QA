@@ -4,8 +4,6 @@
  */
 export const VALUES = {
     //NETWORK
-    // "NetworkInterfaceName": "WiFi",
-    // "Description": "Intel(R) Wi-Fi 6E AX210 160MHz",
     // "MacAddress": "28-DF-EB-5B-20-7F",
     // "DefaultGateway": "192.168.1.1",
     "DnsServer": "8.8.8.8",
@@ -21,7 +19,7 @@ export const VALUES = {
     "Firewall": "Allowed",
 
     //SOFTWARE
-    "TaskScheduler": "Not found",
+    "TaskScheduler": "Found",
     "SetVolExe": "SetVol present",
     "SteamCmdExe": "SteamCMD present",
     "SteamCmdInitialised": "Initialised",
