@@ -10,6 +10,7 @@ import TheWindows from "../components/fullCheck/Windows/TheWindows.vue";
 import TheIMVR from "../components/fullCheck/IMVR/TheIMVR.vue";
 import TheAppliances from "../components/fullCheck/Appliances/TheAppliances.vue";
 import TheStation from "../components/quickCheck/TheStation/TheStation.vue";
+import TheReport from "../components/reports/TheReport.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -233,6 +234,14 @@ const router = createRouter({
             component: ToolSelection,
             meta: {
                 prev: '/selection'
+            }
+        },
+        {
+            path: '/report',
+            name: 'report-handover',
+            component: TheReport,
+            meta: {
+                prev: '/check/selection'
             }
         },
         {

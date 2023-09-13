@@ -29,7 +29,9 @@ const route = useRoute();
           </router-link>
 
           <!--Generate Handover Doc-->
-          <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/generateHandButton.png">
+          <router-link class="hover:no-underline" to="/report">
+            <img class="cursor-pointer hover:bg-blue-200" alt="quick station check" src="../../../assets/deleteLater/generateHandButton.png">
+          </router-link>
         </div>
       </div>
 

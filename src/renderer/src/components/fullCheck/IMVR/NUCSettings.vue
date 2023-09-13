@@ -4,7 +4,9 @@ import StationView from "@renderer/components/fullCheck/IMVR/StationView.vue";
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useFullStore } from "@renderer/store/fullStore";
+import { useStateStore } from "@renderer/store/stateStore";
 
+const stateStore = useStateStore();
 const fullStore = useFullStore();
 const { NucStationList } = storeToRefs(fullStore);
 const { StationList } = storeToRefs(fullStore);
@@ -30,7 +32,7 @@ const uniqueID = computed(() => {
 
   // All IDs are unique
   return true;
-})
+});
 
 const sameNucAddress = computed(() => {
   if (fullStore.StationList.length > 0) {
