@@ -212,7 +212,7 @@ const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/',
+            path: '/welcome',
             name: 'welcome',
             component: Welcome,
             meta: {
@@ -221,7 +221,7 @@ const router = createRouter({
             }
         },
         {
-            path: '/selection',
+            path: '/',
             name: 'selection',
             component: ToolSelection,
             meta: {
