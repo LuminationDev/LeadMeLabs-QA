@@ -1,5 +1,5 @@
 export default interface QaCheck {
-    passedCheck: boolean | null,
+    passedStatus: string | null,
     message: string,
     checkId: string,
 }
