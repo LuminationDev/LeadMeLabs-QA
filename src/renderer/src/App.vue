@@ -4,7 +4,7 @@ import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
 import * as FULL from './assets/checks/_fullcheckValues';
-import { QaCheck, TCPMessage } from "@renderer/interfaces";
+import { TCPMessage, QaCheck } from "@renderer/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
 import { useQuickStore } from "@renderer/store/quickStore";
@@ -25,7 +25,7 @@ const fullStore = useFullStore();
   */
 const transformToObject = (key: string, value: string): QaCheck => {
   return {
-    passedCheck: null, // Default to null
+    passedStatus: null, // Default to null
     message: value,
     checkId: key,
   };
@@ -140,6 +140,20 @@ const handleTCPMessage = (info: any) => {
 
   //[0]Message type | [1]Message details
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
+
+
+  if (info.mainText.includes("WindowChecks") || info.mainText.includes("SoftwareChecks") || info.mainText.includes("SteamConfigChecks")) {
+    console.log(info.mainText.split(":::"))
+    const qaChecks = JSON.parse(info.mainText.split(":::")[1]).map(element => {
+      var qa = {} as QaCheck
+      qa.passedStatus = element._passedStatus
+      qa.message = element._message
+      qa.checkId = element._checkId
+      return qa
+    });
+    fullStore.qaChecks.push(...qaChecks)
+    return
+  }
 
   switch(message[0]) {
     case "Connected":

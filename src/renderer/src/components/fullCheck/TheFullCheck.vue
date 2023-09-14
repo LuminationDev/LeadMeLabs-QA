@@ -85,6 +85,13 @@ onMounted(() => {
         There are {{ fullStore.StationList.length }} stations<br/>
         {{ fullStore.StationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
         <button @click="startTest">Start Test</button>
+        <div class="flex flex-col">
+          <div v-for="check in fullStore.qaChecks" :key="check.checkId" class="flex flex-row">
+            <span :class="check.passedStatus === 'passed' ? 'bg-green-500' : 'bg-red-500'">{{ check.passedStatus }}</span>
+            <span>{{ check.checkId }}</span>
+            <span>{{ check.message }}</span>
+          </div>
+        </div>
       </div>
 
     </template>

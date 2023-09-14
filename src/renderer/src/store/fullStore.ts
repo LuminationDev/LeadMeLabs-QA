@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Appliance, ReportTrackerItem, Station } from "../interfaces";
+import {Appliance, QaCheck, ReportTrackerItem, Station} from "../interfaces";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -16,6 +16,7 @@ export const useFullStore = defineStore({
         NucStationList: Array<Station>(),
         //List of the Station detail's from the Stations
         StationList: Array<Station>(),
+        qaChecks: Array<QaCheck>(),
         //Track the progress of the checks as an overall report object - populated in App.vue
         reportTracker: {} as ReportTrackerItem,
 
