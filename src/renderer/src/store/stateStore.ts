@@ -18,7 +18,7 @@ export const useStateStore = defineStore({
         //Is the backend TCP server running
         isServerRunning: false,
         //Details of the electron server that is running in the backend
-        serverDetails: {address: "", port: null},
+        serverDetails: {address: "", port: "55540"},
         //Local network information
         PortDetails: String,
         //Flag for if the tool is awaiting a response from a TCP client request

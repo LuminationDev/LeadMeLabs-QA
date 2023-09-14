@@ -41,6 +41,7 @@ export default function runTcpClient(mainWindow: Electron.BrowserWindow, info: a
     const headerLength = headerMessageTypeBytes.length;
 
     // Encrypt the message
+    console.log(message, key)
     const encryptedData = encrypt(message, key);
 
     // Combine the header, header length, and encrypted data
@@ -79,6 +80,7 @@ export default function runTcpClient(mainWindow: Electron.BrowserWindow, info: a
  * @param callback
  */
 function sendDataInChunks(data, client, callback) {
+    console.log('data', data)
     const chunkSize = 1024; // Adjust this to an appropriate chunk size
     let offset = 0;
 

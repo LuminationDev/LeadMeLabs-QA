@@ -2,13 +2,63 @@
 import Description from "@renderer/components/checks/Description.vue";
 import GenericLayout from "@renderer/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
+import {onMounted, ref} from "vue";
+import * as CONSTANT from "@renderer/assets/constants";
+import {useStateStore} from "../../store/stateStore";
+import {useFullStore} from "../../store/fullStore";
+import {START_AUTO_TEST} from "../../assets/constants/_message";
 
 const route = useRoute();
+
+const stateStore = useStateStore();
+const fullStore = useFullStore();
+
+const nucAddress = ref("")
+const encryptionKey = ref("")
+
+async function connectToNuc() {
+  stateStore.serverDetails.address = "192.168.1.99"// todo my own address
+  stateStore.key = encryptionKey.value
+
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
+    key: stateStore.key,
+    address: stateStore.serverDetails.address,
+    port: stateStore.serverDetails.port,
+    command: "start"
+  });
+
+  console.log(CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails)
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: encryptionKey.value,
+    address: nucAddress.value,
+    port: 55556,
+    data: CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails
+  });
+}
+
+function startTest() {
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: encryptionKey.value,
+    address: nucAddress.value,
+    port: 55556,
+    data: CONSTANT.MESSAGE.START_AUTO_TEST + stateStore.getServerDetails
+  });
+}
+
+onMounted(() => {
+
+})
+
 </script>
 
 <template>
   <GenericLayout>
     <template v-slot:title>
+      Getting started, put in your details pls
       <!--TODO replace with the proper section below when design is ready-->
       <!--<p class="text-lg text-black mb-3">Quick Station Check</p>-->
       <img alt="title" src="../../assets/deleteLater/flcTitle.png" class="w-96"/>
@@ -21,6 +71,22 @@ const route = useRoute();
 
       <!--Set the station parameters-->
       <Description v-if="route.name === 'full-description'"/>
+
+      Please enter the NUC address and encryption key and then connect
+      <input type="text" name="nucAddress" v-model="nucAddress" class="bg-red-500" />
+      <input type="text" name="encryptionKey" v-model="encryptionKey" class="bg-red-500" />
+
+      <button @click="connectToNuc">Connect</button>
+
+      {{ fullStore.connected }}
+      <div v-if="fullStore.connected">
+        SUccessfully connected<br/>
+        There are {{ fullStore.ApplianceList.length }} appliances<br/>
+        There are {{ fullStore.StationList.length }} stations<br/>
+        {{ fullStore.StationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
+        <button @click="startTest">Start Test</button>
+      </div>
+
     </template>
   </GenericLayout>
 </template>

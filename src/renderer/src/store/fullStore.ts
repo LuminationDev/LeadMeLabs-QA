@@ -7,6 +7,7 @@ import { Appliance, ReportTrackerItem, Station } from "../interfaces";
 export const useFullStore = defineStore({
     id: 'full',
     state: () => ({
+        connected: false,
         //Compared against the number of Station's contacted
         numberOfStations: 0,
         //The IP address entered by a user that should be the NUC
