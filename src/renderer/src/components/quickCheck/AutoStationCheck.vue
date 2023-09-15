@@ -2,9 +2,9 @@
 import * as CONSTANT from "@renderer/assets/constants";
 import InformationTitle from "@renderer/components/checks/InformationTitle.vue";
 import BasicQuickCheck from "@renderer/components/quickCheck/BasicQuickCheck.vue";
-import {computed, onMounted, ref} from "vue";
-import {useStateStore} from "@renderer/store/stateStore";
-import {useQuickStore} from "@renderer/store/quickStore";
+import { computed, onMounted, ref } from "vue";
+import { useStateStore } from "@renderer/store/stateStore";
+import { useQuickStore } from "@renderer/store/quickStore";
 import Spinner from "@renderer/components/_generic/buttons/Spinner.vue";
 
 const stateStore = useStateStore();
@@ -13,15 +13,11 @@ const checkType = ref('');
 const checkCount = ref(0);
 
 const numberOfChecks = computed(() => {
-  return quickStore.stationDetails.length +
-    Object.keys(quickStore.stationNetworkDetails).length +
-    Object.keys(quickStore.stationConfigDetails).length;
+  return quickStore.stationDetails.length;
 });
 
 const currentlyCorrect = computed(() => {
-  return quickStore.stationDetails.filter(item => item['passedCheck'] === true).length +
-    Object.values(quickStore.stationNetworkDetails).filter(item => item['passedCheck'] === true).length +
-    Object.values(quickStore.stationConfigDetails).filter(item => item['passedCheck'] === true).length;
+  return quickStore.stationDetails.filter(item => item['passedCheck'] === true).length;
 });
 
 /**
@@ -70,13 +66,24 @@ const determineRequest = (): string => {
 }
 
 //Filter out the checkId's into different categories
+const networkIds = ['macAddress', 'defaultGateway', 'dnsServer', 'altDnsServer'];
+const networkDetails = computed(() => {
+  const filteredItems = quickStore.stationDetails
+      .filter((value) => networkIds.includes(value['id']));
+
+  return filteredItems.reduce((accumulator, value, index) => {
+    accumulator[value['id']] = value;
+    return accumulator;
+  }, {});
+});
+
 const windowIds = ['magic_packet_enabled', 'amd_installed', 'openssl_environment', 'wallpaper_is_set', 'timezone_correct', 'correct_datetime'];
 const windowDetails = computed(() => {
   const filteredItems = quickStore.stationDetails
-      .filter((value) => windowIds.includes(value['checkId']));
+      .filter((value) => windowIds.includes(value['id']));
 
   return filteredItems.reduce((accumulator, value, index) => {
-    accumulator[value['checkId']] = value;
+    accumulator[value['id']] = value;
     return accumulator;
   }, {});
 });
@@ -84,10 +91,21 @@ const windowDetails = computed(() => {
 const softwareIds = ['setvol_installed', 'steamcmd_installed', 'steamcmd_initialised', 'steamcmd_configured'];
 const softwareDetails = computed(() => {
   const filteredItems = quickStore.stationDetails
-      .filter((value) => softwareIds.includes(value['checkId']));
+      .filter((value) => softwareIds.includes(value['id']));
 
   return filteredItems.reduce((accumulator, value, index) => {
-    accumulator[value['checkId']] = value;
+    accumulator[value['id']] = value;
+    return accumulator;
+  }, {});
+});
+
+const configIds = ['id', 'room', 'labLocation', 'ipAddress', 'nucIpAddress', 'selectedHeadset'];
+const configDetails = computed(() => {
+  const filteredItems = quickStore.stationDetails
+      .filter((value) => configIds.includes(value['id']));
+
+  return filteredItems.reduce((accumulator, value, index) => {
+    accumulator[value['id']] = value;
     return accumulator;
   }, {});
 });
@@ -134,9 +152,9 @@ onMounted(() =>{
       Now checking.... {{checks[checkCount]}} <Spinner />
     </div>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationNetworkDetails).length > 0"
+    <BasicQuickCheck v-if="Object.keys(networkDetails).length > 0"
                      title="Network"
-                     :details="quickStore.stationNetworkDetails"
+                     :details="networkDetails"
                      @retest="retest"/>
 
     <!--Filter out by checkId to the correct areas-->
@@ -148,9 +166,9 @@ onMounted(() =>{
                      title="Software"
                      :details="softwareDetails"/>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationConfigDetails).length > 0"
+    <BasicQuickCheck v-if="Object.keys(configDetails).length > 0"
                      title="Config"
-                     :details="quickStore.stationConfigDetails"
+                     :details="configDetails"
                      @retest="retest"/>
   </div>
 </template>

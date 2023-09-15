@@ -15,7 +15,7 @@ const props = defineProps({
     required: true
   },
   correct: {
-    type: Boolean,
+    type: String,
     required: false
   }
 });
@@ -41,7 +41,7 @@ onBeforeMount(() => {
 <template>
   <div class="my-2 w-full">
     <span class="w-52 flex-shrink-0 font-semibold">{{title}}</span>
-    <span class="flex-grow">{{text ?? 'No message supplied'}}</span>
+    <span class="flex-grow">{{text}}</span>
 
     <div class="w-52">
       <div class="mx-6 font-semibold">Correct?</div>

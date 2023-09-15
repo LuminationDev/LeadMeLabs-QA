@@ -10,7 +10,7 @@ import { ref } from 'vue';
 import { useQuickStore } from "@renderer/store/quickStore";
 import { useStateStore } from './store/stateStore';
 import { useFullStore } from "@renderer/store/fullStore";
-import {Station, StationDetails} from "./types/_station";
+import { Station, StationDetails } from "./types/_station";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -80,20 +80,18 @@ const isCorrectValue = (key: string, value: any) => {
 
   switch (temp) {
     case "id":
-      return value === quickStore.correctStationValues['StationId'];
+      return value == quickStore.correctStationValues['StationId'];
 
     case "name":
-      return value === `Station ${quickStore.correctStationValues['StationId']}`;
+      return value == `Station ${quickStore.correctStationValues['StationId']}`;
 
     case "lablocation":
-      return value === stateStore.labLocation;
+      return value == stateStore.labLocation;
   }
 
   if (quickStore.correctStationValues[key] === undefined) {
     return undefined;
   }
-
-  return quickStore.correctStationValues[key] === value
 }
 
 /**
@@ -232,34 +230,30 @@ const handleTCPMessage = (info: any) => {
       fullStore.StationList.push(JSON.parse(message[1]));
       break;
 
+    case "StationNetwork":
+    case "StationConfig":
     case "StationWindows":
     case "StationSoftware":
       const items = JSON.parse(message[1]);
-      const qaChecks = items.map(element => {
-        const qa = {} as QaCheck;
-        qa.passedStatus = element._passedStatus ?? element.passedStatus
-        qa.message = element._message ?? element.message
-        qa.checkId = element._checkId ?? element.checkId
-        return qa
+      const qaChecks = items.map((element) => {
+        const qa: QaCheck = {
+          passedStatus: element._passedStatus || element.passedStatus,
+          message: element._message || element.message || element._value || element.value,
+          id: element._id || element.id,
+        };
+
+        if (qa.passedStatus === undefined) {
+          const correct = isCorrectValue(qa.id, qa.message);
+          qa.passedStatus = correct !== undefined ? (correct ? 'passed' : 'failed') : undefined;
+        }
+
+        return qa;
       });
 
-      const existingCheckIds = quickStore.stationDetails.map(item => item.checkId);
-      const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.checkId));
+      const existingCheckIds = quickStore.stationDetails.map(item => item.id);
+      const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.id));
 
       quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
-      break;
-
-    case "StationNetwork":
-    case "StationConfig":
-      const dataArray = message[1].split("::::");
-
-      const objectValuesArray: { ReportTrackerItem } = {};
-      const dataObject = JSON.parse(dataArray[1]);
-      for (const variableName in dataObject) {
-        objectValuesArray[variableName] = transformToObject(variableName, dataObject[variableName]);
-        objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, dataObject[variableName]);
-      }
-      quickStore[`station${dataArray[0]}Details`] = objectValuesArray;
       break;
 
     case "StationAll":

@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import * as CHECK from "../assets/checks"
 import { ReportTrackerItem } from "../interfaces";
 
 /**
@@ -16,7 +15,7 @@ export const useQuickStore = defineStore({
         stationNetworkDetails: {} as ReportTrackerItem,
         stationConfigDetails: {} as ReportTrackerItem,
         //Known values that are correct for a Station
-        correctStationValues: CHECK.QUICK.VALUES
+        correctStationValues: {}
     }),
     actions: {
 

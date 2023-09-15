@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import InformationRow from "@renderer/components/checks/InformationRow.vue";
-import {ReportTrackerItem} from "@renderer/interfaces";
-import {useStateStore} from "@renderer/store/stateStore";
-import {useQuickStore} from "@renderer/store/quickStore";
-import {computed, ref} from "vue";
+import { ReportTrackerItem } from "@renderer/interfaces";
+import { useStateStore } from "@renderer/store/stateStore";
+import { useQuickStore } from "@renderer/store/quickStore";
+import { computed, ref } from "vue";
 
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
@@ -22,7 +22,7 @@ const props = defineProps({
 
 const keyAnswered = (key: string, value: boolean) => {
   if (props.details[key] !== undefined) {
-    props.details[key]['passedCheck'] = value;
+    props.details[key]['passStatus'] = value ? 'passed' : 'failed';
   }
 }
 
@@ -38,7 +38,7 @@ const currentlyCorrect = computed(() => {
 
 const currentlyUnanswered = computed(() => {
   return Object.values(props.details)
-      .filter(item => item['passedCheck'] === undefined)
+      .filter(item => item['passedStatus'] === undefined)
       .length;
 });
 
@@ -51,7 +51,7 @@ const correctValue = (key: string) => {
 
   switch (temp) {
     case "id":
-      return quickStore.correctStationValues['StationId'];
+      return quickStore.correctStationValues['StationId'].toString();
 
     case "name":
       return `Station ${quickStore.correctStationValues['StationId']}`;
@@ -103,8 +103,8 @@ const hasPassed = computed(() => {
         <InformationRow
             @answered="keyAnswered"
             :title="check.id"
-            :text="check.message"
-            :correct="check.passedStatus === 'passed'"/>
+            :text="check.message ?? 'No message supplied'"
+            :correct="check.passedStatus"/>
 
         <div v-if="correctValue(check.id) !== undefined && correctValue(check.id) !== check.message">
           <div class="w-52 text-red-500">
