@@ -44,16 +44,27 @@ const openSkipCheckModal = () => {
 </script>
 <template>
   <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
-   >Previous
+   >Back
   </GenericButton>
 
   <div class="grow"></div>
 
-  <GenericButton v-if="props.meta['canSkip'] !== undefined && props.meta['next']" type="secondary" :callback="goNextLinkWithComment"
+  <!--Skip without a comment-->
+  <GenericButton class="mr-3" v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] !== undefined && props.meta['next']" type="text" :callback="goNextLink"
+  >Skip
+  </GenericButton>
+
+  <!--Skip with a comment-->
+  <GenericButton class="mr-3" v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] === undefined && props.meta['next']" type="text" :callback="goNextLinkWithComment"
    >Skip
   </GenericButton>
 
-  <GenericButton v-if="props.meta['next']" type="secondary" :disabled="!canProceed" :callback="goNextLink"
+  <!--TODO add just comment modal with no skip?-->
+  <GenericButton class="mr-3" v-if="props.meta['addComment'] !== undefined" type="transparent" :callback="goNextLinkWithComment"
+  >Add Comment
+  </GenericButton>
+
+  <GenericButton v-if="props.meta['next']" type="blue" :disabled="!canProceed" :callback="goNextLink"
    >Next
   </GenericButton>
 

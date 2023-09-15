@@ -11,7 +11,7 @@ const props = defineProps({
     required: true
   },
   text: {
-    type: [String, Number, null],
+    type: [String, Number, null, undefined],
     required: true
   },
   correct: {
@@ -33,7 +33,7 @@ const changeSelection = (selection: boolean) => {
 
 onBeforeMount(() => {
   if(props.correct !== undefined && props.correct !== null) {
-    changeSelection(props.correct);
+    changeSelection(props.correct === 'passed');
   }
 })
 </script>
@@ -41,7 +41,7 @@ onBeforeMount(() => {
 <template>
   <div class="my-2 w-full">
     <span class="w-52 flex-shrink-0 font-semibold">{{title}}</span>
-    <span class="flex-grow">{{text ?? 'Not found'}}</span>
+    <span class="flex-grow">{{text ?? 'No message supplied'}}</span>
 
     <div class="w-52">
       <div class="mx-6 font-semibold">Correct?</div>

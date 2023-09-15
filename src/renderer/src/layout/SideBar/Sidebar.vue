@@ -4,8 +4,13 @@ import logo from '@renderer/assets/images/logo.svg';
 import FullCheckRoutes from '@renderer/layout/SideBar/FullCheck/FullCheckRoutes.vue';
 import ConfigToolRoutes from '@renderer/layout/SideBar/ConfigToolRoutes.vue';
 import { useRoute } from 'vue-router'
+import {computed} from "vue";
 
 const route = useRoute();
+const routes = ['welcome', 'selection', 'check-selection'];
+const showImage = computed(() => {
+  return route.name === undefined || routes.includes(route.name.toString());
+});
 </script>
 <template>
     <div class="flex flex-col h-full overflow-hidden scrollbar-hide">
@@ -15,11 +20,10 @@ const route = useRoute();
           </router-link>
         </div>
         <div
-            v-if="route.name === 'welcome' || route.name === 'selection'
-              || route.path.includes('check/quick') || route.path === '/check/full'"
+            v-if="showImage || route.path.includes('check/quick') || route.path === '/check/full'"
             class="w-full overflow-y-hidden border-t-gray-100 border-t-2"
         >
-            <img class="h-full w-full object-cover" :src="welcome" alt="LeadMe Labs Logo" />
+            <img class="h-full w-full object-cover rounded-3xl" :src="welcome" alt="LeadMe Labs Logo" />
         </div>
 
         <!--Full check routes-->

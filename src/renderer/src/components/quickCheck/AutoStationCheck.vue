@@ -2,9 +2,9 @@
 import * as CONSTANT from "@renderer/assets/constants";
 import InformationTitle from "@renderer/components/checks/InformationTitle.vue";
 import BasicQuickCheck from "@renderer/components/quickCheck/BasicQuickCheck.vue";
-import { computed, onMounted, ref } from "vue";
-import { useStateStore } from "@renderer/store/stateStore";
-import { useQuickStore } from "@renderer/store/quickStore";
+import {computed, onMounted, ref} from "vue";
+import {useStateStore} from "@renderer/store/stateStore";
+import {useQuickStore} from "@renderer/store/quickStore";
 import Spinner from "@renderer/components/_generic/buttons/Spinner.vue";
 
 const stateStore = useStateStore();
@@ -13,17 +13,15 @@ const checkType = ref('');
 const checkCount = ref(0);
 
 const numberOfChecks = computed(() => {
-  return Object.keys(quickStore.stationNetworkDetails).length +
-   Object.keys(quickStore.stationWindowsDetails).length +
-   Object.keys(quickStore.stationSoftwareDetails).length +
-   Object.keys(quickStore.stationConfigDetails).length;
+  return quickStore.stationDetails.length +
+    Object.keys(quickStore.stationNetworkDetails).length +
+    Object.keys(quickStore.stationConfigDetails).length;
 });
 
 const currentlyCorrect = computed(() => {
-  return Object.values(quickStore.stationNetworkDetails).filter(item => item['passedCheck'] === true).length +
-   Object.values(quickStore.stationWindowsDetails).filter(item => item['passedCheck'] === true).length +
-   Object.values(quickStore.stationSoftwareDetails).filter(item => item['passedCheck'] === true).length +
-   Object.values(quickStore.stationConfigDetails).filter(item => item['passedCheck'] === true).length;
+  return quickStore.stationDetails.filter(item => item['passedCheck'] === true).length +
+    Object.values(quickStore.stationNetworkDetails).filter(item => item['passedCheck'] === true).length +
+    Object.values(quickStore.stationConfigDetails).filter(item => item['passedCheck'] === true).length;
 });
 
 /**
@@ -70,6 +68,29 @@ const determineRequest = (): string => {
       return CONSTANT.MESSAGE.REQUEST_STATION_DETAILS_ALL;
   }
 }
+
+//Filter out the checkId's into different categories
+const windowIds = ['magic_packet_enabled', 'amd_installed', 'openssl_environment', 'wallpaper_is_set', 'timezone_correct', 'correct_datetime'];
+const windowDetails = computed(() => {
+  const filteredItems = quickStore.stationDetails
+      .filter((value) => windowIds.includes(value['checkId']));
+
+  return filteredItems.reduce((accumulator, value, index) => {
+    accumulator[value['checkId']] = value;
+    return accumulator;
+  }, {});
+});
+
+const softwareIds = ['setvol_installed', 'steamcmd_installed', 'steamcmd_initialised', 'steamcmd_configured'];
+const softwareDetails = computed(() => {
+  const filteredItems = quickStore.stationDetails
+      .filter((value) => softwareIds.includes(value['checkId']));
+
+  return filteredItems.reduce((accumulator, value, index) => {
+    accumulator[value['checkId']] = value;
+    return accumulator;
+  }, {});
+});
 
 /**
  * List of checks that can be made against a Station
@@ -118,16 +139,18 @@ onMounted(() =>{
                      :details="quickStore.stationNetworkDetails"
                      @retest="retest"/>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationWindowsDetails).length > 0"
+    <!--Filter out by checkId to the correct areas-->
+    <BasicQuickCheck v-if="Object.keys(windowDetails).length > 0"
                      title="Windows"
-                     :details="quickStore.stationWindowsDetails"/>
+                     :details="windowDetails"/>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationSoftwareDetails).length > 0"
+    <BasicQuickCheck v-if="Object.keys(softwareDetails).length > 0"
                      title="Software"
-                     :details="quickStore.stationSoftwareDetails"/>
+                     :details="softwareDetails"/>
 
     <BasicQuickCheck v-if="Object.keys(quickStore.stationConfigDetails).length > 0"
                      title="Config"
-                     :details="quickStore.stationConfigDetails"/>
+                     :details="quickStore.stationConfigDetails"
+                     @retest="retest"/>
   </div>
 </template>

@@ -32,7 +32,7 @@ const numberOfChecks = computed(() => {
 
 const currentlyCorrect = computed(() => {
   return Object.values(props.details)
-      .filter(item => item.passedCheck === true)
+      .filter(item => item.passedStatus === 'passed')
       .length;
 });
 
@@ -104,7 +104,7 @@ const hasPassed = computed(() => {
             @answered="keyAnswered"
             :title="check.id"
             :text="check.message"
-            :correct="check.passedCheck"/>
+            :correct="check.passedStatus === 'passed'"/>
 
         <div v-if="correctValue(check.id) !== undefined && correctValue(check.id) !== check.message">
           <div class="w-52 text-red-500">

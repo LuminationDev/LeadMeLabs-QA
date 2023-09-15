@@ -2,6 +2,8 @@
 import LauncherDetails from "@renderer/components/_generic/settings/LauncherDetails.vue";
 import GenericButton from "@renderer/components/_generic/buttons/GenericButton.vue";
 import {useRouter} from "vue-router";
+import TcpServer from "@renderer/components/tcp/TcpServer.vue";
+import TcpSetup from "@renderer/components/tcp/TcpSetup.vue";
 
 const router = useRouter();
 
@@ -18,6 +20,8 @@ const goBack = () => {
       <hr class="my-4">
 
       <LauncherDetails />
+
+      <TcpSetup />
     </div>
 
     <div class="flex justify-end">

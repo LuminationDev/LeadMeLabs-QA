@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import TcpSetup from "@renderer/components/tcp/TcpSetup.vue";
 import GenericButton from "@renderer/components/_generic/buttons/GenericButton.vue";
 import AutoStationCheck from "@renderer/components/quickCheck/AutoStationCheck.vue";
 import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
 import { useStateStore } from "@renderer/store/stateStore";
 import { useQuickStore } from "@renderer/store/quickStore";
+import * as CONSTANT from "@renderer/assets/constants";
+import TcpKey from "@renderer/components/tcp/TcpKey.vue";
 
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
@@ -13,8 +14,23 @@ const router = useRouter();
 const route = useRoute();
 
 const canStart = computed(() => {
-  return stateStore.isServerRunning && quickStore.stationAddress.length > 0;
+  return quickStore.stationAddress.length > 0;
 });
+
+const startChecks = async () => {
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
+    key: stateStore.key,
+    address: stateStore.ipAddress,
+    port: stateStore.serverPort,
+    command: "start"
+  });
+
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  await router.push('/check/quick/auto');
+}
 </script>
 
 <template>
@@ -25,17 +41,19 @@ const canStart = computed(() => {
 
     <div v-if="route.name === 'quick-setup'" class="w-full h-auto mb-4 flex flex-col">
       <!--Text describing the process-->
-      <p class="text-base text-black mb-10">Describe what the following section does and what tools/items are required to complete it?</p>
+      <p class="text-base text-black mb-10">
+        Please enter the encryption key and IP address for the Station that is going to be checked.
+      </p>
 
       <!--Start up the TCP server-->
-      <TcpSetup />
+      <TcpKey />
 
-      <hr class="my-4">
+      <hr class="mb-4">
 
       <!--Enter the Station IP address-->
       <input v-model="quickStore.stationAddress" class="bg-gray-100 w-56 h-8 mb-6 px-4 rounded" placeholder="Station IP address"/>
 
-      <GenericButton type="primary" :callback="() => router.push('/check/quick/auto')" :disabled="!canStart">
+      <GenericButton type="primary" :callback="startChecks" :disabled="!canStart">
         Start Checks
       </GenericButton>
     </div>

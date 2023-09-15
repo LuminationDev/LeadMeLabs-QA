@@ -31,10 +31,6 @@ onBeforeMount(() => {
 
 <template>
   <div class="w-full h-auto mb-4 flex flex-col">
-    <TcpKey />
-
-    <hr class="my-4">
-
     <TcpServer />
   </div>
 </template>

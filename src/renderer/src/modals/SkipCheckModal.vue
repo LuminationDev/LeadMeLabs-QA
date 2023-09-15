@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
-import { ref } from "vue";
+import {computed, ref} from "vue";
 
 defineExpose({
   openModal
 });
 
-defineProps({
+const props = defineProps({
   callback: {
     type: Function,
     required: true
@@ -14,7 +14,8 @@ defineProps({
 });
 
 const showModal = ref(false);
-const comment = ref();
+const comment = ref("");
+const noComment = ref(false);
 
 function openModal() {
   showModal.value = true;
@@ -23,47 +24,67 @@ function openModal() {
 function closeModal() {
   showModal.value = false;
 }
+
+const skip = () => {
+  closeModal();
+  props.callback();
+  noComment.value = false; //Reset for next time
+}
+
+const canConfirm = computed(() => {
+  return comment.value.length > 0 || noComment.value;
+});
 </script>
 
 <template>
   <Teleport to="body">
     <Modal :show="showModal" @close="closeModal">
       <template v-slot:header>
-        <header class="h-12 px-8 w-128 bg-white flex justify-between items-center rounded-t-lg">
-          <div class="bg-white flex flex-col">
-            <span class="text-xl font-semibold text-black">Skip Check?</span>
-          </div>
+        <header class="h-20 px-4 w-96 bg-white flex justify-between items-center rounded-t-lg">
+            <img alt="skip icon" src="../assets/icons/skip.svg"/>
+
+            <img v-on:click="showModal = false" class="cursor-pointer" alt="skip icon" src="../assets/icons/close.svg"/>
         </header>
       </template>
 
       <template v-slot:content>
-        <div class="px-8 w-128 pt-3 pb-7 flex flex-col mb-3">
-          <div>
+        <div class="px-6 w-96 bg-white pb-7 flex flex-col">
+          <span class="text-lg font-semibold text-black mb-2">Skip Check?</span>
+
+          <div class="text-sm">
             Are you sure you want to skip this check? If so, Please leave a comment and proceed.
           </div>
 
           <div class="flex flex-col my-4">
-            <div class="mb-2 text-lg font-semibold">
+            <div class="mb-2 text-sm font-semibold">
               Comment
             </div>
-            <input class="h-10 border-2 border-gray-400 rounded px-2" v-model="comment"/>
+            <input v-model="comment"
+                   class="h-10 border-2 border-gray-200 rounded-lg px-2"
+                   placeholder="e.g. Unable to access Bitwarden"/>
           </div>
 
           <div class="flex flex-row items-center">
-            <input class="w-4 h-4 mr-4" name="noComment" type="checkbox">
-            <label for="noComment">Continue without comment</label>
+            <input v-model="noComment" class="w-4 h-4 mr-2" name="noComment" type="checkbox">
+            <label class="text-sm font-semibold" for="noComment">Continue without comment</label>
           </div>
         </div>
       </template>
 
       <template v-slot:footer>
-        <footer class="my-2 text-right flex flex-row justify-end">
-          <button class="w-20 h-10 mr-4 text-blue-500 text-base rounded-lg hover:bg-gray-200 font-medium"
+        <footer class="w-full py-2 text-right flex flex-row bg-white rounded-b-lg px-6 pb-6">
+
+          <button class="w-1/2 h-11 mr-3 text-gray-800 font-semibold text-base border-2 border-gray-300 rounded-lg hover:bg-gray-200 font-medium"
                   v-on:click="showModal = false"
           >Cancel</button>
 
-          <button class="w-20 h-10 mr-4 text-blue-500 text-base rounded-lg hover:bg-gray-200 font-medium"
-                  v-on:click="showModal = false; callback()"
+          <button class="w-1/2 h-11 text-white font-semibold text-base rounded-lg font-medium"
+                  :class="{
+                    'bg-blue-600 hover:bg-blue-300': canConfirm,
+                    'bg-blue-300': !canConfirm,
+                  }"
+                  :disabled="!canConfirm"
+                  v-on:click="skip()"
           >Confirm</button>
         </footer>
       </template>

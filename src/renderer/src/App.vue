@@ -142,7 +142,6 @@ const handleTCPMessage = (info: any) => {
   //[0]Message type | [1]Message details
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
 
-
   if (info.mainText.includes("StationChecks")) {
     const split = info.mainText.split(":::")
     console.log(split)
@@ -234,8 +233,23 @@ const handleTCPMessage = (info: any) => {
       break;
 
     case "StationWindows":
-    case "StationNetwork":
     case "StationSoftware":
+      const items = JSON.parse(message[1]);
+      const qaChecks = items.map(element => {
+        const qa = {} as QaCheck;
+        qa.passedStatus = element._passedStatus ?? element.passedStatus
+        qa.message = element._message ?? element.message
+        qa.checkId = element._checkId ?? element.checkId
+        return qa
+      });
+
+      const existingCheckIds = quickStore.stationDetails.map(item => item.checkId);
+      const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.checkId));
+
+      quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
+      break;
+
+    case "StationNetwork":
     case "StationConfig":
       const dataArray = message[1].split("::::");
 

@@ -17,15 +17,14 @@ const nucAddress = ref("")
 const encryptionKey = ref("")
 
 async function connectToNuc() {
-  stateStore.serverDetails.address = "192.168.1.99"// todo my own address
   stateStore.key = encryptionKey.value
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
     key: stateStore.key,
-    address: stateStore.serverDetails.address,
-    port: stateStore.serverDetails.port,
+    address: stateStore.ipAddress,
+    port: stateStore.serverPort,
     command: "start"
   });
 
