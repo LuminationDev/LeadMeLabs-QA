@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import {Appliance, QaCheck, ReportTrackerItem, Station} from "../interfaces";
+import {Appliance, QaCheck, QaDetail, ReportTrackerItem, Station} from "../interfaces";
+import { Station as StationClass } from '../types/_station'
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -17,6 +18,8 @@ export const useFullStore = defineStore({
         //List of the Station detail's from the Stations
         StationList: Array<Station>(),
         qaChecks: Array<QaCheck>(),
+        qaDetails: Array<QaDetail>(),
+        Stations: Array<StationClass>(),
         //Track the progress of the checks as an overall report object - populated in App.vue
         reportTracker: {} as ReportTrackerItem,
 

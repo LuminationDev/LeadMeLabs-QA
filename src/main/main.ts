@@ -3,6 +3,7 @@ import { join } from 'path';
 import Helpers from "./Helpers";
 import { GetIPAddress } from "./util/Network";
 import * as Sentry from '@sentry/electron'
+import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-assembler";
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 
@@ -228,6 +229,9 @@ function setupTrayIcon(): void {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 app.whenReady().then(async () => {
+  if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+    await installExtension(VUEJS_DEVTOOLS)
+  }
 
   createWindow();
   setupTrayIcon();

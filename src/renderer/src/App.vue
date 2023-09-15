@@ -4,12 +4,13 @@ import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
 import * as FULL from './assets/checks/_fullcheckValues';
-import { TCPMessage, QaCheck } from "@renderer/interfaces";
+import { TCPMessage, QaCheck, QaDetail } from "@renderer/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
 import { useQuickStore } from "@renderer/store/quickStore";
 import { useStateStore } from './store/stateStore';
 import { useFullStore } from "@renderer/store/fullStore";
+import {Station, StationDetails} from "./types/_station";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -27,7 +28,7 @@ const transformToObject = (key: string, value: string): QaCheck => {
   return {
     passedStatus: null, // Default to null
     message: value,
-    checkId: key,
+    id: key,
   };
 }
 
@@ -142,16 +143,50 @@ const handleTCPMessage = (info: any) => {
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
 
 
-  if (info.mainText.includes("WindowChecks") || info.mainText.includes("SoftwareChecks") || info.mainText.includes("SteamConfigChecks")) {
-    console.log(info.mainText.split(":::"))
-    const qaChecks = JSON.parse(info.mainText.split(":::")[1]).map(element => {
+  if (info.mainText.includes("StationChecks")) {
+    const split = info.mainText.split(":::")
+    console.log(split)
+    const expectedId = split[2]
+    const qaChecks = JSON.parse(split[4]).map(element => {
       var qa = {} as QaCheck
-      qa.passedStatus = element._passedStatus
-      qa.message = element._message
-      qa.checkId = element._checkId
+      qa.passedStatus = element._passedStatus ?? element.passedStatus
+      qa.message = element._message ?? element.message
+      qa.id = element._id ?? element.id
       return qa
     });
     fullStore.qaChecks.push(...qaChecks)
+    const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
+    if (index !== -1) {
+      fullStore.Stations[index].qaChecks.push(...qaChecks)
+    }
+    return
+  }
+
+  if (info.mainText.includes("StationDetails")) {
+    const split = info.mainText.split(":::")
+    console.log(split)
+    const expectedId = split[2]
+    const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
+    let stationDetails = {} as StationDetails
+    const qaDetails = JSON.parse(split[4]).map(element => {
+      var qa = {} as QaDetail
+      qa.value = element._value ?? element.value
+      qa.message = element._message ?? element.message
+      qa.id = element._id ?? element.id
+      if (index !== -1) {
+        console.log(qa.id, qa.value, fullStore.Stations[index].details)
+        stationDetails[qa.id] = qa.value
+        // todo go from key to detail
+      }
+      return qa
+    });
+    if (fullStore.Stations[index].details) {
+      fullStore.Stations[index].details = { ...stationDetails, ...fullStore.Stations[index].details }
+    } else {
+      fullStore.Stations[index].details = stationDetails
+    }
+    fullStore.qaDetails.push(...qaDetails)
+
     return
   }
 
@@ -161,6 +196,24 @@ const handleTCPMessage = (info: any) => {
       fullStore.connected = true
       fullStore.ApplianceList = responseData.appliances
       fullStore.StationList = responseData.stations
+
+        console.log(responseData.stations)
+      responseData.stations.forEach(station => {
+        var s = new Station()
+        s.expectedDetails = {
+          ipAddress: station.ipAddress,
+          nucIpAddress: "",
+          name: station.name,
+          installedApplications: station.installedApplications,
+          id: station.id,
+          room: station.room,
+          macAddress: station.macAddress,
+          ledRingId: station.ledRingId,
+          labLocation: ""
+        }
+        fullStore.Stations.push(s)
+        console.log(s)
+      })
       console.log(responseData)
       // stateStore.isServerRunning = JSON.parse(message[1]);
       break;

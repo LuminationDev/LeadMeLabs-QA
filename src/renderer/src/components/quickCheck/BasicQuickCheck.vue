@@ -102,16 +102,16 @@ const hasPassed = computed(() => {
       <div v-for="(check, index) in props.details as ReportTrackerItem" :key="index" class="flex flex-col">
         <InformationRow
             @answered="keyAnswered"
-            :title="check.checkId"
+            :title="check.id"
             :text="check.message"
             :correct="check.passedCheck"/>
 
-        <div v-if="correctValue(check.checkId) !== undefined && correctValue(check.checkId) !== check.message">
+        <div v-if="correctValue(check.id) !== undefined && correctValue(check.id) !== check.message">
           <div class="w-52 text-red-500">
             Expected value:
           </div>
           <div class="text-red-500">
-            {{correctValue(check.checkId)}}
+            {{correctValue(check.id)}}
           </div>
         </div>
       </div>
