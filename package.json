@@ -32,6 +32,7 @@
     "chokidar": "^3.5.3",
     "electron": "^22.0.3",
     "electron-builder": "^24.6.3",
+    "electron-devtools-assembler": "^1.2.0",
     "electron-vite": "^1.0.14",
     "eslint": "^8.28.0",
     "eslint-plugin-vue": "^9.7.0",

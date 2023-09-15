@@ -26,7 +26,7 @@ const currentlyAnswered = computed(() => {
 
 const keyAnswered = (key: string, value: boolean) => {
   const reportTracker: QaCheck[] = fullStore.reportTracker[props.objectName];
-  reportTracker.find(item => item.checkId === key).passedCheck = value;
+  reportTracker.find(item => item.id === key).passedCheck = value;
 }
 
 /**
@@ -62,7 +62,7 @@ onBeforeMount(() => {
   <InformationRow
       v-for="(check, index) in fullStore.reportTracker[props.objectName] as ReportTrackerItem" :key="index"
       @answered="keyAnswered"
-      :title="check.checkId"
+      :title="check.id"
       :text="check.message"
       :correct="check.passedCheck"/>
 </template>
