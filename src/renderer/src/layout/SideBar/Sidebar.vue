@@ -7,7 +7,7 @@ import { useRoute } from 'vue-router'
 import {computed} from "vue";
 
 const route = useRoute();
-const routes = ['welcome', 'selection', 'check-selection'];
+const routes = ['welcome', 'selection', 'check-selection', 'report-handover'];
 const showImage = computed(() => {
   return route.name === undefined || routes.includes(route.name.toString());
 });

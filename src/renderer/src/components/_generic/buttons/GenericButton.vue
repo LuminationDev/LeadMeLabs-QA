@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Spinner from '../loading/Spinner.vue'
+import Spinner from '../loading/CircleSpinner.vue'
 const spinner = ref(false)
 const props = defineProps({
   type: {
