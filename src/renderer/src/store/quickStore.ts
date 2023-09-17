@@ -21,6 +21,16 @@ export const useQuickStore = defineStore({
 
     },
     getters: {
+        filterStationDetails(state) {
+            return (ids: Array<string>) => {
+                const filteredItems = state.stationDetails
+                    .filter((value) => ids.includes(value['id']));
 
+                return filteredItems.reduce((accumulator, value) => {
+                    accumulator[value['id']] = value;
+                    return accumulator;
+                }, {});
+            }
+        }
     }
 });
