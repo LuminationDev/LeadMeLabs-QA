@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/components/checks/GenericLayout.vue";
-import Description from "@renderer/components/checks/Description.vue";
-import ApplianceDisplay from "@renderer/components/fullCheck/Appliances/ApplianceDisplay.vue";
-import TcpSetup from "@renderer/components/tcp/TcpSetup.vue";
+import ApplianceDisplay from "@renderer/components/fullCheck/Appliances/ApplianceList.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -15,12 +13,7 @@ const route = useRoute();
     </template>
 
     <template v-slot:content>
-      <Description v-if="route.name === 'full-appliances'"/>
-
-      <!--Start up the TCP server (if not already)-->
-      <TcpSetup v-if="route.name === 'full-appliance-tcp'"/>
-
-      <ApplianceDisplay v-if="route.name === 'full-appliance-list'"/>
+      <ApplianceDisplay v-if="route.name === 'full-appliance'"/>
     </template>
   </GenericLayout>
 </template>

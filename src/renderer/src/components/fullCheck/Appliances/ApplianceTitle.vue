@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { useFullStore } from "@renderer/store/fullStore";
 
 const fullStore = useFullStore();
@@ -19,12 +19,25 @@ const selected = ref();
 
 const changeSelection = (selection: boolean) => {
   selected.value = selection;
-  fullStore.ApplianceList.find(item => item.id === props.id).correct = selection;
+  const selectedItem = fullStore.ApplianceList.find(item => item.id === props.id);
+  if (selectedItem) {
+    selectedItem.correct = selection;
+  }
 }
 
+const isCorrect = computed(() => {
+  const selectedItem = fullStore.ApplianceList.find(item => item.id === props.id);
+  return selectedItem ? selectedItem.correct : false;
+});
+
+// Watch for changes in the correct variable and update selected accordingly
+watch(isCorrect, (newValue) => {
+  selected.value = newValue;
+});
+
 onBeforeMount(() => {
-  selected.value = fullStore.ApplianceList.find(item => item.id === props.id).correct
-})
+  selected.value = isCorrect.value;  // Trigger the computed property to set up the watcher
+});
 </script>
 
 <template>

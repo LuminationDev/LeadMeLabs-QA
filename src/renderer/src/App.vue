@@ -247,6 +247,26 @@ const handleTCPMessage = (info: any) => {
       populateQuickReportTracker(message[1]);
       break;
 
+    case "CbusValidation":
+      const details = message[1].split(":");
+      const foundItem = fullStore.ApplianceList.find(item =>
+          item.automationBase == details[0] &&
+          item.automationGroup == details[1] &&
+          item.automationId == details[2]
+      );
+
+      if (!foundItem) return;
+
+      const correct = foundItem.id === `${foundItem.type}-${details[3]}`;
+      if(correct !== null) {
+        foundItem.correctId = correct;
+
+        if(correct === false) {
+          foundItem.correct = correct;
+        }
+      }
+      break;
+
     default:
       console.log(`Unknown type: ${message[0]}. Data: ${message[1]}`);
       break;

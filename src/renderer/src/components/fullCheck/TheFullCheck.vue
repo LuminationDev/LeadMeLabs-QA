@@ -2,11 +2,10 @@
 import Description from "@renderer/components/checks/Description.vue";
 import GenericLayout from "@renderer/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import * as CONSTANT from "@renderer/assets/constants";
-import {useStateStore} from "../../store/stateStore";
-import {useFullStore} from "../../store/fullStore";
-import {START_AUTO_TEST} from "../../assets/constants/_message";
+import { useStateStore } from "../../store/stateStore";
+import { useFullStore } from "../../store/fullStore";
 import GenericButton from "@renderer/components/_generic/buttons/GenericButton.vue";
 
 const route = useRoute();
@@ -18,7 +17,8 @@ const nucAddress = ref("")
 const encryptionKey = ref("")
 
 async function connectToNuc() {
-  stateStore.key = encryptionKey.value
+  stateStore.key = encryptionKey.value;
+  fullStore.nucAddress = nucAddress.value;
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -32,8 +32,8 @@ async function connectToNuc() {
   console.log(CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails)
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: encryptionKey.value,
-    address: nucAddress.value,
+    key: stateStore.key,
+    address: fullStore.nucAddress,
     port: 55556,
     data: CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails
   });
@@ -42,8 +42,8 @@ async function connectToNuc() {
 function startTest() {
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: encryptionKey.value,
-    address: nucAddress.value,
+    key: stateStore.key,
+    address: fullStore.nucAddress,
     port: 55556,
     data: CONSTANT.MESSAGE.START_AUTO_TEST + stateStore.getServerDetails
   });

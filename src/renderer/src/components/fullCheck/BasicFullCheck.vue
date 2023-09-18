@@ -20,20 +20,32 @@ const props = defineProps({
 
 const stateStore = useStateStore();
 
-const currentlyAnswered = computed(() => {
-  return fullStore.reportTracker[props.objectName].filter(item => item.passedCheck !== null).length;
-});
-
 const keyAnswered = (key: string, value: boolean) => {
   const reportTracker: QaCheck[] = fullStore.reportTracker[props.objectName];
-  reportTracker.find(item => item.id === key).passedCheck = value;
+  reportTracker.find(item => item.id === key)['passedStatus'] = value ? 'passed' : 'failed';
 }
+
+const numberOfChecks = computed(() => {
+  return fullStore.reportTracker[props.objectName].length;
+});
+
+const currentlyCorrect = computed(() => {
+  return fullStore.reportTracker[props.objectName]
+      .filter(item => item.passedStatus === 'passed')
+      .length;
+});
+
+const currentlyUnanswered = computed(() => {
+  return fullStore.reportTracker[props.objectName]
+      .filter(item => item['passedStatus'] === undefined || item['passedStatus'] === null)
+      .length;
+});
 
 /**
  * The precedent for if a user can continue to the next segment.
  */
 const calcProceed = () => {
-  stateStore.canProceed = currentlyAnswered.value === Object.keys(fullStore.reportTracker[props.objectName]).length;
+  stateStore.canProceed = currentlyUnanswered.value === 0;
 }
 
 /**
@@ -56,8 +68,8 @@ onBeforeMount(() => {
   <InformationTitle
       class="mb-4"
       :title="title"
-      :current-keys="currentlyAnswered"
-      :total-keys="fullStore.reportTracker[props.objectName].length"/>
+      :current-keys="currentlyCorrect"
+      :total-keys="numberOfChecks"/>
 
   <InformationRow
       v-for="(check, index) in fullStore.reportTracker[props.objectName] as ReportTrackerItem" :key="index"

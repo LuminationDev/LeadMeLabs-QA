@@ -2,8 +2,8 @@ import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
 import Helpers from "./Helpers";
 import { GetIPAddress } from "./util/Network";
-import * as Sentry from '@sentry/electron'
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-assembler";
+import * as Sentry from '@sentry/electron'
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 
