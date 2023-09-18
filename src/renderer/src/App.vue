@@ -56,18 +56,28 @@ populateFullReportTracker();
  * Populate the stationDetails in the quickStore with the data from a Station in the QaCheck interface format.
  * @param data An array of object strings.
  */
-const populateQuickReportTracker = (data: string[]) => {
-  const objectValuesArray: { ReportTrackerItem } = {};
-  const combinedObject = data.reduce((result, jsonStr) => {
-    const parsedObject = JSON.parse(jsonStr);
-    return { ...result, ...parsedObject };
-  }, {});
+const populateQuickReportTracker = (data: string) => {
+  const items = JSON.parse(data);
+  const qaChecks = items.map((element) => {
+    const qa: QaCheck = {
+      passedStatus: element._passedStatus || element.passedStatus,
+      message: element._message || element.message || element._value || element.value,
+      id: element._id || element.id,
+    };
 
-  for (const variableName in combinedObject) {
-    objectValuesArray[variableName] = transformToObject(variableName, combinedObject[variableName]);
-    objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, combinedObject[variableName]);
-  }
-  quickStore.stationDetails = objectValuesArray;
+    //If no status is supplied check the local known values
+    if (qa.passedStatus === undefined) {
+      const correct = isCorrectValue(qa.id, qa.message);
+      qa.passedStatus = correct !== undefined ? (correct ? 'passed' : 'failed') : undefined;
+    }
+
+    return qa;
+  });
+
+  const existingCheckIds = quickStore.stationDetails.map(item => item.id);
+  const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.id));
+
+  quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
 };
 
 /**
@@ -234,31 +244,7 @@ const handleTCPMessage = (info: any) => {
     case "StationConfig":
     case "StationWindows":
     case "StationSoftware":
-      const items = JSON.parse(message[1]);
-      const qaChecks = items.map((element) => {
-        const qa: QaCheck = {
-          passedStatus: element._passedStatus || element.passedStatus,
-          message: element._message || element.message || element._value || element.value,
-          id: element._id || element.id,
-        };
-
-        if (qa.passedStatus === undefined) {
-          const correct = isCorrectValue(qa.id, qa.message);
-          qa.passedStatus = correct !== undefined ? (correct ? 'passed' : 'failed') : undefined;
-        }
-
-        return qa;
-      });
-
-      const existingCheckIds = quickStore.stationDetails.map(item => item.id);
-      const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.id));
-
-      quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
-      break;
-
-    case "StationAll":
-      const data = message[1].split("::::");
-      populateQuickReportTracker(data);
+      populateQuickReportTracker(message[1]);
       break;
 
     default:

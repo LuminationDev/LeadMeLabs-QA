@@ -4,7 +4,7 @@ import logo from '@renderer/assets/images/logo.svg';
 import FullCheckRoutes from '@renderer/layout/SideBar/FullCheck/FullCheckRoutes.vue';
 import ConfigToolRoutes from '@renderer/layout/SideBar/ConfigToolRoutes.vue';
 import { useRoute } from 'vue-router'
-import {computed} from "vue";
+import { computed } from "vue";
 
 const route = useRoute();
 const routes = ['welcome', 'selection', 'check-selection', 'report-handover'];
