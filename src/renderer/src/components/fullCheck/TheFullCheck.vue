@@ -90,10 +90,24 @@ onMounted(() => {
         <GenericButton type="primary" :callback="startTest">Start Test</GenericButton>
 
         <div class="flex flex-col">
-          <div v-for="check in fullStore.qaChecks" :key="check.id" class="flex flex-row">
-            <span :class="check.passedStatus === 'passed' ? 'bg-green-500' : 'bg-red-500'">{{ check.passedStatus }}</span>
-            <span>{{ check.id }}</span>
-            <span>{{ check.message }}</span>
+          <div v-for="(station, index) in fullStore.Stations" :key="index" class="flex flex-col">
+            <div v-for="check in station.qaChecks" :key="check.id">
+              <span :class="check.passedStatus === 'passed' ? 'bg-green-500' : 'bg-red-500'">{{ check.passedStatus }}</span>
+              <span>{{ check.id }}</span>
+              <span>{{ check.message }}</span>
+            </div>
+            <div>
+              {{ station.details }}
+            </div>
+            <div>
+              {{ station.expectedDetails }}
+            </div>
+            <div v-for="check in station.getComputedChecks()" :key="check.id">
+              <span :class="check.passedStatus === 'passed' ? 'bg-green-500' : 'bg-red-500'">{{ check.passedStatus }}</span>
+              <span>{{ check.id }}</span>
+              <span>{{ check.message }}</span>
+            </div>
+
           </div>
         </div>
       </div>
