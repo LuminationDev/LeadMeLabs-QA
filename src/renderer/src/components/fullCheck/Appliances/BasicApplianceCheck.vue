@@ -48,9 +48,9 @@ const hasPassed = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col">
     <table>
-      <tr class=" flex flex-row">
+      <tr class="flex flex-row">
         <td class="w-40">
           <div>{{stateStore.capitalizeFirstLetter(typeof type === "string" ? type : "Unknown")}}</div>
         </td>
