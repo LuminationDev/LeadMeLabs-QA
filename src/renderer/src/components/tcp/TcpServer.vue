@@ -2,20 +2,18 @@
 import { ref } from 'vue';
 import * as CONSTANT from '../../assets/constants';
 import { useStateStore } from '../../store/stateStore';
+import TcpKey from "@renderer/components/tcp/TcpKey.vue";
 
 const stateStore = useStateStore();
 
 //Server details
 const serverAddress = ref(stateStore.ipAddress);
-const serverPort = ref(stateStore.serverDetails.port);
+const serverPort = ref(stateStore.serverPort);
 const key = ref("");
 
 const startServer = () => {
   //Save the server details for future use
-  stateStore.serverDetails = {
-    address: serverAddress.value,
-    port: serverPort.value
-  };
+  stateStore.serverPort = serverPort.value;
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -38,7 +36,14 @@ const stopServer = () => {
 
 <template>
   <div class="flex flex-col">
-    <input v-model="serverAddress" class="bg-gray-100 w-56 h-8 mb-4 px-4 rounded" placeholder="Server IP address"/>
+    <div class="mb-4">
+      The server is currently: {{stateStore.isServerRunning ? "Running" : "Offline"}}
+    </div>
+
+    <TcpKey />
+
+    <!--IP Address cannot be changed for a local server-->
+    <input :disabled="true" v-model="serverAddress" class="bg-gray-100 w-56 h-8 mb-4 px-4 rounded" placeholder="Server IP address"/>
     <input v-model="serverPort" class="bg-gray-100 w-56 h-8 mb-4 px-4 rounded" placeholder="Server port"/>
 
     <div class="flex flex-row">

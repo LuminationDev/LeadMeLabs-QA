@@ -126,7 +126,7 @@ const correctValue = (key: string) => {
           @answered="keyAnswered"
           :title="check.id"
           :text="check.message"
-          :correct="check.passedCheck"/>
+          :correct="check.passedStatus"/>
 
       <div v-if="correctValue(check.id) !== undefined && correctValue(check.id) !== check.message">
         <div class="w-52 text-red-500">

@@ -7,6 +7,7 @@ import * as CONSTANT from "@renderer/assets/constants";
 import {useStateStore} from "../../store/stateStore";
 import {useFullStore} from "../../store/fullStore";
 import {START_AUTO_TEST} from "../../assets/constants/_message";
+import GenericButton from "@renderer/components/_generic/buttons/GenericButton.vue";
 
 const route = useRoute();
 
@@ -17,15 +18,14 @@ const nucAddress = ref("")
 const encryptionKey = ref("")
 
 async function connectToNuc() {
-  stateStore.serverDetails.address = "192.168.1.99"// todo my own address
   stateStore.key = encryptionKey.value
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
     key: stateStore.key,
-    address: stateStore.serverDetails.address,
-    port: stateStore.serverDetails.port,
+    address: stateStore.ipAddress,
+    port: stateStore.serverPort,
     command: "start"
   });
 
@@ -58,33 +58,37 @@ onMounted(() => {
 <template>
   <GenericLayout>
     <template v-slot:title>
-      Getting started, put in your details pls
-      <!--TODO replace with the proper section below when design is ready-->
-      <!--<p class="text-lg text-black mb-3">Quick Station Check</p>-->
-      <img alt="title" src="../../assets/deleteLater/flcTitle.png" class="w-96"/>
+      <p class="text-xl font-semibold text-black mb-3">Full Lab Check</p>
     </template>
 
     <template v-slot:content>
-      <!--TODO replace with the proper section when design is ready-->
-      <!--Text describing the process?-->
-      <img alt="title" src="../../assets/deleteLater/placeholder.png" class="w-full mb-4"/>
-
       <!--Set the station parameters-->
       <Description v-if="route.name === 'full-description'"/>
 
-      Please enter the NUC address and encryption key and then connect
-      <input type="text" name="nucAddress" v-model="nucAddress" class="bg-red-500" />
-      <input type="text" name="encryptionKey" v-model="encryptionKey" class="bg-red-500" />
+      Please enter the NUC address and encryption key and then connect.
 
-      <button @click="connectToNuc">Connect</button>
+      <div class="flex flex-col">
+        <input type="text" name="nucAddress" v-model="nucAddress" placeholder="192.168.1.100" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+        <input type="text" name="encryptionKey" v-model="encryptionKey" placeholder="Key" class="w-80 h-10 mb-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
-      {{ fullStore.connected }}
-      <div v-if="fullStore.connected">
-        SUccessfully connected<br/>
+        <GenericButton type="primary" :callback="connectToNuc">Connect</GenericButton>
+
+        <div class="flex flex-row">
+          <span class="font-semibold mr-2">Server is connected:</span>
+          {{ fullStore.connected }}
+        </div>
+      </div>
+
+      <div v-if="fullStore.connected" class="flex flex-col">
+        <hr class="my-5">
+
+        Successfully connected<br/>
         There are {{ fullStore.ApplianceList.length }} appliances<br/>
         There are {{ fullStore.StationList.length }} stations<br/>
         {{ fullStore.StationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
-        <button @click="startTest">Start Test</button>
+
+        <GenericButton type="primary" :callback="startTest">Start Test</GenericButton>
+
         <div class="flex flex-col">
           <div v-for="check in fullStore.qaChecks" :key="check.id" class="flex flex-row">
             <span :class="check.passedStatus === 'passed' ? 'bg-green-500' : 'bg-red-500'">{{ check.passedStatus }}</span>

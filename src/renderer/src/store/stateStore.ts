@@ -11,14 +11,14 @@ export const useStateStore = defineStore({
         version: '',
         //The address of the local computer
         ipAddress: '',
+        //The port used for the local TCP server
+        serverPort: "55540",
         //Encryption key for TCP server and client
         key: '',
         //Default blocker for if a user has not completed the required information before proceeding with a work flow
         canProceed: false,
         //Is the backend TCP server running
         isServerRunning: false,
-        //Details of the electron server that is running in the backend
-        serverDetails: {address: "", port: "55540"},
         //Local network information
         PortDetails: String,
         //Flag for if the tool is awaiting a response from a TCP client request
@@ -76,7 +76,7 @@ export const useStateStore = defineStore({
     },
     getters: {
         getServerDetails: (state) => {
-            return `:${state.serverDetails.address}:${state.serverDetails.port}`
+            return `:${state.ipAddress}:${state.serverPort}`
         }
     }
 });

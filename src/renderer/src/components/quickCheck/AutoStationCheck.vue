@@ -13,17 +13,11 @@ const checkType = ref('');
 const checkCount = ref(0);
 
 const numberOfChecks = computed(() => {
-  return Object.keys(quickStore.stationNetworkDetails).length +
-   Object.keys(quickStore.stationWindowsDetails).length +
-   Object.keys(quickStore.stationSoftwareDetails).length +
-   Object.keys(quickStore.stationConfigDetails).length;
+  return quickStore.stationDetails.length;
 });
 
 const currentlyCorrect = computed(() => {
-  return Object.values(quickStore.stationNetworkDetails).filter(item => item['passedCheck'] === true).length +
-   Object.values(quickStore.stationWindowsDetails).filter(item => item['passedCheck'] === true).length +
-   Object.values(quickStore.stationSoftwareDetails).filter(item => item['passedCheck'] === true).length +
-   Object.values(quickStore.stationConfigDetails).filter(item => item['passedCheck'] === true).length;
+  return quickStore.stationDetails.filter(item => item['passedCheck'] === true).length;
 });
 
 /**
@@ -71,6 +65,12 @@ const determineRequest = (): string => {
   }
 }
 
+//Filter out the checkId's into different categories for display purposes (This is in order of the checks array)
+const networkIds = ['macAddress', 'defaultGateway', 'dnsServer', 'altDnsServer'];
+const windowIds = ['magic_packet_enabled', 'amd_installed', 'openssl_environment', 'wallpaper_is_set', 'timezone_correct', 'correct_datetime'];
+const softwareIds = ['setvol_installed', 'steamcmd_installed', 'steamcmd_initialised', 'steamcmd_configured'];
+const configIds = ['id', 'room', 'labLocation', 'ipAddress', 'nucIpAddress', 'selectedHeadset'];
+
 /**
  * List of checks that can be made against a Station
  */
@@ -113,21 +113,23 @@ onMounted(() =>{
       Now checking.... {{checks[checkCount]}} <Spinner />
     </div>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationNetworkDetails).length > 0"
+    <BasicQuickCheck v-if="Object.keys(quickStore.filterStationDetails(networkIds)).length > 0"
                      title="Network"
-                     :details="quickStore.stationNetworkDetails"
+                     :details="quickStore.filterStationDetails(networkIds)"
                      @retest="retest"/>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationWindowsDetails).length > 0"
+    <!--Filter out by checkId to the correct areas-->
+    <BasicQuickCheck v-if="Object.keys(quickStore.filterStationDetails(windowIds)).length > 0"
                      title="Windows"
-                     :details="quickStore.stationWindowsDetails"/>
+                     :details="quickStore.filterStationDetails(windowIds)"/>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationSoftwareDetails).length > 0"
+    <BasicQuickCheck v-if="Object.keys(quickStore.filterStationDetails(softwareIds)).length > 0"
                      title="Software"
-                     :details="quickStore.stationSoftwareDetails"/>
+                     :details="quickStore.filterStationDetails(softwareIds)"/>
 
-    <BasicQuickCheck v-if="Object.keys(quickStore.stationConfigDetails).length > 0"
+    <BasicQuickCheck v-if="Object.keys(quickStore.filterStationDetails(configIds)).length > 0"
                      title="Config"
-                     :details="quickStore.stationConfigDetails"/>
+                     :details="quickStore.filterStationDetails(configIds)"
+                     @retest="retest"/>
   </div>
 </template>

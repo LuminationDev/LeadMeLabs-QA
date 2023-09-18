@@ -64,5 +64,5 @@ onBeforeMount(() => {
       @answered="keyAnswered"
       :title="check.id"
       :text="check.message"
-      :correct="check.passedCheck"/>
+      :correct="check.passedStatus"/>
 </template>

@@ -1,5 +1,4 @@
 import Welcome from '@renderer/views/_generic/Welcome.vue';
-import ToolSelection from '@renderer/views/_generic/ToolSelection.vue';
 import Settings from '@renderer/views/_generic/Settings.vue';
 import QuickCheck from "@renderer/views/QuickCheck.vue";
 import FullCheck from "@renderer/views/FullCheck.vue";
@@ -200,18 +199,20 @@ const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/welcome',
+            path: '/',
             name: 'welcome',
             component: Welcome,
             meta: {
                 userInput: true, //Requires user input to proceed to the next page
+                noComment: true, //No comment is required to skip
+                canSkip: true, //Can skip the current scene
                 next: '/selection'
             }
         },
         {
-            path: '/',
+            path: '/selection',
             name: 'selection',
-            component: ToolSelection,
+            component: Welcome,
             meta: {
                 prev: '/'
             }
@@ -219,7 +220,7 @@ const router = createRouter({
         {
             path: '/check/selection',
             name: 'check-selection',
-            component: ToolSelection,
+            component: Welcome,
             meta: {
                 prev: '/selection'
             }

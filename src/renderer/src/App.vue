@@ -10,7 +10,7 @@ import { ref } from 'vue';
 import { useQuickStore } from "@renderer/store/quickStore";
 import { useStateStore } from './store/stateStore';
 import { useFullStore } from "@renderer/store/fullStore";
-import {Station, StationDetails} from "./types/_station";
+import { Station, StationDetails } from "./types/_station";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -56,18 +56,28 @@ populateFullReportTracker();
  * Populate the stationDetails in the quickStore with the data from a Station in the QaCheck interface format.
  * @param data An array of object strings.
  */
-const populateQuickReportTracker = (data: string[]) => {
-  const objectValuesArray: { ReportTrackerItem } = {};
-  const combinedObject = data.reduce((result, jsonStr) => {
-    const parsedObject = JSON.parse(jsonStr);
-    return { ...result, ...parsedObject };
-  }, {});
+const populateQuickReportTracker = (data: string) => {
+  const items = JSON.parse(data);
+  const qaChecks = items.map((element) => {
+    const qa: QaCheck = {
+      passedStatus: element._passedStatus || element.passedStatus,
+      message: element._message || element.message || element._value || element.value,
+      id: element._id || element.id,
+    };
 
-  for (const variableName in combinedObject) {
-    objectValuesArray[variableName] = transformToObject(variableName, combinedObject[variableName]);
-    objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, combinedObject[variableName]);
-  }
-  quickStore.stationDetails = objectValuesArray;
+    //If no status is supplied check the local known values
+    if (qa.passedStatus === undefined) {
+      const correct = isCorrectValue(qa.id, qa.message);
+      qa.passedStatus = correct !== undefined ? (correct ? 'passed' : 'failed') : undefined;
+    }
+
+    return qa;
+  });
+
+  const existingCheckIds = quickStore.stationDetails.map(item => item.id);
+  const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.id));
+
+  quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
 };
 
 /**
@@ -80,20 +90,18 @@ const isCorrectValue = (key: string, value: any) => {
 
   switch (temp) {
     case "id":
-      return value === quickStore.correctStationValues['StationId'];
+      return value == quickStore.correctStationValues['StationId'];
 
     case "name":
-      return value === `Station ${quickStore.correctStationValues['StationId']}`;
+      return value == `Station ${quickStore.correctStationValues['StationId']}`;
 
     case "lablocation":
-      return value === stateStore.labLocation;
+      return value == stateStore.labLocation;
   }
 
   if (quickStore.correctStationValues[key] === undefined) {
     return undefined;
   }
-
-  return quickStore.correctStationValues[key] === value
 }
 
 /**
@@ -141,7 +149,6 @@ const handleTCPMessage = (info: any) => {
 
   //[0]Message type | [1]Message details
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
-
 
   if (info.mainText.includes("StationChecks")) {
     const split = info.mainText.split(":::")
@@ -233,24 +240,11 @@ const handleTCPMessage = (info: any) => {
       fullStore.StationList.push(JSON.parse(message[1]));
       break;
 
-    case "StationWindows":
     case "StationNetwork":
-    case "StationSoftware":
     case "StationConfig":
-      const dataArray = message[1].split("::::");
-
-      const objectValuesArray: { ReportTrackerItem } = {};
-      const dataObject = JSON.parse(dataArray[1]);
-      for (const variableName in dataObject) {
-        objectValuesArray[variableName] = transformToObject(variableName, dataObject[variableName]);
-        objectValuesArray[variableName].passedCheck = isCorrectValue(variableName, dataObject[variableName]);
-      }
-      quickStore[`station${dataArray[0]}Details`] = objectValuesArray;
-      break;
-
-    case "StationAll":
-      const data = message[1].split("::::");
-      populateQuickReportTracker(data);
+    case "StationWindows":
+    case "StationSoftware":
+      populateQuickReportTracker(message[1]);
       break;
 
     default:
