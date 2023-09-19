@@ -247,6 +247,10 @@ const handleTCPMessage = (info: any) => {
       populateQuickReportTracker(message[1]);
       break;
 
+    case "cbusConnectionChecks":
+      fullStore.cbusConnection = message[1];
+      break;
+
     case "CbusValidation":
       const details = message[1].split(":");
       const foundItem = fullStore.ApplianceList.find(item =>

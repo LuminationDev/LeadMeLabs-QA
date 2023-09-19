@@ -7,6 +7,7 @@ import { useFullStore } from "@renderer/store/fullStore";
 import { useStateStore } from "@renderer/store/stateStore";
 import * as CONSTANT from "@renderer/assets/constants";
 import BasicApplianceCheck from "@renderer/components/fullCheck/Appliances/BasicApplianceCheck.vue";
+import CircleSpinner from "@renderer/components/_generic/loading/CircleSpinner.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
@@ -39,7 +40,7 @@ const groupedData = computed(() => {
 });
 
 const currentlyAnswered = computed(() => {
-  return fullStore.ApplianceList.filter(item => item.correct === true || item.correct === false).length;
+  return fullStore.ApplianceList.filter(item => item.correct === true).length;
 });
 
 const cbusAppliances = computed(() => {
@@ -54,6 +55,10 @@ const specificAppliances = computed(() => {
     return fullStore.ApplianceList;
   }
   return fullStore.ApplianceList.filter(item => item.type === typeCheck.value);
+})
+
+const cbusConnection = computed(() => {
+  return fullStore.cbusConnection;
 })
 
 /**
@@ -105,6 +110,19 @@ const validateAppliance = async () => {
   currentCheckCount.value = 0;
 }
 
+const validateCbusConnection = async () => {
+  fullStore.cbusConnection = "Loading";
+
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: stateStore.key,
+    address: fullStore.nucAddress,
+    port: 55556,
+    data: CONSTANT.MESSAGE.CBUS_CONNECTION_VALIDATION + stateStore.getServerDetails
+  });
+};
+
 /**
  * The precedent for if a user can continue to the next segment.
  */
@@ -125,11 +143,35 @@ watchEffect(() => {
  */
 onBeforeMount(() => {
   calcProceed();
+  validateCbusConnection();
 });
 </script>
 
 <template>
-  <GenericButton v-if="fullStore.ApplianceList.length > 0" type="primary" :callback="startNewTest">Start Test</GenericButton>
+  <GenericButton
+      v-if="fullStore.ApplianceList.length > 0"
+      type="primary"
+      :callback="validateCbusConnection"
+  >Check Cbus</GenericButton>
+
+  <div class="mb-4 flex flex-row items-center">
+    CBus Connection:
+    <span class="mx-2" :class="{
+      'text-green-500': cbusConnection === 'Connection available',
+      'text-red-500': cbusConnection !== 'Connection available',
+    }">
+      {{cbusConnection === 'Connection available' ? "Available" : cbusConnection}}
+    </span>
+
+    <CircleSpinner v-if="cbusConnection === 'Loading'" :color="'red'" />
+  </div>
+
+  <GenericButton
+      v-if="fullStore.ApplianceList.length > 0"
+      :disabled="fullStore.cbusConnection !== 'Connection available'"
+      type="primary"
+      :callback="startNewTest"
+  >Start Test</GenericButton>
 
   <div v-if="checking">
     Checked appliance {{currentCheckCount}} out of {{cbusAppliances}} CBus appliances.
