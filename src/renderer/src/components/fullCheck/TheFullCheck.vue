@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import Description from "@renderer/components/checks/Description.vue";
 import GenericLayout from "@renderer/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import * as CONSTANT from "@renderer/assets/constants";
 import { useStateStore } from "../../store/stateStore";
 import { useFullStore } from "../../store/fullStore";
@@ -30,6 +29,7 @@ async function connectToNuc() {
   });
 
   console.log(CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails)
+  //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
     key: stateStore.key,
@@ -40,6 +40,7 @@ async function connectToNuc() {
 }
 
 function startTest() {
+  //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
     key: stateStore.key,
@@ -48,11 +49,6 @@ function startTest() {
     data: CONSTANT.MESSAGE.START_AUTO_TEST + stateStore.getServerDetails
   });
 }
-
-onMounted(() => {
-
-})
-
 </script>
 
 <template>
@@ -62,9 +58,6 @@ onMounted(() => {
     </template>
 
     <template v-slot:content>
-      <!--Set the station parameters-->
-      <Description v-if="route.name === 'full-description'"/>
-
       Please enter the NUC address and encryption key and then connect.
 
       <div class="flex flex-col">
@@ -86,6 +79,17 @@ onMounted(() => {
         There are {{ fullStore.ApplianceList.length }} appliances<br/>
         There are {{ fullStore.StationList.length }} stations<br/>
         {{ fullStore.StationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
+
+        <div class="mb-4 flex flex-row items-center">
+          CBus Connection:
+          <span class="mx-2" :class="{
+            'text-green-500': fullStore.getCbusConnection === 'Connection available',
+            'text-red-500': fullStore.getCbusConnection !== 'Connection available',
+          }">
+            {{fullStore.getCbusConnection === 'Connection available' ? "Available" : fullStore.getCbusConnection}}
+          </span>
+        </div>
+
 
         <GenericButton type="primary" :callback="startTest">Start Test</GenericButton>
 

@@ -111,7 +111,7 @@ const validateAppliance = async () => {
 }
 
 const validateCbusConnection = async () => {
-  fullStore.cbusConnection = "Loading";
+  fullStore.cbusConnection = "Loading"
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -143,7 +143,10 @@ watchEffect(() => {
  */
 onBeforeMount(() => {
   calcProceed();
-  validateCbusConnection();
+
+  if(fullStore.cbusConnection !== "Connection available"){
+    validateCbusConnection();
+  }
 });
 </script>
 

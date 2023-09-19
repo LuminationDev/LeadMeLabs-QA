@@ -31,6 +31,8 @@ export const useFullStore = defineStore({
 
     },
     getters: {
-
+        getCbusConnection(state) {
+            return state.cbusConnection;
+        }
     }
 });

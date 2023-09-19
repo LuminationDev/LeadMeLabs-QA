@@ -201,10 +201,11 @@ const handleTCPMessage = (info: any) => {
     case "Connected":
       const responseData = JSON.parse(message[1])
       fullStore.connected = true
-      fullStore.ApplianceList = responseData.appliances
-      fullStore.StationList = responseData.stations
+      fullStore.ApplianceList = responseData.appliances;
+      fullStore.StationList = responseData.stations;
+      fullStore.cbusConnection = responseData.cbus;
 
-        console.log(responseData.stations)
+      console.log(responseData.stations)
       responseData.stations.forEach(station => {
         var s = new Station()
         s.expectedDetails = {
