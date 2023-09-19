@@ -22,8 +22,8 @@ export const useFullStore = defineStore({
         Stations: Array<StationClass>(),
         //Track the progress of the checks as an overall report object - populated in App.vue
         reportTracker: {} as ReportTrackerItem,
-
-        //TEMPORARY ITEMS
+        //Can the NUC contact the CBus unit
+        cbusConnection: "Loading",
         //List of appliance objects
         ApplianceList: Array<Appliance>(),
     }),
