@@ -176,7 +176,7 @@ const handleTCPMessage = (info: any) => {
       api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
         channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
         key: stateStore.key,
-        address: stateStore.nucAddress,
+        address: fullStore.nucAddress,
         port: 55556,
         data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
       });
