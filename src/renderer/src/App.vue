@@ -312,7 +312,7 @@ const openNotificationModal = (title: string, message: string) => {
 
 <template>
   <div class="flex flex-row w-full justify-between max-h-[95vh] h-[95vh]">
-    <div class="flex-col bg-white min-w-[220px] rounded-3xl">
+    <div class="flex-col bg-white min-w-[122px] rounded-3xl">
       <Sidebar />
     </div>
     <div

@@ -42,6 +42,7 @@ const fullRoutes = [
         component: FullCheck,
         meta: {
             next: '/check/full/appliances',
+            nextText: 'Start Test',
             prev: '/check/selection'
         }
     },
@@ -188,7 +189,8 @@ const router = createRouter({
                 userInput: true, //Requires user input to proceed to the next page
                 noComment: true, //No comment is required to skip
                 canSkip: true, //Can skip the current scene
-                next: '/selection'
+                next: '/selection',
+                nextText: 'Get Started'
             }
         },
         {
