@@ -4,6 +4,7 @@ export const REQUEST_APPLIANCE_LIST = "QA:NUC:ApplianceList";
 export const REQUEST_STATION_LIST = "QA:NUC:StationList";
 export const CONNECT = "QA:NUC:Connect";
 export const START_AUTO_TEST = "QA:NUC:StartAutoTest";
+export const RUN_GROUP = "QA:NUC:RunGroup";
 
 //STATION MESSAGES
 //Source:Destination:ActionSpace:Request

@@ -68,6 +68,7 @@ export default class TcpServer {
                 // Decrypt the encrypted main text
                 console.log(key)
                 const mainText = decrypt(encryptedMainText.toString('utf8'), key);
+                console.log('received: ' + mainText)
 
                 // Send to the frontend via Electron.IpcMain
                 this.mainWindow.webContents.send('backend_message', {

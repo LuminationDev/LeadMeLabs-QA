@@ -15,6 +15,7 @@ export const useStateStore = defineStore({
         serverPort: "55540",
         //Encryption key for TCP server and client
         key: '',
+        nucAddress: '',
         //Default blocker for if a user has not completed the required information before proceeding with a work flow
         canProceed: false,
         //Is the backend TCP server running

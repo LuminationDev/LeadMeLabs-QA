@@ -154,7 +154,8 @@ const handleTCPMessage = (info: any) => {
     const split = info.mainText.split(":::")
     console.log(split)
     const expectedId = split[2]
-    const qaChecks = JSON.parse(split[4]).map(element => {
+    const group = split[4]
+    const qaChecks = JSON.parse(split[5]).map(element => {
       var qa = {} as QaCheck
       qa.passedStatus = element._passedStatus ?? element.passedStatus
       qa.message = element._message ?? element.message
@@ -166,6 +167,21 @@ const handleTCPMessage = (info: any) => {
     if (index !== -1) {
       fullStore.Stations[index].qaChecks.push(...qaChecks)
     }
+
+    fullStore.updateQaChecks(expectedId, group, qaChecks)
+
+    const groupsToRun = fullStore.processQaList()
+    groupsToRun.forEach(group => {
+      fullStore.startQa(group)
+      api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+        channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+        key: stateStore.key,
+        address: stateStore.nucAddress,
+        port: 55556,
+        data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
+      });
+    })
+
     return
   }
 

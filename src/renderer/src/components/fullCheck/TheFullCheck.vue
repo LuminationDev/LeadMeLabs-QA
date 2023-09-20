@@ -19,6 +19,7 @@ const encryptionKey = ref("")
 
 async function connectToNuc() {
   stateStore.key = encryptionKey.value
+  stateStore.nucAddress = nucAddress.value
 
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -40,13 +41,19 @@ async function connectToNuc() {
 }
 
 function startTest() {
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: encryptionKey.value,
-    address: nucAddress.value,
-    port: 55556,
-    data: CONSTANT.MESSAGE.START_AUTO_TEST + stateStore.getServerDetails
-  });
+  fullStore.buildQaList(1)
+  const groupsToRun = fullStore.processQaList()
+  console.log(groupsToRun)
+  groupsToRun.forEach(group => {
+    fullStore.startQa(group)
+    api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+      channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+      key: encryptionKey.value,
+      address: nucAddress.value,
+      port: 55556,
+      data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
+    });
+  })
 }
 
 onMounted(() => {
