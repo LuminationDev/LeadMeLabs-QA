@@ -201,10 +201,11 @@ const handleTCPMessage = (info: any) => {
     case "Connected":
       const responseData = JSON.parse(message[1])
       fullStore.connected = true
-      fullStore.ApplianceList = responseData.appliances
-      fullStore.StationList = responseData.stations
+      fullStore.ApplianceList = responseData.appliances;
+      fullStore.StationList = responseData.stations;
+      fullStore.cbusConnection = responseData.cbus;
 
-        console.log(responseData.stations)
+      console.log(responseData.stations)
       responseData.stations.forEach(station => {
         var s = new Station()
         s.expectedDetails = {
@@ -311,7 +312,7 @@ const openNotificationModal = (title: string, message: string) => {
 
 <template>
   <div class="flex flex-row w-full justify-between max-h-[95vh] h-[95vh]">
-    <div class="flex-col bg-white min-w-[220px] rounded-3xl">
+    <div class="flex-col bg-white min-w-[122px] rounded-3xl">
       <Sidebar />
     </div>
     <div
