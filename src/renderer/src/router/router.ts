@@ -41,8 +41,22 @@ const fullRoutes = [
         name: 'full-description',
         component: FullCheck,
         meta: {
-            next: '/check/full/networking',
+            next: '/check/full/appliances',
+            nextText: 'Start Test',
             prev: '/check/selection'
+        }
+    },
+
+    //Appliance Route
+    {
+        path: '/check/full/appliances',
+        name: 'full-appliance',
+        component: TheAppliances,
+        meta: {
+            userInput: true, //Requires user input to proceed to the next page
+            canSkip: true,
+            next: '/check/full/networking',
+            prev: '/check/full'
         }
     },
 
@@ -129,39 +143,8 @@ const fullRoutes = [
         meta: {
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
-            next: '/check/full/appliances',
-            prev: '/check/full/windows/bios'
-        }
-    },
-
-    //Appliance Routes
-    {
-        path: '/check/full/appliances',
-        name: 'full-appliances',
-        component: TheAppliances,
-        meta: {
-            next: '/check/full/appliances/tcp',
-            prev: '/check/full/windows/settings'
-        }
-    },
-    {
-        path: '/check/full/appliances/tcp',
-        name: 'full-appliance-tcp',
-        component: TheAppliances,
-        meta: {
-            next: '/check/full/appliances/list',
-            prev: '/check/full/appliances'
-        }
-    },
-    {
-        path: '/check/full/appliances/list',
-        name: 'full-appliance-list',
-        component: TheAppliances,
-        meta: {
-            userInput: true, //Requires user input to proceed to the next page
-            canSkip: true,
             next: '/check/full/imvr',
-            prev: '/check/full/appliances/tcp'
+            prev: '/check/full/windows/bios'
         }
     },
 
@@ -172,7 +155,7 @@ const fullRoutes = [
         component: TheIMVR,
         meta: {
             next: '/check/full/imvr/tcp',
-            prev: '/check/full/appliances/list'
+            prev: '/check/full/windows/settings'
         }
     },
     {
@@ -206,7 +189,8 @@ const router = createRouter({
                 userInput: true, //Requires user input to proceed to the next page
                 noComment: true, //No comment is required to skip
                 canSkip: true, //Can skip the current scene
-                next: '/selection'
+                next: '/selection',
+                nextText: 'Get Started'
             }
         },
         {

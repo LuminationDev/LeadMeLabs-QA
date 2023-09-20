@@ -19,4 +19,5 @@ export default interface Appliance {
     appliances: string[] | null;
     options: string[] | null;
     correct: boolean | null;
+    correctId: boolean | null;
 }

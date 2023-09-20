@@ -10,9 +10,7 @@ const route = useRoute();
 <template>
   <GenericLayout>
     <template v-slot:title>
-      <!--TODO replace with the proper section below when design is ready-->
-      <!--<p class="text-lg text-black mb-3">Quick Station Check</p>-->
-      <img alt="title" src="../../../assets/deleteLater/networkTitle.png" class="w-56"/>
+      <p class="text-lg text-black mb-3">Network</p>
     </template>
 
     <template v-slot:content>

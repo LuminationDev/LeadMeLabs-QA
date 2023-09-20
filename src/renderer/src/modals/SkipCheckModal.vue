@@ -65,8 +65,8 @@ const canConfirm = computed(() => {
           </div>
 
           <div class="flex flex-row items-center">
-            <input v-model="noComment" class="w-4 h-4 mr-2" name="noComment" type="checkbox">
-            <label class="text-sm font-semibold" for="noComment">Continue without comment</label>
+            <input v-model="noComment" class="w-4 h-4 mr-2" id="noComment" type="checkbox">
+            <label class="text-sm font-semibold cursor-pointer" for="noComment">Continue without comment</label>
           </div>
         </div>
       </template>

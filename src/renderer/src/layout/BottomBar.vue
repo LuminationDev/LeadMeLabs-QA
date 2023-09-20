@@ -64,8 +64,8 @@ const openSkipCheckModal = () => {
   >Add Comment
   </GenericButton>
 
-  <GenericButton v-if="props.meta['next']" type="blue" :disabled="!canProceed" :callback="goNextLink"
-   >Next
+  <GenericButton v-if="props.meta['next']" type="blue" :disabled="!canProceed" :callback="goNextLink" class="w-auto px-4"
+   > {{props.meta['nextText'] ?? 'Next'}}
   </GenericButton>
 
   <!--Modal to handle the skip check comment-->
