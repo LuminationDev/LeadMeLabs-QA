@@ -40,14 +40,19 @@ async function connectToNuc() {
 }
 
 function startTest() {
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.START_AUTO_TEST + stateStore.getServerDetails
-  });
+  fullStore.buildQaList(1)
+  const groupsToRun = fullStore.processQaList()
+  console.log(groupsToRun)
+  groupsToRun.forEach(group => {
+    fullStore.startQa(group)
+    api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+      channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+      key: stateStore.key,
+      address: fullStore.nucAddress,
+      port: 55556,
+      data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
+    });
+  })
 }
 </script>
 

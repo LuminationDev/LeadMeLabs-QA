@@ -9,7 +9,7 @@ export function decrypt(cipherText, passPhrase) {
         }
         decrypted += decrypt108(cipherText.substring(i, i + substringLength), passPhrase);
     }
-    return decrypted.replace('_', '');
+    return decrypted.replace(/_+$/, ''); // Remove trailing underscores
 }
 
 function decrypt108(cipherText, passPhrase) {
@@ -28,8 +28,7 @@ function decrypt108(cipherText, passPhrase) {
     // Decrypt the message
     const decipher = crypto.createDecipheriv(`aes-${keySize}-cbc`, keyBytes, ivBytes);
     const decryptedData = Buffer.concat([decipher.update(cipherTextBytes), decipher.final()]);
-
-    return decryptedData.toString('utf8').replace(/_+$/, ''); // Remove trailing underscores
+    return decryptedData.toString('utf8');
 }
 
 export function encrypt(plainText, passPhrase) {

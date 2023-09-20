@@ -6,6 +6,7 @@ export const CONNECT = "QA:NUC:Connect";
 export const START_AUTO_TEST = "QA:NUC:StartAutoTest";
 export const CBUS_CONNECTION_VALIDATION = "QA:NUC:cbusConnectionChecks";
 export const CBUS_APPLIANCE_VALIDATION = "QA:NUC:CbusValidation";
+export const RUN_GROUP = "QA:NUC:RunGroup";
 
 //STATION MESSAGES
 //Source:Destination:ActionSpace:Request
