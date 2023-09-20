@@ -1,21 +1,19 @@
-const Path = require('path');
+const path = require('path');
 const vuePlugin = require('@vitejs/plugin-vue')
-
 const { defineConfig } = require('vite');
-const { resolve } = require("path");
 
 /**
  * https://vitejs.dev/config
  */
 const config = defineConfig({
-    root: Path.join(__dirname, 'src', 'renderer'),
+    root: path.join(__dirname, 'src', 'renderer'),
     publicDir: 'public',
     server: {
         port: 8080,
     },
     open: false,
     build: {
-        outDir: Path.join(__dirname, 'build', 'renderer'),
+        outDir: path.join(__dirname, 'build', 'renderer'),
         emptyOutDir: true,
     },
     plugins: [vuePlugin()],
@@ -27,7 +25,7 @@ const config = defineConfig({
     resolve: {
         alias: {
             path: 'path-browserify',
-            '@renderer': resolve('src/renderer/src')
+            '@renderer': path.resolve(__dirname, 'src/renderer/src')
         }
     },
 });

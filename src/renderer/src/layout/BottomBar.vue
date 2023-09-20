@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/components/_generic/buttons/GenericButton.vue'
-import SkipCheckModal from "@renderer/modals/SkipCheckModal.vue";
+import GenericButton from '@renderer/tool-qa/components/_generic/buttons/GenericButton.vue'
+import SkipCheckModal from "@renderer/tool-qa/modals/SkipCheckModal.vue";
 import router from '../router/router'
 import { computed, ref } from "vue";
-import { useStateStore } from "@renderer/store/stateStore";
+import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 
 const stateStore = useStateStore();
 const props = defineProps({

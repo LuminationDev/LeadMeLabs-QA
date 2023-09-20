@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useFullStore } from "@renderer/store/fullStore";
-import { QaCheck } from "@renderer/interfaces";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { QaCheck } from "src/renderer/src/tool-qa/interfaces";
 import { computed } from "vue";
 
 const props = defineProps({

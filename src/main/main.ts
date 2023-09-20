@@ -1,9 +1,11 @@
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
 import Helpers from "./Helpers";
+import ConfigTool from "./util/ConfigTool";
 import { GetIPAddress } from "./util/Network";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-assembler";
-import * as Sentry from '@sentry/electron'
+import { optimizer } from "@electron-toolkit/utils";
+import * as Sentry from '@sentry/electron';
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 
@@ -233,13 +235,19 @@ app.whenReady().then(async () => {
     await installExtension(VUEJS_DEVTOOLS)
   }
 
+  //Allow dev tools to toggle on F12
+  app.on('browser-window-created', (_, window) => {
+    optimizer.watchWindowShortcuts(window)
+  });
+
   createWindow();
   setupTrayIcon();
 
   console.log("Starting electron application");
 
-  //Load in all the helper functions
+  //Load in all the helper and config tool functions
   new Helpers(ipcMain, mainWindow).startup();
+  new ConfigTool(ipcMain, mainWindow).startup();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
