@@ -1,0 +1,80 @@
+<script setup lang="ts">
+import InformationTitle from "@renderer/tool-qa/components/checks/InformationTitle.vue";
+import InformationRow from '@renderer/tool-qa/components/checks/InformationRow.vue';
+import { computed, onBeforeMount, watchEffect } from "vue";
+import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { QaCheck, ReportTrackerItem } from "@renderer/tool-qa/interfaces";
+
+const fullStore = useFullStore();
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  objectName: {
+    type: String,
+    required: true
+  }
+});
+
+const stateStore = useStateStore();
+
+const keyAnswered = (key: string, value: boolean) => {
+  const reportTracker: QaCheck[] = fullStore.reportTracker[props.objectName];
+  reportTracker.find(item => item.id === key)['passedStatus'] = value ? 'passed' : 'failed';
+}
+
+const numberOfChecks = computed(() => {
+  return fullStore.reportTracker[props.objectName].length;
+});
+
+const currentlyCorrect = computed(() => {
+  return fullStore.reportTracker[props.objectName]
+      .filter(item => item.passedStatus === 'passed')
+      .length;
+});
+
+const currentlyUnanswered = computed(() => {
+  return fullStore.reportTracker[props.objectName]
+      .filter(item => item['passedStatus'] === undefined || item['passedStatus'] === null)
+      .length;
+});
+
+/**
+ * The precedent for if a user can continue to the next segment.
+ */
+const calcProceed = () => {
+  stateStore.canProceed = currentlyUnanswered.value === 0;
+}
+
+/**
+ * Watch for any changes in the calcProceed to re-evaluate if the user can continue.
+ */
+watchEffect(() => {
+  calcProceed();
+});
+
+/**
+ * Determine if the necessary values are currently inputted to allow a user to progress with the tool.
+ * If not, block the 'Next' button on the BottomBar until they are.
+ */
+onBeforeMount(() => {
+  calcProceed();
+});
+</script>
+
+<template>
+  <InformationTitle
+      class="mb-4"
+      :title="title"
+      :current-keys="currentlyCorrect"
+      :total-keys="numberOfChecks"/>
+
+  <InformationRow
+      v-for="(check, index) in fullStore.reportTracker[props.objectName] as ReportTrackerItem" :key="index"
+      @answered="keyAnswered"
+      :title="check.id"
+      :text="check.message"
+      :correct="check.passedStatus"/>
+</template>

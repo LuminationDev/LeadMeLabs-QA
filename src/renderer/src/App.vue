@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import NotificationModal from "@renderer/modals/NotificationModal.vue";
+import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
 import * as FULL from './assets/checks/_fullcheckValues';
-import { TCPMessage, QaCheck, QaDetail } from "@renderer/interfaces";
+import { TCPMessage, QaCheck, QaDetail } from "tool-qa/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
-import { useQuickStore } from "@renderer/store/quickStore";
-import { useStateStore } from './store/stateStore';
-import { useFullStore } from "@renderer/store/fullStore";
-import { Station, StationDetails } from "./types/_station";
+import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
+import { useStateStore } from './tool-qa/store/stateStore';
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { useConfigStore } from "@renderer/tool-config/store/configStore";
+import { storeToRefs } from "pinia";
+import { Station, StationDetails } from "./tool-qa/types/_station";
+import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -20,6 +23,8 @@ const route = useRoute()
 const stateStore = useStateStore();
 const quickStore = useQuickStore();
 const fullStore = useFullStore();
+const configStore = useConfigStore()
+const { showPreview } = storeToRefs(configStore)
 
 /**
  * Function to transform key-value pairs into QaCheck objects
@@ -328,18 +333,20 @@ const openNotificationModal = (title: string, message: string) => {
 
 <template>
   <div class="flex flex-row w-full justify-between max-h-[95vh] h-[95vh]">
-    <div class="flex-col bg-white min-w-[122px] rounded-3xl">
+    <div class="flex-col bg-white min-w-[220px] rounded-xl">
       <Sidebar />
     </div>
-    <div
-        class="content flex-col bg-white ml-2 rounded-3xl w-full min-w-[30rem] justify-between overflow-auto pt-0"
-    >
+
+    <div class="content flex-col bg-white ml-2 rounded-xl w-full min-w-[30rem] justify-between overflow-auto pt-0">
       <RouterView class="px-4" />
-      <div
-          class="sticky bottom-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white"
-      >
+
+      <div class="sticky bottom-0 shrink-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white">
         <BottomBar :meta="route.meta" />
       </div>
+    </div>
+
+    <div v-if="showPreview" class="content flex flex-col bg-white w-96 flex-shrink-0 max-h-[98vh] rounded-xl ml-2">
+      <ShowState />
     </div>
   </div>
 

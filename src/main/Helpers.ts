@@ -28,7 +28,7 @@ export default class Helpers {
     }
 
     /**
-     * Create a listeners that will delegate actions between the helper functions depending on what channel type has
+     * Create a listener that will delegate actions between the helper functions depending on what channel type has
      * been sent. This allows just one listener to be active rather than individual function ones.
      */
     helperListenerDelegate(): void {

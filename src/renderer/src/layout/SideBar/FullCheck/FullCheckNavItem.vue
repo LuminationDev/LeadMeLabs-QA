@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { useFullStore } from "@renderer/store/fullStore";
-import { QaCheck } from "@renderer/interfaces";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { QaCheck } from "src/renderer/src/tool-qa/interfaces";
 import { computed } from "vue";
+import base from '@renderer/assets/icons/nav-icon-base.svg';
+import active from '@renderer/assets/icons/nav-icon-active.svg';
+import incomplete from '@renderer/assets/icons/nav-icon-incomplete.svg';
+import complete from '@renderer/assets/icons/nav-icon-complete.svg';
 
 const props = defineProps({
   title: {
@@ -23,15 +27,15 @@ const completed = computed(() => {
 
   props.objectNames.forEach(type => {
     const reportTracker: QaCheck[] = fullStore.reportTracker[type];
-    correct += reportTracker.filter(item => item.passedCheck === true).length;
-    progress += reportTracker.filter(item => item.passedCheck !== null).length;
+    correct += reportTracker.filter(item => item.passedStatus === 'passed').length;
+    progress += reportTracker.filter(item => item.passedStatus !== null).length;
     total += fullStore.reportTracker[type].length;
   })
 
   if(progress === 0) {
     return 'pending' //Not started
   } else if (progress < total) {
-    return 'incomplete' //Not finished
+    return 'active' //Not finished
   } else if (correct < total) {
     return 'unpolished' //Finished but with some no's
   } else {
@@ -42,14 +46,13 @@ const completed = computed(() => {
 
 <template>
   <div class="flex flex-row items-center">
-    <div class="w-3 h-3 rounded-xl mr-1"
-         :class="{
-            'border-2 border-gray-400': completed === 'pending',
-            'bg-amber-400': completed === 'unpolished',
-            'bg-red-400': completed === 'incomplete',
-            'bg-green-400': completed === 'complete',
-          }"
-    />
+    <div class="mr-2">
+      <img v-if="completed === 'pending'" :src="base" alt="base"/>
+      <img v-else-if="completed === 'active'" :src="active" alt="active"/>
+      <img v-else-if="completed === 'unpolished'" :src="incomplete" alt="incomplete"/>
+      <img v-else-if="completed === 'complete'" :src="complete" alt="complete"/>
+    </div>
+
     <div>
       {{title}}
     </div>
