@@ -8,8 +8,9 @@ module.exports = {
                 background: '#F5F5F5',
                 primary: '#182B50',
                 secondary: '#3A4A69',
-                inactive: '#ACACAC', // dark dark blue,\
+                inactive: '#ACACAC', // dark dark blue
                 contrast: '#005780',
+                disabled: '#DFDFDF',
                 'modal-site-background': 'rgb(0, 0, 0, .4)', // For transparent modal background
             },
             width: {
