@@ -26,7 +26,7 @@ class QaCheckResult {
     requirements: Array<string> = []
     id: string
     type: string
-    timeout: number|null = null
+    timeout: number = 0
     stations: Array<QaCheckResultStation> = []
     tablets: Array<QaCheckResultTablet> = []
     nuc: Array<QaCheckResultNuc> = []
@@ -35,29 +35,23 @@ class QaCheckResult {
         id: string,
         type: string,
         timeout: number,
-        numberOfStations: number,
+        stationIds: Array<number>,
         hasNuc: boolean,
         tabletIps: Array<string>
     ) {
         this.id = id;
         this.type = type;
         this.timeout = timeout;
-        this.stations.push({
-            id: "101",
-            passedStatus: "unchecked",
-            checkingStatus: "not_checking",
-            checkStartTime: null,
-            message: null
+
+        stationIds.forEach(id => {
+            this.stations.push({
+                id: id + "",
+                passedStatus: "unchecked",
+                checkingStatus: "not_checking",
+                checkStartTime: null,
+                message: null
+            })
         })
-        // for (let i = 1; i <= numberOfStations; i++) {
-        //     this.stations.push({
-        //         id: i + "",
-        //         passedStatus: "unchecked",
-        //         checkingStatus: "not_checking",
-        //         checkStartTime: null,
-        //         message: null
-        //     })
-        // }
         if (hasNuc) {
             this.nuc.push({
                 passedStatus: "unchecked",
@@ -86,7 +80,51 @@ class QaCheckResult {
         if (index !== -1) {
             this.stations[index].passedStatus = qaCheck.passedStatus
             this.stations[index].message = qaCheck.message
+            this.stations[index].checkingStatus = "checked"
+            this.stations[index].checkStartTime = null
         }
+    }
+
+    startQa() {
+        const unixTime = Date.now()
+        this.stations.forEach(station => {
+            station.checkStartTime = unixTime
+            station.checkingStatus = "checking"
+            if (this.timeout > 0) {
+                setTimeout(() => {
+                    if (station.checkingStatus === "checking") {
+                        station.passedStatus = "failed"
+                        station.message = "Timed out waiting for check"
+                    }
+                }, this.timeout)
+            }
+        })
+
+        this.nuc.forEach(n => {
+            n.checkStartTime = unixTime
+            n.checkingStatus = "checking"
+            if (this.timeout > 0) {
+                setTimeout(() => {
+                    if (n.checkingStatus === "checking") {
+                        n.passedStatus = "failed"
+                        n.message = "Timed out waiting for check"
+                    }
+                }, this.timeout)
+            }
+        })
+
+        this.tablets.forEach(tablet => {
+            tablet.checkStartTime = unixTime
+            tablet.checkingStatus = "checking"
+            if (this.timeout > 0) {
+                setTimeout(() => {
+                    if (tablet.checkingStatus === "checking") {
+                        tablet.passedStatus = "failed"
+                        tablet.message = "Timed out waiting for check"
+                    }
+                }, this.timeout)
+            }
+        })
     }
 }
 

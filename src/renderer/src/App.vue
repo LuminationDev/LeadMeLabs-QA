@@ -218,7 +218,7 @@ const handleTCPMessage = (info: any) => {
       const responseData = JSON.parse(message[1])
       fullStore.connected = true
       fullStore.ApplianceList = responseData.appliances;
-      fullStore.StationList = responseData.stations;
+      fullStore.NucStationList = responseData.stations;
       fullStore.cbusConnection = responseData.cbus;
 
       console.log(responseData.stations)

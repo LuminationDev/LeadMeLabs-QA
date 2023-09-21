@@ -20,6 +20,13 @@ class QaGroup {
             check.updateStationDetail(stationId, qaChecks.find(qaCheck => qaCheck.id === check.id))
         })
     }
+
+    startQa() {
+        this.started = true
+        this.checks.forEach(check => {
+            check.startQa()
+        })
+    }
 }
 
 export { QaGroup }
