@@ -333,11 +333,11 @@ const openNotificationModal = (title: string, message: string) => {
 
 <template>
   <div class="flex flex-row w-full justify-between max-h-[95vh] h-[95vh]">
-    <div class="flex-col bg-white min-w-[220px] rounded-3xl">
+    <div class="flex-col bg-white min-w-[220px] rounded-xl">
       <Sidebar />
     </div>
 
-    <div class="content flex-col bg-white ml-2 rounded-3xl w-full min-w-[30rem] justify-between overflow-auto pt-0">
+    <div class="content flex-col bg-white ml-2 rounded-xl w-full min-w-[30rem] justify-between overflow-auto pt-0">
       <RouterView class="px-4" />
 
       <div class="sticky bottom-0 shrink-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white">
@@ -345,7 +345,7 @@ const openNotificationModal = (title: string, message: string) => {
       </div>
     </div>
 
-    <div v-if="showPreview" class="content flex flex-col bg-white w-96 flex-shrink-0 max-h-[98vh] rounded-3xl ml-2">
+    <div v-if="showPreview" class="content flex flex-col bg-white w-96 flex-shrink-0 max-h-[98vh] rounded-xl ml-2">
       <ShowState />
     </div>
   </div>

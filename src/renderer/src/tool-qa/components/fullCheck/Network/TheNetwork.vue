@@ -17,7 +17,7 @@ const route = useRoute();
       <Description v-if="route.name === 'full-networking'"/>
       <BasicFullCheck v-if="route.name === 'full-cabling'" title="Cabling" object-name="CABLING"/>
       <BasicFullCheck v-if="route.name === 'full-network'" title="Network" object-name="NETWORK"/>
-      <BasicFullCheck v-if="route.name === 'full-cbus'" title="CBus" object-name="CBUS"/>
+      <BasicFullCheck v-if="route.name === 'full-cbus-options'" title="CBus" object-name="CBUS"/>
       <BasicFullCheck v-if="route.name === 'full-security'" title="Security" object-name="SECURITY"/>
     </template>
   </GenericLayout>

@@ -6,6 +6,10 @@ defineProps({
     type: String,
     required: true
   },
+  subtitle: {
+    type: String,
+    required: true
+  },
   to: {
     type: String,
     required: true
@@ -15,11 +19,16 @@ defineProps({
 
 <template>
   <router-link
-      class="w-full h-full flex justify-center items-center rounded-2xl border-2 border-gray-300
-      bg-gradient-to-br from-white to-gray-100 text-gray-600 hover:no-underline hover:bg-gradient-to-br
-      hover:from-gray-100  hover:text-gray-800 transition-all duration-300 ease-in-out shadow-md"
+      class="w-full h-full flex flex-col justify-center items-center rounded-2xl border-2 border-gray-200 hover:bg-gray-50"
       :to="to"
   >
-    {{title}}
+    <slot></slot>
+    <div class="font-semibold text-base mb-1">
+      {{title}}
+    </div>
+
+    <div class="text-sm text-gray-400">
+      {{subtitle}}
+    </div>
   </router-link>
 </template>

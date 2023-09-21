@@ -4,7 +4,7 @@ import { useChecklistStore } from "@renderer/tool-config/store/checklistStore";
 import { useRoute } from "vue-router";
 import NavItems from "@renderer/layout/SideBar/ConfigTool/NavItems.vue";
 import logo from '@renderer/assets/icons/leadmeLabsLogo.svg'
-import welcome from '@renderer/assets/images/sidebar_welcome.svg'
+import welcome from '@renderer/assets/images/sidebar-welcome.svg'
 
 const labStore = useLabStore();
 const checklistStore = useChecklistStore();
@@ -64,12 +64,12 @@ const route = useRoute();
 
     <div class="flex h-20 sticky items-center flex-col flex-shrink-0 justify-center">
       <div class="flex justify-start w-11/12">
-        <span class="text-xs">{{ route.meta.progress }}%</span>
+        <span class="text-xs">{{ route.meta['progress'] }}%</span>
       </div>
       <div class="w-11/12 relative">
         <div
           class="bg-slate-800 rounded-full h-2 absolute z-10"
-          :style="{ width: route.meta.progress + '%' }"
+          :style="{ width: route.meta['progress'] + '%' }"
         ></div>
         <div class="w-full bg-zinc-300 rounded-full h-2 absolute"></div>
       </div>

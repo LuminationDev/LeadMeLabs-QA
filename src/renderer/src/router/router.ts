@@ -187,7 +187,8 @@ const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/networking',
-            prev: '/check/full'
+            prev: '/check/full',
+            progress: 0
         }
     },
 
@@ -198,7 +199,8 @@ const fullRoutes = [
         component: TheNetwork,
         meta: {
             next: '/check/full/networking/cabling',
-            prev: '/check/full'
+            prev: '/check/full',
+            progress: 0
         }
     },
     {
@@ -209,7 +211,8 @@ const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true, //The user can skip the page but requires a comment
             next: '/check/full/networking/network',
-            prev: '/check/full/networking'
+            prev: '/check/full/networking',
+            progress: 10
         }
     },
     {
@@ -220,18 +223,20 @@ const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/networking/cbus',
-            prev: '/check/full/networking/cabling'
+            prev: '/check/full/networking/cabling',
+            progress: 20
         }
     },
     {
         path: '/check/full/networking/cbus',
-        name: 'full-cbus',
+        name: 'full-cbus-options',
         component: TheNetwork,
         meta: {
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/networking/security',
-            prev: '/check/full/networking/network'
+            prev: '/check/full/networking/network',
+            progress: 30
         }
     },
     {
@@ -242,7 +247,8 @@ const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/windows',
-            prev: '/check/full/networking/cbus'
+            prev: '/check/full/networking/cbus',
+            progress: 40
         }
     },
 
@@ -253,7 +259,8 @@ const fullRoutes = [
         component: TheWindows,
         meta: {
             next: '/check/full/windows/bios',
-            prev: '/check/full/networking/cbus'
+            prev: '/check/full/networking/cbus',
+            progress: 50
         }
     },
     {
@@ -264,7 +271,8 @@ const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/windows/settings',
-            prev: '/check/full/windows'
+            prev: '/check/full/windows',
+            progress: 50
         }
     },
     {
@@ -275,10 +283,12 @@ const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/imvr',
-            prev: '/check/full/windows/bios'
+            prev: '/check/full/windows/bios',
+            progress: 60
         }
     },
 
+    //TODO not sure if needed anymore
     //IMVR Station Routes
     {
         path: '/check/full/imvr',
