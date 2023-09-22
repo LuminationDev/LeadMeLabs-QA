@@ -40,7 +40,7 @@ async function connectToNuc() {
 }
 
 function startTest() {
-  fullStore.buildQaList(1)
+  fullStore.buildQaList()
   const groupsToRun = fullStore.processQaList()
   console.log(groupsToRun)
   groupsToRun.forEach(group => {
@@ -83,7 +83,7 @@ function startTest() {
         Successfully connected<br/>
         There are {{ fullStore.ApplianceList.length }} appliances<br/>
         There are {{ fullStore.StationList.length }} stations<br/>
-        {{ fullStore.StationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
+        {{ fullStore.NucStationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
 
         <div class="mb-4 flex flex-row items-center">
           CBus Connection:

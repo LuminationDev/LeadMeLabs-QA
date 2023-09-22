@@ -30,6 +30,8 @@ class QaCheckResult {
     stations: Array<QaCheckResultStation> = []
     tablets: Array<QaCheckResultTablet> = []
     nuc: Array<QaCheckResultNuc> = []
+    displayName: string
+    extendedDescription: string|null = null
 
     constructor(
         id: string,
@@ -37,11 +39,15 @@ class QaCheckResult {
         timeout: number,
         stationIds: Array<number>,
         hasNuc: boolean,
-        tabletIps: Array<string>
+        tabletIps: Array<string>,
+        displayName: string,
+        extendedDescription: string|null = null
     ) {
         this.id = id;
         this.type = type;
         this.timeout = timeout;
+        this.displayName = displayName
+        this.extendedDescription = extendedDescription
 
         stationIds.forEach(id => {
             this.stations.push({
