@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
-import {computed, ref} from "vue";
+import { computed, ref } from "vue";
+import {useRoute} from "vue-router";
+import {useFullStore} from "@renderer/tool-qa/store/fullStore";
 
 defineExpose({
   openModal
@@ -13,6 +15,7 @@ const props = defineProps({
   }
 });
 
+const fullStore = useFullStore();
 const showModal = ref(false);
 const comment = ref("");
 const noComment = ref(false);
@@ -26,6 +29,12 @@ function closeModal() {
 }
 
 const skip = () => {
+  //Save the message
+  const key = route.meta['trackerName'];
+  if(key !== undefined && comment.value.length > 0) {
+    fullStore.reportTracker[key]['comment'] = comment.value;
+  }
+
   closeModal();
   props.callback();
   noComment.value = false; //Reset for next time
@@ -34,6 +43,8 @@ const skip = () => {
 const canConfirm = computed(() => {
   return comment.value.length > 0 || noComment.value;
 });
+
+const route = useRoute();
 </script>
 
 <template>
