@@ -51,6 +51,7 @@ export const fullRoutes = [
         name: 'full-appliance',
         component: TheAppliances,
         meta: {
+            addComment: true,
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/networking',
@@ -75,6 +76,7 @@ export const fullRoutes = [
         name: 'full-cabling',
         component: TheNetwork,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true, //The user can skip the page but requires a comment
             next: '/check/full/networking/network',
@@ -88,6 +90,7 @@ export const fullRoutes = [
         name: 'full-network',
         component: TheNetwork,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/networking/cbus',
@@ -101,6 +104,7 @@ export const fullRoutes = [
         name: 'full-cbus-options',
         component: TheNetwork,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/windows',
@@ -126,6 +130,7 @@ export const fullRoutes = [
         name: 'full-bios',
         component: TheWindows,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/windows/settings',
@@ -139,6 +144,7 @@ export const fullRoutes = [
         name: 'full-windows-settings',
         component: TheWindows,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/software',
@@ -164,6 +170,7 @@ export const fullRoutes = [
         name: 'full-steam',
         component: TheSoftware,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/physical',
@@ -189,6 +196,7 @@ export const fullRoutes = [
         name: 'full-keyboard',
         component: ThePhysical,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/physical/vive',
@@ -202,6 +210,7 @@ export const fullRoutes = [
         name: 'full-vive',
         component: ThePhysical,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/physical/projector',
@@ -215,6 +224,7 @@ export const fullRoutes = [
         name: 'full-projector',
         component: ThePhysical,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/security',
@@ -240,6 +250,7 @@ export const fullRoutes = [
         name: 'full-bitwarden',
         component: TheSecurity,
         meta: {
+            addComment: true,
             userInput: true,
             canSkip: true,
             next: '/check/full/report',

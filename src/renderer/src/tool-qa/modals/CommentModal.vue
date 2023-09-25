@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import {useRoute} from "vue-router";
+import {useFullStore} from "@renderer/tool-qa/store/fullStore";
 import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
 
 defineExpose({
   openModal
 });
 
-const props = defineProps({
-  callback: {
-    type: Function,
-    required: true
-  }
-});
-
 const fullStore = useFullStore();
 const showModal = ref(false);
 const comment = ref("");
-const noComment = ref(false);
 
 function openModal() {
   showModal.value = true;
@@ -29,7 +21,7 @@ function closeModal() {
   showModal.value = false;
 }
 
-const skip = () => {
+const addComment = () => {
   //Save the message
   const key = route.meta['trackerName'];
   if(key !== undefined && comment.value.length > 0) {
@@ -37,21 +29,19 @@ const skip = () => {
   }
 
   closeModal();
-  props.callback();
   comment.value = "";
-  noComment.value = false; //Reset for next time
 }
 
 const canConfirm = computed(() => {
-  return comment.value.length > 0 || noComment.value;
+  return comment.value.length > 0;
 });
 
 const route = useRoute();
 </script>
 
 <template>
-  <GenericButton class="mr-3" type="text" :callback="openModal"
-  >Skip
+  <GenericButton class="mr-4" type="transparent" :callback="openModal"
+  >Add Comment
   </GenericButton>
 
   <Teleport to="body">
@@ -66,10 +56,10 @@ const route = useRoute();
 
       <template v-slot:content>
         <div class="px-6 w-96 bg-white pb-7 flex flex-col">
-          <span class="text-lg font-semibold text-black mb-2">Skip Check?</span>
+          <span class="text-lg font-semibold text-black mb-2">Add comment?</span>
 
           <div class="text-sm">
-            Are you sure you want to skip this check? If so, Please leave a comment and proceed.
+            Please leave a comment.
           </div>
 
           <div class="flex flex-col my-4">
@@ -79,11 +69,6 @@ const route = useRoute();
             <input v-model="comment"
                    class="h-10 border-2 border-gray-200 rounded-lg px-2"
                    placeholder="e.g. Unable to access Bitwarden"/>
-          </div>
-
-          <div class="flex flex-row items-center">
-            <input v-model="noComment" class="w-4 h-4 mr-2 cursor-pointer" id="noComment" type="checkbox">
-            <label class="text-sm font-semibold cursor-pointer" for="noComment">Continue without comment</label>
           </div>
         </div>
       </template>
@@ -101,7 +86,7 @@ const route = useRoute();
                     'bg-blue-300': !canConfirm,
                   }"
                   :disabled="!canConfirm"
-                  v-on:click="skip()"
+                  v-on:click="addComment()"
           >Confirm</button>
         </footer>
       </template>

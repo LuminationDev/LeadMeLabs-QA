@@ -9,13 +9,13 @@ const networkNav = [
   { title: "CBus Options", objectName: "CBUS", progress: 30, routeName: 'full-cbus-options' }
 ]
 
-const softwareNav = [
-  { title: "Steam", objectName: "STEAM", progress: 50, routeName: 'full-steam' }
+const windowsNav = [
+  { title: "BIOS", objectName: "BIOS", progress: 40, routeName: 'full-bios' },
+  { title: "Settings", objectName: "WINDOWS", progress: 50, routeName: 'full-windows-settings' },
 ]
 
-const windowsNav = [
-  { title: "BIOS", objectName: "BIOS", progress: 50, routeName: 'full-bios' },
-  { title: "Settings", objectName: "WINDOWS", progress: 60, routeName: 'full-windows-settings' },
+const softwareNav = [
+  { title: "Steam", objectName: "STEAM", progress: 60, routeName: 'full-steam' }
 ]
 
 const physicalNav = [

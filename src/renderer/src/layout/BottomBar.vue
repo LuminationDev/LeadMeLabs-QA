@@ -2,8 +2,9 @@
 import GenericButton from '@renderer/tool-qa/components/_generic/buttons/GenericButton.vue'
 import SkipCheckModal from "@renderer/tool-qa/modals/SkipCheckModal.vue";
 import router from '../router/router'
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
 
 const stateStore = useStateStore();
 const props = defineProps({
@@ -23,24 +24,12 @@ const goNextLink = (): void => {
 }
 
 /**
- * Go to the next link but show the comment modal before moving on.
- */
-const goNextLinkWithComment = (): void => {
-  openSkipCheckModal();
-}
-
-/**
  * If the route requires user input, check the stateStore to see if the user has
  * entered the correct information. Block the next route until they do.
  */
 const canProceed = computed(() => {
   return props.meta['userInput'] !== true || stateStore.canProceed;
 });
-
-const skipCheckRef = ref<InstanceType<typeof SkipCheckModal> | null>(null)
-const openSkipCheckModal = () => {
-  skipCheckRef.value?.openModal();
-}
 </script>
 <template>
   <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
@@ -54,21 +43,14 @@ const openSkipCheckModal = () => {
   >Skip
   </GenericButton>
 
-  <!--Skip with a comment-->
-  <GenericButton class="mr-3" v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] === undefined && props.meta['next']" type="text" :callback="goNextLinkWithComment"
-   >Skip
-  </GenericButton>
+  <!--Modal to handle the skip check comment-->
+  <SkipCheckModal v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] === undefined && props.meta['next']" :callback="goNextLink"/>
 
-  <!--TODO add just comment modal with no skip?-->
-  <GenericButton class="mr-3" v-if="props.meta['addComment'] !== undefined" type="transparent" :callback="goNextLinkWithComment"
-  >Add Comment
-  </GenericButton>
+  <!--Modal to handle adding a comment-->
+  <CommentModal v-if="props.meta['addComment'] !== undefined" />
 
   <GenericButton v-if="props.meta['next']" type="blue" :disabled="!canProceed" :callback="goNextLink" class="w-auto px-4"
    > {{props.meta['nextText'] ?? 'Next'}}
   </GenericButton>
-
-  <!--Modal to handle the skip check comment-->
-  <SkipCheckModal ref="skipCheckRef" :callback="goNextLink"/>
 </template>
 <style></style>
