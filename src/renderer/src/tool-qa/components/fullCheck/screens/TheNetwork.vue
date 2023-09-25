@@ -3,6 +3,7 @@ import Description from "@renderer/tool-qa/components/checks/Description.vue";
 import BasicFullCheck from "@renderer/tool-qa/components/fullCheck/BasicFullCheck.vue";
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
+import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
 
 const route = useRoute();
 </script>
@@ -10,7 +11,8 @@ const route = useRoute();
 <template>
   <GenericLayout>
     <template v-slot:title>
-      <p class="text-lg text-black mb-3">Network</p>
+      <p class="text-2xl text-black font-semibold mb-3">Network</p>
+      <p class="text-base text-black mb-3">Configure network settings to ensure seamless lab connectivity.</p>
     </template>
 
     <template v-slot:content>
@@ -18,7 +20,7 @@ const route = useRoute();
       <BasicFullCheck v-if="route.name === 'full-cabling'" title="Cabling" object-name="CABLING"/>
       <BasicFullCheck v-if="route.name === 'full-network'" title="Network" object-name="NETWORK"/>
       <BasicFullCheck v-if="route.name === 'full-cbus-options'" title="CBus" object-name="CBUS"/>
-      <BasicFullCheck v-if="route.name === 'full-security'" title="Security" object-name="SECURITY"/>
+      <BasicReport v-if="route.name === 'full-network-report'" :section="['CABLING', 'NETWORK', 'CBUS']"/>
     </template>
   </GenericLayout>
 </template>

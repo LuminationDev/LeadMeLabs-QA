@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import GenericButton from '@renderer/tool-qa/components/_generic/buttons/GenericButton.vue'
 import SkipCheckModal from "@renderer/tool-qa/modals/SkipCheckModal.vue";
+import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
 import router from '../router/router'
 import { computed } from "vue";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
-import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
+import { useRoute } from "vue-router";
 
+const fullStore = useFullStore();
 const stateStore = useStateStore();
+const route = useRoute();
 const props = defineProps({
     meta: {
         type: Object,
@@ -30,6 +34,13 @@ const goNextLink = (): void => {
 const canProceed = computed(() => {
   return props.meta['userInput'] !== true || stateStore.canProceed;
 });
+
+const addComment = (comment: string) => {
+  const key = route.meta['trackerName'];
+  if(key !== undefined) {
+    fullStore.reportTracker[key]['comment'] = comment;
+  }
+}
 </script>
 <template>
   <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
@@ -47,7 +58,7 @@ const canProceed = computed(() => {
   <SkipCheckModal v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] === undefined && props.meta['next']" :callback="goNextLink"/>
 
   <!--Modal to handle adding a comment-->
-  <CommentModal v-if="props.meta['addComment'] !== undefined" />
+  <CommentModal v-if="props.meta['addComment'] !== undefined" :callback="addComment" />
 
   <GenericButton v-if="props.meta['next']" type="blue" :disabled="!canProceed" :callback="goNextLink" class="w-auto px-4"
    > {{props.meta['nextText'] ?? 'Next'}}

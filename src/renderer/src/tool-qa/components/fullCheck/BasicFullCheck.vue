@@ -23,6 +23,7 @@ const stateStore = useStateStore();
 const keyAnswered = (key: string, value: boolean) => {
   const reportTracker: QaCheck[] = fullStore.reportTracker[props.objectName];
   reportTracker.find(item => item.id === key)['passedStatus'] = value ? 'passed' : 'failed';
+  reportTracker.find(item => item.id === key)['date'] = stateStore.formattedDate();
 }
 
 const numberOfChecks = computed(() => {
