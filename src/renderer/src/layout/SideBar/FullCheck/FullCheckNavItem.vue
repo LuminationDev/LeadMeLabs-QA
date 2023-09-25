@@ -5,6 +5,7 @@ import { computed } from "vue";
 import base from '@renderer/assets/icons/nav-icon-base.svg';
 import active from '@renderer/assets/icons/nav-icon-active.svg';
 import incomplete from '@renderer/assets/icons/nav-icon-incomplete.svg';
+import failed from '@renderer/assets/icons/nav-icon-cross.svg';
 import complete from '@renderer/assets/icons/nav-icon-complete.svg';
 
 const props = defineProps({
@@ -23,11 +24,13 @@ const fullStore = useFullStore();
 const completed = computed(() => {
   let correct = 0;
   let progress = 0;
+  let failed = 0;
   let total = 0;
 
   props.objectNames.forEach(type => {
     const reportTracker: QaCheck[] = fullStore.reportTracker[type];
     correct += reportTracker.filter(item => item.passedStatus === 'passed').length;
+    failed += reportTracker.filter(item => item.passedStatus === 'failed').length;
     progress += reportTracker.filter(item => item.passedStatus !== null).length;
     total += fullStore.reportTracker[type].length;
   })
@@ -36,6 +39,8 @@ const completed = computed(() => {
     return 'pending' //Not started
   } else if (progress < total) {
     return 'active' //Not finished
+  } else if (failed === total) {
+    return 'failed';
   } else if (correct < total) {
     return 'unpolished' //Finished but with some no's
   } else {
@@ -50,6 +55,7 @@ const completed = computed(() => {
       <img v-if="completed === 'pending'" :src="base" alt="base"/>
       <img v-else-if="completed === 'active'" :src="active" alt="active"/>
       <img v-else-if="completed === 'unpolished'" :src="incomplete" alt="incomplete"/>
+      <img v-else-if="completed === 'failed'" :src="failed" alt="failed"/>
       <img v-else-if="completed === 'complete'" :src="complete" alt="complete"/>
     </div>
 

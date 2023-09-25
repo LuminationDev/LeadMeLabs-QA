@@ -6,13 +6,26 @@ import { useRoute } from "vue-router";
 const networkNav = [
   { title: "Cabling & Routing", objectName: "CABLING", progress: 10, routeName: 'full-cabling' },
   { title: "Network", objectName: "NETWORK", progress: 20, routeName: 'full-network' },
-  { title: "CBus Options", objectName: "CBUS", progress: 30, routeName: 'full-cbus-options' },
-  { title: "Security", objectName: "SECURITY", progress: 40, routeName: 'full-security' }
+  { title: "CBus Options", objectName: "CBUS", progress: 30, routeName: 'full-cbus-options' }
 ]
 
 const windowsNav = [
-  { title: "BIOS", objectName: "BIOS", progress: 50, routeName: 'full-bios' },
-  { title: "Settings", objectName: "WINDOWS", progress: 60, routeName: 'full-windows-settings' },
+  { title: "BIOS", objectName: "BIOS", progress: 40, routeName: 'full-bios' },
+  { title: "Settings", objectName: "WINDOWS", progress: 50, routeName: 'full-windows-settings' },
+]
+
+const softwareNav = [
+  { title: "Steam", objectName: "STEAM", progress: 60, routeName: 'full-steam' }
+]
+
+const physicalNav = [
+  { title: "Keyboard", objectName: "KEYBOARD", progress: 70, routeName: 'full-keyboard' },
+  { title: "Vive", objectName: "VIVE", progress: 80, routeName: 'full-vive' },
+  { title: "Projector", objectName: "PROJECTOR", progress: 90, routeName: 'full-projector' },
+]
+
+const securityNav = [
+  { title: "BIOS", objectName: "BITWARDEN", progress: 91, routeName: 'full-bitwarden' },
 ]
 
 const route = useRoute();
@@ -30,9 +43,9 @@ const route = useRoute();
       <!--Navbar Title with sub-categories below-->
       <FullCheckItem :active="route.path.includes('/check/full/networking')" title="Networking" :object-values="networkNav"/>
       <FullCheckItem :active="route.path.includes('/check/full/windows')" title="Windows" :object-values="windowsNav"/>
-      <FullCheckItem :active="route.path.includes('/check/full/stations')" title="IMVR Stations" :object-values="[]"/>
-      <FullCheckItem :active="route.path.includes('/check/full/leadme')" title="LeadMe" :object-values="[]"/>
-      <FullCheckItem :active="route.path.includes('/check/full/security')" title="Security" :object-values="[]" :last-item="true"/>
+      <FullCheckItem :active="route.path.includes('/check/full/software')" title="Software" :object-values="softwareNav"/>
+      <FullCheckItem :active="route.path.includes('/check/full/physical')" title="Physical" :object-values="physicalNav"/>
+      <FullCheckItem :active="route.path.includes('/check/full/security')" title="Security" :object-values="securityNav" :last-item="true"/>
     </nav>
 
     <div class="flex h-20 sticky items-center flex-col flex-shrink-0 justify-center">
