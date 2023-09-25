@@ -14,6 +14,10 @@ class QaGroup {
         return this.checks.filter(check => check.checkPassed() === false).length === 0
     }
 
+    getPassedChecksIds(): Array<string> {
+        return this.checks.filter(check => check.checkPassed() === true).map(check => this.id + "." + check.id)
+    }
+
     updateQaChecks(stationId, qaChecks) {
         console.log('updateQaChecks:qaGroup', qaChecks)
         this.checks.forEach(check => {

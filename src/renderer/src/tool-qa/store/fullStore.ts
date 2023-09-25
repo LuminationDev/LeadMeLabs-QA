@@ -44,7 +44,7 @@ export const useFullStore = defineStore({
             const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 10000, stationIds, false, [], "SteamCMD is initialised with user details")
             const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 10000, stationIds, false, [], "SteamCMD configured", "SteamCMD has Steam Guard detail or does not need them")
             softwareChecks.checks.push(setvolInstalled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured)
-            softwareChecks.requirements = ["station_connection_checks", "steam_config_checks"]
+            softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
 
             const steamConfigChecks = new QaGroup("steam_config_checks")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, stationIds, false, [], "Steam Username is set")
@@ -71,10 +71,15 @@ export const useFullStore = defineStore({
 
         processQaList() {
             const completedQaCheckGroupIds = this.qaGroups.filter(group => group.allChecksPassed()).map(group => group.id)
-            console.log(completedQaCheckGroupIds)
+            const completedQaCheckIds = [] as Array<string>
+            this.qaGroups.forEach(qaGroup => {
+                completedQaCheckIds.push(...qaGroup.getPassedChecksIds())
+            })
+            var allCompletedIds = [] as Array<string>
+            allCompletedIds.push(...completedQaCheckGroupIds)
+            allCompletedIds.push(...completedQaCheckIds)
             const groupsToStart = this.qaGroups.filter(group => !group.started).filter(group => {
-                console.log(group, group.requirements)
-                return (group.requirements.filter(r => !completedQaCheckGroupIds.includes(r)).length === 0)
+                return (group.requirements.filter(r => !allCompletedIds.includes(r)).length === 0)
             }).map(group => group.id)
             return groupsToStart
         },
