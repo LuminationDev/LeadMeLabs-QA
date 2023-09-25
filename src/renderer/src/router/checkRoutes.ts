@@ -6,7 +6,7 @@ import TheSoftware from "@renderer/tool-qa/components/fullCheck/screens/TheSoftw
 import ThePhysical from "@renderer/tool-qa/components/fullCheck/screens/ThePhysical.vue";
 import TheSecurity from "@renderer/tool-qa/components/fullCheck/screens/TheSecurity.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
-import TheReport from "@renderer/tool-qa/components/fullCheck/screens/TheReport.vue";
+import TheReport from "@renderer/tool-qa/components/fullCheck/Report/TheReport.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -107,10 +107,21 @@ export const fullRoutes = [
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: '/check/full/windows',
+            next: '/check/full/networking/report',
             prev: '/check/full/networking/network',
             progress: 30,
             trackerName: "CBUS"
+        }
+    },
+    {
+        path: '/check/full/networking/report',
+        name: 'full-network-report',
+        component: TheNetwork,
+        meta: {
+            next: '/check/full/windows',
+            prev: '/check/full/networking/cbus',
+            progress: 30,
+            nextText: 'Proceed'
         }
     },
 
@@ -147,10 +158,21 @@ export const fullRoutes = [
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: '/check/full/software',
+            next: '/check/full/windows/report',
             prev: '/check/full/windows/bios',
             progress: 50,
             trackerName: "WINDOWS"
+        }
+    },
+    {
+        path: '/check/full/windows/report',
+        name: 'full-windows-report',
+        component: TheWindows,
+        meta: {
+            next: '/check/full/software',
+            prev: '/check/full/windows/settings',
+            progress: 50,
+            nextText: 'Proceed'
         }
     },
 
@@ -173,10 +195,21 @@ export const fullRoutes = [
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: '/check/full/physical',
+            next: '/check/full/software/report',
             prev: '/check/full/software',
             progress: 60,
             trackerName: "STEAM"
+        }
+    },
+    {
+        path: '/check/full/software/report',
+        name: 'full-software-report',
+        component: TheSoftware,
+        meta: {
+            next: '/check/full/physical',
+            prev: '/check/full/software/steam',
+            progress: 60,
+            nextText: 'Proceed'
         }
     },
 
@@ -227,10 +260,21 @@ export const fullRoutes = [
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: '/check/full/security',
+            next: '/check/full/physical/report',
             prev: '/check/full/physical/vive',
             progress: 90,
             trackerName: "PROJECTOR"
+        }
+    },
+    {
+        path: '/check/full/physical/report',
+        name: 'full-physical-report',
+        component: ThePhysical,
+        meta: {
+            next: '/check/full/security',
+            prev: '/check/full/physical/projector',
+            progress: 90,
+            nextText: 'Proceed'
         }
     },
 
@@ -253,11 +297,21 @@ export const fullRoutes = [
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: '/check/full/report',
+            next: '/check/full/security/report',
             prev: '/check/full/security',
             progress: 100,
             trackerName: "BITWARDEN"
-
+        }
+    },
+    {
+        path: '/check/full/security/report',
+        name: 'full-security-report',
+        component: TheSecurity,
+        meta: {
+            next: '/check/full/report',
+            prev: '/check/full/security/bitwarden',
+            progress: 100,
+            nextText: 'Proceed'
         }
     },
 
@@ -267,7 +321,7 @@ export const fullRoutes = [
         name: 'full-report',
         component: TheReport,
         meta: {
-            prev: '/check/full/security/bitwarden',
+            prev: '/check/full/security/report',
             progress: 100
         }
     }

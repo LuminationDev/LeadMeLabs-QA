@@ -1,12 +1,29 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
-import {useRoute} from "vue-router";
-import {useFullStore} from "@renderer/tool-qa/store/fullStore";
+import { useRoute } from "vue-router";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
 
 defineExpose({
   openModal
+});
+
+const props = defineProps({
+  mode: {
+    type: String,
+    required: false,
+    default: "button"
+  },
+  currentComment: {
+    type: String,
+    required: false,
+    default: ""
+  },
+  callback: {
+    type: Function,
+    required: true
+  }
 });
 
 const fullStore = useFullStore();
@@ -14,6 +31,7 @@ const showModal = ref(false);
 const comment = ref("");
 
 function openModal() {
+  comment.value = props.currentComment;
   showModal.value = true;
 }
 
@@ -23,9 +41,8 @@ function closeModal() {
 
 const addComment = () => {
   //Save the message
-  const key = route.meta['trackerName'];
-  if(key !== undefined && comment.value.length > 0) {
-    fullStore.reportTracker[key]['comment'] = comment.value;
+  if (comment.value.length > 0) {
+    props.callback(comment.value);
   }
 
   closeModal();
@@ -40,9 +57,12 @@ const route = useRoute();
 </script>
 
 <template>
-  <GenericButton class="mr-4" type="transparent" :callback="openModal"
+  <GenericButton v-if="mode === 'button'" class="mr-4" type="transparent" :callback="openModal"
   >Add Comment
   </GenericButton>
+
+  <img v-else-if="mode === 'icon-empty'" v-on:click="openModal" class="cursor-pointer" src="../../assets/icons/comment-empty.svg" alt="comment"/>
+  <img v-else-if="mode === 'icon'" v-on:click="openModal" class="cursor-pointer" src="../../assets/icons/comment.svg" alt="comment"/>
 
   <Teleport to="body">
     <Modal :show="showModal" @close="closeModal">
