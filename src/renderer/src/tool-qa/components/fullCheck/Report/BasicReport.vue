@@ -56,6 +56,45 @@ const addComment = (comment: string) => {
   //Update the original tracker
   fullStore.reportTracker[key].find(item => item.id === currentlySelected.value)['comment'] = comment;
 }
+
+/**
+ * Calculate how many tests have failed, passed or been skipped.
+ */
+const counts = computed(() => {
+  const extractedValues = {};
+
+  props.section.forEach(item => {
+    if (fullStore.reportTracker[item]) {
+      extractedValues[item] = getCounts(fullStore.reportTracker[item]);
+    }
+  });
+
+  return extractedValues;
+});
+
+const getCounts = (entries: any) => {
+  const { totalEntries, passedStatusCount, failedCount } = entries.reduce(
+      (acc, item) => {
+        acc.totalEntries += 1; // Increase totalEntries by 1 for each object in the array
+        acc.passedStatusCount += item['passedStatus'] === 'passed' ? 1 : 0; // Increment passedStatusCount if 'passed'
+        acc.failedCount += item['passedStatus'] === 'failed' ? 1 : 0; // Increment failedCount if 'failed'
+        return acc;
+      },
+      { totalEntries: 0, passedStatusCount: 0, failedCount: 0 }
+  );
+
+  return { totalEntries, passedStatusCount, failedCount };
+}
+
+const statusValue = (category) => {
+  if (category.failedCount > 0) {
+    return category.failedCount + " Failed";
+  } else if (category.passedStatusCount === category.totalEntries) {
+    return "Passed";
+  } else {
+    return "Skipped";
+  }
+}
 </script>
 
 <template>
@@ -65,10 +104,19 @@ const addComment = (comment: string) => {
     <div class="w-full mb-3" v-for="(categories, categoryKey) in reportItems" :key="categoryKey">
       <div class="w-full mb-4 flex flex-col rounded-lg border-2 border-gray-200">
 
-        <!--Category Title-->
-        <h2 class="font-semibold text-lg p-3">{{ stateStore.capitalizeFirstLetter(categoryKey.toLowerCase()) }}</h2>
+        <div class="flex flex-row items-center">
+          <!--Category Title-->
+          <h2 class="font-semibold text-lg p-3">{{ stateStore.capitalizeFirstLetter(categoryKey.toLowerCase()) }}</h2>
 
-        <!--Quick look at category status-->
+          <!--Quick look at category status-->
+          <div class="flex items-center rounded-xl w-fit h-5 text-sm px-2 font-semibold" :class="{
+                  'bg-red-100 border-[1px] border-red-300 text-red-700': counts[categoryKey].failedCount > 0,
+                  'bg-green-100 border-[1px] border-green-300 text-green-700': counts[categoryKey].passedStatusCount === counts[categoryKey].totalEntries,
+                  'bg-blue-100 border-[1px] border-blue-300 text-blue-700': counts[categoryKey].failedCount + counts[categoryKey].passedStatusCount !== counts[categoryKey].totalEntries,
+                }">
+            {{statusValue(counts[categoryKey])}}
+          </div>
+        </div>
 
         <!--General Category Comments-->
         <div v-if="categories['comment'] !== undefined" class="mb-2 text-sm flex flex-row">
