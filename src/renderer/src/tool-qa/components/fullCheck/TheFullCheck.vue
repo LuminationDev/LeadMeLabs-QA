@@ -40,7 +40,6 @@ async function connectToNuc() {
 }
 
 function startTest() {
-  fullStore.buildQaList()
   const groupsToRun = fullStore.processQaList()
   console.log(groupsToRun)
   groupsToRun.forEach(group => {
@@ -82,7 +81,7 @@ function startTest() {
 
         Successfully connected<br/>
         There are {{ fullStore.ApplianceList.length }} appliances<br/>
-        There are {{ fullStore.StationList.length }} stations<br/>
+        There are {{ fullStore.NucStationList.length }} stations<br/>
         {{ fullStore.NucStationList.filter(station => station.status === "On").length }} stations are on and ready<br/>
 
         <div class="mb-4 flex flex-row items-center">

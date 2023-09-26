@@ -38,6 +38,15 @@ export const useFullStore = defineStore({
             const stationIsConnected = new QaCheckResult("station_is_connected", "auto", 10000, stationIds, false, [], "Station is connected to NUC")
             stationConnectionChecks.checks.push(stationIsConnected)
 
+            const windowsChecks = new QaGroup("windows_checks")
+            const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, stationIds, false, [], "Wake On LAN", "Wake on Magic Packet is enabled")
+            const amdInstalled = new QaCheckResult("amd_installed", "auto", 10000, stationIds, false, [], "AMD Installed", "Is AMD software installed")
+            const envVariable = new QaCheckResult("openssl_environment", "auto", 10000, stationIds, false, [], "OPENSSL ENV", "Is OPENSSL_ia32cap set in environment variables")
+            const wallpaper = new QaCheckResult("wallpaper_is_set", "auto", 10000, stationIds, false, [], "Wallpaper", "Is the Lumination wallpaper set")
+            const timezone = new QaCheckResult("timezone_correct", "auto", 10000, stationIds, false, [], "Timezone", "Has the time zone been set to the correct location")
+            const dateTime = new QaCheckResult("correct_datetime", "auto", 10000, stationIds, false, [], "Time & Date", "Is the date and time set correctly")
+            windowsChecks.checks.push(wakeOnLAN, amdInstalled, envVariable, wallpaper, timezone, dateTime);
+
             const softwareChecks = new QaGroup("software_checks")
             const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 10000, stationIds, false, [], "SetVol is installed")
             const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 10000, stationIds, false, [], "SteamCMD is installed")
@@ -66,7 +75,7 @@ export const useFullStore = defineStore({
             steamConfigChecks.checks.push(isSteamUserNameSet, isSteamPasswordSet, isSteamInitialized, isFriendsSettingDisabled, isDownloadRegionSetCorrectly, isCloudEnabledOff, isDefaultPageSetToLibrary, skipOfflineWarning, allowAutoLogin, wantsOfflineMode, homeAppDisabled, controllerTimeoutSetToZero, screenTimeoutSetTo1800, pauseCompositorSetToFalse, steamVrDashboardDisabled, steamVrStatusNotOnTop)
             steamConfigChecks.requirements = ["station_connection_checks"]
 
-            this.qaGroups.push(stationConnectionChecks, softwareChecks, steamConfigChecks)
+            this.qaGroups = [stationConnectionChecks, windowsChecks, softwareChecks, steamConfigChecks];
         },
 
         processQaList() {
@@ -86,6 +95,7 @@ export const useFullStore = defineStore({
 
         updateQaChecks(stationId, groupName, qaChecks) {
             console.log('updateQaChecks', qaChecks, groupName)
+            console.log(this.qaGroups);
             let index = this.qaGroups.findIndex(group => group.id === groupName)
             console.log('updateQaChecks', index)
             if (index !== -1) {

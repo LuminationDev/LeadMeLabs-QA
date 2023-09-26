@@ -4,6 +4,7 @@ import BasicFullCheck from "@renderer/tool-qa/components/fullCheck/BasicFullChec
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
+import BasicAutoCheck from "@renderer/tool-qa/components/fullCheck/BasicAutoCheck.vue";
 
 const route = useRoute();
 </script>
@@ -16,9 +17,10 @@ const route = useRoute();
 
     <template v-slot:content>
       <Description v-if="route.name === 'full-windows'"/>
+      <BasicAutoCheck v-if="route.name === 'full-windows-auto'" check-type="windows_checks"/>
       <BasicFullCheck v-if="route.name === 'full-bios'" title="BIOS" object-name="BIOS"/>
       <BasicFullCheck v-if="route.name === 'full-windows-settings'" title="Windows' Settings" object-name="WINDOWS"/>
-      <BasicReport v-if="route.name === 'full-windows-report'" :section="['BIOS', 'WINDOWS']"/>
+      <BasicReport v-if="route.name === 'full-windows-report'" auto="windows_checks" :section="['BIOS', 'WINDOWS']"/>
     </template>
   </GenericLayout>
 </template>

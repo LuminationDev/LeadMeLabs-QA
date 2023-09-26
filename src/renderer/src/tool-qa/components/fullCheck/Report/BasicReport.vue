@@ -5,14 +5,20 @@ import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { computed, ref } from "vue";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/Report/ItemHover.vue";
+import AutoSection from "@renderer/tool-qa/components/fullCheck/Report/AutoSection.vue";
 
 interface ReportItem { [key: string]: any }
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
 const currentlySelected = ref("");
+const showAutoChecks = ref(false);
 
 const props = defineProps({
+  auto: {
+    type: String,
+    required: false
+  },
   section: {
     type: Array<string>,
     required: false
@@ -36,6 +42,29 @@ const reportItems = computed((): ReportItem => {
 
   return extractedValues;
 });
+
+/**
+ * Collect all the test results into one array.
+ */
+const testResults = computed(() => {
+  const extractedValues: { [key: string]: any } = {};
+  props.section.forEach(key => {
+    if (fullStore.reportTracker[key]) {
+      extractedValues[key] = fullStore.reportTracker[key];
+    }
+  });
+
+  if(props.auto) {
+    //Add the checks from the auto result section, these are grouped by station and hence need a bit more work
+    Object.entries(fullStore.reportTracker[props.auto]).forEach(([key, value]) => {
+      extractedValues[props.auto] = extractedValues[props.auto] || {};
+      extractedValues[props.auto][key] = extractedValues[props.auto][key] || [];
+      extractedValues[props.auto] = value;
+    });
+  }
+
+  return extractedValues;
+})
 
 /**
  * Add a comment to the fullStore reportTracker item that has been selected
@@ -69,6 +98,33 @@ const counts = computed(() => {
     }
   });
 
+  if (props.auto) {
+    //Add the checks from the auto result section, these are grouped by station and hence need a bit more work
+    Object.entries(fullStore.reportTracker[props.auto]).forEach(([key, value]) => {
+      extractedValues[props.auto] = extractedValues[props.auto] || {};
+      extractedValues[props.auto][key] = extractedValues[props.auto][key] || [];
+      extractedValues[props.auto][key] = getCounts(fullStore.reportTracker[props.auto][key]);
+    });
+  }
+
+  return extractedValues;
+});
+
+/**
+ * Calculate just the automatic checks failed, passed and total counts.
+ */
+const allAutoCounts = computed(() => {
+  const extractedValues = {};
+  const flattenArray = []
+
+  //Add the checks from the auto result section, these are grouped by station and hence need a bit more work
+  Object.entries(fullStore.reportTracker[props.auto]).forEach(([key, value]) => {
+    value.forEach(item => {
+      flattenArray.push(item);
+    })
+  });
+  extractedValues[props.auto] = getCounts(flattenArray);
+
   return extractedValues;
 });
 
@@ -95,11 +151,49 @@ const statusValue = (category) => {
     return "Skipped";
   }
 }
+
+/**
+ * Change the currently selected sub-check for assigning a comment to.
+ */
+const updateCurrentlySelected = (newValue: string) => {
+  currentlySelected.value = newValue;
+}
 </script>
 
 <template>
   <div class="flex flex-col">
-    <TestResults :report-items="reportItems"/>
+    <TestResults :report-items="testResults"/>
+
+    <div v-if="props.auto" class="flex flex-col w-full mb-4 rounded-lg border-2 border-gray-200">
+      <div class="flex flex-row justify-between items-center">
+        <div class="flex items-center grow">
+          <!--Category Title-->
+          <h2 class="font-semibold text-lg p-3">Auto Checks</h2>
+
+          <!--Quick look at all the auto results-->
+          <div class="flex items-center rounded-xl w-fit h-5 text-sm px-2 font-semibold" :class="{
+                    'bg-red-100 border-[1px] border-red-300 text-red-700': allAutoCounts[auto].failedCount > 0,
+                    'bg-green-100 border-[1px] border-green-300 text-green-700': allAutoCounts[auto].passedStatusCount === allAutoCounts[auto].totalEntries,
+                    'bg-blue-100 border-[1px] border-blue-300 text-blue-700': allAutoCounts[auto].failedCount + allAutoCounts[auto].passedStatusCount !== allAutoCounts[auto].totalEntries,
+                  }">
+            {{statusValue(allAutoCounts[auto])}}
+          </div>
+        </div>
+
+        <img @click="showAutoChecks = !showAutoChecks" class="w-6 h-6 mr-6 cursor-pointer" alt="down" src="../../../../assets/icons/chevron-down.svg"/>
+      </div>
+
+      <AutoSection v-if="showAutoChecks" v-for="(stationChecks, key) in fullStore.reportTracker[auto]" :key="key"
+         @update="updateCurrentlySelected"
+         :auto="auto"
+         :station-id="key"
+         :currentlySelected="currentlySelected"
+         :station-checks="stationChecks"
+         :quick-ref="statusValue(counts[auto][key])"
+         :failed-count="counts[auto][key].failedCount"
+         :passed-status-count="counts[auto][key].passedStatusCount"
+         :total-entries="counts[auto][key].totalEntries"/>
+    </div>
 
     <div class="w-full mb-3" v-for="(categories, categoryKey) in reportItems" :key="categoryKey">
       <div class="w-full mb-4 flex flex-col rounded-lg border-2 border-gray-200">
