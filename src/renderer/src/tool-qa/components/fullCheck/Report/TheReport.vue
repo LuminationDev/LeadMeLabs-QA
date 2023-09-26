@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import {computed, ref} from "vue";
 import ReportNavigation from "@renderer/tool-qa/components/fullCheck/Report/ReportNavigation.vue";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { computed, ref } from "vue";
 
 const fullStore = useFullStore();
 const currentReport = ref('Network');

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/Report/ItemHover.vue";
@@ -9,6 +9,8 @@ import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
+const currentStation = ref("");
+const currentCheck = ref("");
 
 const props = defineProps({
   checkType: {
@@ -68,6 +70,21 @@ onMounted(() => {
     data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + props.checkType
   });
 });
+
+const addComment = (comment: string) => {
+  //Update the original tracker
+  fullStore.reportTracker[props.checkType][currentStation.value].find(item => item.id === currentCheck.value)['comment'] = comment;
+}
+
+/**
+ * Update the currently selected check and station so that a comment can be added besides it.
+ * @param check
+ * @param stationId
+ */
+const updateCurrentlySelected = (check: string, stationId: string) => {
+  currentCheck.value = check;
+  currentStation.value = stationId;
+}
 </script>
 
 <template>
@@ -99,8 +116,10 @@ onMounted(() => {
 
           <StatusHover :message="check.message ?? 'No details provided'" :checking-status="check.checkingStatus" :passed-status="check.passedStatus"/>
 
-          <td>
-            <img class="cursor-pointer" src="../../../assets/icons/comment-empty.svg" alt="comment"/>
+          <td class="p-3 w-28" v-on:click="updateCurrentlySelected(check.id, <string>key)">
+            <CommentModal :mode="check['comment'] !== undefined && check['comment'].length > 0 ? 'icon' : 'icon-empty'"
+                          :current-comment="check['comment']"
+                          :callback="addComment"/>
           </td>
         </tr>
       </table>

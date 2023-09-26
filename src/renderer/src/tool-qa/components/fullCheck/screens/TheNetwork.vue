@@ -3,7 +3,6 @@ import Description from "@renderer/tool-qa/components/checks/Description.vue";
 import BasicFullCheck from "@renderer/tool-qa/components/fullCheck/BasicFullCheck.vue";
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
-import BasicAutoCheck from "@renderer/tool-qa/components/fullCheck/BasicAutoCheck.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
