@@ -10,8 +10,8 @@ const currentReport = ref('Network');
 
 //Report titles with their associated sections
 const sections = {
-  'Network': {auto: 'windows_checks', manual: ['CABLING', 'NETWORK', 'CBUS']},
-  'Windows': {auto: '', manual: ['BIOS', 'WINDOWS']},
+  'Network': {auto: '', manual: ['CABLING', 'NETWORK', 'CBUS']},
+  'Windows': {auto: 'windows_checks', manual: ['BIOS', 'WINDOWS']},
   'Software': {auto: '', manual: ['STEAM']},
   'Physical': {auto: '', manual: ['KEYBOARD', 'VIVE', 'PROJECTOR']},
   'Security': {auto: '', manual: ['BITWARDEN']}
