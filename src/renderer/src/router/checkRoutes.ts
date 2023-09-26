@@ -131,8 +131,18 @@ export const fullRoutes = [
         name: 'full-windows',
         component: TheWindows,
         meta: {
-            next: '/check/full/windows/bios',
+            next: '/check/full/windows/auto',
             prev: '/check/full/networking/cbus',
+            progress: 30
+        }
+    },
+    {
+        path: '/check/full/windows/auto',
+        name: 'full-windows-auto',
+        component: TheWindows,
+        meta: {
+            next: '/check/full/windows/bios',
+            prev: '/check/full/windows',
             progress: 30
         }
     },
@@ -145,7 +155,7 @@ export const fullRoutes = [
             userInput: true,
             canSkip: true,
             next: '/check/full/windows/settings',
-            prev: '/check/full/windows',
+            prev: '/check/full/windows/auto',
             progress: 40,
             trackerName: "BIOS"
         }

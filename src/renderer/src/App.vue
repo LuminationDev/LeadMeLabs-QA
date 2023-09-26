@@ -56,7 +56,6 @@ const populateFullReportTracker = () => {
 }
 populateFullReportTracker();
 
-
 /**
  * Populate the stationDetails in the quickStore with the data from a Station in the QaCheck interface format.
  * @param data An array of object strings.
@@ -228,7 +227,7 @@ const handleTCPMessage = (info: any) => {
 
       console.log(responseData.stations)
       responseData.stations.forEach(station => {
-        var s = new Station()
+        const s = new Station();
         s.expectedDetails = {
           ipAddress: station.ipAddress,
           nucIpAddress: "",
@@ -241,10 +240,8 @@ const handleTCPMessage = (info: any) => {
           labLocation: ""
         }
         fullStore.Stations.push(s)
-        console.log(s)
       })
-      console.log(responseData)
-      // stateStore.isServerRunning = JSON.parse(message[1]);
+      fullStore.buildQaList(); //Build the QaList on connection response
       break;
     case "ServerStatus":
       stateStore.isServerRunning = JSON.parse(message[1]);

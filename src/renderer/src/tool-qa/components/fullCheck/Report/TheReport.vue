@@ -10,17 +10,18 @@ const currentReport = ref('Network');
 
 //Report titles with their associated sections
 const sections = {
-  'Network': ['CABLING', 'NETWORK', 'CBUS'],
-  'Windows': ['BIOS', 'WINDOWS'],
-  'Software': ['STEAM'],
-  'Physical': ['KEYBOARD', 'VIVE', 'PROJECTOR'],
-  'Security': ['BITWARDEN']
+  'Network': {auto: 'windows_checks', manual: ['CABLING', 'NETWORK', 'CBUS']},
+  'Windows': {auto: '', manual: ['BIOS', 'WINDOWS']},
+  'Software': {auto: '', manual: ['STEAM']},
+  'Physical': {auto: '', manual: ['KEYBOARD', 'VIVE', 'PROJECTOR']},
+  'Security': {auto: '', manual: ['BITWARDEN']}
 };
 
 const getSections = computed(() => {
   return Object.keys(sections).map(key => ({
     name: key,
-    items: sections[key]
+    manualItems: sections[key].manual,
+    autoItem: sections[key].auto
   }));
 });
 
@@ -34,20 +35,19 @@ const changeReport = (report: string) => {
     <template v-slot:title>
       <p class="text-2xl text-black font-semibold mb-3">Test Report</p>
       <div class="flex flex-row">
-        <ReportNavigation @update="changeReport" v-for="section in getSections" :key="section.name" :title="section.name" :section="section.items" :active="false"/>
+        <ReportNavigation @update="changeReport" v-for="section in getSections"
+                          :key="section.name"
+                          :title="section.name"
+                          :auto-section="section.autoItem"
+                          :section="section.manualItems"
+                          :active="false"/>
       </div>
     </template>
 
     <template v-slot:content>
       <div v-for="section in getSections" class="w-full">
-        <BasicReport v-if="currentReport === section.name" :section="section.items" class="w-full"/>
+        <BasicReport v-if="currentReport === section.name" :auto="section.autoItem" :section="section.manualItems" class="w-full"/>
       </div>
-
-<!--      <BasicReport v-if="currentReport === 'NETWORK'" :section="['CABLING', 'NETWORK', 'CBUS']"/>-->
-<!--      <BasicReport v-if="currentReport === 'WINDOWS'" :section="['BIOS', 'WINDOWS']"/>-->
-<!--      <BasicReport v-if="currentReport === 'SOFTWARE'" :section="['STEAM']"/>-->
-<!--      <BasicReport v-if="currentReport === 'PHYSICAL'" :section="['KEYBOARD', 'VIVE', 'PROJECTOR']"/>-->
-<!--      <BasicReport v-if="currentReport === 'SECURITY'" :section="['BITWARDEN']"/>-->
     </template>
   </GenericLayout>
 </template>

@@ -11,6 +11,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  autoSection: {
+    type: String,
+    required: true
+  },
   section: {
     type: Array<string>,
     required: true
@@ -22,13 +26,24 @@ const props = defineProps({
 });
 
 const failedCount = computed(() => {
-  const extractedValues = [];
+  let extractedValues = [];
 
   props.section.forEach(item => {
     if (fullStore.reportTracker[item]) {
       extractedValues.push(...fullStore.reportTracker[item]);
     }
   });
+
+  if(props.autoSection) {
+    const flattenArray = []
+    //Add the checks from the auto result section, these are grouped by station and hence need a bit more work
+    Object.entries(fullStore.reportTracker[props.autoSection]).forEach(([key, value]) => {
+      value.forEach(item => {
+        flattenArray.push(item);
+      })
+    });
+    extractedValues = extractedValues.concat(flattenArray);
+  }
 
   return extractedValues.filter(entry => entry['passedStatus'] === 'failed').length;
 });
