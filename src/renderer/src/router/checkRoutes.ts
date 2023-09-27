@@ -204,7 +204,7 @@ export const fullRoutes = [
         meta: {
             next: '/check/full/software/auto-steam',
             prev: '/check/full/software',
-            progress: 30
+            progress: 50
         }
     },
     {
@@ -214,7 +214,7 @@ export const fullRoutes = [
         meta: {
             next: '/check/full/software/steam',
             prev: '/check/full/software/auto',
-            progress: 30
+            progress: 50
         }
     },
     {
