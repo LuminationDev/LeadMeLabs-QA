@@ -186,15 +186,35 @@ export const fullRoutes = [
         }
     },
 
-    //Windows Routes
+    //Software Routes
     {
         path: '/check/full/software',
         name: 'full-software',
         component: TheSoftware,
         meta: {
-            next: '/check/full/software/steam',
+            next: '/check/full/software/auto',
             prev: '/check/full/windows/report',
             progress: 50
+        }
+    },
+    {
+        path: '/check/full/software/auto',
+        name: 'full-software-auto',
+        component: TheSoftware,
+        meta: {
+            next: '/check/full/software/auto-steam',
+            prev: '/check/full/software',
+            progress: 30
+        }
+    },
+    {
+        path: '/check/full/software/auto-steam',
+        name: 'full-steam-auto',
+        component: TheSoftware,
+        meta: {
+            next: '/check/full/software/steam',
+            prev: '/check/full/software/auto',
+            progress: 30
         }
     },
     {
@@ -206,7 +226,7 @@ export const fullRoutes = [
             userInput: true,
             canSkip: true,
             next: '/check/full/software/report',
-            prev: '/check/full/software',
+            prev: '/check/full/software/auto',
             progress: 60,
             trackerName: "STEAM"
         }

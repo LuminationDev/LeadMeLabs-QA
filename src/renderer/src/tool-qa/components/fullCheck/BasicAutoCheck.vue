@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import {computed, onMounted, ref} from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/Report/ItemHover.vue";

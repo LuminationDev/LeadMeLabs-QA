@@ -10,11 +10,11 @@ const currentReport = ref('Network');
 
 //Report titles with their associated sections
 const sections = {
-  'Network': {auto: '', manual: ['CABLING', 'NETWORK', 'CBUS']},
-  'Windows': {auto: 'windows_checks', manual: ['BIOS', 'WINDOWS']},
-  'Software': {auto: '', manual: ['STEAM']},
-  'Physical': {auto: '', manual: ['KEYBOARD', 'VIVE', 'PROJECTOR']},
-  'Security': {auto: '', manual: ['BITWARDEN']}
+  'Network': { auto: [], manual: ['CABLING', 'NETWORK', 'CBUS'] },
+  'Windows': { auto: ['windows_checks'], manual: ['BIOS', 'WINDOWS'] },
+  'Software': { auto: ['software_checks', 'steam_config_checks'], manual: ['STEAM'] },
+  'Physical': { auto: [], manual: ['KEYBOARD', 'VIVE', 'PROJECTOR'] },
+  'Security': { auto: [], manual: ['BITWARDEN'] }
 };
 
 const getSections = computed(() => {
@@ -46,7 +46,7 @@ const changeReport = (report: string) => {
 
     <template v-slot:content>
       <div v-for="section in getSections" class="w-full">
-        <BasicReport v-if="currentReport === section.name" :auto="section.autoItem" :section="section.manualItems" class="w-full"/>
+        <BasicReport v-if="currentReport === section.name" :auto="section.autoItem.length !== 0 ? section.autoItem : undefined" :section="section.manualItems" class="w-full"/>
       </div>
     </template>
   </GenericLayout>
