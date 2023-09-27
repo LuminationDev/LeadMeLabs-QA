@@ -1,16 +1,24 @@
-import { PDFDocument, rgb } from 'pdf-lib';
-import { dialog } from 'electron';
+import {PDFDocument, rgb} from 'pdf-lib';
+import {dialog} from 'electron';
 import fs from 'fs';
+import path from "path";
 
 export async function DetermineReportType(info: any) {
     switch(info.type) {
         case "pdf":
-            void GeneratePDF(info);
+            void generatePDF(info);
             break;
 
         case "csv":
-            void GenerateCSV(info);
+            void generateCSV(info);
             break;
+
+        case "save_progress":
+            void saveCurrentProgress(info);
+            break;
+
+        case "load_progress":
+            return await loadCurrentProgress(info);
 
         default:
             break;
@@ -21,7 +29,7 @@ export async function DetermineReportType(info: any) {
  * Generate a basic PDF document with the info.data supplied.
  * @param info
  */
-const GeneratePDF = async (info: any) => {
+const generatePDF = async (info: any) => {
     const pdfDoc = await PDFDocument.create();
     const a4Page = pdfDoc.addPage([595, 842]); // A4 size in points (approximately)
 
@@ -46,6 +54,41 @@ const GeneratePDF = async (info: any) => {
     }
 }
 
-const GenerateCSV = async (info: any) => {
+const generateCSV = async (info: any) => {
     console.log("Do something good");
+}
+
+const saveCurrentProgress = async (info: any) => {
+    return dialog.showOpenDialog({ properties: ['openDirectory'] }).then((res) => {
+        if (!res.canceled) {
+            console.log(res.filePaths[0])
+            const outputDir = res.filePaths[0]
+            try {
+                fs.writeFileSync(path.join(outputDir, 'progress.json'), info.data)
+            } catch (err) {
+                // @ts-ignore type error has message
+                console.log(err.message)
+            }
+        }
+    });
+}
+
+const loadCurrentProgress = async (filepath: string) => {
+    const res = await dialog.showOpenDialog({properties: ['openFile']});
+    if (!res.canceled) {
+        const filepath = res.filePaths[0];
+        console.log(filepath);
+
+        try {
+            return {
+                message: 'load_progress',
+                data: JSON.parse(fs.readFileSync(filepath, 'utf-8'))
+            };
+        } catch (err) {
+            console.error(err);
+            return 0;
+        }
+    } else {
+        return 0;
+    }
 }

@@ -139,6 +139,10 @@ api.ipcRenderer.on('backend_message', (event, info) => {
       console.log(info);
       break;
 
+    case CONSTANT.MESSAGE.LOAD_PROGRESS:
+      fullStore.reportTracker = info.data;
+      break;
+
     default:
       console.log(info);
       break;

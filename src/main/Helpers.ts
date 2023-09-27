@@ -32,8 +32,8 @@ export default class Helpers {
      * been sent. This allows just one listener to be active rather than individual function ones.
      */
     helperListenerDelegate(): void {
-        this.ipcMain.on('helper_function', (_event, info) => {
-            switch(info.channelType) {
+        this.ipcMain.on('helper_function', async (_event, info) => {
+            switch (info.channelType) {
                 case "tcp_server_command":
                     this.tcpServer.handleCommand(info)
                     break;
@@ -55,7 +55,14 @@ export default class Helpers {
                     break;
 
                 case "generate_report":
-                    void DetermineReportType(info);
+                    const details = await DetermineReportType(info);
+
+                    if (details !== undefined) {
+                        this.mainWindow.webContents.send('backend_message', {
+                            channelType: details['message'],
+                            data: details['data'],
+                        });
+                    }
                     break;
 
                 default:

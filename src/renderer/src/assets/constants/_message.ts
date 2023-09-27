@@ -16,3 +16,7 @@ export const REQUEST_STATION_DETAILS_NETWORK = "QA:Station:QA:StationNetwork";
 export const REQUEST_STATION_DETAILS_SOFTWARE = "QA:Station:QA:StationSoftware";
 export const REQUEST_STATION_DETAILS_CONFIG = "QA:Station:QA:StationConfig";
 export const REQUEST_STATION_DETAILS_ALL = "QA:Station:QA:StationAll";
+
+//PROGRESS MESSAGES
+export const SAVE_PROGRESS = "save_progress"; //The frontend is trying to save file
+export const LOAD_PROGRESS = "load_progress"; //The backend is trying to load a saved file
