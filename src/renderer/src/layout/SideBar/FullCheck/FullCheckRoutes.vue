@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import FullCheckItem from "@renderer/layout/SideBar/FullCheck/FullCheckItem.vue";
 import logo from '@renderer/assets/images/tool-logo.svg';
-import {useRoute, useRouter} from "vue-router";
+import * as CONSTANT from "@renderer/assets/constants";
+import { useRoute, useRouter } from "vue-router";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 
 const experiencesNav = [
   { title: "Launching", objectName: "LAUNCHING", progress: 10, routeName: 'launching' },
@@ -32,6 +34,17 @@ const securityNav = [
   { title: "BIOS", objectName: "BITWARDEN", progress: 91, routeName: 'full-bitwarden' },
 ]
 
+const fullStore = useFullStore();
+
+const saveCurrentProgress = async () => {
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.GENERATE_REPORT,
+    type: CONSTANT.MESSAGE.SAVE_PROGRESS,
+    data: JSON.stringify(fullStore.reportTracker)
+  });
+};
+
 const route = useRoute();
 const router = useRouter();
 </script>
@@ -58,7 +71,7 @@ const router = useRouter();
       <div class="flex flex-row w-48 justify-between mb-2">
         <div class="text-sm font-semibold">QA Test</div>
 
-        <div class="bg-blue-50 text-blue-600 rounded-xl px-1.5 py-0.5 cursor-pointer border-[1px]
+        <div @click="saveCurrentProgress" class="bg-blue-50 text-blue-600 rounded-xl px-1.5 py-0.5 cursor-pointer border-[1px]
                     border-blue-400 font-semibold text-xs hover:bg-gray-50">
           Save & Exit
         </div>
