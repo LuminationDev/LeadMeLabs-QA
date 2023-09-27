@@ -4,35 +4,7 @@ import logo from '@renderer/assets/images/tool-logo.svg';
 import * as CONSTANT from "@renderer/assets/constants";
 import { useRoute, useRouter } from "vue-router";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-
-const experiencesNav = [
-  { title: "Launching", objectName: "LAUNCHING", progress: 10, routeName: 'launching' },
-]
-
-const networkNav = [
-  { title: "Cabling & Routing", objectName: "CABLING", progress: 10, routeName: 'full-cabling' },
-  { title: "Network", objectName: "NETWORK", progress: 20, routeName: 'full-network' },
-  { title: "CBus Options", objectName: "CBUS", progress: 30, routeName: 'full-cbus-options' }
-]
-
-const windowsNav = [
-  { title: "BIOS", objectName: "BIOS", progress: 40, routeName: 'full-bios' },
-  { title: "Settings", objectName: "WINDOWS", progress: 50, routeName: 'full-windows-settings' },
-]
-
-const softwareNav = [
-  { title: "Steam", objectName: "STEAM", progress: 60, routeName: 'full-steam' }
-]
-
-const physicalNav = [
-  { title: "Keyboard", objectName: "KEYBOARD", progress: 70, routeName: 'full-keyboard' },
-  { title: "Vive", objectName: "VIVE", progress: 80, routeName: 'full-vive' },
-  { title: "Projector", objectName: "PROJECTOR", progress: 90, routeName: 'full-projector' },
-]
-
-const securityNav = [
-  { title: "BIOS", objectName: "BITWARDEN", progress: 91, routeName: 'full-bitwarden' },
-]
+import { navigation } from "@renderer/router/checkRoutes";
 
 const fullStore = useFullStore();
 
@@ -59,12 +31,12 @@ const router = useRouter();
 
     <nav class="flex flex-col w-full h-full text-black overflow-y-auto gray-scrollbar">
       <!--Navbar Title with sub-categories below-->
-      <FullCheckItem :active="route.path.includes('/check/full/networking')" @click="router.push('/check/full/networking')" title="Networking" :object-values="networkNav"/>
-      <FullCheckItem :active="route.path.includes('/check/full/experiences')" @click="router.push('/check/full/experiences')" title="Experiences" :object-values="experiencesNav"/>
-      <FullCheckItem :active="route.path.includes('/check/full/windows')" @click="router.push('/check/full/windows')" title="Windows" :object-values="windowsNav"/>
-      <FullCheckItem :active="route.path.includes('/check/full/software')" @click="router.push('/check/full/software')" title="Software" :object-values="softwareNav"/>
-      <FullCheckItem :active="route.path.includes('/check/full/physical')" @click="router.push('/check/full/physical')" title="Physical" :object-values="physicalNav"/>
-      <FullCheckItem :active="route.path.includes('/check/full/security')" @click="router.push('/check/full/security')" title="Security" :object-values="securityNav" :last-item="true"/>
+      <FullCheckItem v-for="(nav, index) in navigation"
+                     @click="router.push(nav.route)"
+                     :active="route.path.includes(nav.route)"
+                     :title="nav.title"
+                     :object-values="nav.screens"
+                     :last-item="(navigation.length - 1) === index"/>
     </nav>
 
     <div class="flex h-20 sticky items-center flex-col flex-shrink-0 justify-center">

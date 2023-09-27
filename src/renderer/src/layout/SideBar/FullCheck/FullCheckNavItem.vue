@@ -28,11 +28,13 @@ const completed = computed(() => {
   let total = 0;
 
   props.objectNames.forEach(type => {
-    const reportTracker: QaCheck[] = fullStore.reportTracker[type];
-    correct += reportTracker.filter(item => item.passedStatus === 'passed').length;
-    failed += reportTracker.filter(item => item.passedStatus === 'failed').length;
-    progress += reportTracker.filter(item => item.passedStatus !== null).length;
-    total += fullStore.reportTracker[type].length;
+    if (fullStore.reportTracker[type] !== undefined) {
+      const reportTracker: QaCheck[] = fullStore.reportTracker[type];
+      correct += reportTracker.filter(item => item.passedStatus === 'passed').length;
+      failed += reportTracker.filter(item => item.passedStatus === 'failed').length;
+      progress += reportTracker.filter(item => item.passedStatus !== null).length;
+      total += fullStore.reportTracker[type].length;
+    }
   })
 
   if(progress === 0) {

@@ -2,26 +2,18 @@
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import ReportNavigation from "@renderer/tool-qa/components/fullCheck/Report/ReportNavigation.vue";
+import { navigation } from "@renderer/router/checkRoutes";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed, ref } from "vue";
 
 const fullStore = useFullStore();
 const currentReport = ref('Network');
 
-//Report titles with their associated sections
-const sections = {
-  'Network': { auto: [], manual: ['CABLING', 'NETWORK', 'CBUS'] },
-  'Windows': { auto: ['windows_checks'], manual: ['BIOS', 'WINDOWS'] },
-  'Software': { auto: ['software_checks', 'steam_config_checks'], manual: ['STEAM'] },
-  'Physical': { auto: [], manual: ['KEYBOARD', 'VIVE', 'PROJECTOR'] },
-  'Security': { auto: [], manual: ['BITWARDEN'] }
-};
-
 const getSections = computed(() => {
-  return Object.keys(sections).map(key => ({
-    name: key,
-    manualItems: sections[key].manual,
-    autoItem: sections[key].auto
+  return navigation.map(key => ({
+    name: key.title,
+    manualItems: key.checks.manual,
+    autoItem: key.checks.auto
   }));
 });
 

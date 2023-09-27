@@ -4,7 +4,9 @@ import BasicFullCheck from "@renderer/tool-qa/components/fullCheck/BasicFullChec
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
 import { useRoute } from "vue-router";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 
+const fullStore = useFullStore();
 const route = useRoute();
 </script>
 
@@ -16,11 +18,10 @@ const route = useRoute();
     </template>
 
     <template v-slot:content>
-      <Description v-if="route.name === 'full-networking'"/>
-      <BasicFullCheck v-if="route.name === 'full-cabling'" title="Cabling" object-name="CABLING"/>
-      <BasicFullCheck v-if="route.name === 'full-network'" title="Network" object-name="NETWORK"/>
-      <BasicFullCheck v-if="route.name === 'full-cbus-options'" title="CBus" object-name="CBUS"/>
-      <BasicReport v-if="route.name === 'full-network-report'" :section="['CABLING', 'NETWORK', 'CBUS']"/>
+      <Description v-if="route.name === 'full-network'"/>
+      <BasicFullCheck v-if="route.name === 'full-network-network'" title="Network" object-name="NETWORK"/>
+      <BasicFullCheck v-if="route.name === 'full-network-cbus'" title="CBus" object-name="CBUS"/>
+      <BasicReport v-if="route.name === 'full-network-report'" :auto="fullStore.getAutoChecks(route.path)" :section="fullStore.getManualChecks(route.path)"/>
     </template>
   </GenericLayout>
 </template>
