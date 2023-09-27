@@ -48,10 +48,10 @@ export const useFullStore = defineStore({
             windowsChecks.checks.push(wakeOnLAN, amdInstalled, envVariable, wallpaper, timezone, dateTime);
 
             const softwareChecks = new QaGroup("software_checks")
-            const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 10000, stationIds, false, [], "SetVol is installed")
-            const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 10000, stationIds, false, [], "SteamCMD is installed")
-            const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 10000, stationIds, false, [], "SteamCMD is initialised with user details")
-            const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 10000, stationIds, false, [], "SteamCMD configured", "SteamCMD has Steam Guard detail or does not need them")
+            const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 10000, stationIds, false, [], "SetVol Installed", "SetVol is installed at the correct location")
+            const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 10000, stationIds, false, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
+            const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 10000, stationIds, false, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
+            const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 10000, stationIds, false, [], "SteamCMD Configured", "SteamCMD has Steam Guard detail or does not need them")
             softwareChecks.checks.push(setvolInstalled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured)
             softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
 
@@ -108,6 +108,34 @@ export const useFullStore = defineStore({
             if (index !== -1) {
                 this.qaGroups[index].startQa()
             }
+        },
+
+        statusValue(category) {
+            if (category.failedCount > 0) {
+                return category.failedCount + " Failed";
+            } else if ((category.passedStatusCount === category.totalEntries) && category.totalEntries > 0) {
+                return "Passed";
+            } else {
+                return "Skipped";
+            }
+        },
+
+        /**
+         * Get the counts of passedStatus within a test group.
+         * @param entries An array containing a number of tests.
+         */
+        getCounts (entries: any) {
+            const { totalEntries, passedStatusCount, failedCount } = entries.reduce(
+                (acc, item) => {
+                    acc.totalEntries += 1; // Increase totalEntries by 1 for each object in the array
+                    acc.passedStatusCount += item['passedStatus'] === 'passed' ? 1 : 0; // Increment passedStatusCount if 'passed'
+                    acc.failedCount += item['passedStatus'] === 'failed' ? 1 : 0; // Increment failedCount if 'failed'
+                    return acc;
+                },
+                { totalEntries: 0, passedStatusCount: 0, failedCount: 0 }
+            );
+
+            return { totalEntries, passedStatusCount, failedCount };
         }
     },
     getters: {

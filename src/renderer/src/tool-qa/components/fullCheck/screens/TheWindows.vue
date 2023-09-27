@@ -20,7 +20,7 @@ const route = useRoute();
       <BasicAutoCheck v-if="route.name === 'full-windows-auto'" check-type="windows_checks"/>
       <BasicFullCheck v-if="route.name === 'full-bios'" title="BIOS" object-name="BIOS"/>
       <BasicFullCheck v-if="route.name === 'full-windows-settings'" title="Windows' Settings" object-name="WINDOWS"/>
-      <BasicReport v-if="route.name === 'full-windows-report'" auto="windows_checks" :section="['BIOS', 'WINDOWS']"/>
+      <BasicReport v-if="route.name === 'full-windows-report'" :auto="['windows_checks']" :section="['BIOS', 'WINDOWS']"/>
     </template>
   </GenericLayout>
 </template>

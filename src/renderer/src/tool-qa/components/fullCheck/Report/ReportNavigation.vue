@@ -12,7 +12,7 @@ const props = defineProps({
     required: true
   },
   autoSection: {
-    type: String,
+    type: Array<string>,
     required: true
   },
   section: {
@@ -34,18 +34,22 @@ const failedCount = computed(() => {
     }
   });
 
-  if(props.autoSection) {
-    const flattenArray = []
-    //Add the checks from the auto result section, these are grouped by station and hence need a bit more work
-    Object.entries(fullStore.reportTracker[props.autoSection]).forEach(([key, value]) => {
-      value.forEach(item => {
-        flattenArray.push(item);
-      })
+  if(props.autoSection.length > 0) {
+    props.autoSection.forEach(entry => {
+      if (fullStore.reportTracker[entry] !== undefined) {
+        const flattenArray = []
+        //Add the checks from the auto result section, these are grouped by station and hence need a bit more work
+        Object.entries(fullStore.reportTracker[entry]).forEach(([key, value]) => {
+          value.forEach(item => {
+            flattenArray.push(item);
+          })
+        });
+        extractedValues = extractedValues.concat(flattenArray);
+      }
     });
-    extractedValues = extractedValues.concat(flattenArray);
   }
 
-  return extractedValues.filter(entry => entry['passedStatus'] === 'failed').length;
+  return extractedValues.filter(entry => entry['passedStatus'] !== undefined && entry['passedStatus'] === 'failed').length;
 });
 </script>
 
