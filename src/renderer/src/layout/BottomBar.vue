@@ -32,7 +32,7 @@ const goNextLink = (): void => {
  * entered the correct information. Block the next route until they do.
  */
 const canProceed = computed(() => {
-  return props.meta['userInput'] !== true || stateStore.canProceed;
+  return props.meta['userInput'] !== true || stateStore.canProceed || true;
 });
 
 const addComment = (comment: string) => {

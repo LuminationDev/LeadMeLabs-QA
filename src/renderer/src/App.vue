@@ -217,6 +217,29 @@ const handleTCPMessage = (info: any) => {
     return
   }
 
+  if (info.mainText.includes("ExperienceLaunching")) {
+    const status = info.mainText.split(":::")[5]
+    const message = info.mainText.split(":::")[6]
+    const experienceId = info.mainText.split(":::")[4]
+    const stationId = info.mainText.split(":::")[2]
+    fullStore.updateExperienceCheck(stationId, experienceId, status, message)
+    return
+  }
+
+  if (info.mainText.includes("ExperienceLaunched")) {
+    const stationId = info.mainText.split(":")[1].split("::")[0].split(",")[1]
+    const experienceId = info.mainText.split("::")[1]
+    fullStore.updateExperienceCheck(stationId, experienceId, "passed", "")
+    return
+  }
+
+  if (info.mainText.includes("ExperienceLaunchFailed")) {
+    const stationId = info.mainText.split(":")[1].split("::")[0].split(",")[1]
+    const experienceId = info.mainText.split("::")[1]
+    fullStore.updateExperienceCheck(stationId, experienceId, "failed", "")
+    return
+  }
+
   switch(message[0]) {
     case "Connected":
       const responseData = JSON.parse(message[1])

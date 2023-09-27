@@ -1,6 +1,7 @@
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
 import TheNetwork from "@renderer/tool-qa/components/fullCheck/screens/TheNetwork.vue";
+import TheExperiences from "@renderer/tool-qa/components/fullCheck/screens/TheExperiences.vue";
 import TheWindows from "@renderer/tool-qa/components/fullCheck/screens/TheWindows.vue";
 import TheSoftware from "@renderer/tool-qa/components/fullCheck/screens/TheSoftware.vue";
 import ThePhysical from "@renderer/tool-qa/components/fullCheck/screens/ThePhysical.vue";
@@ -118,10 +119,35 @@ export const fullRoutes = [
         name: 'full-network-report',
         component: TheNetwork,
         meta: {
-            next: '/check/full/windows',
+            next: '/check/full/experiences',
             prev: '/check/full/networking/cbus',
             progress: 30,
             nextText: 'Proceed'
+        }
+    },
+
+    {
+        path: '/check/full/experiences',
+        name: 'full-experiences',
+        component: TheExperiences,
+        meta: {
+            next: '/check/full/experiences/launching',
+            prev: '/check/full/networking/cbus',
+            progress: 0
+        }
+    },
+    {
+        path: '/check/full/experiences/launching',
+        name: 'full-launching',
+        component: TheExperiences,
+        meta: {
+            addComment: true,
+            userInput: true,
+            canSkip: true, //The user can skip the page but requires a comment
+            next: '/check/full/windows',
+            prev: '/check/full/experiences',
+            progress: 10,
+            trackerName: "LAUNCHING" //Name of the key in the object tracker to save skip messages/comments to
         }
     },
 
@@ -132,7 +158,7 @@ export const fullRoutes = [
         component: TheWindows,
         meta: {
             next: '/check/full/windows/auto',
-            prev: '/check/full/networking/report',
+            prev: '/check/full/experiences/launching',
             progress: 30
         }
     },

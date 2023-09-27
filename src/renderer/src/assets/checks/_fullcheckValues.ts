@@ -11,6 +11,10 @@ export const CABLING = {
     "CBus Ethernet": "An Ethernet cable is connected to the CBus"
 }
 
+export const LAUNCHING = {
+    "LAUNCHING": "Launching"
+}
+
 export const NETWORK = {
     "Milesight Interface": "The devices are viewable in the Milesight router web interface and have the correct IP address",
     "Milesight Router": "The master configuration file has been uploaded to the router"
