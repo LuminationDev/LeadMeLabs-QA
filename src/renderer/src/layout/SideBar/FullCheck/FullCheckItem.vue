@@ -34,7 +34,7 @@ const route = useRoute();
 
 <template>
   <div class="flex flex-col ml-4 relative">
-    <FullCheckNavItem class="my-3" :class="{'font-semibold': active}" :title="title" :object-names="objectValues.map(item => item.objectName)"/>
+    <FullCheckNavItem class="my-3 cursor-pointer" :class="{'font-semibold': active}" :title="title" :object-names="objectValues.map(item => item.objectName)"/>
 
     <div v-if="active" v-for="(item, index) in objectValues" :key="item.title" class="ml-5 flex flex-col relative">
       <FullCheckNavItem class="my-3" :class="{'font-semibold': route.name === item.routeName}"  :title="item.title" :object-names="[item.objectName]"/>
