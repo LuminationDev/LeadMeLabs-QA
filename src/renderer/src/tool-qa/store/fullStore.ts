@@ -3,6 +3,8 @@ import {Appliance, QaCheck, QaDetail, ReportTrackerItem, Station} from "../inter
 import { Station as StationClass } from '../types/_station'
 import {QaGroup} from "../types/_qaGroup";
 import {QaCheckResult} from "../types/_qaCheckResult";
+import * as CONSTANT from "../../assets/constants";
+import {useStateStore} from "./stateStore";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -29,9 +31,108 @@ export const useFullStore = defineStore({
         //List of appliance objects
         ApplianceList: Array<Appliance>(),
 
+        experienceChecks: Array<any>(),
+
         qaGroups: [] as Array<QaGroup>
     }),
     actions: {
+        buildExperienceChecks() {
+            let stationIds = this.NucStationList.map(station => station.id)
+
+            //todo - build out proper list based on tier selection
+            let experiences = [
+                {
+                    id: 346900,
+                    title: "AdVenture Capitalist"
+                },
+                {
+                    id: 512270,
+                    title: "Home - A VR Spacewalk"
+                },
+                {
+                    id: 2499150,
+                    title: "Aonar"
+                },
+                {
+                    id: 513490,
+                    title: "1943 Berlin Blitz"
+                },
+                {
+                    id: 1404360,
+                    title: "A Shopping Trip to Eklan Tor"
+                }
+            ]
+
+            experiences.forEach(experience => {
+                let stations = Array<any>()
+                stationIds.forEach(stationId => {
+                    stations.push({
+                        id: stationId,
+                        status: "unchecked",
+                        message: null
+                    })
+                })
+                this.experienceChecks.push({
+                    id: experience.id,
+                    title: experience.title,
+                    stations: stations
+                })
+            })
+        },
+
+        startExperienceChecks() {
+            const stateStore = useStateStore();
+            if (this.experienceChecks.length === 0) {
+                this.buildExperienceChecks()
+            }
+            var index = 0
+            this.experienceChecks[0].stations.forEach(station => {
+                this.experienceChecks[0].stations[index].status === "checking"
+                api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+                    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+                    key: stateStore.key,
+                    address: this.nucAddress,
+                    port: 55556,
+                    data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + station.id + ":" + this.experienceChecks[0].id
+                });
+                index++
+            })
+        },
+
+        updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
+            const stateStore = useStateStore();
+            const index = this.experienceChecks.findIndex(element => element.id == experienceId);
+            if (index === -1) {
+                return;
+            }
+            const stationIndex = this.experienceChecks[index].stations.findIndex(element => element.id == stationId);
+            if (index === -1) {
+                return;
+            }
+            this.experienceChecks[index].stations[stationIndex].status = status
+            this.experienceChecks[index].stations[stationIndex].message = message
+
+            if (status === "passed" || status === "failed") {
+                //find the next unpassed one
+                let nextStationIndex = -1
+                const nextCheckIndex = this.experienceChecks.findIndex(element => {
+                    nextStationIndex = element.stations.findIndex(element => element.id == stationId)
+                    if (index === -1) return false
+
+                    return element.stations[nextStationIndex].status === "unchecked"
+                })
+
+                this.experienceChecks[nextCheckIndex].stations[nextStationIndex].status = "checking"
+                api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+                    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+                    key: stateStore.key,
+                    address: this.nucAddress,
+                    port: 55556,
+                    data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + this.experienceChecks[nextCheckIndex].stations[nextStationIndex].id + ":" + this.experienceChecks[nextCheckIndex].id
+                });
+            }
+        },
+
         buildQaList() {
             let stationIds = this.NucStationList.map(station => station.id)
             const stationConnectionChecks = new QaGroup("station_connection_checks")

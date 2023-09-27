@@ -3,6 +3,10 @@ import FullCheckItem from "@renderer/layout/SideBar/FullCheck/FullCheckItem.vue"
 import logo from '@renderer/assets/images/tool-logo.svg';
 import { useRoute } from "vue-router";
 
+const experiencesNav = [
+  { title: "Launching", objectName: "LAUNCHING", progress: 10, routeName: 'launching' },
+]
+
 const networkNav = [
   { title: "Cabling & Routing", objectName: "CABLING", progress: 10, routeName: 'full-cabling' },
   { title: "Network", objectName: "NETWORK", progress: 20, routeName: 'full-network' },
@@ -42,6 +46,7 @@ const route = useRoute();
     <nav class="flex flex-col w-full h-full text-black overflow-y-auto gray-scrollbar">
       <!--Navbar Title with sub-categories below-->
       <FullCheckItem :active="route.path.includes('/check/full/networking')" title="Networking" :object-values="networkNav"/>
+      <FullCheckItem :active="route.path.includes('/check/full/experiences')" title="Experiences" :object-values="experiencesNav"/>
       <FullCheckItem :active="route.path.includes('/check/full/windows')" title="Windows" :object-values="windowsNav"/>
       <FullCheckItem :active="route.path.includes('/check/full/software')" title="Software" :object-values="softwareNav"/>
       <FullCheckItem :active="route.path.includes('/check/full/physical')" title="Physical" :object-values="physicalNav"/>
