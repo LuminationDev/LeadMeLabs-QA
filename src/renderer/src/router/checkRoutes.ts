@@ -1,13 +1,13 @@
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
 import TheNetwork from "@renderer/tool-qa/components/fullCheck/screens/TheNetwork.vue";
-import TheExperiences from "@renderer/tool-qa/components/fullCheck/screens/TheExperiences.vue";
 import TheWindows from "@renderer/tool-qa/components/fullCheck/screens/TheWindows.vue";
 import TheSoftware from "@renderer/tool-qa/components/fullCheck/screens/TheSoftware.vue";
-import ThePhysical from "@renderer/tool-qa/components/fullCheck/screens/ThePhysical.vue";
 import TheSecurity from "@renderer/tool-qa/components/fullCheck/screens/TheSecurity.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import TheReport from "@renderer/tool-qa/components/fullCheck/Report/TheReport.vue";
+import TheHardware from "@renderer/tool-qa/components/fullCheck/screens/TheHardware.vue";
+import TheIMVR from "@renderer/tool-qa/components/fullCheck/screens/TheIMVR.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -30,6 +30,262 @@ export const quickRoutes = [
         }
     }
 ];
+
+/**
+ * Describes each page within the QA tool.
+ * NOTE this does not yet align with the routes, they need to be changed manually if the screens are moved around.
+ */
+export const navigation = [
+    {
+        route: "/check/full/hardware",
+        title: "Hardware",
+        component: TheHardware,
+        progress: 0, //TODO work out how to automate this
+        screens: [ //TODO Work out how to auto generate the pages/auto checks
+            { title: "Battery", objectName: "BATTERY", progress: 10 },
+            { title: "Cabling & Routing", objectName: "CABLING", progress: 20 },
+            { title: "Projectors", objectName: "PROJECTOR", progress: 30 },
+            { title: "Keyboard", objectName: "KEYBOARD", progress: 40 },
+            { title: "BIOS", objectName: "BIOS", progress: 50 },
+        ],
+        checks: {
+            auto: [],
+            manual: ['BATTERY', 'CABLING', 'PROJECTOR', 'KEYBOARD', 'BIOS'] //TODO Work out how to automate this
+        }
+    },
+    {
+        route: "/check/full/networking",
+        title: "Network",
+        component: TheNetwork,
+        progress: 31,
+        screens: [
+            { title: "Network", objectName: "NETWORK", progress: 50 },
+            { title: "CBus Options", objectName: "CBUS", progress: 60 }
+        ],
+        checks: {
+            auto: [],
+            manual: ['NETWORK', 'CBUS']
+        }
+    },
+    {
+        route: "/check/full/windows",
+        title: "Windows",
+        component: TheWindows,
+        progress: 61,
+        screens: [
+
+            { title: "Settings", objectName: "WINDOWS", progress: 80 },
+        ],
+        checks: {
+            auto: ['windows_checks'],
+            manual: ['WINDOWS']
+        }
+    },
+    {
+        route: "/check/full/security",
+        title: "Security",
+        component: TheSecurity,
+        progress: 81,
+        screens: [
+            { title: "BIOS", objectName: "BITWARDEN", progress: 90 },
+        ],
+        checks: {
+            auto: [],
+            manual: ['BITWARDEN']
+        }
+    },
+    {
+        route: "/check/full/software",
+        title: "Software",
+        component: TheSoftware,
+        progress: 91,
+        screens: [
+            { title: "Steam", objectName: "STEAM", progress: 95 },
+        ],
+        checks: {
+            auto: ['software_checks', 'steam_config_checks'],
+            manual: ['STEAM']
+        }
+    },
+    {
+        route: "/check/full/imvr",
+        title: "IMVR Stations",
+        component: TheIMVR,
+        progress: 96,
+        screens: [
+            { title: "Vive", objectName: "VIVE", progress: 20 },
+            { title: "Launching", objectName: "LAUNCHING", progress: 100 },
+        ],
+        checks: {
+            auto: [],
+            manual: ['VIVE']
+        }
+    },
+    // {
+    //     route: "/check/full/leadme",
+    //     title: "LeadMe",
+    //     component: "",
+    //     progress: 0,
+    //     screens : [],
+    //     checks: {
+    //         auto: [],
+    //         manual: []
+    //     }
+    // }
+]
+
+/**
+ * Automatically generate the routes for the basic checks from the data structure above.
+ */
+const createBasicRoutes = (): [{}] => {
+    const routes: [{}] = [{}];
+
+    navigation.forEach((entry, navigationIndex) => {
+        const descriptionRoute = {
+            path: entry.route,
+            name: `full-${entry.title.toLowerCase()}`,
+            component: entry.component,
+            meta: {
+                next: generateNextPath("description", navigationIndex, 0),
+                prev: generatePreviousPath("description", navigationIndex, 0),
+                progress: entry.progress
+            }
+        };
+
+        routes.push(descriptionRoute);
+
+        if (entry.checks.auto.length > 0) {
+            entry.checks.auto.forEach((autoCheck, pageIndex) => {
+                const autoRoute = {
+                    path: `${entry.route}/auto/${autoCheck}`,
+                    name: `full-${entry.title.toLowerCase()}-auto-${autoCheck}`,
+                    component: entry.component,
+                    meta: {
+                        next: generateNextPath("auto", navigationIndex, pageIndex),
+                        prev: generatePreviousPath("auto", navigationIndex, pageIndex),
+                        progress: entry.progress
+                    }
+                };
+                routes.push(autoRoute);
+            });
+        }
+
+        if (entry.screens.length > 0) {
+            entry.screens.forEach((screen, pageIndex) => {
+                const manualRoute = {
+                    path: `${entry.route}/${screen.objectName.toLowerCase()}`,
+                    name: `full-${entry.title.toLowerCase()}-${screen.objectName.toLowerCase()}`,
+                    component: entry.component,
+                    meta: {
+                        addComment: true,
+                        userInput: true,
+                        canSkip: true,
+                        next: generateNextPath("manual", navigationIndex, pageIndex),
+                        prev: generatePreviousPath("manual", navigationIndex, pageIndex),
+                        progress: screen.progress,
+                        trackerName: screen.objectName
+                    }
+                };
+                routes.push(manualRoute);
+            });
+        }
+
+        const reportRoute = {
+            path: `${entry.route}/report`,
+            name: `full-${entry.title.toLowerCase()}-report`,
+            component: entry.component,
+            meta: {
+                next: generateNextPath("report", navigationIndex, 0),
+                prev: generatePreviousPath("report", navigationIndex, 0),
+                progress: entry.screens[entry.screens.length -1].progress,
+                nextText: 'Proceed'
+            }
+        };
+        routes.push(reportRoute);
+    });
+
+    console.log(routes);
+
+    return routes;
+}
+
+/**
+ * Generate the next path based on the user's current location.
+ * @param pageType A string of the page that a user is on. [description, auto, manual or report]
+ * @param navigationIndex A number of the current route index as per the navigation array
+ * @param pageIndex A number of the individual page index of the auto checks or navigation entries screens
+ */
+const generateNextPath = (pageType: string, navigationIndex: number, pageIndex: number) => {
+    const entry = navigation[navigationIndex];
+
+    if (pageType === 'report' && navigationIndex === navigation.length - 1) {
+        return '/check/full/report';
+    }
+
+    switch (pageType) {
+        case 'description':
+            return entry.checks.auto.length > 0
+                ? `${entry.route}/auto/${entry.checks.auto[0]}`
+                : `${entry.route}/${entry.screens[0].objectName.toLowerCase()}`;
+
+        case 'auto':
+            return pageIndex < entry.checks.auto.length - 1
+                ? `${entry.route}/auto/${entry.checks.auto[pageIndex + 1]}`
+                : `${entry.route}/${entry.screens[0].objectName.toLowerCase()}`;
+
+        case 'manual':
+            return pageIndex < entry.screens.length - 1
+                ? `${entry.route}/${entry.screens[pageIndex + 1].objectName.toLowerCase()}`
+                : `${entry.route}/report`;
+
+        case 'report':
+            const nextEntry = navigation[navigationIndex + 1];
+            return `${nextEntry.route}`;
+
+        default:
+            return "/";
+    }
+};
+
+/**
+ * Generate the previous path based on the user's current location.
+ * @param pageType A string of the page that a user is on. [description, auto, manual or report]
+ * @param navigationIndex A number of the current route index as per the navigation array
+ * @param pageIndex A number of the individual page index of the auto checks or navigation entries screens
+ */
+const generatePreviousPath = (pageType: string, navigationIndex: number, pageIndex: number) => {
+    const entry = navigation[navigationIndex];
+
+    if (navigationIndex === -1) {
+        const lastEntry = navigation[navigation.length - 1];
+        return `${lastEntry.route}/report`;
+    }
+
+    switch (pageType) {
+        case 'description':
+            return navigationIndex === 0 ? '/check/full' : `${navigation[navigationIndex - 1].route}/report`;
+
+        case 'auto':
+            return pageIndex > 0
+                ? `${entry.route}/auto/${entry.checks.auto[pageIndex - 1]}`
+                : entry.route;
+
+        case 'manual':
+            if (pageIndex > 0) {
+                return `${entry.route}/${entry.screens[pageIndex - 1].objectName.toLowerCase()}`;
+            } else if (entry.checks.auto.length > 0) {
+                return `${entry.route}/auto/${entry.checks.auto[entry.checks.auto.length - 1]}`;
+            } else {
+                return `${entry.route}`;
+            }
+
+        case 'report':
+            return `${entry.route}/${entry.screens[entry.screens.length - 1].objectName.toLowerCase()}`;
+
+        default:
+            return "/";
+    }
+};
 
 /**
  * Routes used for the Full Lab Check
@@ -55,321 +311,14 @@ export const fullRoutes = [
             addComment: true,
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
-            next: '/check/full/networking',
+            next: navigation[0].route,
             prev: '/check/full',
             progress: 0
         }
     },
 
-    //Networking Routes
-    {
-        path: '/check/full/networking',
-        name: 'full-networking',
-        component: TheNetwork,
-        meta: {
-            next: '/check/full/networking/cabling',
-            prev: '/check/full',
-            progress: 0
-        }
-    },
-    {
-        path: '/check/full/networking/cabling',
-        name: 'full-cabling',
-        component: TheNetwork,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true, //The user can skip the page but requires a comment
-            next: '/check/full/networking/network',
-            prev: '/check/full/networking',
-            progress: 10,
-            trackerName: "CABLING" //Name of the key in the object tracker to save skip messages/comments to
-        }
-    },
-    {
-        path: '/check/full/networking/network',
-        name: 'full-network',
-        component: TheNetwork,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/networking/cbus',
-            prev: '/check/full/networking/cabling',
-            progress: 20,
-            trackerName: "NETWORK"
-        }
-    },
-    {
-        path: '/check/full/networking/cbus',
-        name: 'full-cbus-options',
-        component: TheNetwork,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/networking/report',
-            prev: '/check/full/networking/network',
-            progress: 30,
-            trackerName: "CBUS"
-        }
-    },
-    {
-        path: '/check/full/networking/report',
-        name: 'full-network-report',
-        component: TheNetwork,
-        meta: {
-            next: '/check/full/experiences',
-            prev: '/check/full/networking/cbus',
-            progress: 30,
-            nextText: 'Proceed'
-        }
-    },
-
-    {
-        path: '/check/full/experiences',
-        name: 'full-experiences',
-        component: TheExperiences,
-        meta: {
-            next: '/check/full/experiences/launching',
-            prev: '/check/full/networking/cbus',
-            progress: 0
-        }
-    },
-    {
-        path: '/check/full/experiences/launching',
-        name: 'full-launching',
-        component: TheExperiences,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true, //The user can skip the page but requires a comment
-            next: '/check/full/windows',
-            prev: '/check/full/experiences',
-            progress: 10,
-            trackerName: "LAUNCHING" //Name of the key in the object tracker to save skip messages/comments to
-        }
-    },
-
-    //Windows Routes
-    {
-        path: '/check/full/windows',
-        name: 'full-windows',
-        component: TheWindows,
-        meta: {
-            next: '/check/full/windows/auto',
-            prev: '/check/full/experiences/launching',
-            progress: 30
-        }
-    },
-    {
-        path: '/check/full/windows/auto',
-        name: 'full-windows-auto',
-        component: TheWindows,
-        meta: {
-            next: '/check/full/windows/bios',
-            prev: '/check/full/windows',
-            progress: 30
-        }
-    },
-    {
-        path: '/check/full/windows/bios',
-        name: 'full-bios',
-        component: TheWindows,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/windows/settings',
-            prev: '/check/full/windows/auto',
-            progress: 40,
-            trackerName: "BIOS"
-        }
-    },
-    {
-        path: '/check/full/windows/settings',
-        name: 'full-windows-settings',
-        component: TheWindows,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/windows/report',
-            prev: '/check/full/windows/bios',
-            progress: 50,
-            trackerName: "WINDOWS"
-        }
-    },
-    {
-        path: '/check/full/windows/report',
-        name: 'full-windows-report',
-        component: TheWindows,
-        meta: {
-            next: '/check/full/software',
-            prev: '/check/full/windows/settings',
-            progress: 50,
-            nextText: 'Proceed'
-        }
-    },
-
-    //Software Routes
-    {
-        path: '/check/full/software',
-        name: 'full-software',
-        component: TheSoftware,
-        meta: {
-            next: '/check/full/software/auto',
-            prev: '/check/full/windows/report',
-            progress: 50
-        }
-    },
-    {
-        path: '/check/full/software/auto',
-        name: 'full-software-auto',
-        component: TheSoftware,
-        meta: {
-            next: '/check/full/software/auto-steam',
-            prev: '/check/full/software',
-            progress: 50
-        }
-    },
-    {
-        path: '/check/full/software/auto-steam',
-        name: 'full-steam-auto',
-        component: TheSoftware,
-        meta: {
-            next: '/check/full/software/steam',
-            prev: '/check/full/software/auto',
-            progress: 50
-        }
-    },
-    {
-        path: '/check/full/software/steam',
-        name: 'full-steam',
-        component: TheSoftware,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/software/report',
-            prev: '/check/full/software/auto',
-            progress: 60,
-            trackerName: "STEAM"
-        }
-    },
-    {
-        path: '/check/full/software/report',
-        name: 'full-software-report',
-        component: TheSoftware,
-        meta: {
-            next: '/check/full/physical',
-            prev: '/check/full/software/steam',
-            progress: 60,
-            nextText: 'Proceed'
-        }
-    },
-
-    //Physical routes
-    {
-        path: '/check/full/physical',
-        name: 'full-physical',
-        component: ThePhysical,
-        meta: {
-            next: '/check/full/physical/keyboard',
-            prev: '/check/full/software/report',
-            progress: 60
-        }
-    },
-    {
-        path: '/check/full/physical/keyboard',
-        name: 'full-keyboard',
-        component: ThePhysical,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/physical/vive',
-            prev: '/check/full/physical',
-            progress: 70,
-            trackerName: "KEYBOARD"
-        }
-    },
-    {
-        path: '/check/full/physical/vive',
-        name: 'full-vive',
-        component: ThePhysical,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/physical/projector',
-            prev: '/check/full/physical/keyboard',
-            progress: 80,
-            trackerName: "VIVE"
-        }
-    },
-    {
-        path: '/check/full/physical/projector',
-        name: 'full-projector',
-        component: ThePhysical,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/physical/report',
-            prev: '/check/full/physical/vive',
-            progress: 90,
-            trackerName: "PROJECTOR"
-        }
-    },
-    {
-        path: '/check/full/physical/report',
-        name: 'full-physical-report',
-        component: ThePhysical,
-        meta: {
-            next: '/check/full/security',
-            prev: '/check/full/physical/projector',
-            progress: 90,
-            nextText: 'Proceed'
-        }
-    },
-
-    //Security routes
-    {
-        path: '/check/full/security',
-        name: 'full-security',
-        component: TheSecurity,
-        meta: {
-            next: '/check/full/security/bitwarden',
-            prev: '/check/full/physical/report',
-            progress: 90
-        }
-    },
-    {
-        path: '/check/full/security/bitwarden',
-        name: 'full-bitwarden',
-        component: TheSecurity,
-        meta: {
-            addComment: true,
-            userInput: true,
-            canSkip: true,
-            next: '/check/full/security/report',
-            prev: '/check/full/security',
-            progress: 100,
-            trackerName: "BITWARDEN"
-        }
-    },
-    {
-        path: '/check/full/security/report',
-        name: 'full-security-report',
-        component: TheSecurity,
-        meta: {
-            next: '/check/full/report',
-            prev: '/check/full/security/bitwarden',
-            progress: 100,
-            nextText: 'Proceed'
-        }
-    },
+    //Auto generated routes
+    ...createBasicRoutes(),
 
     //Basic report preview
     {
@@ -377,7 +326,7 @@ export const fullRoutes = [
         name: 'full-report',
         component: TheReport,
         meta: {
-            prev: '/check/full/security/report',
+            prev: generatePreviousPath("report", -1, 0),
             progress: 100
         }
     }

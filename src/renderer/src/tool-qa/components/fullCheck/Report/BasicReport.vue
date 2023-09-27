@@ -153,7 +153,7 @@ const allAutoCounts = computed(() => {
   <div class="flex flex-col">
     <TestResults :report-items="testResults"/>
 
-    <div v-if="auto !== undefined" class="flex flex-col w-full mb-4 rounded-lg border-2 border-gray-200">
+    <div v-if="auto !== undefined && auto.length !== 0" class="flex flex-col w-full mb-4 rounded-lg border-2 border-gray-200">
       <div class="flex flex-row justify-between items-center">
         <div class="flex items-center grow">
           <!--Category Title-->
