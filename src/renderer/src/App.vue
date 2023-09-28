@@ -270,6 +270,15 @@ const handleTCPMessage = (info: any) => {
       })
       fullStore.buildQaList(); //Build the QaList on connection response
       break;
+    case "tablet_connected":
+      const ipAddress = message[1]
+      fullStore.tabletConnected(ipAddress)
+      break;
+    case "tablet_checks":
+      const ipAddress1 = message[1]
+      fullStore.tabletConnected(ipAddress1)
+      console.log(message[1].substring(message[1].indexOf(':')+1))
+      break;
     case "ServerStatus":
       stateStore.isServerRunning = JSON.parse(message[1]);
       break;
