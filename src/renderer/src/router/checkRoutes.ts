@@ -1,13 +1,10 @@
+import { NavigationItem } from "../tool-qa/interfaces";
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
-import TheNetwork from "@renderer/tool-qa/components/fullCheck/screens/TheNetwork.vue";
-import TheWindows from "@renderer/tool-qa/components/fullCheck/screens/TheWindows.vue";
-import TheSoftware from "@renderer/tool-qa/components/fullCheck/screens/TheSoftware.vue";
-import TheSecurity from "@renderer/tool-qa/components/fullCheck/screens/TheSecurity.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import TheReport from "@renderer/tool-qa/components/fullCheck/Report/TheReport.vue";
-import TheHardware from "@renderer/tool-qa/components/fullCheck/screens/TheHardware.vue";
 import TheIMVR from "@renderer/tool-qa/components/fullCheck/screens/TheIMVR.vue";
+import BasicSection from "@renderer/tool-qa/components/fullCheck/screens/BasicSection.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -31,101 +28,95 @@ export const quickRoutes = [
     }
 ];
 
+//TODO this is not hot-reloading correctly
 /**
  * Describes each page within the QA tool.
  * NOTE this does not yet align with the routes, they need to be changed manually if the screens are moved around.
  */
-export const navigation = [
+export const navigation: Array<NavigationItem> = [
     {
         route: "/check/full/hardware",
         title: "Hardware",
-        component: TheHardware,
-        progress: 0, //TODO work out how to automate this
-        screens: [ //TODO Work out how to auto generate the pages/auto checks
-            { title: "Battery", objectName: "BATTERY", progress: 10 },
-            { title: "Cabling & Routing", objectName: "CABLING", progress: 20 },
-            { title: "Projectors", objectName: "PROJECTOR", progress: 30 },
-            { title: "Keyboard", objectName: "KEYBOARD", progress: 40 },
-            { title: "BIOS", objectName: "BIOS", progress: 50 },
+        description: "Something about the section...",
+        screens: [
+            { title: "Battery", objectName: "BATTERY"},
+            { title: "Cabling & Routing", objectName: "CABLING"},
+            { title: "Projectors", objectName: "PROJECTOR"},
+            { title: "Keyboard", objectName: "KEYBOARD"},
+            { title: "BIOS", objectName: "BIOS"},
         ],
         checks: {
             auto: [],
-            manual: ['BATTERY', 'CABLING', 'PROJECTOR', 'KEYBOARD', 'BIOS'] //TODO Work out how to automate this
+            manual: [] as string[]
         }
     },
     {
         route: "/check/full/networking",
         title: "Network",
-        component: TheNetwork,
-        progress: 31,
+        description: "Configure network settings to ensure seamless lab connectivity.",
         screens: [
-            { title: "Network", objectName: "NETWORK", progress: 50 },
-            { title: "CBus Options", objectName: "CBUS", progress: 60 }
+            { title: "Network", objectName: "NETWORK"},
+            { title: "CBus Options", objectName: "CBUS"}
         ],
         checks: {
             auto: [],
-            manual: ['NETWORK', 'CBUS']
+            manual: [] as string[]
         }
     },
     {
         route: "/check/full/windows",
         title: "Windows",
-        component: TheWindows,
-        progress: 61,
+        description: "Something about the section...",
         screens: [
-
-            { title: "Settings", objectName: "WINDOWS", progress: 80 },
+            { title: "Settings", objectName: "WINDOWS"},
         ],
         checks: {
             auto: ['windows_checks'],
-            manual: ['WINDOWS']
+            manual: [] as string[]
         }
     },
     {
         route: "/check/full/security",
         title: "Security",
-        component: TheSecurity,
-        progress: 81,
+        description: "Something about the section...",
         screens: [
-            { title: "BIOS", objectName: "BITWARDEN", progress: 90 },
+            { title: "BIOS", objectName: "BITWARDEN"},
         ],
         checks: {
             auto: [],
-            manual: ['BITWARDEN']
+            manual: [] as string[]
         }
     },
     {
         route: "/check/full/software",
         title: "Software",
-        component: TheSoftware,
-        progress: 91,
+        description: "Something about the section...",
         screens: [
-            { title: "Steam", objectName: "STEAM", progress: 95 },
+            { title: "Steam", objectName: "STEAM"},
         ],
         checks: {
             auto: ['software_checks', 'steam_config_checks'],
-            manual: ['STEAM']
+            manual: [] as string[]
         }
     },
     {
         route: "/check/full/imvr",
         title: "IMVR Stations",
-        component: TheIMVR,
-        progress: 96,
+        component: TheIMVR, //Use a custom base component
+        description: "Something about the section...",
         screens: [
-            { title: "Vive", objectName: "VIVE", progress: 20 },
-            { title: "Launching", objectName: "LAUNCHING", progress: 100 },
+            { title: "Vive", objectName: "VIVE"},
+            { title: "Launching", objectName: "LAUNCHING", component: TheIMVR}, //Use a custom screen component
         ],
         checks: {
             auto: [],
-            manual: ['VIVE']
+            manual: [] as string[]
         }
     },
     // {
     //     route: "/check/full/leadme",
     //     title: "LeadMe",
     //     component: "",
-    //     progress: 0,
     //     screens : [],
     //     checks: {
     //         auto: [],
@@ -140,49 +131,65 @@ export const navigation = [
 const createBasicRoutes = (): [{}] => {
     const routes: [{}] = [{}];
 
-    navigation.forEach((entry, navigationIndex) => {
+    //Calculate the total pages to use for the progress
+    let previousProgress = 0;
+    let currentCheck = 0;
+    let totalChecks = navigation.reduce((total, obj) => total + obj.screens.length + obj.checks.auto.length, 0);
+
+    navigation.forEach((entry: NavigationItem, navigationIndex: number) => {
+        //Create the manual checks for each navigation item
+        entry.checks.manual = entry.screens.map(screen => screen.objectName);
+
+        //Create a description page (this may not be needed in the future)
         const descriptionRoute = {
             path: entry.route,
             name: `full-${entry.title.toLowerCase()}`,
-            component: entry.component,
+            component: entry.component ?? BasicSection, //entry.component is checked first then BasicSection as the default
             meta: {
                 next: generateNextPath("description", navigationIndex, 0),
                 prev: generatePreviousPath("description", navigationIndex, 0),
-                progress: entry.progress
+                progress: previousProgress
             }
         };
-
         routes.push(descriptionRoute);
 
+        //Create any auto check pages (this can be none)
         if (entry.checks.auto.length > 0) {
-            entry.checks.auto.forEach((autoCheck, pageIndex) => {
+            entry.checks.auto.forEach((autoCheck: string, pageIndex: number) => {
                 const autoRoute = {
                     path: `${entry.route}/auto/${autoCheck}`,
                     name: `full-${entry.title.toLowerCase()}-auto-${autoCheck}`,
-                    component: entry.component,
+                    component: entry.component ?? BasicSection, //entry.component is checked first then BasicSection as the default
                     meta: {
                         next: generateNextPath("auto", navigationIndex, pageIndex),
                         prev: generatePreviousPath("auto", navigationIndex, pageIndex),
-                        progress: entry.progress
+                        progress: (() => {
+                            //Work out percentage and set the previous percentage progress
+                            return previousProgress = Math.floor((++currentCheck / totalChecks) * 100);
+                        })()
                     }
                 };
                 routes.push(autoRoute);
             });
         }
 
+        //Create any manual check pages
         if (entry.screens.length > 0) {
-            entry.screens.forEach((screen, pageIndex) => {
+            entry.screens.forEach((screen: {title: string, objectName: string, component?: any}, pageIndex: number) => {
                 const manualRoute = {
                     path: `${entry.route}/${screen.objectName.toLowerCase()}`,
                     name: `full-${entry.title.toLowerCase()}-${screen.objectName.toLowerCase()}`,
-                    component: entry.component,
+                    component: screen.component ?? entry.component ?? BasicSection, //screen.component is checked first, then entry.component then BasicSection as the default
                     meta: {
                         addComment: true,
                         userInput: true,
                         canSkip: true,
                         next: generateNextPath("manual", navigationIndex, pageIndex),
                         prev: generatePreviousPath("manual", navigationIndex, pageIndex),
-                        progress: screen.progress,
+                        progress: (() => {
+                            //Work out percentage and set the progress in the navigation object & set the previous percentage progress
+                            return screen['progress'] = previousProgress = Math.floor((++currentCheck / totalChecks) * 100);
+                        })(),
                         trackerName: screen.objectName
                     }
                 };
@@ -190,14 +197,15 @@ const createBasicRoutes = (): [{}] => {
             });
         }
 
+        //Create the report page
         const reportRoute = {
             path: `${entry.route}/report`,
             name: `full-${entry.title.toLowerCase()}-report`,
-            component: entry.component,
+            component: entry.component ?? BasicSection, //entry.component is checked first then BasicSection as the default
             meta: {
                 next: generateNextPath("report", navigationIndex, 0),
                 prev: generatePreviousPath("report", navigationIndex, 0),
-                progress: entry.screens[entry.screens.length -1].progress,
+                progress: previousProgress,
                 nextText: 'Proceed'
             }
         };

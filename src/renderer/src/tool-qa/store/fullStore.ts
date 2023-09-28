@@ -89,6 +89,7 @@ export const useFullStore = defineStore({
             var index = 0
             this.experienceChecks[0].stations.forEach(station => {
                 this.experienceChecks[0].stations[index].status === "checking"
+                //@ts-ignore
                 api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
                     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
                     key: stateStore.key,
@@ -124,6 +125,7 @@ export const useFullStore = defineStore({
                 })
 
                 this.experienceChecks[nextCheckIndex].stations[nextStationIndex].status = "checking"
+                //@ts-ignore
                 api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
                     channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
                     key: stateStore.key,
@@ -212,7 +214,11 @@ export const useFullStore = defineStore({
             }
         },
 
-        statusValue(category) {
+        /**
+         * Based on the category counts provide a string of the status of a check or group of checks.
+         * @param category An object containing totalEntries, passedStatusCount and failedCount.
+         */
+        statusValue(category: { totalEntries: number, passedStatusCount: number, failedCount: number }) {
             if (category.failedCount > 0) {
                 return category.failedCount + " Failed";
             } else if ((category.passedStatusCount === category.totalEntries) && category.totalEntries > 0) {
@@ -228,7 +234,7 @@ export const useFullStore = defineStore({
          */
         getCounts (entries: any) {
             const { totalEntries, passedStatusCount, failedCount } = entries.reduce(
-                (acc, item) => {
+                (acc: { totalEntries: number, passedStatusCount: number, failedCount: number }, item: { [x: string]: string; }) => {
                     acc.totalEntries += 1; // Increase totalEntries by 1 for each object in the array
                     acc.passedStatusCount += item['passedStatus'] === 'passed' ? 1 : 0; // Increment passedStatusCount if 'passed'
                     acc.failedCount += item['passedStatus'] === 'failed' ? 1 : 0; // Increment failedCount if 'failed'
