@@ -1,6 +1,10 @@
 /**
  * This file contains the titles and text for each of the Full Checks.
  */
+export const BATTERY = {
+
+}
+
 export const CABLING = {
     "Device Power": "Each device is receiving power",
     "Video Cable": "Video cable is connected to the graphics card",

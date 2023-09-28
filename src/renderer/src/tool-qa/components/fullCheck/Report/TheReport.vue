@@ -7,7 +7,7 @@ import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed, ref } from "vue";
 
 const fullStore = useFullStore();
-const currentReport = ref('Network');
+const currentReport = ref(navigation[0].title);
 
 const getSections = computed(() => {
   return navigation.map(key => ({
