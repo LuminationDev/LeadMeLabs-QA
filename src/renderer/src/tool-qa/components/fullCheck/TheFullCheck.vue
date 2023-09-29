@@ -13,6 +13,7 @@ const stateStore = useStateStore();
 const fullStore = useFullStore();
 
 const nucAddress = ref("")
+const tabletIp = ref("")
 const encryptionKey = ref("")
 
 async function connectToNuc() {
@@ -39,6 +40,18 @@ async function connectToNuc() {
   });
 }
 
+async function connectToTablet() {
+
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: stateStore.key,
+    address: fullStore.nucAddress,
+    port: 55556,
+    data: CONSTANT.MESSAGE.CONNECT_TO_ANDROID + stateStore.getServerDetails + ":" + tabletIp.value + ":Connect"
+  });
+}
+
 function startTest() {
   const groupsToRun = fullStore.processQaList()
   console.log(groupsToRun)
@@ -52,6 +65,13 @@ function startTest() {
       data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
     });
   })
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: stateStore.key,
+    address: fullStore.nucAddress,
+    port: 55556,
+    data: CONSTANT.MESSAGE.CONNECT_TO_ANDROID + stateStore.getServerDetails + ":" + tabletIp.value + ":RunAuto"
+  });
 }
 </script>
 
@@ -70,10 +90,17 @@ function startTest() {
 
         <GenericButton type="primary" :callback="connectToNuc">Connect</GenericButton>
 
+
+        <input type="text" name="tabletIp" v-model="tabletIp" placeholder="192.168.1.99" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+
+        <GenericButton type="primary" :callback="connectToTablet">Connect</GenericButton>
+
         <div class="flex flex-row">
           <span class="font-semibold mr-2">Server is connected:</span>
           {{ fullStore.connected }}
         </div>
+        <div>Tablets:
+        {{ fullStore.tablets }}</div>
       </div>
 
       <div v-if="fullStore.connected" class="flex flex-col">
