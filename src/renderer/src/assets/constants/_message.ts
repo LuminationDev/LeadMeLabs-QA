@@ -8,6 +8,7 @@ export const CBUS_CONNECTION_VALIDATION = "QA:NUC:cbusConnectionChecks";
 export const CBUS_APPLIANCE_VALIDATION = "QA:NUC:CbusValidation";
 export const RUN_GROUP = "QA:NUC:RunGroup";
 export const LAUNCH_EXPERIENCE = "QA:Station:LaunchExperience";
+export const CONNECT_TO_ANDROID = "QA:Android:Android";
 
 //STATION MESSAGES
 //Source:Destination:ActionSpace:Request

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import {Appliance, QaCheck, QaDetail, ReportTrackerItem, Station, TestCounts} from "../interfaces";
+import {Appliance, QaCheck, QaDetail, ReportTrackerItem, Station, Tablet, TestCounts} from "../interfaces";
 import { Station as StationClass } from '../types/_station'
 import {QaGroup} from "../types/_qaGroup";
 import {QaCheckResult} from "../types/_qaCheckResult";
@@ -31,6 +31,7 @@ export const useFullStore = defineStore({
         cbusConnection: "Loading",
         //List of appliance objects
         ApplianceList: Array<Appliance>(),
+        tablets: Array<Tablet>(),
 
         experienceChecks: Array<any>(),
 
@@ -262,6 +263,16 @@ export const useFullStore = defineStore({
         getAutoChecks(route: string): Array<string> {
             const entry = navigation.find(item => route.includes(item.route));
             return entry?.checks.auto ?? [''];
+        },
+
+        tabletConnected (ipAddress: string) {
+            const index = this.tablets.findIndex(element => element.ipAddress === ipAddress)
+            if (index === -1) {
+                this.tablets.push({
+                    ipAddress,
+                    connected: true
+                })
+            }
         }
     },
     getters: {
