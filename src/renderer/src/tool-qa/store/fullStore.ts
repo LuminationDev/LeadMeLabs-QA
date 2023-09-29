@@ -89,6 +89,11 @@ export const useFullStore = defineStore({
             }
             var index = 0
             this.experienceChecks[0].stations.forEach(station => {
+                const i = this.Stations.findIndex(s => (station.id == s.expectedDetails.id) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+                if (i === -1) {
+                    return;
+                }
+
                 this.experienceChecks[0].stations[index].status === "checking"
                 //@ts-ignore
                 api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -125,6 +130,11 @@ export const useFullStore = defineStore({
                     return element.stations[nextStationIndex].status === "unchecked"
                 })
 
+                const i = this.Stations.findIndex(s => (s.expectedDetails.id == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+                if (i === -1) {
+                    return;
+                }
+
                 this.experienceChecks[nextCheckIndex].stations[nextStationIndex].status = "checking"
                 //@ts-ignore
                 api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
@@ -134,6 +144,13 @@ export const useFullStore = defineStore({
                     port: 55556,
                     data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + this.experienceChecks[nextCheckIndex].stations[nextStationIndex].id + ":" + this.experienceChecks[nextCheckIndex].id
                 });
+            }
+        },
+
+        updateStationVrStatuses(stationId: string, statuses: any) {
+            const index = this.Stations.findIndex(element => element.expectedDetails.id == stationId)
+            if (index !== -1) {
+                this.Stations[index].vrStatuses = statuses
             }
         },
 

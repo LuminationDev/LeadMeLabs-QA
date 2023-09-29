@@ -4,14 +4,33 @@ import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue
 import { useRoute } from "vue-router";
 import {useFullStore} from "../../../store/fullStore";
 import BasicFullCheck from "@renderer/tool-qa/components/fullCheck/BasicFullCheck.vue";
+import {onMounted} from "vue";
+import * as CONSTANT from "../../../../assets/constants";
+import {GET_VR_STATUSES} from "../../../../assets/constants/_message";
+import {useStateStore} from "../../../store/stateStore";
 
 const fullStore = useFullStore();
+const stateStore = useStateStore();
 
 const route = useRoute();
 
 function startTesting() {
   fullStore.startExperienceChecks()
 }
+
+function getVrStatuses() {
+  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+    key: stateStore.key,
+    address: fullStore.nucAddress,
+    port: 55556,
+    data: CONSTANT.MESSAGE.GET_VR_STATUSES + stateStore.getServerDetails
+  });
+}
+
+onMounted(() => {
+  getVrStatuses()
+})
 
 </script>
 
@@ -25,6 +44,12 @@ function startTesting() {
     <template v-slot:content>
       <Description v-if="route.name === 'full-imvr stations'"/>
       <BasicFullCheck v-if="route.name === 'full-imvr stations-vive'" title="Vive Console" object-name="VIVE"/>
+
+      Stations
+      <div v-for="station in fullStore.Stations">
+        {{ station.vrStatuses }}
+      </div>
+      <button @click="getVrStatuses">Refresh statuses</button>
 
       <div v-if="route.name === 'full-imvr stations-launching'">
         <button @click="startTesting">Start Testing</button>

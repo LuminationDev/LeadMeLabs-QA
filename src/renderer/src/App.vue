@@ -244,6 +244,15 @@ const handleTCPMessage = (info: any) => {
     return
   }
 
+  if (info.mainText.includes("VrStatuses")) {
+    const stationId = info.mainText.split(":::")[2]
+    const json = JSON.parse(info.mainText.split(":::")[4])
+    fullStore.updateStationVrStatuses(stationId, json)
+    console.log(info.mainText)
+    // fullStore.updateExperienceCheck(stationId, experienceId, "failed", "")
+    return
+  }
+
   switch(message[0]) {
     case "Connected":
       const responseData = JSON.parse(message[1])

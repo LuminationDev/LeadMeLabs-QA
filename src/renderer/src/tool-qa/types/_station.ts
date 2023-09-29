@@ -15,6 +15,7 @@ type StationDetails = {
 class Station {
     details: StationDetails | null = null
     expectedDetails: StationDetails | null = null // from NUC
+    vrStatuses: any = null
     qaChecks: Array<QaCheck> = []
 
     getComputedChecks(): Array<QaCheck> {
