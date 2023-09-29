@@ -28,7 +28,6 @@ export const quickRoutes = [
     }
 ];
 
-//TODO this is not hot-reloading correctly
 /**
  * Describes each page within the QA tool.
  * NOTE this does not yet align with the routes, they need to be changed manually if the screens are moved around.
@@ -40,10 +39,10 @@ export const navigation: Array<NavigationItem> = [
         description: "Something about the section...",
         screens: [
             { title: "Battery", objectName: "BATTERY"},
-            { title: "Cabling & Routing", objectName: "CABLING"},
-            { title: "Projectors", objectName: "PROJECTOR"},
+            { title: "Video Cables", objectName: "VIDEO_CABLES"},
+            { title: "Projectors", objectName: "PROJECTORS"},
             { title: "Keyboard", objectName: "KEYBOARD"},
-            { title: "BIOS", objectName: "BIOS"},
+            { title: "BIOS Settings", objectName: "BIOS_SETTINGS"},
         ],
         checks: {
             auto: [],
@@ -55,8 +54,8 @@ export const navigation: Array<NavigationItem> = [
         title: "Network",
         description: "Configure network settings to ensure seamless lab connectivity.",
         screens: [
-            { title: "Network", objectName: "NETWORK"},
-            { title: "CBus Options", objectName: "CBUS"}
+            { title: "MileSight Router", objectName: "MILESITE_ROUTER"},
+            { title: "C-Bus Template", objectName: "CBUS"}
         ],
         checks: {
             auto: [],
@@ -68,7 +67,9 @@ export const navigation: Array<NavigationItem> = [
         title: "Windows",
         description: "Something about the section...",
         screens: [
-            { title: "Settings", objectName: "WINDOWS"},
+            { title: "Handover Doc", objectName: "HANDOVER"},
+            { title: "Drivers", objectName: "DRIVERS"},
+            { title: "Executables", objectName: "EXECUTABLES"},
         ],
         checks: {
             auto: ['windows_checks'],
@@ -80,7 +81,8 @@ export const navigation: Array<NavigationItem> = [
         title: "Security",
         description: "Something about the section...",
         screens: [
-            { title: "BIOS", objectName: "BITWARDEN"},
+            { title: "Passwords", objectName: "PASSWORDS"},
+            { title: "LeadMe", objectName: "LEADME_SECURITY"},
         ],
         checks: {
             auto: [],
@@ -102,11 +104,11 @@ export const navigation: Array<NavigationItem> = [
     {
         route: "/check/full/imvr",
         title: "IMVR Stations",
-        component: TheIMVR, //Use a custom base component
         description: "Something about the section...",
         screens: [
-            { title: "Vive", objectName: "VIVE"},
+            { title: "Vive Console", objectName: "VIVE"},
             { title: "Launching", objectName: "LAUNCHING", component: TheIMVR}, //Use a custom screen component
+            { title: "Virtual Reality", objectName: "VIRTUAL_REALITY"}
         ],
         checks: {
             auto: [],

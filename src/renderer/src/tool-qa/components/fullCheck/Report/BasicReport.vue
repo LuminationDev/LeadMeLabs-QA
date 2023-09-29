@@ -6,6 +6,7 @@ import AutoContainer from "@renderer/tool-qa/components/fullCheck/Report/AutoCon
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { computed, ref } from "vue";
+import {TestCounts} from "@renderer/tool-qa/interfaces";
 
 interface ReportItem { [key: string]: any }
 
@@ -134,9 +135,9 @@ const autoCounts = computed(() => {
 /**
  * Calculate the total of all auto checks regardless of their category.
  */
-const allAutoCounts = computed(() => {
+const allAutoCounts = computed<TestCounts>(() => {
   if(props.auto) {
-    return Object.values(autoCounts.value).reduce((acc, {totalEntries, passedStatusCount, failedCount}) => {
+    return Object.values(autoCounts.value).reduce<TestCounts>((acc, {totalEntries, passedStatusCount, failedCount}) => {
       acc.totalEntries += totalEntries;
       acc.passedStatusCount += passedStatusCount;
       acc.failedCount += failedCount;
@@ -147,6 +148,21 @@ const allAutoCounts = computed(() => {
     return { totalEntries: 0, passedStatusCount: 0, failedCount: 0 }
   }
 });
+
+/**
+ * Replace any underscores with spaces and capitalise the first letter of each word.
+ * @param title A string of the category title.
+ */
+const createTitle = (title: string) => {
+  const split = title.split("_");
+
+  const capitalizedSplit = split.map(entry => {
+    const lowercaseEntry = entry.toLowerCase();
+    return stateStore.capitalizeFirstLetter(lowercaseEntry);
+  });
+
+  return capitalizedSplit.join(" ");
+}
 </script>
 
 <template>
@@ -178,7 +194,7 @@ const allAutoCounts = computed(() => {
 
         <div class="flex flex-row items-center">
           <!--Category Title-->
-          <h2 class="font-semibold text-lg p-3">{{ stateStore.capitalizeFirstLetter(categoryKey.toLowerCase()) }}</h2>
+          <h2 class="font-semibold text-lg p-3">{{ createTitle(categoryKey) }}</h2>
 
           <!--Quick look at category status-->
           <div class="flex items-center rounded-xl w-fit h-5 text-sm px-2 font-semibold" :class="{
@@ -212,7 +228,7 @@ const allAutoCounts = computed(() => {
             <ItemHover :title="item.id" :message="item.message "/>
 
             <td class="p-3 w-36">
-              <div>{{item.date}}</div>
+              <div>{{item['date']}}</div>
             </td>
 
             <td class="p-3 w-28 font-semibold">

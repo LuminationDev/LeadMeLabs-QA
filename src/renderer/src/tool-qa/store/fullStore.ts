@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import {Appliance, QaCheck, QaDetail, ReportTrackerItem, Station, Tablet} from "../interfaces";
+import {Appliance, QaCheck, QaDetail, ReportTrackerItem, Station, Tablet, TestCounts} from "../interfaces";
 import { Station as StationClass } from '../types/_station'
 import {QaGroup} from "../types/_qaGroup";
 import {QaCheckResult} from "../types/_qaCheckResult";
@@ -219,7 +219,7 @@ export const useFullStore = defineStore({
          * Based on the category counts provide a string of the status of a check or group of checks.
          * @param category An object containing totalEntries, passedStatusCount and failedCount.
          */
-        statusValue(category: { totalEntries: number, passedStatusCount: number, failedCount: number }) {
+        statusValue(category: TestCounts) {
             if (category.failedCount > 0) {
                 return category.failedCount + " Failed";
             } else if ((category.passedStatusCount === category.totalEntries) && category.totalEntries > 0) {
@@ -235,7 +235,7 @@ export const useFullStore = defineStore({
          */
         getCounts (entries: any) {
             const { totalEntries, passedStatusCount, failedCount } = entries.reduce(
-                (acc: { totalEntries: number, passedStatusCount: number, failedCount: number }, item: { [x: string]: string; }) => {
+                (acc: TestCounts, item: { [x: string]: string; }) => {
                     acc.totalEntries += 1; // Increase totalEntries by 1 for each object in the array
                     acc.passedStatusCount += item['passedStatus'] === 'passed' ? 1 : 0; // Increment passedStatusCount if 'passed'
                     acc.failedCount += item['passedStatus'] === 'failed' ? 1 : 0; // Increment failedCount if 'failed'
