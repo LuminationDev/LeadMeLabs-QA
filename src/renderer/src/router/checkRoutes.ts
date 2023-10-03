@@ -1,10 +1,9 @@
-import { NavigationItem } from "../tool-qa/interfaces";
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
-import TheReport from "@renderer/tool-qa/components/fullCheck/Report/TheReport.vue";
-import TheIMVR from "@renderer/tool-qa/components/fullCheck/screens/TheIMVR.vue";
-import BasicSection from "@renderer/tool-qa/components/fullCheck/screens/BasicSection.vue";
+import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
+import {HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS} from "../assets/checks/_fullcheckValues";
+import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
 
 /**
  * Routes used for the Quick Lab Check
@@ -29,273 +28,133 @@ export const quickRoutes = [
 ];
 
 /**
- * Describes each page within the QA tool.
- * NOTE this does not yet align with the routes, they need to be changed manually if the screens are moved around.
+ * Generic metadata that is the same across all manual routes
  */
-export const navigation: Array<NavigationItem> = [
-    {
-        route: "/check/full/hardware",
-        title: "Hardware",
-        description: "Something about the section...",
-        screens: [
-            { title: "Battery", objectName: "BATTERY"},
-            { title: "Video Cables", objectName: "VIDEO_CABLES"},
-            { title: "Projectors", objectName: "PROJECTORS"},
-            { title: "Keyboard", objectName: "KEYBOARD"},
-            { title: "BIOS Settings", objectName: "BIOS_SETTINGS"},
-        ],
-        checks: {
-            auto: [],
-            manual: [] as string[]
-        }
-    },
-    {
-        route: "/check/full/networking",
-        title: "Network",
-        description: "Configure network settings to ensure seamless lab connectivity.",
-        screens: [
-            { title: "MileSight Router", objectName: "MILESITE_ROUTER"},
-            { title: "C-Bus Template", objectName: "CBUS"}
-        ],
-        checks: {
-            auto: [],
-            manual: [] as string[]
-        }
-    },
-    {
-        route: "/check/full/windows",
-        title: "Windows",
-        description: "Something about the section...",
-        screens: [
-            { title: "Handover Doc", objectName: "HANDOVER"},
-            { title: "Drivers", objectName: "DRIVERS"},
-            { title: "Executables", objectName: "EXECUTABLES"},
-        ],
-        checks: {
-            auto: ['windows_checks'],
-            manual: [] as string[]
-        }
-    },
-    {
-        route: "/check/full/security",
-        title: "Security",
-        description: "Something about the section...",
-        screens: [
-            { title: "Passwords", objectName: "PASSWORDS"},
-            { title: "LeadMe", objectName: "LEADME_SECURITY"},
-        ],
-        checks: {
-            auto: [],
-            manual: [] as string[]
-        }
-    },
-    {
-        route: "/check/full/software",
-        title: "Software",
-        description: "Something about the section...",
-        screens: [
-            { title: "Steam", objectName: "STEAM"},
-        ],
-        checks: {
-            auto: ['software_checks', 'steam_config_checks'],
-            manual: [] as string[]
-        }
-    },
-    {
-        route: "/check/full/imvr",
-        title: "IMVR Stations",
-        description: "Something about the section...",
-        screens: [
-            { title: "Vive Console", objectName: "VIVE"},
-            { title: "Launching", objectName: "LAUNCHING", component: TheIMVR}, //Use a custom screen component
-            { title: "Virtual Reality", objectName: "VIRTUAL_REALITY"}
-        ],
-        checks: {
-            auto: [],
-            manual: [] as string[]
-        }
-    },
-    // {
-    //     route: "/check/full/leadme",
-    //     title: "LeadMe",
-    //     component: "",
-    //     screens : [],
-    //     checks: {
-    //         auto: [],
-    //         manual: []
-    //     }
-    // }
-]
-
-/**
- * Automatically generate the routes for the basic checks from the data structure above.
- */
-const createBasicRoutes = (): [{}] => {
-    const routes: [{}] = [{}];
-
-    //Calculate the total pages to use for the progress
-    let previousProgress = 0;
-    let currentCheck = 0;
-    let totalChecks = navigation.reduce((total, obj) => total + obj.screens.length + obj.checks.auto.length, 0);
-
-    navigation.forEach((entry: NavigationItem, navigationIndex: number) => {
-        //Create the manual checks for each navigation item
-        entry.checks.manual = entry.screens.map(screen => screen.objectName);
-
-        //Create a description page (this may not be needed in the future)
-        const descriptionRoute = {
-            path: entry.route,
-            name: `full-${entry.title.toLowerCase()}`,
-            component: entry.component ?? BasicSection, //entry.component is checked first then BasicSection as the default
-            meta: {
-                next: generateNextPath("description", navigationIndex, 0),
-                prev: generatePreviousPath("description", navigationIndex, 0),
-                progress: previousProgress
-            }
-        };
-        routes.push(descriptionRoute);
-
-        //Create any auto check pages (this can be none)
-        if (entry.checks.auto.length > 0) {
-            entry.checks.auto.forEach((autoCheck: string, pageIndex: number) => {
-                const autoRoute = {
-                    path: `${entry.route}/auto/${autoCheck}`,
-                    name: `full-${entry.title.toLowerCase()}-auto-${autoCheck}`,
-                    component: entry.component ?? BasicSection, //entry.component is checked first then BasicSection as the default
-                    meta: {
-                        next: generateNextPath("auto", navigationIndex, pageIndex),
-                        prev: generatePreviousPath("auto", navigationIndex, pageIndex),
-                        progress: (() => {
-                            //Work out percentage and set the previous percentage progress
-                            return previousProgress = Math.floor((++currentCheck / totalChecks) * 100);
-                        })()
-                    }
-                };
-                routes.push(autoRoute);
-            });
-        }
-
-        //Create any manual check pages
-        if (entry.screens.length > 0) {
-            entry.screens.forEach((screen: {title: string, objectName: string, component?: any}, pageIndex: number) => {
-                const manualRoute = {
-                    path: `${entry.route}/${screen.objectName.toLowerCase()}`,
-                    name: `full-${entry.title.toLowerCase()}-${screen.objectName.toLowerCase()}`,
-                    component: screen.component ?? entry.component ?? BasicSection, //screen.component is checked first, then entry.component then BasicSection as the default
-                    meta: {
-                        addComment: true,
-                        userInput: true,
-                        canSkip: true,
-                        next: generateNextPath("manual", navigationIndex, pageIndex),
-                        prev: generatePreviousPath("manual", navigationIndex, pageIndex),
-                        progress: (() => {
-                            //Work out percentage and set the progress in the navigation object & set the previous percentage progress
-                            return screen['progress'] = previousProgress = Math.floor((++currentCheck / totalChecks) * 100);
-                        })(),
-                        trackerName: screen.objectName
-                    }
-                };
-                routes.push(manualRoute);
-            });
-        }
-
-        //Create the report page
-        const reportRoute = {
-            path: `${entry.route}/report`,
-            name: `full-${entry.title.toLowerCase()}-report`,
-            component: entry.component ?? BasicSection, //entry.component is checked first then BasicSection as the default
-            meta: {
-                next: generateNextPath("report", navigationIndex, 0),
-                prev: generatePreviousPath("report", navigationIndex, 0),
-                progress: previousProgress,
-                nextText: 'Proceed'
-            }
-        };
-        routes.push(reportRoute);
-    });
-
-    console.log(routes);
-
-    return routes;
+const manualMetaData = () => {
+    return {
+        type: 'manual', //The checks on this page are all manual
+        addComment: true,
+        userInput: true, //Requires user input to proceed to the next page
+        canSkip: true,
+    };
 }
 
 /**
- * Generate the next path based on the user's current location.
- * @param pageType A string of the page that a user is on. [description, auto, manual or report]
- * @param navigationIndex A number of the current route index as per the navigation array
- * @param pageIndex A number of the individual page index of the auto checks or navigation entries screens
+ * Generates route configurations from an array of check objects.
+ * @param checkArray - An array of check objects representing hardware checks.
+ * @param previousRoute - A string of the previous route outside the object array.
+ * @param nextRoute - A string of the next route outside the object array.
+ * @returns Array, An array of route configurations for the checks.
  */
-const generateNextPath = (pageType: string, navigationIndex: number, pageIndex: number) => {
-    const entry = navigation[navigationIndex];
+const generateRoutesFromObjectArray = (checkArray: CheckObject[], previousRoute: string, nextRoute: string): Route[] => {
+    const routes: Route[] = [];
 
-    if (pageType === 'report' && navigationIndex === navigation.length - 1) {
-        return '/check/full/report';
-    }
+    checkArray.forEach((section, sectionIndex) => {
+        const categories = section.category;
 
-    switch (pageType) {
-        case 'description':
-            return entry.checks.auto.length > 0
-                ? `${entry.route}/auto/${entry.checks.auto[0]}`
-                : `${entry.route}/${entry.screens[0].objectName.toLowerCase()}`;
+        categories.forEach((categoryObj, categoryIndex) => {
+            const categoryName = Object.keys(categoryObj)[0];
+            const category = categoryObj[categoryName];
+            const path = `/check/full/hardware/${section.page}/${categoryName.toLowerCase()}`;
+            const name = `full-hardware-${section.page}-${categoryName.toLowerCase()}`;
 
-        case 'auto':
-            return pageIndex < entry.checks.auto.length - 1
-                ? `${entry.route}/auto/${entry.checks.auto[pageIndex + 1]}`
-                : `${entry.route}/${entry.screens[0].objectName.toLowerCase()}`;
+            const route: Route = {
+                path,
+                name,
+                component: ManualCheck,
+                meta: {
+                    description: category.description,
+                    page: section.page,
+                    category: categoryName,
+                    next: getNextPath(checkArray, sectionIndex, categoryIndex, nextRoute),
+                    prev: getPrevPath(checkArray, sectionIndex, categoryIndex, previousRoute),
+                    progress: 0,
+                    ...manualMetaData(),
+                },
+            };
 
-        case 'manual':
-            return pageIndex < entry.screens.length - 1
-                ? `${entry.route}/${entry.screens[pageIndex + 1].objectName.toLowerCase()}`
-                : `${entry.route}/report`;
+            routes.push(route);
+        });
+    });
 
-        case 'report':
-            const nextEntry = navigation[navigationIndex + 1];
-            return `${nextEntry.route}`;
+    return routes;
+};
 
-        default:
-            return "/";
+/**
+ * Retrieves the next path based on navigation object, category, and check indices.
+ * @param checkArray - An array of navigation objects.
+ * @param checkIndex - The index of the current navigation object.
+ * @param categoryIndex - The index of the current category within the navigation object.
+ * @param lastItemPath - A string of the route that is after the current navigation object.
+ * @returns string, The next path for navigation.
+ */
+const getNextPath = (
+    checkArray: CheckObject[],
+    checkIndex: number,
+    categoryIndex: number,
+    lastItemPath: string
+): string => {
+    if (categoryIndex < checkArray[checkIndex].category.length - 1) {
+        const nextCategory = checkArray[checkIndex].category[categoryIndex + 1];
+        const nextCategoryKey = Object.keys(nextCategory)[0];
+        return `/check/full/hardware/${checkArray[checkIndex].page.toLowerCase()}/${nextCategoryKey.toLowerCase()}`;
+    } else if (checkIndex < checkArray.length - 1) {
+        const nextHardware = checkArray[checkIndex + 1];
+        const nextCategory = nextHardware.category[0];
+        const nextCategoryKey = Object.keys(nextCategory)[0];
+        return `/check/full/hardware/${checkArray[checkIndex + 1].page.toLowerCase()}/${nextCategoryKey.toLowerCase()}`;
+    } else {
+        return lastItemPath;  // No next path for the last item
     }
 };
 
 /**
- * Generate the previous path based on the user's current location.
- * @param pageType A string of the page that a user is on. [description, auto, manual or report]
- * @param navigationIndex A number of the current route index as per the navigation array
- * @param pageIndex A number of the individual page index of the auto checks or navigation entries screens
+ * Retrieves the previous path based on navigation object, category, and check indices.
+ * @param checkArray - An array of navigation objects.
+ * @param checkIndex - The index of the current navigation object.
+ * @param categoryIndex - The index of the current category within the navigation object.
+ * @param firstItemPath - A string of the route that is before the current navigation object.
+ * @returns string, The previous path for navigation.
  */
-const generatePreviousPath = (pageType: string, navigationIndex: number, pageIndex: number) => {
-    const entry = navigation[navigationIndex];
-
-    if (navigationIndex === -1) {
-        const lastEntry = navigation[navigation.length - 1];
-        return `${lastEntry.route}/report`;
-    }
-
-    switch (pageType) {
-        case 'description':
-            return navigationIndex === 0 ? '/check/full' : `${navigation[navigationIndex - 1].route}/report`;
-
-        case 'auto':
-            return pageIndex > 0
-                ? `${entry.route}/auto/${entry.checks.auto[pageIndex - 1]}`
-                : entry.route;
-
-        case 'manual':
-            if (pageIndex > 0) {
-                return `${entry.route}/${entry.screens[pageIndex - 1].objectName.toLowerCase()}`;
-            } else if (entry.checks.auto.length > 0) {
-                return `${entry.route}/auto/${entry.checks.auto[entry.checks.auto.length - 1]}`;
-            } else {
-                return `${entry.route}`;
-            }
-
-        case 'report':
-            return `${entry.route}/${entry.screens[entry.screens.length - 1].objectName.toLowerCase()}`;
-
-        default:
-            return "/";
+const getPrevPath = (
+    checkArray: CheckObject[],
+    checkIndex: number,
+    categoryIndex: number,
+    firstItemPath: string
+): string => {
+    if (categoryIndex > 0) {
+        const prevCategory = checkArray[checkIndex].category[categoryIndex - 1];
+        const prevCategoryKey = Object.keys(prevCategory)[0];
+        return `/check/full/hardware/${checkArray[checkIndex].page.toLowerCase()}/${prevCategoryKey.toLowerCase()}`;
+    } else if (checkIndex > 0) {
+        const prevHardware = checkArray[checkIndex - 1];
+        const prevCategory = prevHardware.category[prevHardware.category.length - 1];
+        const prevCategoryKey = Object.keys(prevCategory)[0];
+        return `/check/full/hardware/${checkArray[checkIndex - 1].page.toLowerCase()}/${prevCategoryKey.toLowerCase()}`;
+    } else {
+        return firstItemPath;  // No prev path for the first item
     }
 };
+
+/**
+ * Retrieves the first path based on a navigation object.
+ * @param checkArray - An array of navigation objects.
+ * @returns string, The first path for navigation.
+ */
+const getFirstRoute = (checkArray: CheckObject[]) => {
+    const firstRoute = checkArray[0];
+    return `/check/full/hardware/${firstRoute.page}/${Object.keys(firstRoute.category[0])[0].toLowerCase()}`;
+}
+
+/**
+ * Retrieves the last path based on a navigation object.
+ * @param checkArray - An array of navigation objects.
+ * @returns string, The last path for navigation.
+ */
+const getLastRoute = (checkArray: CheckObject[]) => {
+    const lastRoute = checkArray[checkArray.length - 1];
+    return `/check/full/hardware/${lastRoute.page}/${Object.keys(lastRoute.category[lastRoute.category.length - 1])[0].toLowerCase()}`;
+}
 
 /**
  * Routes used for the Full Lab Check
@@ -321,23 +180,16 @@ export const fullRoutes = [
             addComment: true,
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
-            next: navigation[0].route,
+            next: '/check/full/hardware/battery/cabinet',
             prev: '/check/full',
             progress: 0
         }
     },
 
-    //Auto generated routes
-    ...createBasicRoutes(),
-
-    //Basic report preview
-    {
-        path: '/check/full/report',
-        name: 'full-report',
-        component: TheReport,
-        meta: {
-            prev: generatePreviousPath("report", -1, 0),
-            progress: 100
-        }
-    }
+    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', getFirstRoute(NETWORK)),
+    ...generateRoutesFromObjectArray(NETWORK, getLastRoute(HARDWARE),  getFirstRoute(WINDOWS)),
+    ...generateRoutesFromObjectArray(WINDOWS, getLastRoute(NETWORK),  getFirstRoute(SECURITY)),
+    ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  getFirstRoute(SOFTWARE)),
+    ...generateRoutesFromObjectArray(SOFTWARE, getLastRoute(SECURITY),  getFirstRoute(IMVR)),
+    ...generateRoutesFromObjectArray(IMVR, getLastRoute(SOFTWARE),  ""),
 ];

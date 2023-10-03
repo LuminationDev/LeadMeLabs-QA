@@ -1,0 +1,131 @@
+<script setup lang="ts">
+import * as FULL from "../../../../assets/checks/_fullcheckValues";
+import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
+import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
+import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
+import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+
+const stateStore = useStateStore();
+const route = useRoute();
+
+const onManualPage = computed(() => {
+  return route.meta['type'] === 'manual';
+});
+
+const checkDetails = computed(() => {
+  return FULL[route.meta['page'].toUpperCase()];
+});
+
+const categories = computed(() => {
+  return checkDetails.value.category.map(categoryItem => {
+    const [categoryKey, categoryValue] = Object.entries(categoryItem)[0];
+    return {
+      key: categoryKey,
+      description: categoryValue.description
+    };
+  });
+});
+
+const currentCategoryIndex = computed(() => {
+  return checkDetails.value.category.findIndex(item => Object.keys(item)[0] === route.meta['category']);
+});
+
+const checks = computed(() => {
+  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
+
+  if (category && category.checks) {
+    return Object.entries(category.checks).map(([key, description]) => ({ key, description }));
+  } else {
+    return [];
+  }
+});
+
+const generateTitle = computed(() => {
+  const split = route.meta['page'].split("_");
+
+  const capitalizedSplit = split.map(entry => {
+    const lowercaseEntry = entry.toLowerCase();
+    return stateStore.capitalizeFirstLetter(lowercaseEntry);
+  });
+
+  return capitalizedSplit.join(" ");
+});
+</script>
+
+<template>
+  <GenericLayout>
+    <template v-slot:title>
+      <p class="text-2xl text-black font-semibold">{{generateTitle}}</p>
+
+      <template v-if="onManualPage">
+        <p class="text-base text-black mb-6">{{checkDetails.description ?? "No description set"}}</p>
+
+        <!--A tab for each category-->
+        <div class="flex flex-row w-full">
+          <CategoryTab
+              v-for="(category, index) in categories"
+              :key="index"
+              :category="category"
+              :index="index as number"
+              :currentCategoryIndex="currentCategoryIndex"
+          />
+        </div>
+      </template>
+
+      <!--If on any other page-->
+      <template v-else>
+        <p class="text-base text-black mb-6">{{route.meta['description']}}</p>
+      </template>
+    </template>
+
+    <template v-slot:content>
+      <div class="w-full mb-4 flex flex-col rounded-lg border-2 border-gray-200">
+
+        <div class="flex flex-row justify-between p-3">
+          <div class="flex flex-col">
+            <!--Category Title-->
+            <h2 class="font-semibold text-base">{{ categories[currentCategoryIndex].key }}</h2>
+            <h2 class="text-sm">{{ categories[currentCategoryIndex].description }}</h2>
+          </div>
+
+          <div class="w-20 h-10 flex justify-center items-center border-[1px]
+               border-gray-500 rounded-lg cursor-pointer hover:bg-gray-200"
+          >
+            <img class="w-5 h-5 mr-1" src="../../../../assets/icons/help-circle.svg" alt="question mark">
+            <div class="text-sm font-semibold">
+              Guide
+            </div>
+          </div>
+        </div>
+
+        <table class="w-full border-collapse">
+          <tr class="text-left text-xs bg-gray-100 border border-gray-200">
+            <th class="p-3">Name</th>
+
+            <!--TODO auto generate these-->
+            <th>S1</th>
+            <th>S2</th>
+            <th>S3</th>
+            <th>T1</th>
+            <th>Nuc</th>
+            <th>CBus</th>
+          </tr>
+
+          <tr v-for="(item, index) in checks" :key="index" class="text-sm border border-gray-200">
+            <ItemHover :title="item.key" :message="item.description "/>
+
+            <td class="p-3"><input type="checkbox"></td>
+            <td class="p-3"><input type="checkbox"></td>
+            <td class="p-3"><input type="checkbox"></td>
+            <td class="p-3"><input type="checkbox"></td>
+            <td class="p-3"><input type="checkbox"></td>
+            <td class="p-3"><input type="checkbox"></td>
+
+          </tr>
+        </table>
+      </div>
+    </template>
+  </GenericLayout>
+</template>

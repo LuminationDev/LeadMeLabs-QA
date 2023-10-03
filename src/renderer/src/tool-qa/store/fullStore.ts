@@ -5,7 +5,7 @@ import {QaGroup} from "../types/_qaGroup";
 import {QaCheckResult} from "../types/_qaCheckResult";
 import * as CONSTANT from "../../assets/constants";
 import {useStateStore} from "./stateStore";
-import {navigation} from "../../router/checkRoutes";
+// import {navigation} from "../../router/checkRoutes";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -247,23 +247,23 @@ export const useFullStore = defineStore({
             return { totalEntries, passedStatusCount, failedCount };
         },
 
-        /**
-         * Collect the manual checks from the navigation data structure for basic reports.
-         * @param route A string of the route.path of the users current location.
-         */
-        getManualChecks(route: string): Array<string> {
-            const entry = navigation.find(item => route.includes(item.route));
-            return entry?.checks.manual ?? [''];
-        },
-
-        /**
-         * Collect the auto checks from the navigation data structure for basic reports.
-         * @param route A string of the route.path of the users current location.
-         */
-        getAutoChecks(route: string): Array<string> {
-            const entry = navigation.find(item => route.includes(item.route));
-            return entry?.checks.auto ?? [''];
-        },
+        // /**
+        //  * Collect the manual checks from the navigation data structure for basic reports.
+        //  * @param route A string of the route.path of the users current location.
+        //  */
+        // getManualChecks(route: string): Array<string> {
+        //     const entry = navigation.find(item => route.includes(item.route));
+        //     return entry?.checks.manual ?? [''];
+        // },
+        //
+        // /**
+        //  * Collect the auto checks from the navigation data structure for basic reports.
+        //  * @param route A string of the route.path of the users current location.
+        //  */
+        // getAutoChecks(route: string): Array<string> {
+        //     const entry = navigation.find(item => route.includes(item.route));
+        //     return entry?.checks.auto ?? [''];
+        // },
 
         tabletConnected (ipAddress: string) {
             const index = this.tablets.findIndex(element => element.ipAddress === ipAddress)
