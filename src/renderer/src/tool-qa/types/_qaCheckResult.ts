@@ -30,6 +30,7 @@ class QaCheckResult {
     stations: Array<QaCheckResultStation> = []
     tablets: Array<QaCheckResultTablet> = []
     nuc: Array<QaCheckResultNuc> = []
+    cbus: Array<QaCheckResultNuc> = []
     displayName: string
     extendedDescription: string|null = null
 
@@ -39,6 +40,7 @@ class QaCheckResult {
         timeout: number,
         stationIds: Array<number>,
         hasNuc: boolean,
+        hasCbus: boolean,
         tabletIps: Array<string>,
         displayName: string,
         extendedDescription: string|null = null
@@ -60,6 +62,14 @@ class QaCheckResult {
         })
         if (hasNuc) {
             this.nuc.push({
+                passedStatus: "unchecked",
+                checkingStatus: "not_checking",
+                checkStartTime: null,
+                message: null
+            })
+        }
+        if (hasCbus) {
+            this.cbus.push({
                 passedStatus: "unchecked",
                 checkingStatus: "not_checking",
                 checkStartTime: null,
@@ -99,6 +109,7 @@ class QaCheckResult {
             if (this.timeout > 0) {
                 setTimeout(() => {
                     if (station.checkingStatus === "checking") {
+                        station.checkingStatus = "timeout"
                         station.passedStatus = "failed"
                         station.message = "Timed out waiting for check"
                     }
@@ -112,8 +123,23 @@ class QaCheckResult {
             if (this.timeout > 0) {
                 setTimeout(() => {
                     if (n.checkingStatus === "checking") {
+                        n.checkingStatus = "timeout"
                         n.passedStatus = "failed"
                         n.message = "Timed out waiting for check"
+                    }
+                }, this.timeout)
+            }
+        })
+
+        this.cbus.forEach(c => {
+            c.checkStartTime = unixTime
+            c.checkingStatus = "checking"
+            if (this.timeout > 0) {
+                setTimeout(() => {
+                    if (c.checkingStatus === "checking") {
+                        c.checkingStatus = "timeout"
+                        c.passedStatus = "failed"
+                        c.message = "Timed out waiting for check"
                     }
                 }, this.timeout)
             }
@@ -125,6 +151,7 @@ class QaCheckResult {
             if (this.timeout > 0) {
                 setTimeout(() => {
                     if (tablet.checkingStatus === "checking") {
+                        tablet.checkingStatus = "timeout"
                         tablet.passedStatus = "failed"
                         tablet.message = "Timed out waiting for check"
                     }

@@ -2,10 +2,10 @@ import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
-import {HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS} from "../assets/checks/_fullcheckValues";
+import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
 import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
 import TheIMVR from "../tool-qa/components/fullCheck/screens/TheIMVR.vue";
-import BasicAutoCheck from "../tool-qa/components/fullCheck/BasicAutoCheck.vue";
+import BasicAutoCheck from "../tool-qa/components/fullCheck/AutoCheck.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -188,11 +188,11 @@ export const fullRoutes = [
         }
     },
 
-    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', getFirstRoute(NETWORK)),
+    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', '/check/full/windows/auto'),
     //Manually add the automatic routes between the necessary checks
     {
         path: '/check/full/windows/auto',
-        name: 'full-imvr-experiences',
+        name: 'full-windows-auto',
         component: BasicAutoCheck,
         meta: {
             checkType: 'windows_checks',
@@ -204,7 +204,7 @@ export const fullRoutes = [
             progress: 0
         }
     },
-    ...generateRoutesFromObjectArray(NETWORK, getLastRoute(HARDWARE),  getFirstRoute(WINDOWS)),
+    ...generateRoutesFromObjectArray(NETWORK, '/check/full/windows/auto',  getFirstRoute(WINDOWS)),
     ...generateRoutesFromObjectArray(WINDOWS, getLastRoute(NETWORK),  getFirstRoute(SECURITY)),
     ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  getFirstRoute(SOFTWARE)),
     ...generateRoutesFromObjectArray(SOFTWARE, getLastRoute(SECURITY),  '/check/full/imvr/experiences'),
