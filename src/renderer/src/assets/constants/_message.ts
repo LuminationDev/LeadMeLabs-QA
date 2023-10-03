@@ -10,6 +10,7 @@ export const RUN_GROUP = "QA:NUC:RunGroup";
 export const LAUNCH_EXPERIENCE = "QA:Station:LaunchExperience";
 export const CONNECT_TO_ANDROID = "QA:Android:Android";
 export const GET_VR_STATUSES = "QA:Station:GetVrStatuses";
+export const QA_LEAD_TEXT = "QA:NUC:QA";
 
 //STATION MESSAGES
 //Source:Destination:ActionSpace:Request

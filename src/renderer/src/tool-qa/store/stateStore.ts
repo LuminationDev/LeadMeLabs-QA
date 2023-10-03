@@ -76,7 +76,7 @@ export const useStateStore = defineStore({
     },
     getters: {
         getServerDetails: (state) => {
-            return `:${state.ipAddress}:${state.serverPort}`
+            return `${state.ipAddress}:${state.serverPort}`
         }
     }
 });

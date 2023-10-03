@@ -62,13 +62,13 @@ const transformData = computed(() => {
  */
 onMounted(() => {
   fullStore.startQa(props.checkType);
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + props.checkType
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.RUN_STATION_GROUP,
+    actionData: {
+      group: props.checkType,
+      stationIds: ['all']
+    }
+  })
 });
 
 const addComment = (comment: string) => {

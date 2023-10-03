@@ -83,7 +83,6 @@ export const useFullStore = defineStore({
         },
 
         startExperienceChecks() {
-            const stateStore = useStateStore();
             if (this.experienceChecks.length === 0) {
                 this.buildExperienceChecks()
             }
@@ -95,20 +94,18 @@ export const useFullStore = defineStore({
                 }
 
                 this.experienceChecks[0].stations[index].status === "checking"
-                //@ts-ignore
-                api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-                    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-                    key: stateStore.key,
-                    address: this.nucAddress,
-                    port: 55556,
-                    data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + station.id + ":" + this.experienceChecks[0].id
-                });
+                this.sendMessage({
+                    action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
+                    actionData: {
+                        stationId: station.id,
+                        experienceId: this.experienceChecks[0].id
+                    }
+                })
                 index++
             })
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
-            const stateStore = useStateStore();
             const index = this.experienceChecks.findIndex(element => element.id == experienceId);
             if (index === -1) {
                 return;
@@ -136,14 +133,15 @@ export const useFullStore = defineStore({
                 }
 
                 this.experienceChecks[nextCheckIndex].stations[nextStationIndex].status = "checking"
-                //@ts-ignore
-                api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-                    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-                    key: stateStore.key,
-                    address: this.nucAddress,
-                    port: 55556,
-                    data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + this.experienceChecks[nextCheckIndex].stations[nextStationIndex].id + ":" + this.experienceChecks[nextCheckIndex].id
-                });
+
+
+                this.sendMessage({
+                    action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
+                    actionData: {
+                        stationId: this.experienceChecks[nextCheckIndex].stations[nextStationIndex].id,
+                        experienceId: this.experienceChecks[nextCheckIndex].id
+                    }
+                })
             }
         },
 
@@ -290,6 +288,22 @@ export const useFullStore = defineStore({
                     connected: true
                 })
             }
+        },
+
+        sendMessage(messageData: { action: string, actionData: any }) {
+            const stateStore = useStateStore()
+            const processedData = {
+                qaToolAddress: stateStore.getServerDetails,
+                ...messageData
+            }
+            // @ts-ignore api is injected
+            api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+                channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+                key: stateStore.key,
+                address: this.nucAddress,
+                port: 55556,
+                data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
+            });
         }
     },
     getters: {

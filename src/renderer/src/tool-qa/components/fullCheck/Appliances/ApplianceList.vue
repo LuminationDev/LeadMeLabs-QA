@@ -89,15 +89,14 @@ const validateAppliance = async () => {
     if(specificAppliances.value[i].automationType !== 'cbus') continue;
     currentCheckCount.value++;
 
-    //@ts-ignore
-    api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-      channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-      key: stateStore.key,
-      address: fullStore.nucAddress,
-      port: 55556,
-      data: CONSTANT.MESSAGE.CBUS_APPLIANCE_VALIDATION + stateStore.getServerDetails +
-          `:${specificAppliances.value[i]['automationBase']}:${specificAppliances.value[i]['automationGroup']}:${specificAppliances.value[i]['automationId']}`
-    });
+    fullStore.sendMessage({
+      action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
+      actionData: {
+        automationBase: specificAppliances.value[i]['automationBase'],
+        automationGroup: specificAppliances.value[i]['automationGroup'],
+        automationId: specificAppliances.value[i]['automationId'],
+      }
+    })
 
     //Wait for a set period before moving to the next one
     //Todo test how many might overload the cbus?
@@ -113,14 +112,10 @@ const validateAppliance = async () => {
 const validateCbusConnection = async () => {
   fullStore.cbusConnection = "Loading"
 
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.CBUS_CONNECTION_VALIDATION + stateStore.getServerDetails
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.CBUS_CONNECTION_VALIDATION,
+    actionData: {}
+  })
 };
 
 /**

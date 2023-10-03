@@ -157,112 +157,94 @@ const handleTCPMessage = (info: any) => {
 
   //[0]Message type | [1]Message details
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
-
-  if (info.mainText.includes("StationChecks")) {
-    const split = info.mainText.split(":::")
-    console.log(split)
-    const expectedId = split[2]
-    const group = split[4]
-    const qaChecks = JSON.parse(split[5]).map(element => {
-      var qa = {} as QaCheck
-      qa.passedStatus = element._passedStatus ?? element.passedStatus
-      qa.message = element._message ?? element.message
-      qa.id = element._id ?? element.id
-      return qa
-    });
-    fullStore.qaChecks.push(...qaChecks)
-    const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
-    if (index !== -1) {
-      fullStore.Stations[index].qaChecks.push(...qaChecks)
-    }
-
-    fullStore.updateQaChecks(expectedId, group, qaChecks)
-
-    const groupsToRun = fullStore.processQaList()
-    groupsToRun.forEach(group => {
-      fullStore.startQa(group)
-      api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-        channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-        key: stateStore.key,
-        address: fullStore.nucAddress,
-        port: 55556,
-        data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
-      });
-    })
-
-    return
-  }
-
-  if (info.mainText.includes("StationDetails")) {
-    const split = info.mainText.split(":::")
-    console.log(split)
-    const expectedId = split[2]
-    const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
-    let stationDetails = {} as StationDetails
-    const qaDetails = JSON.parse(split[4]).map(element => {
-      var qa = {} as QaDetail
-      qa.value = element._value ?? element.value
-      qa.message = element._message ?? element.message
-      qa.id = element._id ?? element.id
-      if (index !== -1) {
-        console.log(qa.id, qa.value, fullStore.Stations[index].details)
-        stationDetails[qa.id] = qa.value
-        // todo go from key to detail
-      }
-      return qa
-    });
-    if (fullStore.Stations[index].details) {
-      fullStore.Stations[index].details = { ...stationDetails, ...fullStore.Stations[index].details }
-    } else {
-      fullStore.Stations[index].details = stationDetails
-    }
-    fullStore.qaDetails.push(...qaDetails)
-
-    return
-  }
-
-  if (info.mainText.includes("ExperienceLaunching")) {
-    const status = info.mainText.split(":::")[5]
-    const message = info.mainText.split(":::")[6]
-    const experienceId = info.mainText.split(":::")[4]
-    const stationId = info.mainText.split(":::")[2]
-    fullStore.updateExperienceCheck(stationId, experienceId, status, message)
-    return
-  }
-
-  if (info.mainText.includes("ExperienceLaunched")) {
-    const stationId = info.mainText.split(":")[1].split("::")[0].split(",")[1]
-    const experienceId = info.mainText.split("::")[1]
-    fullStore.updateExperienceCheck(stationId, experienceId, "passed", "")
-    return
-  }
-
-  if (info.mainText.includes("ExperienceLaunchFailed")) {
-    const stationId = info.mainText.split(":")[1].split("::")[0].split(",")[1]
-    const experienceId = info.mainText.split("::")[1]
-    fullStore.updateExperienceCheck(stationId, experienceId, "failed", "")
-    return
-  }
-
-  if (info.mainText.includes("VrStatuses")) {
-    const stationId = info.mainText.split(":::")[2]
-    const json = JSON.parse(info.mainText.split(":::")[4])
-    fullStore.updateStationVrStatuses(stationId, json)
-    console.log(info.mainText)
-    // fullStore.updateExperienceCheck(stationId, experienceId, "failed", "")
-    return
-  }
-
   switch(message[0]) {
-    case "Connected":
-      const responseData = JSON.parse(message[1])
-      fullStore.connected = true
-      fullStore.ApplianceList = responseData.appliances;
-      fullStore.NucStationList = responseData.stations;
-      fullStore.cbusConnection = responseData.cbus;
+    case "ServerStatus":
+      stateStore.isServerRunning = JSON.parse(message[1]);
+      break;
+    case "ApplianceList":
+      fullStore.ApplianceList = JSON.parse(message[1]);
+      break;
+    case "StationList":
+      fullStore.NucStationList = JSON.parse(message[1]);
+      break;
+    case "StationDetails":
+      fullStore.StationList.push(JSON.parse(message[1]));
+      break;
+    case "StationNetwork":
+    case "StationConfig":
+    case "StationWindows":
+    case "StationSoftware":
+      populateQuickReportTracker(message[1]);
+      break;
+  }
 
-      console.log(responseData.stations)
-      responseData.stations.forEach(station => {
+
+  const response = JSON.parse(info.mainText) // todo expected response type
+  switch (response.response) {
+    case "RunGroup": {
+      const group = response.responseData.group
+      const id = response.source.split(",")[1]
+
+      const qaChecks = JSON.parse(response.responseData.data).map(element => {
+        var qa = {} as QaCheck
+        qa.passedStatus = element._passedStatus ?? element.passedStatus
+        qa.message = element._message ?? element.message
+        qa.id = element._id ?? element.id
+        return qa
+      });
+      fullStore.qaChecks.push(...qaChecks)
+      const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == id)
+      if (index !== -1) {
+        fullStore.Stations[index].qaChecks.push(...qaChecks)
+      }
+
+      fullStore.updateQaChecks(id, group, qaChecks)
+
+      const groupsToRun = fullStore.processQaList()
+      groupsToRun.forEach(group => {
+        fullStore.startQa(group)
+        fullStore.sendMessage({
+          action: CONSTANT.ACTION.RUN_STATION_GROUP,
+          actionData: {
+            group,
+            stationIds: ['all']
+          }
+        })
+      })
+      break;
+    }
+    case "ExperienceLaunchAttempt": {
+      const status = response.responseData.result
+      const message = response.responseData.message
+      const stationId = response.source.split(",")[1]
+      const experienceId = response.responseData.experienceId
+      fullStore.updateExperienceCheck(stationId, experienceId, status, message)
+      break;
+    }
+    case "ExperienceLaunched": {
+      const stationId = response.source.split(",")[1]
+      const experienceId = response.responseData.experienceId
+      fullStore.updateExperienceCheck(stationId, experienceId, "passed", "")
+      break;
+    }
+    case "ExperienceLaunchFailed": {
+      const stationId = response.source.split(",")[1]
+      const experienceId = response.responseData.experienceId
+      fullStore.updateExperienceCheck(stationId, experienceId, "failed", "")
+      break;
+    }
+    case "GetVrStatuses": {
+      const stationId = response.source.split(",")[1]
+      fullStore.updateStationVrStatuses(stationId, response.responseData.result)
+      break;
+    }
+    case "Connected": {
+      fullStore.connected = true
+      fullStore.ApplianceList = response.responseData.appliances;
+      fullStore.NucStationList = response.responseData.stations;
+      fullStore.cbusConnection = response.responseData.cbus;
+
+      response.responseData.stations.forEach(station => {
         const s = new Station();
         s.expectedDetails = {
           ipAddress: station.ipAddress,
@@ -279,66 +261,103 @@ const handleTCPMessage = (info: any) => {
       })
       fullStore.buildQaList(); //Build the QaList on connection response
       break;
-    case "tablet_connected":
-      const ipAddress = message[1]
-      fullStore.tabletConnected(ipAddress)
+    }
+    case "tabletConnected": {
+      fullStore.tabletConnected(response.ipAddress)
       break;
-    case "tablet_checks":
-      const ipAddress1 = message[1]
-      fullStore.tabletConnected(ipAddress1)
-      console.log(message[1].substring(message[1].indexOf(':')+1))
+    }
+    case "tabletChecks": {
+      fullStore.tabletConnected(response.ipAddress)
+      console.log(response.responseData)
       break;
-    case "ServerStatus":
-      stateStore.isServerRunning = JSON.parse(message[1]);
-      break;
-
-    case "ApplianceList":
-      fullStore.ApplianceList = JSON.parse(message[1]);
-      break;
-
-    case "StationList":
-      fullStore.NucStationList = JSON.parse(message[1]);
-      break;
-
-    case "StationDetails":
-      fullStore.StationList.push(JSON.parse(message[1]));
-      break;
-
-    case "StationNetwork":
-    case "StationConfig":
-    case "StationWindows":
-    case "StationSoftware":
-      populateQuickReportTracker(message[1]);
-      break;
-
-    case "cbusConnectionChecks":
-      fullStore.cbusConnection = message[1];
-      break;
-
-    case "CbusValidation":
-      const details = message[1].split(":");
+    }
+    case "CbusConnectionValidation": {
+      fullStore.cbusConnection = response.responseData.result;
+    }
+    case "CbusValidation": {
+      const details = response.responseData.result;
       const foundItem = fullStore.ApplianceList.find(item =>
-          item.automationBase == details[0] &&
-          item.automationGroup == details[1] &&
-          item.automationId == details[2]
+          item.automationBase == details.automationBase &&
+          item.automationGroup == details.automationGroup &&
+          item.automationId == details.automationId
       );
 
       if (!foundItem) return;
 
-      const correct = foundItem.id === `${foundItem.type}-${details[3]}`;
-      if(correct !== null) {
+      const correct = foundItem.id === `${foundItem.type}-${details.address}`;
+      if (correct !== null) {
         foundItem.correctId = correct;
 
-        if(correct === false) {
+        if (correct === false) {
           foundItem.correct = correct;
         }
       }
       break;
-
-    default:
-      console.log(`Unknown type: ${message[0]}. Data: ${message[1]}`);
-      break;
+    }
   }
+
+  // if (info.mainText.includes("StationChecks")) {
+  //   const split = info.mainText.split(":::")
+  //   console.log(split)
+  //   const expectedId = split[2]
+  //   const group = split[4]
+  //   const qaChecks = JSON.parse(split[5]).map(element => {
+  //     var qa = {} as QaCheck
+  //     qa.passedStatus = element._passedStatus ?? element.passedStatus
+  //     qa.message = element._message ?? element.message
+  //     qa.id = element._id ?? element.id
+  //     return qa
+  //   });
+  //   fullStore.qaChecks.push(...qaChecks)
+  //   const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
+  //   if (index !== -1) {
+  //     fullStore.Stations[index].qaChecks.push(...qaChecks)
+  //   }
+  //
+  //   fullStore.updateQaChecks(expectedId, group, qaChecks)
+  //
+  //   const groupsToRun = fullStore.processQaList()
+  //   groupsToRun.forEach(group => {
+  //     fullStore.startQa(group)
+  //     fullStore.sendMessage({
+  //       action: CONSTANT.ACTION.RUN_STATION_GROUP,
+  //       actionData: {
+  //         group,
+  //         stationIds: ['all']
+  //       }
+  //     })
+  //   })
+  //
+  //   return
+  // }
+
+  // if (info.mainText.includes("StationDetails")) {
+  //   const split = info.mainText.split(":::")
+  //   console.log(split)
+  //   const expectedId = split[2]
+  //   const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
+  //   let stationDetails = {} as StationDetails
+  //   const qaDetails = JSON.parse(split[4]).map(element => {
+  //     var qa = {} as QaDetail
+  //     qa.value = element._value ?? element.value
+  //     qa.message = element._message ?? element.message
+  //     qa.id = element._id ?? element.id
+  //     if (index !== -1) {
+  //       console.log(qa.id, qa.value, fullStore.Stations[index].details)
+  //       stationDetails[qa.id] = qa.value
+  //       // todo go from key to detail
+  //     }
+  //     return qa
+  //   });
+  //   if (fullStore.Stations[index].details) {
+  //     fullStore.Stations[index].details = { ...stationDetails, ...fullStore.Stations[index].details }
+  //   } else {
+  //     fullStore.Stations[index].details = stationDetails
+  //   }
+  //   fullStore.qaDetails.push(...qaDetails)
+  //
+  //   return
+  // }
 }
 
 /**

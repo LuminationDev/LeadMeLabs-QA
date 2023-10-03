@@ -19,13 +19,12 @@ function startTesting() {
 }
 
 function getVrStatuses() {
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.GET_VR_STATUSES + stateStore.getServerDetails
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.GET_VR_STATUSES,
+    actionData: {
+      stationIds: ['all']
+    }
+  })
 }
 
 onMounted(() => {
