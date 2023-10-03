@@ -37,13 +37,12 @@ const clearHoverTimer = () => {
 </script>
 
 <template>
-  <td class="p-3 w-28 relative">
-    <div @mouseover="startHoverTimer" @mouseout="clearHoverTimer" class="cursor-help font-semibold rounded-xl w-fit px-2" :class="{
-        'bg-blue-100 border-[1px] border-blue-300 text-blue-700': (passedStatus !== 'failed' && passedStatus !== 'passed') || checkingStatus === 'checking',
-        'bg-red-100 border-[1px] border-red-300 text-red-700': passedStatus === 'failed' && checkingStatus !== 'checking',
-        'bg-green-100 border-[1px] border-green-300 text-green-700': passedStatus === 'passed' && checkingStatus !== 'checking',
-      }">
-      {{ stateStore.capitalizeFirstLetter(checkingStatus === 'checked' ? passedStatus : checkingStatus) }}
+  <td class="p-3 w-16 relative">
+    <div @mouseover="startHoverTimer" @mouseout="clearHoverTimer" class="cursor-help font-semibold rounded-xl w-full justify-center h-4">
+      <img v-if="checkingStatus === 'timeout'" alt="error" src="../../../assets/icons/auto-checked-error.svg"/>
+      <img v-else-if="(passedStatus !== 'failed' && passedStatus !== 'passed') || checkingStatus === 'checking'" alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
+      <img v-else-if="passedStatus === 'failed' && checkingStatus !== 'checking'" alt="failed" src="../../../assets/icons/auto-checked-failed.svg"/>
+      <img v-else-if="passedStatus === 'passed' && checkingStatus !== 'checking'" alt="passed" src="../../../assets/icons/auto-checked-passed.svg"/>
     </div>
     <Transition name="fade">
       <div v-if="isHovered" class="absolute w-40 bg-gray-100 border-[1px] border-gray-300 p-2 rounded-lg z-10">{{ message }}</div>
