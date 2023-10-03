@@ -3,7 +3,7 @@ import * as CONSTANT from "@renderer/assets/constants";
 import { computed, onMounted, ref } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
-import ItemHover from "@renderer/tool-qa/components/fullCheck/Report/ItemHover.vue";
+import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
 import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue";
 import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
 
@@ -19,6 +19,7 @@ const props = defineProps({
   }
 });
 
+//TODO update this
 /**
  * Change the data format and save the data within the fullStore.reportTracker
  */

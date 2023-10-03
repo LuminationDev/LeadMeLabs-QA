@@ -3,7 +3,6 @@ import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
-import * as FULL from './assets/checks/_fullcheckValues';
 import { TCPMessage, QaCheck, QaDetail } from "tool-qa/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
@@ -25,36 +24,6 @@ const quickStore = useQuickStore();
 const fullStore = useFullStore();
 const configStore = useConfigStore()
 const { showPreview } = storeToRefs(configStore)
-
-/**
- * Function to transform key-value pairs into QaCheck objects
-  */
-const transformToObject = (key: string, value: string): QaCheck => {
-  return {
-    passedStatus: null, // Default to null
-    message: value,
-    id: key,
-  };
-}
-
-/**
- * Read the static _fullCheckValues and load them into the fullStore's reportTracker variable
- */
-const populateFullReportTracker = () => {
-  const objectValuesArray: { ReportTrackerItem } = {};
-
-  // Iterate through the exported objects in index.ts
-  for (const variableName in FULL) {
-    if (Object.prototype.hasOwnProperty.call(FULL, variableName)) {
-      const object = FULL[variableName];
-      objectValuesArray[variableName] = Object.keys(object).map((key) =>
-          transformToObject(key, object[key])
-      );
-    }
-  }
-  fullStore.reportTracker = objectValuesArray;
-}
-populateFullReportTracker();
 
 /**
  * Populate the stationDetails in the quickStore with the data from a Station in the QaCheck interface format.
