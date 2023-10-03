@@ -6,31 +6,48 @@ import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
 import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue";
 import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
+import {useRoute} from "vue-router";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
 const currentStation = ref("");
 const currentCheck = ref("");
 
-const props = defineProps({
-  checkType: {
-    type: String,
-    required: true
-  }
-});
+interface ReportTracker {
+  [checkType: string]: {
+    [stationId: string]: ReportData[];
+  };
+}
 
-//TODO update this
+interface ReportData {
+  id: string;
+  displayName: string;
+  description: string;
+  passedStatus: string;
+  checkingStatus: string;
+  message: string;
+  date: string;
+}
+
+const route = useRoute();
+const checkType = route.meta['checkType'];
+
+/**
+ * Consolidate the information to the single page with no memory at te moment/
+ */
+const reportTracker: ReportTracker = {};
+
 /**
  * Change the data format and save the data within the fullStore.reportTracker
  */
 const transformData = computed(() => {
   fullStore.qaGroups
-      .filter(group => group.id === props.checkType)
+      .filter(group => group.id === checkType)
       .forEach(group => {
         group.checks.forEach(check => {
           check.stations.forEach(station => {
             const stationId = station.id;
-            const dataToUpdate = {
+            const dataToUpdate: ReportData = {
               id: check.id,
               displayName: check.displayName,
               description: check.extendedDescription,
@@ -41,40 +58,40 @@ const transformData = computed(() => {
             };
 
             //Add to the reportTracker (create fields if required)
-            fullStore.reportTracker[props.checkType] = fullStore.reportTracker[props.checkType] || {};
-            fullStore.reportTracker[props.checkType][stationId] = fullStore.reportTracker[props.checkType][stationId] || [];
+            reportTracker[checkType] = reportTracker[checkType] || {};
+            reportTracker[checkType][stationId] = reportTracker[checkType][stationId] || [];
 
             //Avoid double ups (mostly while dev working with hot-reload)
-            const indexToUpdate = fullStore.reportTracker[props.checkType][stationId].findIndex(entry => entry.id === dataToUpdate.id);
+            const indexToUpdate = reportTracker[checkType][stationId].findIndex(entry => entry.id === dataToUpdate.id);
             if (indexToUpdate !== -1) {
-              fullStore.reportTracker[props.checkType][stationId][indexToUpdate] = dataToUpdate;
+              reportTracker[checkType][stationId][indexToUpdate] = dataToUpdate;
             } else {
-              fullStore.reportTracker[props.checkType][stationId].push(dataToUpdate);
+              reportTracker[checkType][stationId].push(dataToUpdate);
             }
       });
     });
   });
 
-  return fullStore.reportTracker[props.checkType];
+  return reportTracker[checkType];
 });
 
 /**
  * Start the auto test once the component has been mounted, check that the server and connection is up first.
  */
 onMounted(() => {
-  fullStore.startQa(props.checkType);
+  fullStore.startQa(checkType);
   fullStore.sendMessage({
     action: CONSTANT.ACTION.RUN_STATION_GROUP,
     actionData: {
-      group: props.checkType,
+      group: checkType,
       stationIds: ['all']
     }
-  })
+  });
 });
 
 const addComment = (comment: string) => {
   //Update the original tracker
-  fullStore.reportTracker[props.checkType][currentStation.value].find(item => item.id === currentCheck.value)['comment'] = comment;
+  reportTracker[checkType][currentStation.value].find(item => item.id === currentCheck.value)['comment'] = comment;
 }
 
 /**
