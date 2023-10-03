@@ -83,27 +83,29 @@ export const useFullStore = defineStore({
         },
 
         startExperienceChecks() {
-            const stateStore = useStateStore();
             if (this.experienceChecks.length === 0) {
                 this.buildExperienceChecks()
             }
             var index = 0
             this.experienceChecks[0].stations.forEach(station => {
+                const i = this.Stations.findIndex(s => (station.id == s.expectedDetails.id) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+                if (i === -1) {
+                    return;
+                }
+
                 this.experienceChecks[0].stations[index].status === "checking"
-                //@ts-ignore
-                api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-                    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-                    key: stateStore.key,
-                    address: this.nucAddress,
-                    port: 55556,
-                    data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + station.id + ":" + this.experienceChecks[0].id
-                });
+                this.sendMessage({
+                    action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
+                    actionData: {
+                        stationId: station.id,
+                        experienceId: this.experienceChecks[0].id
+                    }
+                })
                 index++
             })
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
-            const stateStore = useStateStore();
             const index = this.experienceChecks.findIndex(element => element.id == experienceId);
             if (index === -1) {
                 return;
@@ -125,15 +127,28 @@ export const useFullStore = defineStore({
                     return element.stations[nextStationIndex].status === "unchecked"
                 })
 
+                const i = this.Stations.findIndex(s => (s.expectedDetails.id == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+                if (i === -1) {
+                    return;
+                }
+
                 this.experienceChecks[nextCheckIndex].stations[nextStationIndex].status = "checking"
-                //@ts-ignore
-                api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-                    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-                    key: stateStore.key,
-                    address: this.nucAddress,
-                    port: 55556,
-                    data: CONSTANT.MESSAGE.LAUNCH_EXPERIENCE + stateStore.getServerDetails + ":" + this.experienceChecks[nextCheckIndex].stations[nextStationIndex].id + ":" + this.experienceChecks[nextCheckIndex].id
-                });
+
+
+                this.sendMessage({
+                    action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
+                    actionData: {
+                        stationId: this.experienceChecks[nextCheckIndex].stations[nextStationIndex].id,
+                        experienceId: this.experienceChecks[nextCheckIndex].id
+                    }
+                })
+            }
+        },
+
+        updateStationVrStatuses(stationId: string, statuses: any) {
+            const index = this.Stations.findIndex(element => element.expectedDetails.id == stationId)
+            if (index !== -1) {
+                this.Stations[index].vrStatuses = statuses
             }
         },
 
@@ -273,6 +288,22 @@ export const useFullStore = defineStore({
                     connected: true
                 })
             }
+        },
+
+        sendMessage(messageData: { action: string, actionData: any }) {
+            const stateStore = useStateStore()
+            const processedData = {
+                qaToolAddress: stateStore.getServerDetails,
+                ...messageData
+            }
+            // @ts-ignore api is injected
+            api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+                channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+                key: stateStore.key,
+                address: this.nucAddress,
+                port: 55556,
+                data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
+            });
         }
     },
     getters: {

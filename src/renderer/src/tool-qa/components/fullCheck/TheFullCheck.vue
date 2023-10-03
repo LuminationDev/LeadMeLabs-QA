@@ -29,27 +29,20 @@ async function connectToNuc() {
     command: "start"
   });
 
-  console.log(CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails)
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.CONNECT + stateStore.getServerDetails
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.CONNECT,
+    actionData: {}
+  })
 }
 
 async function connectToTablet() {
 
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.CONNECT_TO_ANDROID + stateStore.getServerDetails + ":" + tabletIp.value + ":Connect"
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.CONNECT_TABLET,
+    actionData: {
+      tabletIp: tabletIp.value
+    }
+  })
 }
 
 function startTest() {
@@ -57,21 +50,20 @@ function startTest() {
   console.log(groupsToRun)
   groupsToRun.forEach(group => {
     fullStore.startQa(group)
-    api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-      channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-      key: stateStore.key,
-      address: fullStore.nucAddress,
-      port: 55556,
-      data: CONSTANT.MESSAGE.RUN_GROUP + stateStore.getServerDetails + ":" + group
-    });
+    fullStore.sendMessage({
+      action: CONSTANT.ACTION.RUN_STATION_GROUP,
+      actionData: {
+        group,
+        stationIds: ['all']
+      }
+    })
   })
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: fullStore.nucAddress,
-    port: 55556,
-    data: CONSTANT.MESSAGE.CONNECT_TO_ANDROID + stateStore.getServerDetails + ":" + tabletIp.value + ":RunAuto"
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.RUN_TABLET_ALL,
+    actionData: {
+      tabletIpAddresses: [tabletIp.value]
+    }
+  })
 }
 </script>
 

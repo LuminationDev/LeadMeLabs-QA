@@ -51,31 +51,27 @@ const requestStationsFromNuc = () => {
   //Save the IP address as the NUC address
   fullStore.nucAddress = address.value;
 
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-    channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-    key: stateStore.key,
-    address: address.value,
-    port: 55556,
-    data: CONSTANT.MESSAGE.REQUEST_STATION_LIST + stateStore.getServerDetails
-  });
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.REQUEST_NUC_STATION_LIST,
+    actionData: {}
+  })
 }
 
 /**
  * Cycle through the list of Stations that the NUC has provided and ask each one for their details.
  */
-const requestFromStations = () => {
-  fullStore.NucStationList.forEach(station => {
-    //@ts-ignore
-    api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-      channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-      key: stateStore.key,
-      address: station.ipAddress,
-      port: 55557,
-      data: CONSTANT.MESSAGE.REQUEST_STATION_DETAILS + stateStore.getServerDetails
-    });
-  })
-}
+// const requestFromStations = () => {
+//   fullStore.NucStationList.forEach(station => {
+//     //@ts-ignore
+//     api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+//       channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+//       key: stateStore.key,
+//       address: station.ipAddress,
+//       port: 55557,
+//       data: CONSTANT.MESSAGE.REQUEST_STATION_DETAILS + stateStore.getServerDetails
+//     });
+//   })
+// }
 </script>
 
 <template>
@@ -89,14 +85,14 @@ const requestFromStations = () => {
                  }">
       Check
     </div>
-    <div v-on:click="requestFromStations"
-         class="w-32 h-8 mb-5 flex items-center justify-center rounded-lg"
-         :class="{
-                    'bg-blue-500 text-white cursor-pointer hover:bg-blue-400': NucStationList.length > 0,
-                    'bg-gray-300 text-white': NucStationList.length === 0,
-                 }">
-      Collect
-    </div>
+<!--    <div v-on:click="requestFromStations"-->
+<!--         class="w-32 h-8 mb-5 flex items-center justify-center rounded-lg"-->
+<!--         :class="{-->
+<!--                    'bg-blue-500 text-white cursor-pointer hover:bg-blue-400': NucStationList.length > 0,-->
+<!--                    'bg-gray-300 text-white': NucStationList.length === 0,-->
+<!--                 }">-->
+<!--      Collect-->
+<!--    </div>-->
   </div>
 
   <hr class="my-3"/>
