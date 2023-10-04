@@ -6,6 +6,7 @@ type CheckCategory = {
 };
 
 export type CheckObject = {
+    parent: string;
     page: string;
     description: string;
     category: Record<string, CheckCategory>[];

@@ -14,6 +14,7 @@ import { CheckObject } from "../../tool-qa/interfaces/_routeItems";
  */
 //region HARDWARE SECTION
 export const BATTERY: CheckObject = {
+    "parent": "hardware",
     "page": "battery",
     "description": "Headsets, controllers, and tablets",
     "category": [
@@ -38,6 +39,7 @@ export const BATTERY: CheckObject = {
 };
 
 export const VIDEO_CABLES: CheckObject = {
+    "parent": "hardware",
     "page": "video_cables",
     "description": "Cabling for projectors",
     "category": [
@@ -61,6 +63,7 @@ export const VIDEO_CABLES: CheckObject = {
 };
 
 export const PROJECTORS: CheckObject = {
+    "parent": "hardware",
     "page": "projectors",
     "description": "Display quality and configuration",
     "category": [
@@ -84,6 +87,7 @@ export const PROJECTORS: CheckObject = {
 };
 
 export const KEYBOARD: CheckObject = {
+    "parent": "hardware",
     "page": "keyboard",
     "description": "Keyboard connection to station",
     "category": [
@@ -102,6 +106,7 @@ export const KEYBOARD: CheckObject = {
 };
 
 export const BIOS_SETTINGS: CheckObject = {
+    "parent": "hardware",
     "page": "bios_settings",
     "description": "Startup and reboot settings",
     "category": [
@@ -125,6 +130,7 @@ export const HARDWARE: CheckObject[] = [BATTERY, VIDEO_CABLES, PROJECTORS, KEYBO
 //  - IPv4 Settings
 //  - Network Checks
 export const MILESITE_ROUTER: CheckObject = {
+    "parent": "network",
     "page": "milesite_router",
     "description": "Web interface and devices",
     "category": [
@@ -142,6 +148,7 @@ export const MILESITE_ROUTER: CheckObject = {
 };
 
 export const CBUS: CheckObject = {
+    "parent": "network",
     "page": "cbus",
     "description": "Configuration and connectivity",
     "category": [
@@ -163,6 +170,7 @@ export const NETWORK = [MILESITE_ROUTER, CBUS];
 //Contains an additional automatic check
 //  - Windows Settings
 export const HANDOVER: CheckObject = {
+    "parent": "windows",
     "page": "handover",
     "description": "Document Details for Handover",
     "category": [
@@ -179,6 +187,7 @@ export const HANDOVER: CheckObject = {
 };
 
 export const DRIVERS: CheckObject = {
+    "parent": "windows",
     "page": "drivers",
     "description": "Updates and Drivers",
     "category": [
@@ -197,6 +206,7 @@ export const DRIVERS: CheckObject = {
 };
 
 export const EXECUTABLES: CheckObject = {
+    "parent": "windows",
     "page": "executables",
     "description": "Launch on start up each time",
     "category": [
@@ -215,6 +225,7 @@ export const WINDOWS = [HANDOVER, DRIVERS, EXECUTABLES];
 
 //region SECURITY SECTION
 export const PASSWORDS: CheckObject = {
+    "parent": "security",
     "page": "passwords",
     "description": "Passwords are sufficient and stored correctly",
     "category": [
@@ -234,6 +245,7 @@ export const PASSWORDS: CheckObject = {
 };
 
 export const LEADME_SECURITY: CheckObject = {
+    "parent": "security",
     "page": "leadme_security",
     "description": "Passwords are sufficient and stored correctly",
     "category": [
@@ -257,6 +269,7 @@ export const SECURITY = [PASSWORDS, LEADME_SECURITY];
 //  - LeadMe Launcher
 //  - Steam
 export const STEAM: CheckObject = {
+    "parent": "software",
     "page": "steam",
     "description": "Steam and SteamVR",
     "category": [
@@ -281,6 +294,7 @@ export const SOFTWARE = [STEAM];
 //  - HTC Hardware
 //  - VR Experiences
 export const VIVE: CheckObject = {
+    "parent": "imvr",
     "page": "vive",
     "description": "Hardware and Software",
     "category": [
@@ -299,6 +313,7 @@ export const VIVE: CheckObject = {
 };
 
 export const VIRTUAL_REALITY: CheckObject = {
+    "parent": "imvr",
     "page": "virtual_reality",
     "description": "Functionality in VR (Tiltbush)",
     "category": [
