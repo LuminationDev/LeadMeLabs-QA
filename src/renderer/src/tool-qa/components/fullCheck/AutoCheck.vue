@@ -125,6 +125,8 @@ const monitorCheck = () => {
     checking.value = 'error'
   } else if (!stillRunning) {
     checking.value = 'done'
+  } else {
+    checking.value = 'testing'
   }
 }
 watch(() => fullStore.qaGroups, monitorCheck, { deep: true });
@@ -133,6 +135,9 @@ watch(() => fullStore.qaGroups, monitorCheck, { deep: true });
  * Start the auto test once the component has been mounted, check that the server and connection is up first.
  */
 onMounted(() => {
+  if (typeof checkType === "string") {
+    fullStore.mostRecentAutoCheck = checkType;
+  }
   checking.value = "testing";
 
   fullStore.startQa(checkType);

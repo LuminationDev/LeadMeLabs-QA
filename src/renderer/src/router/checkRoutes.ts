@@ -197,7 +197,6 @@ export const fullRoutes = [
         }
     },
 
-
     //Appliance Route
     {
         path: '/check/full/appliances',
@@ -223,8 +222,7 @@ export const fullRoutes = [
         meta: {
             checkType: 'windows_checks',
             addComment: true,
-            userInput: true,
-            canSkip: true,
+            canRetry: true,
             next: getFirstRoute(WINDOWS),
             prev: getLastRoute(NETWORK),
             progress: calculateProgress()
@@ -239,8 +237,7 @@ export const fullRoutes = [
         meta: {
             checkType: 'software_checks',
             addComment: true,
-            userInput: true,
-            canSkip: true,
+            canRetry: true,
             next: '/check/full/software/steam_config_checks',
             prev: getLastRoute(SECURITY),
             progress: calculateProgress()
@@ -253,8 +250,7 @@ export const fullRoutes = [
         meta: {
             checkType: 'steam_config_checks',
             addComment: true,
-            userInput: true,
-            canSkip: true,
+            canRetry: true,
             next: getFirstRoute(SOFTWARE),
             prev: '/check/full/software/software_checks',
             progress: calculateProgress()

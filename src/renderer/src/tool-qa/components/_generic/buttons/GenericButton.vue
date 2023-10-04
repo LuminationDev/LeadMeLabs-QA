@@ -50,6 +50,8 @@ const asyncCall = (): Promise<void> => {
                 type === 'light',
             'w-20 bg-white hover:text-gray-400 text-gray-800 font-semibold disabled:text-gray-400':
                 type === 'text',
+              'w-20 bg-white text-blue-600 font-semibold disabled:text-gray-400':
+                type === 'active-text',
             'w-20 bg-blue-600 hover:bg-blue-400 disabled:bg-gray-200 disabled:text-black text-white font-semibold':
                 type === 'blue',
             'w-36 bg-blue-50 border-blue-200 border-2 hover:bg-gray-50 text-blue-700 font-semibold disabled:bg-gray-200 disabled:text-black':
