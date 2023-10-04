@@ -311,6 +311,9 @@ export const useFullStore = defineStore({
     getters: {
         getCbusConnection(state) {
             return state.cbusConnection;
+        },
+        connectedTabletCount(state) {
+            return state.tablets.filter(tablet => tablet.connected).length
         }
     }
 });
