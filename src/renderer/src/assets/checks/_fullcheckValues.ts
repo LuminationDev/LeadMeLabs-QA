@@ -6,6 +6,7 @@
 //      - group
 //          - checks
 //          - description
+//          - devices (software/appliances the check relates to)
 
 import { CheckObject } from "../../tool-qa/interfaces/_routeItems";
 
@@ -24,7 +25,13 @@ export const BATTERY: CheckObject = {
                     "Headsets": "All batteries are charging and capable of a full charge.",
                     "Controllers": "All controllers are charging and capable of a full charge."
                 },
-                "description": "The LeadMe Storage Cabinet"
+                "description": "The LeadMe Storage Cabinet",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         },
         {
@@ -32,7 +39,13 @@ export const BATTERY: CheckObject = {
                 "checks": {
                     "Tablets": "All tablets are charging and capable of a full charge."
                 },
-                "description": "Samsung Tablets"
+                "description": "Samsung Tablets",
+                "devices": {
+                    "station": false,
+                    "tablet": true,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -48,7 +61,13 @@ export const VIDEO_CABLES: CheckObject = {
                 "checks": {
                     "Video Cable": "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             },
         },
         {
@@ -56,7 +75,13 @@ export const VIDEO_CABLES: CheckObject = {
                 "checks": {
                     "Additional Cables": "If additional cables are connected for Presentation mode, they are connected to a secondary display input."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -72,7 +97,13 @@ export const PROJECTORS: CheckObject = {
                 "checks": {
                     "Visual Quality": "Projector is displaying in the correct orientation, with no warping or blurriness."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             },
         },
         {
@@ -80,7 +111,13 @@ export const PROJECTORS: CheckObject = {
                 "checks": {
                     "Networking": "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": true,
+                    "nuc": true,
+                    "cbus": true
+                }
             }
         }
     ]
@@ -99,7 +136,13 @@ export const KEYBOARD: CheckObject = {
                     "Windows": "The keyboard works in Windows OS.",
                     "BIOS Mode": "The keyboard works in BIOS menu."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -116,7 +159,13 @@ export const BIOS_SETTINGS: CheckObject = {
                     "Wake on LAN": "Wake on LAN is enabled.",
                     "Restore Power": "Restore Power after AC loss is set to 'Power On’."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": true,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -141,7 +190,13 @@ export const MILESITE_ROUTER: CheckObject = {
                     "IP Address": "Device has the correct IP address in the Milesight Router web interface.",
                     "Config File": "The master Config file is uploaded in the Milesight Router web interface.",
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": true,
+                    "nuc": true,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -158,7 +213,13 @@ export const CBUS: CheckObject = {
                     "Scripts": "The CBUS template contains the necessary scripts and objects.",
                     "Keywords": "The keyword ‘sendToNuc’ has been added to all Lumination C-Bus objects."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": false,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": true
+                }
             }
         }
     ]
@@ -180,7 +241,13 @@ export const HANDOVER: CheckObject = {
                     "Hostname": "Hostname is set and recorded in the Lab Handover Doc.",
                     "MAC Address": "MAC Address is set and recorded in the Lab Handover Doc."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": true,
+                    "nuc": true,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -197,9 +264,28 @@ export const DRIVERS: CheckObject = {
                     "Windows": "Windows is up-to-date.",
                     "Devices": "Any device drivers with warning symbols have been resolved.",
                     "Motherboard": "The motherboard drivers and firmware are up to date.",
+                },
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": true,
+                    "cbus": false
+                }
+            }
+        },
+        {
+            "AMD": {
+                "checks": {
                     "AMD Adrenalin": "AMD Adrenalin is set to only run recommended updates (not recommended + optional)."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -215,7 +301,13 @@ export const EXECUTABLES: CheckObject = {
                 "checks": {
                     "Rebooting": "Station.exe & NUC.exe launch on start up each time after rebooting 3 times consecutively."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": true,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -230,15 +322,60 @@ export const PASSWORDS: CheckObject = {
     "description": "Passwords are sufficient and stored correctly",
     "category": [
         {
-            "TODO": {
+            "Projectors": {
                 "checks": {
-                    "Projector": "The projector's web interface password has been changed and is logged in Bitwarden.",
-                    "MileSight Router": "The milesight router has a complex password and is logged in Bitwarden.",
-                    "C-Bus": "The C-Bus has a complex password and is logged in Bitwarden.",
+                    "Projector": "The projector's web interface password has been changed and is logged in Bitwarden."
+                },
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
+            }
+        },
+        {
+            "Router": {
+                "checks": {
+                    "MileSight Router": "The milesight router has a complex password and is logged in Bitwarden."
+                },
+                "description": "Put something here later",
+                "devices": {
+                    "station": false,
+                    "tablet": false,
+                    "nuc": true,
+                    "cbus": false
+                }
+            }
+        },
+        {
+            "Steam": {
+                "checks": {
                     "Steam Account": "The Steam accounts have complex passwords and is logged in Bitwarden.",
                     "Family Mode PIN": "Family mode PIN is unique and is logged in Bitwarden."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
+            }
+        },
+        {
+            "C-Bus": {
+                "checks": {
+                    "C-Bus": "The C-Bus has a complex password and is logged in Bitwarden."
+                },
+                "description": "Put something here later",
+                "devices": {
+                    "station": false,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": true
+                }
             }
         }
     ]
@@ -255,7 +392,13 @@ export const LEADME_SECURITY: CheckObject = {
                     "Tablet PIN": "LeadMe Tablet PIN is unique and is logged in Bitwarden.",
                     "Google Account": "LeadMe Tablet Google account is unique, has a complex password, and is logged in Bitwarden."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": false,
+                    "tablet": true,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -280,7 +423,13 @@ export const STEAM: CheckObject = {
                     "Remote Play": "Remote Play: Disable all settings.",
                     "Broadcasting": "Broadcasting: Disable broadcasting."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -306,7 +455,13 @@ export const VIVE: CheckObject = {
                     "Base Stations": "Each base station is operating on a unique channel.",
                     "Hardware Condition": "There aren't signs of physical damage to the headsets or controllers.",
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]
@@ -326,7 +481,13 @@ export const VIRTUAL_REALITY: CheckObject = {
                     "Controller Tracking": "When the boundary is traced in Tiltbrush at low, mid and high heights, the end result shows a consistent brush stroke.",
                     "Headset Inactivity": "When an experience is left inactive for 5+ minutes, it can be picked up and resumed without the headset going blank."
                 },
-                "description": "Put something here later"
+                "description": "Put something here later",
+                "devices": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                }
             }
         }
     ]

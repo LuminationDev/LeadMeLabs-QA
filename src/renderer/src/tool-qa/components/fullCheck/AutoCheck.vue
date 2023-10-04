@@ -172,6 +172,7 @@ onMounted(() => {
             </th>
           </tr>
 
+          <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
           <tr v-for="(check, index) in filteredChecks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="check.displayName" :message="check.extendedDescription ?? 'No details provided'"/>
 
