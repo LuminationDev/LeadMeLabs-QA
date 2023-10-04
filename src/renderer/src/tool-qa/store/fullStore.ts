@@ -17,6 +17,7 @@ export const useFullStore = defineStore({
         numberOfStations: 0,
         //The IP address entered by a user that should be the NUC
         nucAddress: '',
+        mostRecentAutoCheck: '',
         //List of the Station detail's from the NUC
         qaChecks: Array<QaCheck>(),
         qaDetails: Array<QaDetail>(),

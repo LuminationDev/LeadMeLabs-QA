@@ -7,6 +7,7 @@ import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
+import * as CONSTANT from "@renderer/assets/constants";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -41,6 +42,22 @@ const addComment = (comment: string) => {
     fullStore.reportTracker[key]['comment'] = comment;
   }
 }
+
+/**
+ * Retry the most recently attempted auto check.
+ */
+const retryAutoCheck = () => {
+  if(fullStore.mostRecentAutoCheck.length === 0) return;
+
+  fullStore.startQa(fullStore.mostRecentAutoCheck);
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.RUN_STATION_GROUP,
+    actionData: {
+      group: fullStore.mostRecentAutoCheck,
+      stationIds: ['all']
+    }
+  });
+}
 </script>
 <template>
   <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
@@ -52,6 +69,10 @@ const addComment = (comment: string) => {
   <!--Skip without a comment-->
   <GenericButton class="mr-3" v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] !== undefined && props.meta['next']" type="text" :callback="goNextLink"
   >Skip
+  </GenericButton>
+
+  <GenericButton class="mr-3 hover:opacity-60" v-if="props.meta['canRetry'] !== undefined" type="active-text" :callback="retryAutoCheck"
+  ><img src="../assets/icons/auto-retry.svg" alt="Retry" class="mr-1.5"/> Retry
   </GenericButton>
 
   <!--Modal to handle the skip check comment-->
