@@ -4,11 +4,44 @@ import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue
 import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
 import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 
 const stateStore = useStateStore();
+const fullStore = useFullStore();
 const route = useRoute();
+
+/**
+ * Populate the device map from the known devices in the fullStore. Iterating over the deviceMap will allow for constant
+ * ordering and quick comparison on the table to align the values to correct header.
+ */
+const deviceMap = ref([
+  ...fullStore.stations.map(station => ({
+    id: station.id,
+    prefix: 'S',
+    type: 'station',
+    checks: {}
+  })),
+  ...fullStore.tablets.map(tablet => ({
+    id: tablet.ipAddress,
+    prefix: 'T',
+    type: 'tablet',
+    checks: {}
+  })),
+  {
+    id: 'NUC',
+    prefix: '',
+    type: 'nuc',
+    checks: {}
+  },
+  {
+    id: 'C-Bus',
+    prefix: '',
+    type: 'cbus',
+    checks: {}
+  }
+]);
 
 const onManualPage = computed(() => {
   return route.meta['type'] === 'manual';
@@ -23,7 +56,8 @@ const categories = computed(() => {
     const [categoryKey, categoryValue] = Object.entries(categoryItem)[0];
     return {
       key: categoryKey,
-      description: categoryValue.description
+      description: categoryValue.description,
+      devices: categoryValue.devices
     };
   });
 });
@@ -63,7 +97,7 @@ const generateTitle = computed(() => {
         <p class="text-base text-black mb-6">{{checkDetails.description ?? "No description set"}}</p>
 
         <!--A tab for each category-->
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row w-full overflow-auto">
           <CategoryTab
               v-for="(category, index) in categories"
               :key="index"
@@ -104,25 +138,18 @@ const generateTitle = computed(() => {
           <tr class="text-left text-xs bg-gray-100 border border-gray-200">
             <th class="p-3">Name</th>
 
-            <!--TODO auto generate these-->
-            <th>S1</th>
-            <th>S2</th>
-            <th>S3</th>
-            <th>T1</th>
-            <th>Nuc</th>
-            <th>CBus</th>
+            <th class="w-16 text-center p-3" v-for="device in deviceMap">
+              {{device.prefix}}{{device.id}}
+            </th>
           </tr>
 
+          <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
           <tr v-for="(item, index) in checks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="item.key" :message="item.description "/>
 
-            <td class="p-3"><input type="checkbox"></td>
-            <td class="p-3"><input type="checkbox"></td>
-            <td class="p-3"><input type="checkbox"></td>
-            <td class="p-3"><input type="checkbox"></td>
-            <td class="p-3"><input type="checkbox"></td>
-            <td class="p-3"><input type="checkbox"></td>
-
+            <td v-for="device in deviceMap" class="text-center p-3">
+              <input v-if="categories[currentCategoryIndex].devices[device.type] === true" type="checkbox" class="h-4 w-4">
+            </td>
           </tr>
         </table>
       </div>

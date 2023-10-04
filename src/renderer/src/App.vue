@@ -3,7 +3,7 @@ import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
-import { TCPMessage, QaCheck, QaDetail } from "tool-qa/interfaces";
+import { TCPMessage, QaCheck } from "tool-qa/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
 import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
@@ -11,7 +11,7 @@ import { useStateStore } from './tool-qa/store/stateStore';
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useConfigStore } from "@renderer/tool-config/store/configStore";
 import { storeToRefs } from "pinia";
-import { Station, StationDetails } from "./tool-qa/types/_station";
+import { Station } from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 
 // Sentry.init({
@@ -36,6 +36,7 @@ const populateQuickReportTracker = (data: string) => {
       passedStatus: element._passedStatus || element.passedStatus,
       message: element._message || element.message || element._value || element.value,
       id: element._id || element.id,
+      displayName: ""
     };
 
     //If no status is supplied check the local known values
@@ -81,7 +82,7 @@ const isCorrectValue = (key: string, value: any) => {
  * Backend listener, any messages from the node backend are directed to this listener and then
  * triaged for the appropriate follow through.
  */
-// @ts-ignore
+//@ts-ignore
 api.ipcRenderer.on('backend_message', (event, info) => {
   switch(info.channelType) {
     case CONSTANT.CHANNEL.APPLICATION_CHANNEL:
@@ -209,7 +210,6 @@ const handleTCPMessage = (info: any) => {
 
       response.responseData.stations.forEach(station => {
         const s = new Station(station.id + "");
-        console.log('heck', station, s)
         s.expectedDetails = {
           ipAddress: station.ipAddress,
           nucIpAddress: "",
@@ -221,7 +221,6 @@ const handleTCPMessage = (info: any) => {
           ledRingId: station.ledRingId,
           labLocation: ""
         }
-        console.log('heck2', station, s)
         fullStore.stations.push(s)
         fullStore.sendStationMessage(s.id, {
           action: CONSTANT.ACTION.CONNECT_STATION,

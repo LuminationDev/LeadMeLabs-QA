@@ -3,6 +3,12 @@ import ManualCheck from "*.vue";
 type CheckCategory = {
     checks: Record<string, string>;
     description: string;
+    devices: {
+        station: boolean;
+        tablet: boolean;
+        nuc: boolean;
+        cbus: boolean;
+    }
 };
 
 export type CheckObject = {
