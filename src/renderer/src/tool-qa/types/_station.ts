@@ -13,7 +13,11 @@ type StationDetails = {
 }
 
 class Station {
+    constructor(id: string) {
+        this.id = id;
+    }
     details: StationDetails | null = null
+    id: string
     expectedDetails: StationDetails | null = null // from NUC
     vrStatuses: any = null
     qaChecks: Array<QaCheck> = []
@@ -35,6 +39,7 @@ class Station {
     doesIpAddressMatch(): QaCheck {
         var qaCheck = {} as QaCheck
         qaCheck.id = "ip_address_match"
+        qaCheck.displayName = "IP Address Matches"
         if (this.details === null) {
             qaCheck.message = "Details not sent from station"
             qaCheck.passedStatus = "failed"
@@ -58,6 +63,7 @@ class Station {
         if (this.details.ipAddress !== this.expectedDetails.ipAddress) {
             qaCheck.message = `Station IP address did not match expected IP address. Station address: ${this.details.ipAddress}. Expected address: ${this.expectedDetails.ipAddress}`
             qaCheck.passedStatus = "failed"
+            return qaCheck
         }
         if (this.details.ipAddress === this.expectedDetails.ipAddress) {
             qaCheck.passedStatus = "passed"
@@ -71,6 +77,7 @@ class Station {
     doesMacAddressMatch(): QaCheck {
         var qaCheck = {} as QaCheck
         qaCheck.id = "mac_address_match"
+        qaCheck.displayName = "MAC address matches"
         if (this.details === null) {
             qaCheck.message = "Details not sent from station"
             qaCheck.passedStatus = "failed"
@@ -94,6 +101,7 @@ class Station {
         if (this.details.macAddress !== this.expectedDetails.macAddress) {
             qaCheck.message = `Station IP address did not match expected MAC address. Station address: ${this.details.macAddress}. Expected address: ${this.expectedDetails.macAddress}`
             qaCheck.passedStatus = "failed"
+            return qaCheck
         }
         if (this.details.macAddress === this.expectedDetails.macAddress) {
             qaCheck.passedStatus = "passed"
@@ -107,6 +115,7 @@ class Station {
     doesLabLocationMatch(): QaCheck {
         var qaCheck = {} as QaCheck
         qaCheck.id = "lab_location_match"
+        qaCheck.displayName = "Lab location matches"
         if (this.details === null) {
             qaCheck.message = "Details not sent from station"
             qaCheck.passedStatus = "failed"
@@ -130,6 +139,7 @@ class Station {
         if (this.details.labLocation !== this.expectedDetails.labLocation) {
             qaCheck.message = `Station lab location did not match expected lab location. Station lab location: ${this.details.labLocation}. Expected lab location: ${this.expectedDetails.labLocation}`
             qaCheck.passedStatus = "failed"
+            return qaCheck
         }
         if (this.details.labLocation === this.expectedDetails.labLocation) {
             qaCheck.passedStatus = "passed"
@@ -143,6 +153,7 @@ class Station {
     doesIdMatch(): QaCheck {
         var qaCheck = {} as QaCheck
         qaCheck.id = "id_match"
+        qaCheck.displayName = "ID matches"
         if (this.details === null) {
             qaCheck.message = "Details not sent from station"
             qaCheck.passedStatus = "failed"
@@ -167,6 +178,7 @@ class Station {
         if (this.details.id !== this.expectedDetails.id) {
             qaCheck.message = `Station id did not match expected id. Station id: ${this.details.id}. Expected id: ${this.expectedDetails.id}`
             qaCheck.passedStatus = "failed"
+            return qaCheck
         }
         if (this.details.id === this.expectedDetails.id) {
             qaCheck.passedStatus = "passed"
@@ -180,6 +192,7 @@ class Station {
     doesRoomMatch(): QaCheck {
         var qaCheck = {} as QaCheck
         qaCheck.id = "room_match"
+        qaCheck.displayName = "Room matches"
         if (this.details === null) {
             qaCheck.message = "Details not sent from station"
             qaCheck.passedStatus = "failed"
@@ -204,6 +217,7 @@ class Station {
         if (this.details.room !== this.expectedDetails.room) {
             qaCheck.message = `Station room did not match expected room. Station room: ${this.details.room}. Expected room: ${this.expectedDetails.room}`
             qaCheck.passedStatus = "failed"
+            return qaCheck
         }
         if (this.details.room === this.expectedDetails.room) {
             qaCheck.passedStatus = "passed"

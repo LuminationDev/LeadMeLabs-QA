@@ -92,7 +92,7 @@ class QaCheckResult {
     }
 
     updateStationDetail(stationId, qaCheck) {
-        const index = this.stations.findIndex(element => element.id === stationId)
+        const index = this.stations.findIndex(element => element.id == stationId)
         if (index !== -1) {
             this.stations[index].passedStatus = qaCheck.passedStatus
             this.stations[index].message = qaCheck.message

@@ -20,7 +20,7 @@ const checking = ref("");
  * ordering and quick comparison on the table to align the values to correct header.
  */
 const deviceMap = ref([
-  ...fullStore.NucStationList.map(station => ({
+  ...fullStore.stations.map(station => ({
     id: station.id,
     prefix: 'S',
     checks: {}

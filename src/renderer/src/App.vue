@@ -208,23 +208,25 @@ const handleTCPMessage = (info: any) => {
       fullStore.cbusConnection = response.responseData.cbus;
 
       response.responseData.stations.forEach(station => {
-        const s = new Station();
+        const s = new Station(station.id + "");
+        console.log('heck', station, s)
         s.expectedDetails = {
           ipAddress: station.ipAddress,
           nucIpAddress: "",
           name: station.name,
           installedApplications: station.installedApplications,
-          id: station.id,
+          id: station.id + "",
           room: station.room,
           macAddress: station.macAddress,
           ledRingId: station.ledRingId,
           labLocation: ""
         }
+        console.log('heck2', station, s)
         fullStore.stations.push(s)
-        fullStore.sendStationMessage(station.id, {
+        fullStore.sendStationMessage(s.id, {
           action: CONSTANT.ACTION.CONNECT_STATION,
           actionData: {
-            expectedStationId: station.id
+            expectedStationId: s.id
           }
         })
       })
