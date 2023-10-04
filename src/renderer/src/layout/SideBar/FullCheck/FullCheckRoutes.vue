@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import FullCheckItem from "@renderer/layout/SideBar/FullCheck/FullCheckItem.vue";
 import logo from '@renderer/assets/images/tool-logo.svg';
 import * as CONSTANT from "@renderer/assets/constants";
 import { useRoute, useRouter } from "vue-router";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-// import { navigation } from "@renderer/router/checkRoutes";
+import FullMenu from "@renderer/layout/SideBar/FullCheck/FullMenu.vue";
 
 const fullStore = useFullStore();
 
@@ -31,12 +30,7 @@ const router = useRouter();
 
     <nav class="flex flex-col w-full h-full text-black overflow-y-auto gray-scrollbar">
       <!--Navbar Title with sub-categories below-->
-<!--      <FullCheckItem v-for="(nav, index) in navigation"-->
-<!--                     @click="router.push(nav.route)"-->
-<!--                     :active="route.path.includes(nav.route)"-->
-<!--                     :title="nav.title"-->
-<!--                     :object-values="nav.screens"-->
-<!--                     :last-item="(navigation.length - 1) === index"/>-->
+      <FullMenu/>
     </nav>
 
     <div class="flex h-20 sticky items-center flex-col flex-shrink-0 justify-center">

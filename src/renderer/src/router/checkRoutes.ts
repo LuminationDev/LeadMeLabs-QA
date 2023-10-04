@@ -42,6 +42,16 @@ const manualMetaData = () => {
 }
 
 /**
+ * Use this variable to track the progress over the different screens, each screen is assigned it as ++currentProgress
+ * incrementing it before the next screen.
+ */
+let currentProgress = 0;
+const calculateProgress = () => {
+    //return ++currentProgress; //Quick way to count how many checks there are.
+    return Math.floor(++currentProgress/24 * 100); //TODO WARNING: 24 is a static number it will change depending when more checks are added.
+}
+
+/**
  * Generates route configurations from an array of check objects.
  * @param checkArray - An array of check objects representing hardware checks.
  * @param previousRoute - A string of the previous route outside the object array.
@@ -54,11 +64,13 @@ const generateRoutesFromObjectArray = (checkArray: CheckObject[], previousRoute:
     checkArray.forEach((section, sectionIndex) => {
         const categories = section.category;
 
+
+
         categories.forEach((categoryObj, categoryIndex) => {
             const categoryName = Object.keys(categoryObj)[0];
             const category = categoryObj[categoryName];
-            const path = `/check/full/hardware/${section.page}/${categoryName.toLowerCase()}`;
-            const name = `full-hardware-${section.page}-${categoryName.toLowerCase()}`;
+            const path = `/check/full/${section.parent}/${section.page}/${categoryName.toLowerCase()}`;
+            const name = `full-${section.parent}-${section.page}-${categoryName.toLowerCase()}`;
 
             const route: Route = {
                 path,
@@ -70,7 +82,7 @@ const generateRoutesFromObjectArray = (checkArray: CheckObject[], previousRoute:
                     category: categoryName,
                     next: getNextPath(checkArray, sectionIndex, categoryIndex, nextRoute),
                     prev: getPrevPath(checkArray, sectionIndex, categoryIndex, previousRoute),
-                    progress: 0,
+                    progress: calculateProgress(),
                     ...manualMetaData(),
                 },
             };
@@ -99,12 +111,12 @@ const getNextPath = (
     if (categoryIndex < checkArray[checkIndex].category.length - 1) {
         const nextCategory = checkArray[checkIndex].category[categoryIndex + 1];
         const nextCategoryKey = Object.keys(nextCategory)[0];
-        return `/check/full/hardware/${checkArray[checkIndex].page.toLowerCase()}/${nextCategoryKey.toLowerCase()}`;
+        return `/check/full/${checkArray[checkIndex].parent}/${checkArray[checkIndex].page.toLowerCase()}/${nextCategoryKey.toLowerCase()}`;
     } else if (checkIndex < checkArray.length - 1) {
         const nextHardware = checkArray[checkIndex + 1];
         const nextCategory = nextHardware.category[0];
         const nextCategoryKey = Object.keys(nextCategory)[0];
-        return `/check/full/hardware/${checkArray[checkIndex + 1].page.toLowerCase()}/${nextCategoryKey.toLowerCase()}`;
+        return `/check/full/${checkArray[checkIndex].parent}/${checkArray[checkIndex + 1].page.toLowerCase()}/${nextCategoryKey.toLowerCase()}`;
     } else {
         return lastItemPath;  // No next path for the last item
     }
@@ -127,12 +139,12 @@ const getPrevPath = (
     if (categoryIndex > 0) {
         const prevCategory = checkArray[checkIndex].category[categoryIndex - 1];
         const prevCategoryKey = Object.keys(prevCategory)[0];
-        return `/check/full/hardware/${checkArray[checkIndex].page.toLowerCase()}/${prevCategoryKey.toLowerCase()}`;
+        return `/check/full/${checkArray[checkIndex].parent}/${checkArray[checkIndex].page.toLowerCase()}/${prevCategoryKey.toLowerCase()}`;
     } else if (checkIndex > 0) {
         const prevHardware = checkArray[checkIndex - 1];
         const prevCategory = prevHardware.category[prevHardware.category.length - 1];
         const prevCategoryKey = Object.keys(prevCategory)[0];
-        return `/check/full/hardware/${checkArray[checkIndex - 1].page.toLowerCase()}/${prevCategoryKey.toLowerCase()}`;
+        return `/check/full/${checkArray[checkIndex].parent}/${checkArray[checkIndex - 1].page.toLowerCase()}/${prevCategoryKey.toLowerCase()}`;
     } else {
         return firstItemPath;  // No prev path for the first item
     }
@@ -145,7 +157,7 @@ const getPrevPath = (
  */
 const getFirstRoute = (checkArray: CheckObject[]) => {
     const firstRoute = checkArray[0];
-    return `/check/full/hardware/${firstRoute.page}/${Object.keys(firstRoute.category[0])[0].toLowerCase()}`;
+    return `/check/full/${firstRoute.parent}/${firstRoute.page}/${Object.keys(firstRoute.category[0])[0].toLowerCase()}`;
 }
 
 /**
@@ -155,7 +167,7 @@ const getFirstRoute = (checkArray: CheckObject[]) => {
  */
 const getLastRoute = (checkArray: CheckObject[]) => {
     const lastRoute = checkArray[checkArray.length - 1];
-    return `/check/full/hardware/${lastRoute.page}/${Object.keys(lastRoute.category[lastRoute.category.length - 1])[0].toLowerCase()}`;
+    return `/check/full/${lastRoute.parent}/${lastRoute.page}/${Object.keys(lastRoute.category[lastRoute.category.length - 1])[0].toLowerCase()}`;
 }
 
 /**
@@ -184,30 +196,58 @@ export const fullRoutes = [
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
             prev: '/check/full',
-            progress: 0
+            progress: calculateProgress()
         }
     },
 
-    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', '/check/full/windows/auto'),
+    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', getFirstRoute(NETWORK)),
+    ...generateRoutesFromObjectArray(NETWORK, getLastRoute(HARDWARE), '/check/full/windows/windows_checks'),
     //Manually add the automatic routes between the necessary checks
     {
-        path: '/check/full/windows/auto',
-        name: 'full-windows-auto',
+        path: '/check/full/windows/windows_checks',
+        name: 'full-windows-windows_checks',
         component: BasicAutoCheck,
         meta: {
             checkType: 'windows_checks',
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: getFirstRoute(NETWORK),
-            prev: getLastRoute(HARDWARE),
-            progress: 0
+            next: getFirstRoute(WINDOWS),
+            prev: getLastRoute(NETWORK),
+            progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(NETWORK, '/check/full/windows/auto',  getFirstRoute(WINDOWS)),
-    ...generateRoutesFromObjectArray(WINDOWS, getLastRoute(NETWORK),  getFirstRoute(SECURITY)),
-    ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  getFirstRoute(SOFTWARE)),
-    ...generateRoutesFromObjectArray(SOFTWARE, getLastRoute(SECURITY),  '/check/full/imvr/experiences'),
+    ...generateRoutesFromObjectArray(WINDOWS, '/check/full/windows/windows_checks',  getFirstRoute(SECURITY)),
+    ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  '/check/full/software/software_checks'),
+    {
+        path: '/check/full/software/software_checks',
+        name: 'full-software-software_checks',
+        component: BasicAutoCheck,
+        meta: {
+            checkType: 'software_checks',
+            addComment: true,
+            userInput: true,
+            canSkip: true,
+            next: '/check/full/software/steam_config_checks',
+            prev: getLastRoute(SECURITY),
+            progress: calculateProgress()
+        }
+    },
+    {
+        path: '/check/full/software/steam_config_checks',
+        name: 'full-software-steam_config_checks',
+        component: BasicAutoCheck,
+        meta: {
+            checkType: 'steam_config_checks',
+            addComment: true,
+            userInput: true,
+            canSkip: true,
+            next: getFirstRoute(SOFTWARE),
+            prev: '/check/full/software/software_checks',
+            progress: calculateProgress()
+        }
+    },
+    ...generateRoutesFromObjectArray(SOFTWARE, '/check/full/software/steam_config_checks',  '/check/full/imvr/experiences'),
     {
         path: '/check/full/imvr/experiences',
         name: 'full-imvr-experiences',
@@ -218,7 +258,7 @@ export const fullRoutes = [
             canSkip: true,
             next: getFirstRoute(IMVR),
             prev: getLastRoute(SOFTWARE),
-            progress: 0
+            progress: calculateProgress()
         }
     },
     ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  ""),
