@@ -300,7 +300,7 @@ export const useFullStore = defineStore({
                 labLocation: stationData.labLocation,
                 name: null,
                 installedApplications: null,
-                id: stationData.id,
+                id: stationData.id + "",
                 room: stationData.room,
                 macAddress: stationData.macAddress,
                 ledRingId: null
