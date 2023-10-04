@@ -39,7 +39,7 @@ onMounted(() => {
 
     <template v-slot:content>
       Stations
-      <div v-for="station in fullStore.Stations">
+      <div v-for="station in fullStore.stations">
         {{ station.vrStatuses }}
       </div>
       <button @click="getVrStatuses">Refresh statuses</button>

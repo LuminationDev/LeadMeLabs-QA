@@ -43,6 +43,7 @@ const asyncCall = (): Promise<void> => {
         :class="{
             'h-auto rounded-lg text-base': true,
             'w-32 text-white bg-primary mb-3 hover:bg-blue-400': type === 'primary',
+            'w-32 text-white bg-blue-700 disabled:bg-blue-200 hover:bg-blue-400': type === 'light-blue',
             'w-32 text-white bg-primary hover:bg-blue-400 font-semibold': type === 'secondary',
             'w-32 border-2 border-primary hover:bg-primary hover:text-white text-primary':
                 type === 'white',

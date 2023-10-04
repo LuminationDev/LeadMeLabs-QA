@@ -38,7 +38,7 @@ class QaCheckResult {
         id: string,
         type: string,
         timeout: number,
-        stationIds: Array<number>,
+        stationIds: Array<string>,
         hasNuc: boolean,
         hasCbus: boolean,
         tabletIps: Array<string>,
@@ -53,7 +53,7 @@ class QaCheckResult {
 
         stationIds.forEach(id => {
             this.stations.push({
-                id: id + "",
+                id: id,
                 passedStatus: "unchecked",
                 checkingStatus: "not_checking",
                 checkStartTime: null,
