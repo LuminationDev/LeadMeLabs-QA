@@ -128,7 +128,7 @@ const handleTCPMessage = (info: any) => {
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
   switch(message[0]) {
     case "ServerStatus":
-      stateStore.isServerRunning = true;
+      stateStore.isServerRunning = message[1].includes("true");
       break;
     case "ApplianceList":
       fullStore.ApplianceList = JSON.parse(message[1]);
