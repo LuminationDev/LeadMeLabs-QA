@@ -45,7 +45,7 @@ onMounted(() => {
       <BasicFullCheck v-if="route.name === 'full-imvr stations-vive'" title="Vive Console" object-name="VIVE"/>
 
       Stations
-      <div v-for="station in fullStore.Stations">
+      <div v-for="station in fullStore.stations">
         {{ station.vrStatuses }}
       </div>
       <button @click="getVrStatuses">Refresh statuses</button>

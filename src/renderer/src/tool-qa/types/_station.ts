@@ -4,12 +4,12 @@ type StationDetails = {
     ipAddress: string,
     nucIpAddress: string,
     labLocation: string,
-    name: string;
+    name: string|null;
     installedApplications: null | string[];
-    id: number;
+    id: string;
     room: string;
     macAddress: string;
-    ledRingId: string;
+    ledRingId: string|null;
 }
 
 class Station {
@@ -17,6 +17,10 @@ class Station {
     expectedDetails: StationDetails | null = null // from NUC
     vrStatuses: any = null
     qaChecks: Array<QaCheck> = []
+
+    getId(): string {
+        return this.expectedDetails?.id ?? ''
+    }
 
     getComputedChecks(): Array<QaCheck> {
         var qaChecks: QaCheck[] = []

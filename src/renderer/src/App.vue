@@ -128,16 +128,10 @@ const handleTCPMessage = (info: any) => {
   const message = stateStore.splitStringWithLimit(info.mainText, ":", 2);
   switch(message[0]) {
     case "ServerStatus":
-      stateStore.isServerRunning = JSON.parse(message[1]);
+      stateStore.isServerRunning = true;
       break;
     case "ApplianceList":
       fullStore.ApplianceList = JSON.parse(message[1]);
-      break;
-    case "StationList":
-      fullStore.NucStationList = JSON.parse(message[1]);
-      break;
-    case "StationDetails":
-      fullStore.StationList.push(JSON.parse(message[1]));
       break;
     case "StationNetwork":
     case "StationConfig":
@@ -148,6 +142,7 @@ const handleTCPMessage = (info: any) => {
   }
 
 
+  console.log(info.mainText)
   const response = JSON.parse(info.mainText) // todo expected response type
   switch (response.response) {
     case "RunGroup": {
@@ -162,9 +157,9 @@ const handleTCPMessage = (info: any) => {
         return qa
       });
       fullStore.qaChecks.push(...qaChecks)
-      const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == id)
+      const index = fullStore.stations.findIndex(element => element.expectedDetails.id == id)
       if (index !== -1) {
-        fullStore.Stations[index].qaChecks.push(...qaChecks)
+        fullStore.stations[index].qaChecks.push(...qaChecks)
       }
 
       fullStore.updateQaChecks(id, group, qaChecks)
@@ -210,7 +205,6 @@ const handleTCPMessage = (info: any) => {
     case "Connected": {
       fullStore.connected = true
       fullStore.ApplianceList = response.responseData.appliances;
-      fullStore.NucStationList = response.responseData.stations;
       fullStore.cbusConnection = response.responseData.cbus;
 
       response.responseData.stations.forEach(station => {
@@ -226,16 +220,27 @@ const handleTCPMessage = (info: any) => {
           ledRingId: station.ledRingId,
           labLocation: ""
         }
-        fullStore.Stations.push(s)
+        fullStore.stations.push(s)
+        fullStore.sendStationMessage(station.id, {
+          action: CONSTANT.ACTION.CONNECT_STATION,
+          actionData: {
+            expectedStationId: station.id
+          }
+        })
       })
       fullStore.buildQaList(); //Build the QaList on connection response
       break;
     }
-    case "tabletConnected": {
+    case "TabletConnected": {
       fullStore.tabletConnected(response.ipAddress)
       break;
     }
-    case "tabletChecks": {
+    case "StationConnected": {
+      console.log('stationConnected')
+      fullStore.stationConnected(response.responseData.expectedStationId, response.responseData)
+      break;
+    }
+    case "TabletChecks": {
       fullStore.tabletConnected(response.ipAddress)
       console.log(response.responseData)
       break;
