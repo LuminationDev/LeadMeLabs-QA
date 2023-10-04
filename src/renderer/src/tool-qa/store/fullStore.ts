@@ -18,12 +18,9 @@ export const useFullStore = defineStore({
         //The IP address entered by a user that should be the NUC
         nucAddress: '',
         //List of the Station detail's from the NUC
-        NucStationList: Array<Station>(),
-        //List of the Station detail's from the Stations
-        StationList: Array<Station>(),
         qaChecks: Array<QaCheck>(),
         qaDetails: Array<QaDetail>(),
-        Stations: Array<StationClass>(),
+        stations: Array<StationClass>(),
         //Track the progress of the checks as an overall report object - populated in App.vue
         reportTracker: {} as ReportTrackerItem,
         //Can the NUC contact the CBus unit
@@ -38,7 +35,7 @@ export const useFullStore = defineStore({
     }),
     actions: {
         buildExperienceChecks() {
-            let stationIds = this.NucStationList.map(station => station.id)
+            let stationIds = this.stations.map(station => station.getId())
 
             //todo - build out proper list based on tier selection
             let experiences = [
@@ -87,7 +84,7 @@ export const useFullStore = defineStore({
             }
             var index = 0
             this.experienceChecks[0].stations.forEach(station => {
-                const i = this.Stations.findIndex(s => (station.id == s.expectedDetails.id) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+                const i = this.stations.findIndex(s => (station.id == s.getId()) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
                 if (i === -1) {
                     return;
                 }
@@ -126,7 +123,7 @@ export const useFullStore = defineStore({
                     return element.stations[nextStationIndex].status === "unchecked"
                 })
 
-                const i = this.Stations.findIndex(s => (s.expectedDetails.id == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+                const i = this.stations.findIndex(s => (s.getId() == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
                 if (i === -1) {
                     return;
                 }
@@ -145,14 +142,14 @@ export const useFullStore = defineStore({
         },
 
         updateStationVrStatuses(stationId: string, statuses: any) {
-            const index = this.Stations.findIndex(element => element.expectedDetails.id == stationId)
+            const index = this.stations.findIndex(element => element.getId() == stationId)
             if (index !== -1) {
-                this.Stations[index].vrStatuses = statuses
+                this.stations[index].vrStatuses = statuses
             }
         },
 
         buildQaList() {
-            let stationIds = this.NucStationList.map(station => station.id)
+            let stationIds = this.stations.map(station => station.getId())
             const stationConnectionChecks = new QaGroup("station_connection_checks")
             const stationIsConnected = new QaCheckResult("station_is_connected", "auto", 10000, stationIds, false, false, [], "Station is connected to NUC")
             stationConnectionChecks.checks.push(stationIsConnected)
@@ -213,10 +210,7 @@ export const useFullStore = defineStore({
         },
 
         updateQaChecks(stationId, groupName, qaChecks) {
-            console.log('updateQaChecks', qaChecks, groupName)
-            console.log(this.qaGroups);
             let index = this.qaGroups.findIndex(group => group.id === groupName)
-            console.log('updateQaChecks', index)
             if (index !== -1) {
                 this.qaGroups[index].updateQaChecks(stationId, qaChecks)
             }
@@ -234,7 +228,29 @@ export const useFullStore = defineStore({
             if (index === -1) {
                 this.tablets.push({
                     ipAddress,
-                    connected: true
+                    connected: true,
+                    connecting: false
+                })
+            }
+            if (index !== -1 && this.tablets[index].connected === false) {
+                this.tablets[index].connected = true
+                this.tablets[index].connecting = false
+            }
+        },
+
+        addUnconnectedTablet(ipAddress: string) {
+            const index = this.tablets.findIndex(element => element.ipAddress === ipAddress)
+            if (index === -1) {
+                this.tablets.push({
+                    ipAddress,
+                    connected: false,
+                    connecting: true
+                })
+                setTimeout(() => {
+                    const index = this.tablets.findIndex(element => element.ipAddress === ipAddress)
+                    if (index !== -1) {
+                        this.tablets[index].connecting = false
+                    }
                 })
             }
         },
@@ -253,7 +269,43 @@ export const useFullStore = defineStore({
                 port: 55556,
                 data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
             });
-        }
+        },
+
+        sendStationMessage(stationId: string, messageData: { action: string, actionData: any }) {
+            const stateStore = useStateStore()
+            const processedData = {
+                qaToolAddress: stateStore.getServerDetails,
+                ...messageData
+            }
+            const station = this.stations.find(element => element.expectedDetails && element.expectedDetails.id === stationId);
+            if (!station) {
+                return
+            }
+            // @ts-ignore api is injected
+            api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+                channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+                key: stateStore.key,
+                address: station.expectedDetails.ipAddress,
+                port: 55557,
+                data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
+            });
+        },
+
+        stationConnected (expectedStationId: string, stationData: any) {
+            const index = this.stations.findIndex(element => element.expectedDetails.id === expectedStationId)
+            console.log(index, expectedStationId)
+            this.stations[index].details = {
+                ipAddress: stationData.ipAddress,
+                nucIpAddress: stationData.nucAddress,
+                labLocation: stationData.labLocation,
+                name: null,
+                installedApplications: null,
+                id: stationData.id + "",
+                room: stationData.room,
+                macAddress: stationData.macAddress,
+                ledRingId: null
+            }
+        },
     },
     getters: {
         getCbusConnection(state) {

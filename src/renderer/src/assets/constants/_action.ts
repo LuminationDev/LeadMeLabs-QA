@@ -1,5 +1,6 @@
 export const CONNECT = "Connect"
 export const CONNECT_TABLET = "ConnectTablet"
+export const CONNECT_STATION = "ConnectStation"
 export const LAUNCH_EXPERIENCE = "LaunchExperience"
 export const RUN_STATION_GROUP = "RunStationGroup"
 export const RUN_STATION_ALL = "RunStationAll"

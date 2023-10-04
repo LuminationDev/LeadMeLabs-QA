@@ -1,5 +1,6 @@
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
+import Stations from "@renderer/tool-qa/screens/Stations.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
 import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
@@ -179,11 +180,23 @@ export const fullRoutes = [
         name: 'full-description',
         component: FullCheck,
         meta: {
-            next: '/check/full/appliances',
+            next: '/check/full/stations',
             nextText: 'Start Test',
             prev: '/check/selection'
         }
     },
+
+    {
+        path: '/check/full/stations',
+        name: 'full-stations',
+        component: Stations,
+        meta: {
+            next: '/check/full/appliances',
+            nextText: 'Station Connection',
+            prev: '/check/full'
+        }
+    },
+
 
     //Appliance Route
     {
@@ -195,7 +208,7 @@ export const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
-            prev: '/check/full',
+            prev: '/check/full/stations',
             progress: calculateProgress()
         }
     },

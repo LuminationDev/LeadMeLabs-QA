@@ -38,7 +38,7 @@ class QaCheckResult {
         id: string,
         type: string,
         timeout: number,
-        stationIds: Array<number>,
+        stationIds: Array<string>,
         hasNuc: boolean,
         hasCbus: boolean,
         tabletIps: Array<string>,
@@ -53,7 +53,7 @@ class QaCheckResult {
 
         stationIds.forEach(id => {
             this.stations.push({
-                id: id + "",
+                id: id,
                 passedStatus: "unchecked",
                 checkingStatus: "not_checking",
                 checkStartTime: null,
@@ -92,7 +92,7 @@ class QaCheckResult {
     }
 
     updateStationDetail(stationId, qaCheck) {
-        const index = this.stations.findIndex(element => element.id === stationId)
+        const index = this.stations.findIndex(element => element.id == stationId)
         if (index !== -1) {
             this.stations[index].passedStatus = qaCheck.passedStatus
             this.stations[index].message = qaCheck.message
