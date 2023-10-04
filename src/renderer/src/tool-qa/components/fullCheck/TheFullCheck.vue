@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import * as CONSTANT from "@renderer/assets/constants";
 import { useStateStore } from "../../store/stateStore";
 import { useFullStore } from "../../store/fullStore";
@@ -10,19 +10,22 @@ import {storeToRefs} from "pinia";
 import GenericButton from "../../../tool-config/components/GenericButton.vue";
 import StatusIcon from "../_generic/StatusIcon.vue";
 import ComputerSvg from "../../../assets/icons/ComputerSvg.vue";
+import CbusSvg from "../../../assets/icons/CbusSvg.vue";
+import TabletSvg from "../../../assets/icons/TabletSvg.vue";
 
 const route = useRoute();
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
 
-const { connected } = storeToRefs(fullStore)
+const { connected, connectedTabletCount } = storeToRefs(fullStore)
 
 const nucAddress = ref("")
 const tabletIp = ref("")
 const encryptionKey = ref("")
-const connectionState = ref("unstarted")
 
+
+const connectionState = ref("unstarted")
 watch(connected, (newValue) => {
   if (newValue === true) {
     connectionState.value = 'success'
@@ -30,6 +33,12 @@ watch(connected, (newValue) => {
     connectionState.value = 'failed'
   }
 })
+onMounted(() => {
+  if (connected.value) {
+    connectionState.value = 'success'
+  }
+})
+
 
 watch(connectionState, (newValue) => {
   if (newValue === 'failed') {
@@ -38,6 +47,21 @@ watch(connectionState, (newValue) => {
       command: "stop"
     });
   }
+})
+
+watch(connectedTabletCount, (newValue) => {
+  toggleShowTabletForm.value = false
+})
+
+const tabletConnectionState = computed(() => {
+  if (fullStore.tablets.length < 1) {
+    return 'unstarted'
+  }
+  const tablet = fullStore.tablets[fullStore.tablets.length - 1]
+  if (tablet.connecting) {
+    return 'loading'
+  }
+  return tablet.connected ? 'unstarted' : 'failed' // unstarted because it's already in the list in this case
 })
 
 async function connectToNuc() {
@@ -98,7 +122,14 @@ function startTest() {
     }
   })
 }
-const show = ref(false)
+
+const toggleShowTabletForm = ref(false)
+const showTabletForm = computed(() => {
+  if (fullStore.connectedTabletCount < 1) {
+    return true
+  }
+  return toggleShowTabletForm.value
+})
 </script>
 
 <template>
@@ -110,7 +141,7 @@ const show = ref(false)
     <template v-slot:content>
       Please enter the NUC address and encryption key and then connect.
 
-      <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col">
+      <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col mb-4">
         <div class="flex flex-row items-center h-full">
           <StatusIcon :status="connectionState" class="w-16 h-16 mr-8">
             <template v-slot:icon="{ fill }">
@@ -123,7 +154,7 @@ const show = ref(false)
           <div class="flex flex-col">
             <label for="nucAddress" class="text-sm font-semibold">NUC address</label>
             <input type="text" name="nucAddress" v-model="nucAddress" placeholder="192.168.1.100" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
-            <label for="encryptionKey" class="text-sm font-semibold">NUC address</label>
+            <label for="encryptionKey" class="text-sm font-semibold">Encryption key</label>
             <input type="text" name="encryptionKey" v-model="encryptionKey" placeholder="Key" class="w-80 h-10 mb-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
             <div class="flex flex-row items-center">
               <GenericButton type="light-blue" :callback="connectToNuc" class="mr-4" :disabled="connectionState === 'loading'">Connect</GenericButton>
@@ -135,11 +166,11 @@ const show = ref(false)
 
       <div v-if="connectionState === 'success'" class="flex flex-col">
         <!--    Cbus    -->
-        <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col">
+        <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col mb-4">
           <div class="flex flex-row items-center h-full">
             <StatusIcon :status="fullStore.getCbusConnection === 'Connection available' ? 'green' : 'yellow'" class="w-16 h-16 mr-8">
               <template v-slot:icon="{ fill }">
-                <ComputerSvg :fill="fill" />
+                <CbusSvg :fill="fill" />
               </template>
             </StatusIcon>
             <span class="text-lg font-semibold col-span-4">{{ fullStore.getCbusConnection === 'Connection available' ? 'C-Bus is connected' : 'C-Bus is not connected' }}</span>
@@ -147,7 +178,7 @@ const show = ref(false)
         </div>
 
         <!--    Stations    -->
-        <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col">
+        <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col mb-4">
           <div class="flex flex-row items-center h-full">
             <StatusIcon :status="fullStore.stations.length === fullStore.stations.filter(station => station.details).length ? 'green' : 'red'" class="w-16 h-16 mr-8">
               <template v-slot:icon="{ fill }">
@@ -159,17 +190,35 @@ const show = ref(false)
         </div>
 
         <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col">
-          <div class="flex flex-row items-center h-full" v-for="tablet in fullStore.tablets" :key="tablet.ipAddress">
-            <StatusIcon :status="tablet.connecting ? 'blue' : connected ? 'green' : 'red'" class="w-16 h-16 mr-8">
+          <div class="flex flex-row items-center h-full" v-if="fullStore.connectedTabletCount === 0">
+            <StatusIcon status="grey" class="w-16 h-16 mr-8">
               <template v-slot:icon="{ fill }">
-                <ComputerSvg :fill="fill" />
+                <TabletSvg :fill="fill" />
               </template>
             </StatusIcon>
-            <span>{{ tablet.ipAddress }}</span>
-            <span class="text-lg font-semibold col-span-4">{{ tablet.connecting ? 'Connecting to tablet' : connected ? 'Connected' : 'Not connected' }}</span>
+            <span class="text-lg font-semibold col-span-4">Connect to tablets</span>
           </div>
-          <input type="text" name="tabletIp" v-model="tabletIp" placeholder="192.168.1.99" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
-          <GenericButton type="primary" :callback="connectToTablet">Connect</GenericButton>
+          <div class="flex flex-row items-center h-full" v-else>
+            <StatusIcon status="green" class="w-16 h-16 mr-8">
+              <template v-slot:icon="{ fill }">
+                <TabletSvg :fill="fill" />
+              </template>
+            </StatusIcon>
+            <div class="flex flex-row justify-between items-center w-full">
+              <div class="text-lg font-semibold">
+                {{ fullStore.connectedTabletCount }} tablet is connected
+              </div>
+              <GenericButton :callback="() => {toggleShowTabletForm = !toggleShowTabletForm}"><span class="text-blue-700 font-semibold">{{ toggleShowTabletForm ? 'Close' : 'Connect another tablet' }}</span></GenericButton>
+            </div>
+          </div>
+          <div class="ml-24 flex flex-col" v-if="showTabletForm">
+            <label for="tabletIp" class="text-sm font-semibold">Tablet IP address</label>
+            <input type="text" name="tabletIp" v-model="tabletIp" placeholder="192.168.1.99" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+            <div class="flex flex-row items-center">
+              <GenericButton class="mr-2" type="light-blue" :callback="connectToTablet">Connect</GenericButton>
+              <ConnectingSpinner :state="tabletConnectionState" device-name="tablet" />
+            </div>
+          </div>
         </div>
       </div>
     </template>

@@ -36,6 +36,7 @@ const colours = computed(() => {
         background: '#DBEAFE'
       }
     case 'gray':
+    case 'grey':
     case 'unstarted':
     case 'unchecked':
     default:
