@@ -22,12 +22,12 @@ const checking = ref("");
  */
 const recordChecks = () => {
   fullStore.qaGroups
-      .filter(group => group.id === checkType)
+      .filter(group => group.id === checkType.value)
       .forEach(group => {
         group.checks.forEach(check => {
           const targetDevices = determineTargetDevices(check);
           const checkItems = { key: check.id, description: check.extendedDescription }
-          fullStore.addCheckToReportTracker(<string>route.meta['parent'], <string>checkType, checkItems, targetDevices);
+          fullStore.addCheckToReportTracker(<string>route.meta['parent'], <string>checkType.value, checkItems, targetDevices);
         });
       });
 }
@@ -44,7 +44,7 @@ const updateDeviceMap = (idKey, item, check) => {
     date: stateStore.formattedDate()
   };
 
-  fullStore.updateReport(<string>route.meta['parent'], <string>checkType, info, check.id, idKey);
+  fullStore.updateReport(<string>route.meta['parent'], <string>checkType.value, info, check.id, idKey);
 };
 
 /**
@@ -136,10 +136,10 @@ watch(() => fullStore.qaGroups, monitorCheck, { deep: true });
  */
 onMounted(() => {
   recordChecks();
-  fullStore.readReportData(<string>route.meta['parent'], <string>checkType);
+  fullStore.readReportData(<string>route.meta['parent'], <string>checkType.value);
 
-  if (typeof checkType === "string") {
-    fullStore.mostRecentAutoCheck = checkType;
+  if (typeof checkType.value === "string") {
+    fullStore.mostRecentAutoCheck = checkType.value;
   }
 
   //TODO check if the tests have already been run before auto starting it again?
