@@ -17,7 +17,7 @@ const stateStore = useStateStore();
 const checking = ref("");
 
 /**
- * Run through each of the automatic checks in this section. Adding the required details and targets devices to the
+ * Run through each of the automatic checks in this section. Adding the required details and target devices to the
  * fullStore.reportTracker.
  */
 const recordChecks = () => {
@@ -142,14 +142,14 @@ onMounted(() => {
     fullStore.mostRecentAutoCheck = checkType;
   }
 
-  //TODO check if the tests have already been run
+  //TODO check if the tests have already been run before auto starting it again?
   checking.value = "testing";
 
-  // fullStore.startQa(checkType);
+  // fullStore.startQa(checkType.value);
   // fullStore.sendMessage({
   //   action: CONSTANT.ACTION.RUN_STATION_GROUP,
   //   actionData: {
-  //     group: checkType,
+  //     group: checkType.value,
   //     stationIds: ['all']
   //   }
   // });
