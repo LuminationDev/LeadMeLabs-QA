@@ -4,48 +4,13 @@ import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue
 import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
 import { useRoute } from "vue-router";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
 const route = useRoute();
-
-/**
- * Populate the device map from the known devices in the fullStore. Iterating over the deviceMap will allow for constant
- * ordering and quick comparison on the table to align the values to correct header.
- */
-const deviceMap = ref([
-  ...fullStore.stations.map(station => ({
-    id: station.id,
-    prefix: 'S',
-    type: 'station',
-    checks: {}
-  })),
-  ...fullStore.tablets.map(tablet => ({
-    id: tablet.ipAddress,
-    prefix: 'T',
-    type: 'tablet',
-    checks: {}
-  })),
-  {
-    id: 'NUC',
-    prefix: '',
-    type: 'nuc',
-    checks: {}
-  },
-  {
-    id: 'C-Bus',
-    prefix: '',
-    type: 'cbus',
-    checks: {}
-  }
-]);
-
-const onManualPage = computed(() => {
-  return route.meta['type'] === 'manual';
-});
 
 const checkDetails = computed(() => {
   return FULL[route.meta['page'].toUpperCase()];
@@ -67,51 +32,41 @@ const currentCategoryIndex = computed(() => {
 });
 
 const checks = computed(() => {
-  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
+  const { parent, page } = checkDetails.value;
+  fullStore.readReportData(parent, page);
 
+  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
   if (category && category.checks) {
-    return Object.entries(category.checks).map(([key, description]) => ({ key, description }));
+    const checks = Object.entries(category.checks).map(([key, description]) => ({ key, description }));
+
+    //Add the checks to the report tracker
+    checks.forEach(check => {
+      fullStore.addCheckToReportTracker(parent, page, check, category.devices);
+    });
+
+    return checks
   } else {
     return [];
   }
-});
-
-const generateTitle = computed(() => {
-  const split = route.meta['page'].split("_");
-
-  const capitalizedSplit = split.map(entry => {
-    const lowercaseEntry = entry.toLowerCase();
-    return stateStore.capitalizeFirstLetter(lowercaseEntry);
-  });
-
-  return capitalizedSplit.join(" ");
 });
 </script>
 
 <template>
   <GenericLayout>
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold">{{generateTitle}}</p>
+      <p class="text-2xl text-black font-semibold">{{stateStore.generateTitle(route.meta['page'] as string)}}</p>
+      <p class="text-base text-black mb-6">{{checkDetails.description ?? "No description set"}}</p>
 
-      <template v-if="onManualPage">
-        <p class="text-base text-black mb-6">{{checkDetails.description ?? "No description set"}}</p>
-
-        <!--A tab for each category-->
-        <div class="flex flex-row w-full overflow-auto">
-          <CategoryTab
-              v-for="(category, index) in categories"
-              :key="index"
-              :category="category"
-              :index="index as number"
-              :currentCategoryIndex="currentCategoryIndex"
-          />
-        </div>
-      </template>
-
-      <!--If on any other page-->
-      <template v-else>
-        <p class="text-base text-black mb-6">{{route.meta['description']}}</p>
-      </template>
+      <!--A tab for each category-->
+      <div class="flex flex-row w-full overflow-auto">
+        <CategoryTab
+            v-for="(category, index) in categories"
+            :key="index"
+            :category="category"
+            :index="index as number"
+            :currentCategoryIndex="currentCategoryIndex"
+        />
+      </div>
     </template>
 
     <template v-slot:content>
@@ -138,7 +93,7 @@ const generateTitle = computed(() => {
           <tr class="text-left text-xs bg-gray-100 border border-gray-200">
             <th class="p-3">Name</th>
 
-            <th class="w-16 text-center p-3" v-for="device in deviceMap">
+            <th class="w-16 text-center p-3" v-for="device in fullStore.deviceMap">
               {{device.prefix}}{{device.id}}
             </th>
           </tr>
@@ -147,8 +102,16 @@ const generateTitle = computed(() => {
           <tr v-for="(item, index) in checks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="item.key" :message="item.description "/>
 
-            <td v-for="device in deviceMap" class="text-center p-3">
-              <input v-if="categories[currentCategoryIndex].devices[device.type] === true" type="checkbox" class="h-4 w-4">
+            <td v-for="device in fullStore.deviceMap" class="text-center p-3">
+              <input v-if="categories[currentCategoryIndex].devices[device.type] === true"
+                     :checked="device.checks[item.key]?.passedStatus === 'passed'"
+                     type="checkbox" class="h-4 w-4"
+                     @change="fullStore.updateReport(
+                         checkDetails.parent,
+                         checkDetails.page,
+                         { passedStatus: $event.target.checked ? 'passed' : 'skipped' },
+                         item.key,
+                         device.id)">
             </td>
           </tr>
         </table>

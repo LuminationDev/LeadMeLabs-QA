@@ -220,6 +220,7 @@ export const fullRoutes = [
         name: 'full-windows-windows_checks',
         component: BasicAutoCheck,
         meta: {
+            parent: 'windows',
             checkType: 'windows_checks',
             addComment: true,
             canRetry: true,
@@ -235,6 +236,7 @@ export const fullRoutes = [
         name: 'full-software-software_checks',
         component: BasicAutoCheck,
         meta: {
+            parent: 'software',
             checkType: 'software_checks',
             addComment: true,
             canRetry: true,
@@ -248,6 +250,7 @@ export const fullRoutes = [
         name: 'full-software-steam_config_checks',
         component: BasicAutoCheck,
         meta: {
+            parent: 'software',
             checkType: 'steam_config_checks',
             addComment: true,
             canRetry: true,

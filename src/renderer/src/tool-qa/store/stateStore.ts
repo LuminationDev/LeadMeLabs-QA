@@ -72,6 +72,17 @@ export const useStateStore = defineStore({
             const year = currentDate.getFullYear();
 
             return `${month}, ${day}, ${year}`;
+        },
+
+        generateTitle(page: string): string {
+            const split = page.split("_");
+
+            const capitalizedSplit = split.map(entry => {
+                const lowercaseEntry = entry.toLowerCase();
+                return this.capitalizeFirstLetter(lowercaseEntry);
+            });
+
+            return capitalizedSplit.join(" ");
         }
     },
     getters: {

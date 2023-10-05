@@ -500,3 +500,5 @@ export const IMVR = [VIVE, VIRTUAL_REALITY];
 //region LEADME SECTION
 
 //endregion
+
+export const ALL_VALUES = [HARDWARE, NETWORK, WINDOWS, SECURITY, SOFTWARE, IMVR]

@@ -13,6 +13,7 @@ import { useConfigStore } from "@renderer/tool-config/store/configStore";
 import { storeToRefs } from "pinia";
 import { Station } from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
+import {ALL_VALUES} from "@renderer/assets/checks/_fullcheckValues";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -53,6 +54,21 @@ const populateQuickReportTracker = (data: string) => {
 
   quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
 };
+
+/**
+ * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
+ * The individual checks will be added when that page is visited. If no checks are present in a section or category it
+ * is considered skipped.
+ */
+const populateFullReportTracker = () => {
+  for (const section of ALL_VALUES) {
+    for (const { parent, page } of section) {
+      fullStore.reportTracker[parent] ||= {};
+      fullStore.reportTracker[parent][page] ||= {};
+    }
+  }
+}
+populateFullReportTracker();
 
 /**
  * Check the value of a Station's key against the known correct values.
@@ -222,6 +238,7 @@ const handleTCPMessage = (info: any) => {
           labLocation: ""
         }
         fullStore.stations.push(s)
+        fullStore.addDevice(s.id, 'station');
         fullStore.sendStationMessage(s.id, {
           action: CONSTANT.ACTION.CONNECT_STATION,
           actionData: {

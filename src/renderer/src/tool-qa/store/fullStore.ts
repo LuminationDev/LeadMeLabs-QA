@@ -1,10 +1,33 @@
 import { defineStore } from 'pinia';
-import { Appliance, QaCheck, QaDetail, ReportTrackerItem, Station, Tablet } from "../interfaces";
+import { Appliance, QaCheck, QaDetail, Tablet } from "../interfaces";
 import { Station as StationClass } from '../types/_station'
 import { QaGroup } from "../types/_qaGroup";
 import { QaCheckResult } from "../types/_qaCheckResult";
 import * as CONSTANT from "../../assets/constants";
 import { useStateStore } from "./stateStore";
+
+interface Report {
+    [section: string]: {
+        [category: string]: {
+            [check: string]: {
+                description: string;
+                comments: string[];
+                targets: {};
+                devices: {
+                    [deviceId: string]: Device
+                };
+            }
+        }
+    }
+}
+
+interface Device {
+    deviceId: string;
+    type: string;
+    passedStatus: string;
+    message: string;
+    id: string;
+}
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -12,6 +35,13 @@ import { useStateStore } from "./stateStore";
 export const useFullStore = defineStore({
     id: 'full',
     state: () => ({
+        //Track the progress of the checks as an overall report object
+        reportTracker: {} as Report,
+        //Track all connected devices
+        deviceMap: [
+            { id: 'NUC', prefix: '', type: 'nuc', checks: {} },
+            { id: 'C-Bus', prefix: '', type: 'cbus', checks: {}}
+        ],
         connected: false,
         //Compared against the number of Station's contacted
         numberOfStations: 0,
@@ -22,17 +52,13 @@ export const useFullStore = defineStore({
         qaChecks: Array<QaCheck>(),
         qaDetails: Array<QaDetail>(),
         stations: Array<StationClass>(),
-        //Track the progress of the checks as an overall report object - populated in App.vue
-        reportTracker: {} as ReportTrackerItem,
         //Can the NUC contact the CBus unit
         cbusConnection: "Loading",
         //List of appliance objects
         ApplianceList: Array<Appliance>(),
         tablets: Array<Tablet>(),
-
         experienceChecks: Array<any>(),
-
-        qaGroups: [] as Array<QaGroup>
+        qaGroups: [] as Array<QaGroup>,
     }),
     actions: {
         buildExperienceChecks() {
@@ -232,6 +258,7 @@ export const useFullStore = defineStore({
                     connected: true,
                     connecting: false
                 })
+                this.addDevice(ipAddress, 'tablet');
             }
             if (index !== -1 && this.tablets[index].connected === false) {
                 this.tablets[index].connected = true
@@ -246,7 +273,8 @@ export const useFullStore = defineStore({
                     ipAddress,
                     connected: false,
                     connecting: true
-                })
+                });
+                this.addDevice(ipAddress, 'tablet');
                 setTimeout(() => {
                     const index = this.tablets.findIndex(element => element.ipAddress === ipAddress)
                     if (index !== -1) {
@@ -307,6 +335,100 @@ export const useFullStore = defineStore({
                 ledRingId: null
             }
         },
+
+        /**
+         * Add a device to the deviceMap if it does not already exist.
+         * @param id
+         * @param type
+         */
+        addDevice(id: string, type: string) {
+            const index = this.deviceMap.findIndex(item => item.id === id);
+            if(index === -1) {
+                this.deviceMap.push({
+                    id: id,
+                    prefix: type === 'station' ? 'S' : 'T', //Assumes only stations or tablets are added
+                    type: type,
+                    checks: {}
+                });
+            }
+        },
+
+        /**
+         * Add a check with its associated information to the report tracker
+         * @param parent
+         * @param page
+         * @param check
+         * @param targetDevices
+         */
+        addCheckToReportTracker(parent: string, page: string, check, targetDevices) {
+            const checkKey = check.key;
+            const reportTracker = this.reportTracker[parent][page] ||= {};
+
+            reportTracker[checkKey] ||= {
+                description: check.description,
+                comments: [],
+                targets: targetDevices,
+                devices: {}
+            };
+
+            this.deviceMap.forEach(device => {
+                if (targetDevices[device.type]) {
+                    reportTracker[checkKey].devices[device.id] ||= {
+                        deviceId: device.id,
+                        type: device.type,
+                        passedStatus: "skipped",
+                        message: "Not provided",
+                        id: checkKey
+                    };
+                }
+            });
+        },
+
+        /**
+         * On a checkbox change update the reportTracker. The manual check items are either 'passed' or 'skipped'.
+         * @param parent
+         * @param page
+         * @param info A string representing the current state of the check.
+         * @param checkId A string ID of the associated check.
+         * @param deviceId A string ID of the associated device.
+         */
+        updateReport(parent: string, page: string, info: any, checkId: string, deviceId: string) {
+            // Access reportTracker properties step by step
+            const parentPage = this.reportTracker[parent]?.[page];
+            const check = parentPage?.[checkId];
+            let device = check?.devices?.[deviceId];
+
+            // Update the passedStatus based on the event
+            if (device) {
+                this.reportTracker[parent][page][checkId].devices[deviceId] = info;
+            }
+
+            // Update the fullStore.deviceMap
+            const mapDevice = this.deviceMap.find(device => device.id === deviceId);
+            if (mapDevice) {
+                mapDevice.checks[checkId] = info;
+            }
+        },
+
+        /**
+         * Read any saved report data from the reportTracker, mapping it to the deviceMap.
+         * @param parent
+         * @param page
+         */
+        readReportData(parent: string, page: string) {
+            const reportTracker = this.reportTracker[parent]?.[page];
+
+            if (!reportTracker) return;
+
+            for (const [checkId, check] of Object.entries(reportTracker)) {
+                for (const [deviceId, info] of Object.entries(check.devices)) {
+                    const device = this.deviceMap.find(device => device.id === deviceId);
+                    if (device) {
+                        device.checks[checkId] ??= info;
+                    }
+                }
+            }
+        }
     },
     getters: {
         getCbusConnection(state) {
