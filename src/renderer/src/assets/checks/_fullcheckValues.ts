@@ -154,10 +154,23 @@ export const PROJECTORS: CheckObject = {
     "description": "Display quality and configuration",
     "category": [
         {
-            "Visuals": {
+            "Projectors": {
                 "checks": {
                     "Visual Quality": {
                         description: "Projector is displaying in the correct orientation, with no warping or blurriness.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Networking": {
+                        description: "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document.",
                         guide: [
                             {
                                 imageSource: null,
@@ -178,32 +191,6 @@ export const PROJECTORS: CheckObject = {
                     "cbus": false
                 }
             },
-        },
-        {
-            "Network": {
-                "checks": {
-                    "Networking": {
-                        description: "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document.",
-                        guide: [
-                            {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
-                            }
-                        ]
-                    }
-                },
-                "description": "Put something here later",
-                "devices": {
-                    "station": true,
-                    "tablet": true,
-                    "nuc": true,
-                    "cbus": true
-                }
-            }
         }
     ]
 };
@@ -369,7 +356,7 @@ export const MILESIGHT_ROUTER: CheckObject = {
                             }
                         ]
                     },
-                    "Config File": {
+                    "Config File": { // todo - this should only need one check
                         description: "The master Config file is uploaded in the Milesight Router web interface.",
                         guide: [
                             {
@@ -451,7 +438,7 @@ export const HANDOVER: CheckObject = {
     "parent": "windows",
     "page": "handover",
     "description": "Document Details for Handover",
-    "category": [
+    "category": [ // todo - we should be able to display the hostname etc on this page to help out
         {
             "TODO": {
                 "checks": {
@@ -585,7 +572,7 @@ export const EXECUTABLES: CheckObject = {
     "page": "executables",
     "description": "Launch on start up each time",
     "category": [
-        {
+        { // todo - ensure progress is saved before doing this, particularly if running on a nuc
             "TODO": {
                 "checks": {
                     "Rebooting": {
@@ -621,7 +608,7 @@ export const PASSWORDS: CheckObject = {
     "parent": "security",
     "page": "passwords",
     "description": "Passwords are sufficient and stored correctly",
-    "category": [
+    "category": [ // todo tablet google account
         {
             "Projectors": {
                 "checks": {

@@ -152,7 +152,7 @@ const generateTitle = computed(() => {
             <ItemHover :title="item.key" :message="item.description "/>
 
             <td v-for="device in deviceMap" class="text-center p-3">
-              <input v-if="categories[currentCategoryIndex].devices[device.type] === true" type="checkbox" class="h-4 w-4">
+              <input v-if="categories[currentCategoryIndex].devices[device.type] === true" :key="index + '-' + item.key" type="checkbox" class="h-4 w-4">
             </td>
           </tr>
         </table>
