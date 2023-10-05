@@ -182,7 +182,7 @@ export const fullRoutes = [
         meta: {
             next: '/check/full/stations',
             nextText: 'Start Test',
-            prev: '/check/selection'
+            prev: '/'
         }
     },
 
@@ -214,8 +214,17 @@ export const fullRoutes = [
 
     ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', getFirstRoute(NETWORK)),
     ...generateRoutesFromObjectArray(NETWORK, getLastRoute(HARDWARE), '/check/full/windows/windows_checks'),
+    {
+        // todo IPv4 settings
+    },
+    {
+        // todo network checks from matt's notion, also station can access heroku, nuc can access heroku, cbus script id is correct
+        // todo maybe arp tablet comparison
+    },
     //Manually add the automatic routes between the necessary checks
     {
+        // todo - task scheduler, driver easy, nvidia not installed, WOL -> Wake on magic packet, enabled in firewall, launcher enabled in firewall
+        // todo - wallpaper to station name, date time to be manual when offline
         path: '/check/full/windows/windows_checks',
         name: 'full-windows-windows_checks',
         component: BasicAutoCheck,
@@ -229,6 +238,8 @@ export const fullRoutes = [
         }
     },
     ...generateRoutesFromObjectArray(WINDOWS, '/check/full/windows/windows_checks',  getFirstRoute(SECURITY)),
+    // todo for security - auto check steam and cbus complexity, auto check milesight and projector is not default
+    // todo - bring the auto tablet checks in here
     ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  '/check/full/software/software_checks'),
     {
         path: '/check/full/software/software_checks',
@@ -244,6 +255,7 @@ export const fullRoutes = [
         }
     },
     {
+        // todo - steam install location, play area red, steam guard disabled auto
         path: '/check/full/software/steam_config_checks',
         name: 'full-software-steam_config_checks',
         component: BasicAutoCheck,
@@ -258,7 +270,9 @@ export const fullRoutes = [
     },
     ...generateRoutesFromObjectArray(SOFTWARE, '/check/full/software/steam_config_checks',  '/check/full/imvr/experiences'),
     {
-        path: '/check/full/imvr/experiences',
+        // todo - block this behind IMVR connection
+        // todo - headset, base station and controller firmware, each station can detect two controllers, headset connection
+        path: '/check/full/imvr/experiences', // todo this full thing
         name: 'full-imvr-experiences',
         component: TheIMVR,
         meta: {
@@ -271,4 +285,6 @@ export const fullRoutes = [
         }
     },
     ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  ""),
+    // todo - decide if needed - manual leadme labs ux checks
+    // todo export and upload, including all json files
 ];

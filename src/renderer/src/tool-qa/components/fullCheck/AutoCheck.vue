@@ -10,7 +10,7 @@ import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue
 import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
 
 const route = useRoute();
-const checkType = route.meta['checkType'];
+const checkType = computed(() => { return route.meta['checkType'] });
 const fullStore = useFullStore();
 const stateStore = useStateStore();
 const checking = ref("");
@@ -65,7 +65,7 @@ const updateDeviceMap = (idKey, item, check) => {
  */
 const transformData = () => {
   fullStore.qaGroups
-      .filter(group => group.id === checkType)
+      .filter(group => group.id === checkType.value)
       .forEach(group => {
         group.checks.forEach(check => {
           check.stations.forEach(station => {
@@ -94,7 +94,7 @@ watch(() => fullStore.qaGroups, transformData, { deep: true });
  * Consolidate the information to the single page with no memory at te moment/
  */
 const filteredChecks = computed(() => {
-  const filteredGroups = fullStore.qaGroups.filter(group => group.id === checkType);
+  const filteredGroups = fullStore.qaGroups.filter(group => group.id === checkType.value);
   return filteredGroups.flatMap(group => group.checks);
 });
 
@@ -107,7 +107,7 @@ const monitorCheck = () => {
   let errorFound = false;
 
   fullStore.qaGroups
-    .filter(group => group.id === checkType)
+    .filter(group => group.id === checkType.value)
     .forEach(group => {
       group.checks.forEach(check => {
         [ ...check.stations, ...check.tablets, ...check.nuc, ...check.cbus ].forEach(item => {
@@ -135,16 +135,16 @@ watch(() => fullStore.qaGroups, monitorCheck, { deep: true });
  * Start the auto test once the component has been mounted, check that the server and connection is up first.
  */
 onMounted(() => {
-  if (typeof checkType === "string") {
-    fullStore.mostRecentAutoCheck = checkType;
+  if (typeof checkType.value === "string") {
+    fullStore.mostRecentAutoCheck = checkType.value;
   }
   checking.value = "testing";
 
-  fullStore.startQa(checkType);
+  fullStore.startQa(checkType.value);
   fullStore.sendMessage({
     action: CONSTANT.ACTION.RUN_STATION_GROUP,
     actionData: {
-      group: checkType,
+      group: checkType.value,
       stationIds: ['all']
     }
   });
@@ -152,7 +152,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <GenericLayout>
+  <GenericLayout :key="route.name">
     <template v-slot:title>
       <p class="text-2xl text-black font-semibold">Title</p>
       <p class="text-base text-black mb-6">{{checkType}}</p>
