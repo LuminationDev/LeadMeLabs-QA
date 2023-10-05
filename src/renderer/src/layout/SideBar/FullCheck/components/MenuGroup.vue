@@ -51,6 +51,22 @@ const isAutoSubActive = (index: number) => {
   return route.name.toString().includes(`full-${props.title.toLowerCase()}-${props.autoChecks[index]}`)
 };
 
+/**
+ * Check if the separator between menu items should be highlighted.
+ * @param localRoute A string of the menu item direct before the current separator.
+ */
+const isSeparatorActive = (localRoute: string) => {
+  const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
+  const pageProgress = pageRoute.meta['progress'];
+  const currentProgress = route.meta['progress'];
+
+  return pageProgress < currentProgress;
+}
+
+/**
+ * Generate the route a main menu item should direct a user to if clicked on. This returns the check section and the
+ * first category for that section.
+ */
 const generateRoute = () => {
   if (props.autoChecks.length > 0) {
     return `/check/full/${props.title.toLowerCase()}/${props.autoChecks[0]}`;
@@ -130,7 +146,7 @@ const currentSubStatus = (localRoute: string) => {
                 :current="isAutoSubActive(index)"
                 :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${subtitle}`)"/>
 
-      <MenuSeparator v-if="category.length > 0" :active="false"/>
+      <MenuSeparator v-if="category.length > 0" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${subtitle}`)"/>
     </div>
 
     <!--Manual-checks-->
@@ -140,10 +156,10 @@ const currentSubStatus = (localRoute: string) => {
                 :current="isSubActive(index)"
                 :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${object.page}`)"/>
 
-      <MenuSeparator v-if="index < category.length - 1" :active="false" status="pending"/>
+      <MenuSeparator v-if="index < category.length - 1" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${object.page}`)"/>
     </div>
 
     <!--Category separator-->
-    <MenuSeparator v-if="separator" :active="false"/>
+    <MenuSeparator v-if="separator" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${category[category.length-1].page}`)"/>
   </div>
 </template>

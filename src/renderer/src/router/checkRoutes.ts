@@ -176,24 +176,26 @@ const getLastRoute = (checkArray: CheckObject[]) => {
  */
 export const fullRoutes = [
     {
-        path: '/check/full',
-        name: 'full-description',
+        path: '/check/full/setup/devices',
+        name: 'full-setup-devices',
         component: FullCheck,
         meta: {
-            next: '/check/full/stations',
+            next: '/check/full/setup/config',
             nextText: 'Start Test',
-            prev: '/'
+            prev: '/',
+            progress: calculateProgress()
         }
     },
 
     {
-        path: '/check/full/stations',
-        name: 'full-stations',
+        path: '/check/full/setup/config',
+        name: 'full-setup-stations',
         component: Stations,
         meta: {
             next: '/check/full/appliances',
             nextText: 'Station Connection',
-            prev: '/check/full'
+            prev: '/check/full/setup/devices',
+            progress: calculateProgress()
         }
     },
 
@@ -207,7 +209,7 @@ export const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
-            prev: '/check/full/stations',
+            prev: '/check/full/setup/config',
             progress: calculateProgress()
         }
     },

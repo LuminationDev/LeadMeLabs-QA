@@ -9,10 +9,10 @@ const route = useRoute();
 </script>
 <template>
     <!--Config tool routes-->
-    <ConfigToolRoutes v-if="route.path.includes('/config')"/>
+    <ConfigToolRoutes v-if="route.path.startsWith('/config')"/>
 
     <!--Full check manual routes-->
-    <FullCheckRoutes v-else-if="route.path.includes('check/full/')"/>
+    <FullCheckRoutes v-else-if="route.path.includes('check/full')"/>
 
     <div v-else class="flex flex-col h-full max-w-[220px] overflow-hidden scrollbar-hide">
       <div v-if="route.path.includes('/config')" class="flex justify-center h-10 mt-5 mb-5 sticky flex-shrink-0">
