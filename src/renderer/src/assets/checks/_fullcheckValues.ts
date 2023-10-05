@@ -9,6 +9,7 @@
 //          - devices (software/appliances the check relates to)
 
 import { CheckObject } from "../../tool-qa/interfaces/_routeItems";
+import milesightSample from '../../assets/images/milesight-sample.png'
 
 /**
  * This file contains the titles and text for each of the Full Checks.
@@ -22,8 +23,32 @@ export const BATTERY: CheckObject = {
         {
             "Cabinet": {
                 "checks": {
-                    "Headsets": "All batteries are charging and capable of a full charge.",
-                    "Controllers": "All controllers are charging and capable of a full charge."
+                    "Headsets": {
+                        description: "All batteries are charging and capable of a full charge.",
+                        guide: [
+                            {
+                                imageSource: milesightSample,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Controllers": {
+                        description: "All controllers are charging and capable of a full charge.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "The LeadMe Storage Cabinet",
                 "devices": {
@@ -37,7 +62,19 @@ export const BATTERY: CheckObject = {
         {
             "Tablets": {
                 "checks": {
-                    "Tablets": "All tablets are charging and capable of a full charge."
+                    "Tablets": {
+                        description: "All tablets are charging and capable of a full charge.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Samsung Tablets",
                 "devices": {
@@ -59,7 +96,19 @@ export const VIDEO_CABLES: CheckObject = {
         {
             "HDMI": {
                 "checks": {
-                    "Video Cable": "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector."
+                    "Video Cable": {
+                        description: "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -73,7 +122,19 @@ export const VIDEO_CABLES: CheckObject = {
         {
             "Other": {
                 "checks": {
-                    "Additional Cables": "If additional cables are connected for Presentation mode, they are connected to a secondary display input."
+                    "Additional Cables": {
+                        description: "If additional cables are connected for Presentation mode, they are connected to a secondary display input.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -93,9 +154,34 @@ export const PROJECTORS: CheckObject = {
     "description": "Display quality and configuration",
     "category": [
         {
-            "Visuals": {
+            "Projectors": {
                 "checks": {
-                    "Visual Quality": "Projector is displaying in the correct orientation, with no warping or blurriness."
+                    "Visual Quality": {
+                        description: "Projector is displaying in the correct orientation, with no warping or blurriness.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Networking": {
+                        description: "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -105,20 +191,6 @@ export const PROJECTORS: CheckObject = {
                     "cbus": false
                 }
             },
-        },
-        {
-            "Network": {
-                "checks": {
-                    "Networking": "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document."
-                },
-                "description": "Put something here later",
-                "devices": {
-                    "station": true,
-                    "tablet": true,
-                    "nuc": true,
-                    "cbus": true
-                }
-            }
         }
     ]
 };
@@ -131,10 +203,58 @@ export const KEYBOARD: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "USB Receiver": "The keyboard has been paired with a USB receiver.",
-                    "Recovery Mode": "The keyboard works in Windows Recovery Mode.",
-                    "Windows": "The keyboard works in Windows OS.",
-                    "BIOS Mode": "The keyboard works in BIOS menu."
+                    "USB Receiver": {
+                        description: "The keyboard has been paired with a USB receiver.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Recovery Mode": {
+                        description: "The keyboard works in Windows Recovery Mode.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Windows": {
+                        description: "The keyboard works in Windows OS.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "BIOS Mode": {
+                        description: "The keyboard works in BIOS menu.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -156,8 +276,32 @@ export const BIOS_SETTINGS: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Wake on LAN": "Wake on LAN is enabled.",
-                    "Restore Power": "Restore Power after AC loss is set to 'Power On’."
+                    "Wake on LAN": {
+                        description: "Wake on LAN is enabled.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Restore Power": {
+                        description: "Restore Power after AC loss is set to 'Power On’.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -178,17 +322,53 @@ export const HARDWARE: CheckObject[] = [BATTERY, VIDEO_CABLES, PROJECTORS, KEYBO
 //Contains two additional automatic checks
 //  - IPv4 Settings
 //  - Network Checks
-export const MILESITE_ROUTER: CheckObject = {
+export const MILESIGHT_ROUTER: CheckObject = {
     "parent": "network",
-    "page": "milesite_router",
+    "page": "milesight_router",
     "description": "Web interface and devices",
     "category": [
         {
-            "TODO": {
+            "Milesight configuration": {
                 "checks": {
-                    "Devices": "Device is viewable in the Milesight Router web interface.",
-                    "IP Address": "Device has the correct IP address in the Milesight Router web interface.",
-                    "Config File": "The master Config file is uploaded in the Milesight Router web interface.",
+                    "Devices": {
+                        description: "Device is viewable in the Milesight Router web interface.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "IP Address": {
+                        description: "Device has the correct IP address in the Milesight Router web interface.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Config File": { // todo - this should only need one check
+                        description: "The master Config file is uploaded in the Milesight Router web interface.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -210,8 +390,32 @@ export const CBUS: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Scripts": "The CBUS template contains the necessary scripts and objects.",
-                    "Keywords": "The keyword ‘sendToNuc’ has been added to all Lumination C-Bus objects."
+                    "Scripts": {
+                        description: "The CBUS template contains the necessary scripts and objects.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Keywords": {
+                        description: "The keyword ‘sendToNuc’ has been added to all Lumination C-Bus objects.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -224,7 +428,7 @@ export const CBUS: CheckObject = {
         }
     ]
 };
-export const NETWORK = [MILESITE_ROUTER, CBUS];
+export const NETWORK = [MILESIGHT_ROUTER, CBUS];
 //endregion
 
 //region WINDOWS SECTION
@@ -234,12 +438,36 @@ export const HANDOVER: CheckObject = {
     "parent": "windows",
     "page": "handover",
     "description": "Document Details for Handover",
-    "category": [
+    "category": [ // todo - we should be able to display the hostname etc on this page to help out
         {
             "TODO": {
                 "checks": {
-                    "Hostname": "Hostname is set and recorded in the Lab Handover Doc.",
-                    "MAC Address": "MAC Address is set and recorded in the Lab Handover Doc."
+                    "Hostname": {
+                        description: "Hostname is set and recorded in the Lab Handover Doc.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "MAC Address": {
+                        description: "MAC Address is set and recorded in the Lab Handover Doc.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -261,9 +489,45 @@ export const DRIVERS: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Windows": "Windows is up-to-date.",
-                    "Devices": "Any device drivers with warning symbols have been resolved.",
-                    "Motherboard": "The motherboard drivers and firmware are up to date.",
+                    "Windows": {
+                        description: "Windows is up-to-date.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Devices": {
+                        description: "Any device drivers with warning symbols have been resolved.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Motherboard": {
+                        description: "The motherboard drivers and firmware are up to date.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -277,7 +541,19 @@ export const DRIVERS: CheckObject = {
         {
             "AMD": {
                 "checks": {
-                    "AMD Adrenalin": "AMD Adrenalin is set to only run recommended updates (not recommended + optional)."
+                    "AMD Adrenalin": {
+                        description: "AMD Adrenalin is set to only run recommended updates (not recommended + optional).",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -296,10 +572,22 @@ export const EXECUTABLES: CheckObject = {
     "page": "executables",
     "description": "Launch on start up each time",
     "category": [
-        {
+        { // todo - ensure progress is saved before doing this, particularly if running on a nuc
             "TODO": {
                 "checks": {
-                    "Rebooting": "Station.exe & NUC.exe launch on start up each time after rebooting 3 times consecutively."
+                    "Rebooting": {
+                        description: "Station.exe & NUC.exe launch on start up each time after rebooting 3 times consecutively.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -320,11 +608,23 @@ export const PASSWORDS: CheckObject = {
     "parent": "security",
     "page": "passwords",
     "description": "Passwords are sufficient and stored correctly",
-    "category": [
+    "category": [ // todo tablet google account
         {
             "Projectors": {
                 "checks": {
-                    "Projector": "The projector's web interface password has been changed and is logged in Bitwarden."
+                    "Projector": {
+                        description: "The projector's web interface password has been changed and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -338,7 +638,19 @@ export const PASSWORDS: CheckObject = {
         {
             "Router": {
                 "checks": {
-                    "MileSight Router": "The milesight router has a complex password and is logged in Bitwarden."
+                    "MileSight Router": {
+                        description: "The milesight router has a complex password and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -352,8 +664,32 @@ export const PASSWORDS: CheckObject = {
         {
             "Steam": {
                 "checks": {
-                    "Steam Account": "The Steam accounts have complex passwords and is logged in Bitwarden.",
-                    "Family Mode PIN": "Family mode PIN is unique and is logged in Bitwarden."
+                    "Steam Account": {
+                        description: "The Steam accounts have complex passwords and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Family Mode PIN": {
+                        description: "Family mode PIN is unique and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -367,7 +703,19 @@ export const PASSWORDS: CheckObject = {
         {
             "C-Bus": {
                 "checks": {
-                    "C-Bus": "The C-Bus has a complex password and is logged in Bitwarden."
+                    "C-Bus": {
+                        description: "The C-Bus has a complex password and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -389,8 +737,32 @@ export const LEADME_SECURITY: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Tablet PIN": "LeadMe Tablet PIN is unique and is logged in Bitwarden.",
-                    "Google Account": "LeadMe Tablet Google account is unique, has a complex password, and is logged in Bitwarden."
+                    "Tablet PIN": {
+                        description: "LeadMe Tablet PIN is unique and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Google Account": {
+                        description: "LeadMe Tablet Google account is unique, has a complex password, and is logged in Bitwarden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -419,9 +791,45 @@ export const STEAM: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Steam Guard": "Security settings: Steamguard is disabled.",
-                    "Remote Play": "Remote Play: Disable all settings.",
-                    "Broadcasting": "Broadcasting: Disable broadcasting."
+                    "Steam Guard": {
+                        description: "Security settings: Steamguard is disabled.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Remote Play": {
+                        description: "Remote Play: Disable all settings.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Broadcasting": {
+                        description: "Broadcasting: Disable broadcasting.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -450,10 +858,58 @@ export const VIVE: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "VIVE Wireless": "The display and power cables are plugged in at the back of the wireless unit.",
-                    "Headsets": "The headset has been paired and been given a device name.",
-                    "Base Stations": "Each base station is operating on a unique channel.",
-                    "Hardware Condition": "There aren't signs of physical damage to the headsets or controllers.",
+                    "VIVE Wireless": {
+                        description: "The display and power cables are plugged in at the back of the wireless unit.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Headsets": {
+                        description: "The headset has been paired and been given a device name.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Base Stations": {
+                        description: "Each base station is operating on a unique channel.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Hardware Condition": {
+                        description: "There aren't signs of physical damage to the headsets or controllers.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
                 },
                 "description": "Put something here later",
                 "devices": {
@@ -475,11 +931,71 @@ export const VIRTUAL_REALITY: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "VR Room Setup": "The floor in-experience is the same height as the physical floor, and the headset experience faces the projector screen.",
-                    "Boundary Perimeter": "The perimeter of the boundary is visible when moving around near the LED ring, and once outside the active experience is hidden.",
-                    "Headset Tracking": "The headset doesn't drop out when moving around the play space.",
-                    "Controller Tracking": "When the boundary is traced in Tiltbrush at low, mid and high heights, the end result shows a consistent brush stroke.",
-                    "Headset Inactivity": "When an experience is left inactive for 5+ minutes, it can be picked up and resumed without the headset going blank."
+                    "VR Room Setup": {
+                        description: "The floor in-experience is the same height as the physical floor, and the headset experience faces the projector screen.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Boundary Perimeter": {
+                        description: "The perimeter of the boundary is visible when moving around near the LED ring, and once outside the active experience is hidden.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Headset Tracking": {
+                        description: "The headset doesn't drop out when moving around the play space.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Controller Tracking": {
+                        description: "When the boundary is traced in Tiltbrush at low, mid and high heights, the end result shows a consistent brush stroke.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    },
+                    "Headset Inactivity": {
+                        description: "When an experience is left inactive for 5+ minutes, it can be picked up and resumed without the headset going blank.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
                 },
                 "description": "Put something here later",
                 "devices": {

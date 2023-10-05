@@ -9,12 +9,12 @@ const route = useRoute();
 <template>
   <div class="w-full h-auto my-4 flex flex-col">
 
-    <p class="text-xl text-black font-semibold mb-3">{{route.name === 'selection' ? "Select your Tool" : "Select your Check Type"}}</p>
+    <p class="text-xl text-black font-semibold mb-3">{{route.name === 'welcome' ? "Select your Tool" : "Select your Check Type"}}</p>
 
     <div class="w-full h-auto mb-4 flex flex-col">
       <hr class="my-4">
 
-      <div v-if="route.name === 'selection'" class="h-96 w-full mt-16 flex flex-row">
+      <div v-if="route.name === 'welcome'" class="h-96 w-full mt-16 flex flex-row">
 
         <!--Setup tool (Config tool)-->
         <div class="w-full p-4">
@@ -26,7 +26,7 @@ const route = useRoute();
         <div class="flex flex-col w-full p-4">
           <!--QA tool choice-->
           <div class="w-full h-full pb-4">
-            <OptionButton title="QA Test" subtitle="Run a Quality Assurance Test" to="/check/selection"/>
+            <OptionButton title="QA Test" subtitle="Run a Quality Assurance Test" to="/check/full"/>
           </div>
 
           <!--Generate Handover Doc-->
