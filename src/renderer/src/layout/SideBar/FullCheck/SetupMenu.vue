@@ -80,7 +80,7 @@ const currentSubStatus = (localRoute: string) => {
 <template>
   <div class="flex flex-col relative">
     <!--Category title-->
-    <MenuItem title="Setup" route="/check/full" :current="isActive" :status="currentTitleStatus('/check/full/setup')" :setup="true"/>
+    <MenuItem title="Setup" route="/check/full/setup/devices" :current="isActive" :status="currentTitleStatus('/check/full/setup')" :setup="true"/>
 
     <template v-if="isActive">
       <!--Sub-categories-->
