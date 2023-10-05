@@ -7,6 +7,7 @@ import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import GuideModal from "../../../modals/GuideModal.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
@@ -70,11 +71,21 @@ const checks = computed(() => {
   const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
 
   if (category && category.checks) {
-    return Object.entries(category.checks).map(([key, description]) => ({ key, description }));
+    return Object.entries(category.checks).map(([key, checkDetails]) => ({ key, description: checkDetails.description }));
   } else {
     return [];
   }
 });
+
+const guides = computed(() => {
+  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
+
+  if (category && category.checks) {
+    return Object.entries(category.checks).map(([key, checkDetails]) => ({ key, guide: checkDetails.guide })).filter(object => object.guide.length > 0);
+  } else {
+    return [];
+  }
+})
 
 const generateTitle = computed(() => {
   const split = route.meta['page'].split("_");
@@ -124,14 +135,7 @@ const generateTitle = computed(() => {
             <h2 class="text-sm">{{ categories[currentCategoryIndex].description }}</h2>
           </div>
 
-          <div class="w-20 h-10 flex justify-center items-center border-[1px]
-               border-gray-500 rounded-lg cursor-pointer hover:bg-gray-200"
-          >
-            <img class="w-5 h-5 mr-1" src="../../../../assets/icons/help-circle.svg" alt="question mark">
-            <div class="text-sm font-semibold">
-              Guide
-            </div>
-          </div>
+          <GuideModal :guides="guides" />
         </div>
 
         <table class="w-full border-collapse">

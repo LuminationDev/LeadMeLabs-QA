@@ -1,7 +1,17 @@
 import ManualCheck from "*.vue";
 
+export type CheckGuideItem = {
+    imageSource: string|null;
+    text: string;
+}
+
+type Check = {
+    description: string;
+    guide: Array<CheckGuideItem>
+}
+
 type CheckCategory = {
-    checks: Record<string, string>;
+    checks: Record<string, Check>;
     description: string;
     devices: {
         station: boolean;
