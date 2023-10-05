@@ -7,6 +7,7 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import GuideModal from "../../../modals/GuideModal.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
@@ -37,8 +38,7 @@ const checks = computed(() => {
 
   const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
   if (category && category.checks) {
-    const checks = Object.entries(category.checks).map(([key, description]) => ({ key, description }));
-
+    const checks = Object.entries(category.checks).map(([key, checkDetails]) => ({ key, description: checkDetails.description }));
     //Add the checks to the report tracker
     checks.forEach(check => {
       fullStore.addCheckToReportTracker(parent, page, check, category.devices);
@@ -49,6 +49,16 @@ const checks = computed(() => {
     return [];
   }
 });
+
+const guides = computed(() => {
+  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
+
+  if (category && category.checks) {
+    return Object.entries(category.checks).map(([key, checkDetails]) => ({ key, guide: checkDetails.guide })).filter(object => object.guide.length > 0);
+  } else {
+    return [];
+  }
+})
 </script>
 
 <template>
@@ -79,14 +89,7 @@ const checks = computed(() => {
             <h2 class="text-sm">{{ categories[currentCategoryIndex].description }}</h2>
           </div>
 
-          <div class="w-20 h-10 flex justify-center items-center border-[1px]
-               border-gray-500 rounded-lg cursor-pointer hover:bg-gray-200"
-          >
-            <img class="w-5 h-5 mr-1" src="../../../../assets/icons/help-circle.svg" alt="question mark">
-            <div class="text-sm font-semibold">
-              Guide
-            </div>
-          </div>
+          <GuideModal :guides="guides" />
         </div>
 
         <table class="w-full border-collapse">
@@ -104,6 +107,7 @@ const checks = computed(() => {
 
             <td v-for="device in fullStore.deviceMap" class="text-center p-3">
               <input v-if="categories[currentCategoryIndex].devices[device.type] === true"
+                     :key="index + '-' + item.key"
                      :checked="device.checks[item.key]?.passedStatus === 'passed'"
                      type="checkbox" class="h-4 w-4"
                      @change="fullStore.updateReport(

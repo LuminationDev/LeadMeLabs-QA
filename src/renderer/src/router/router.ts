@@ -13,29 +13,14 @@ const router = createRouter({
         {
             path: '/',
             name: 'welcome',
-            component: Welcome,
-            meta: {
-                userInput: true, //Requires user input to proceed to the next page
-                noComment: true, //No comment is required to skip
-                canSkip: true, //Can skip the current scene
-                next: '/selection',
-                nextText: 'Get Started'
-            }
-        },
-        {
-            path: '/selection',
-            name: 'selection',
-            component: Welcome,
-            meta: {
-                prev: '/'
-            }
+            component: Welcome
         },
         {
             path: '/check/selection',
             name: 'check-selection',
             component: Welcome,
             meta: {
-                prev: '/selection'
+                prev: '/welcome'
             }
         },
         {
