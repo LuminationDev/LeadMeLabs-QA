@@ -31,20 +31,6 @@ const router = useRouter();
 const route = useRoute();
 
 /**
- * Generate a title from the supplied page name.
- */
-const generateTitle = (page: string) => {
-  const split = page.split("_");
-
-  const capitalizedSplit = split.map(entry => {
-    const lowercaseEntry = entry.toLowerCase();
-    return stateStore.capitalizeFirstLetter(lowercaseEntry);
-  });
-
-  return capitalizedSplit.join(" ");
-};
-
-/**
  * Check if the main category is currently active.
  */
 const isActive = computed(() => {
@@ -139,7 +125,7 @@ const currentSubStatus = (localRoute: string) => {
     <!--Sub-categories-->
     <!--Auto-checks-->
     <div v-if="isActive" v-for="(subtitle, index) in autoChecks" :key="index" class="ml-5 flex flex-col relative">
-      <MenuItem :title="generateTitle(subtitle)"
+      <MenuItem :title="stateStore.generateTitle(subtitle)"
                 :route="`/check/full/${title.toLowerCase()}/${subtitle}`"
                 :current="isAutoSubActive(index)"
                 :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${subtitle}`)"/>
@@ -149,7 +135,7 @@ const currentSubStatus = (localRoute: string) => {
 
     <!--Manual-checks-->
     <div v-if="isActive" v-for="(object, index) in category" :key="index" class="ml-5 flex flex-col relative">
-      <MenuItem :title="generateTitle(object.page)"
+      <MenuItem :title="stateStore.generateTitle(object.page)"
                 :route="`/check/full/${title.toLowerCase()}/${object.page}/${Object.keys(object.category[0])[0].toLowerCase()}`"
                 :current="isSubActive(index)"
                 :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${object.page}`)"/>
