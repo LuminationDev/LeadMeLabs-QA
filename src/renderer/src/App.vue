@@ -3,15 +3,15 @@ import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
-import { TCPMessage, QaCheck } from "tool-qa/interfaces";
-import { RouterView, useRoute } from 'vue-router';
-import { ref } from 'vue';
-import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
-import { useStateStore } from './tool-qa/store/stateStore';
-import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-import { useConfigStore } from "@renderer/tool-config/store/configStore";
-import { storeToRefs } from "pinia";
-import { Station } from "./tool-qa/types/_station";
+import {QaCheck, TCPMessage} from "tool-qa/interfaces";
+import {RouterView, useRoute} from 'vue-router';
+import {ref} from 'vue';
+import {useQuickStore} from "@renderer/tool-qa/store/quickStore";
+import {useStateStore} from './tool-qa/store/stateStore';
+import {useFullStore} from "@renderer/tool-qa/store/fullStore";
+import {useConfigStore} from "@renderer/tool-config/store/configStore";
+import {storeToRefs} from "pinia";
+import {Station} from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 import {ALL_VALUES} from "@renderer/assets/checks/_fullcheckValues";
 
@@ -55,19 +55,31 @@ const populateQuickReportTracker = (data: string) => {
   quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
 };
 
+//TODO load in the auto checks?
 /**
  * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
  * The individual checks will be added when that page is visited. If no checks are present in a section or category it
  * is considered skipped.
  */
 const populateFullReportTracker = () => {
-  for (const section of ALL_VALUES) {
-    for (const { parent, page } of section) {
-      fullStore.reportTracker[parent] ||= {};
-      fullStore.reportTracker[parent][page] ||= {};
+  for (const { parent, page, category } of ALL_VALUES.flat()) {
+    fullStore.reportTracker[parent] ??= {};
+    fullStore.reportTracker[parent][page] ??= {};
+
+    for (const subCategory of category) {
+      const checks = Object.entries(subCategory[Object.keys(subCategory)[0]].checks);
+
+      for (const [check, { description }] of checks) {
+        fullStore.reportTracker[parent][page][check] ??= {
+          description,
+          comments: [],
+          targets: subCategory[Object.keys(subCategory)[0]].devices,
+          devices: {}
+        };
+      }
     }
   }
-}
+};
 populateFullReportTracker();
 
 /**
