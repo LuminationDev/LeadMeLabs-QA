@@ -147,12 +147,3 @@ const imageSrc = computed(() => {
     </Modal>
   </Teleport>
 </template>
-
-<style>
-h3 {
-  @apply font-semibold text-lg !important
-}
-p {
-  @apply text-sm !important
-}
-</style>

@@ -64,8 +64,8 @@ const guides = computed(() => {
 <template>
   <GenericLayout>
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold">{{stateStore.generateTitle(route.meta['page'] as string)}}</p>
-      <p class="text-base text-black mb-6">{{checkDetails.description ?? "No description set"}}</p>
+      <p class="text-2xl text-black font-semibold mb-2">{{stateStore.generateTitle(route.meta['page'] as string)}}</p>
+      <p class="text-base text-black mb-4">{{checkDetails.description ?? "No description set"}}</p>
 
       <!--A tab for each category-->
       <div class="flex flex-row w-full overflow-auto">

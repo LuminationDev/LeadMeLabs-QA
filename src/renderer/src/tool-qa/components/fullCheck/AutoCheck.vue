@@ -159,8 +159,8 @@ onMounted(() => {
 <template>
   <GenericLayout :key="route.name">
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold">Title</p>
-      <p class="text-base text-black mb-6">{{checkType}}</p>
+      <p class="text-2xl text-black font-semibold mb-2">Title</p>
+      <p class="text-base text-black mb-4">{{checkType}}</p>
     </template>
 
     <template v-slot:content>
