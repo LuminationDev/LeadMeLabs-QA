@@ -3,17 +3,17 @@ import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
-import {QaCheck, TCPMessage} from "tool-qa/interfaces";
-import {RouterView, useRoute} from 'vue-router';
-import {ref} from 'vue';
-import {useQuickStore} from "@renderer/tool-qa/store/quickStore";
-import {useStateStore} from './tool-qa/store/stateStore';
-import {useFullStore} from "@renderer/tool-qa/store/fullStore";
-import {useConfigStore} from "@renderer/tool-config/store/configStore";
-import {storeToRefs} from "pinia";
-import {Station} from "./tool-qa/types/_station";
+import { QaCheck, TCPMessage } from "tool-qa/interfaces";
+import { RouterView, useRoute } from 'vue-router';
+import { ref } from 'vue';
+import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
+import { useStateStore } from './tool-qa/store/stateStore';
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { useConfigStore } from "@renderer/tool-config/store/configStore";
+import { storeToRefs } from "pinia";
+import { Station } from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
-import {ALL_VALUES} from "@renderer/assets/checks/_fullcheckValues";
+import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
