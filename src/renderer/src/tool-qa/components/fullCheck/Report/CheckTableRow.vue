@@ -40,7 +40,8 @@ const addComment = (comment: string) => {
  * @param device
  */
 const generateMessage = (device: any) => {
-  if (!props.check.devices[device.type]) {
+  console.log(props.check);
+  if (!props.check.targets[device.type]) {
     return "Not applicable";
   }
 
