@@ -2,12 +2,14 @@ import {QaCheckResult} from "./_qaCheckResult";
 
 class QaGroup {
     id: string
+    section: string | null
     requirements: Array<string> = []
     checks: Array<QaCheckResult> = []
     started: boolean = false
 
-    constructor(id: string) {
+    constructor(id: string, section: string| null = null) {
         this.id = id;
+        this.section = section;
     }
 
     allChecksPassed(): boolean {

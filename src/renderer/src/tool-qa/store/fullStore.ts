@@ -1,33 +1,11 @@
+import * as CONSTANT from "../../assets/constants";
 import { defineStore } from 'pinia';
 import { Appliance, QaCheck, QaDetail, Tablet } from "../interfaces";
 import { Station as StationClass } from '../types/_station'
 import { QaGroup } from "../types/_qaGroup";
 import { QaCheckResult } from "../types/_qaCheckResult";
-import * as CONSTANT from "../../assets/constants";
 import { useStateStore } from "./stateStore";
-
-interface Report {
-    [section: string]: {
-        [category: string]: {
-            [check: string]: {
-                description: string;
-                comments: string[];
-                targets: {};
-                devices: {
-                    [deviceId: string]: Device
-                };
-            }
-        }
-    }
-}
-
-interface Device {
-    deviceId: string;
-    type: string;
-    passedStatus: string;
-    message: string;
-    id: string;
-}
+import { Report } from "../interfaces/_report";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -183,7 +161,7 @@ export const useFullStore = defineStore({
             const stationIsConnected = new QaCheckResult("station_is_connected", "auto", 10000, stationIds, false, false, [], "Station is connected to NUC")
             stationConnectionChecks.checks.push(stationIsConnected)
 
-            const windowsChecks = new QaGroup("windows_checks")
+            const windowsChecks = new QaGroup("windows_checks", "windows")
             const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, stationIds, false, false, [], "Wake On LAN", "Wake on Magic Packet is enabled")
             const amdInstalled = new QaCheckResult("amd_installed", "auto", 10000, stationIds, false, false, [], "AMD Installed", "Is AMD software installed")
             const envVariable = new QaCheckResult("openssl_environment", "auto", 10000, stationIds, false, false, [], "OPENSSL ENV", "Is OPENSSL_ia32cap set in environment variables")
@@ -192,7 +170,7 @@ export const useFullStore = defineStore({
             const dateTime = new QaCheckResult("correct_datetime", "auto", 10000, stationIds, false, false, [], "Time & Date", "Is the date and time set correctly")
             windowsChecks.checks.push(wakeOnLAN, amdInstalled, envVariable, wallpaper, timezone, dateTime);
 
-            const softwareChecks = new QaGroup("software_checks")
+            const softwareChecks = new QaGroup("software_checks", "software")
             const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 10000, stationIds, false, false, [], "SetVol Installed", "SetVol is installed at the correct location")
             const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 10000, stationIds, false, false, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
             const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 10000, stationIds, false, false, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
@@ -200,7 +178,7 @@ export const useFullStore = defineStore({
             softwareChecks.checks.push(setvolInstalled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured)
             softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
 
-            const steamConfigChecks = new QaGroup("steam_config_checks")
+            const steamConfigChecks = new QaGroup("steam_config_checks", "software")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, stationIds, false, false, [], "Steam Username is set")
             const isSteamPasswordSet = new QaCheckResult("steam_password", "auto", 10000, stationIds, false, false, [], "Steam Password is set")
             const isSteamInitialized = new QaCheckResult("steam_initialized", "auto", 10000, stationIds, false, false, [], "Steam initialised", "Steam has been logged into at least once")
@@ -232,10 +210,9 @@ export const useFullStore = defineStore({
             var allCompletedIds = [] as Array<string>
             allCompletedIds.push(...completedQaCheckGroupIds)
             allCompletedIds.push(...completedQaCheckIds)
-            const groupsToStart = this.qaGroups.filter(group => !group.started).filter(group => {
+            return this.qaGroups.filter(group => !group.started).filter(group => {
                 return (group.requirements.filter(r => !allCompletedIds.includes(r)).length === 0)
             }).map(group => group.id)
-            return groupsToStart
         },
 
         updateQaChecks(stationId, groupName, qaChecks) {
@@ -316,14 +293,14 @@ export const useFullStore = defineStore({
             api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
                 channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
                 key: stateStore.key,
-                address: station.expectedDetails.ipAddress,
+                address: station.expectedDetails?.ipAddress,
                 port: 55557,
                 data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
             });
         },
 
         stationConnected (expectedStationId: string, stationData: any) {
-            const index = this.stations.findIndex(element => element.expectedDetails.id === expectedStationId)
+            const index = this.stations.findIndex(element => element.expectedDetails?.id === expectedStationId)
             console.log(index, expectedStationId)
             this.stations[index].details = {
                 ipAddress: stationData.ipAddress,

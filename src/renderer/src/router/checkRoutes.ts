@@ -247,7 +247,7 @@ export const fullRoutes = [
         component: BasicReport,
         meta: {
             page: "network",
-            description: "TODO write something",
+            description: "TODO write something in checkRoutes",
             next: '/check/full/windows/windows_checks',
             prev: getLastRoute(NETWORK),
             progress: calculateProgress()
@@ -280,7 +280,7 @@ export const fullRoutes = [
         component: BasicReport,
         meta: {
             page: "windows",
-            description: "TODO write something",
+            description: "TODO write something in checkRoutes",
             next: getFirstRoute(SECURITY),
             prev: getLastRoute(WINDOWS),
             progress: calculateProgress()
@@ -289,7 +289,7 @@ export const fullRoutes = [
 
     // todo for security - projector is not default
     // todo - bring the auto tablet checks in here
-    ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  '/check/full/security/report'),
+    ...generateRoutesFromObjectArray(SECURITY, '/check/full/windows/report',  '/check/full/security/report'),
 
     //SECURITY REPORT
     {
@@ -298,7 +298,7 @@ export const fullRoutes = [
         component: BasicReport,
         meta: {
             page: "security",
-            description: "TODO write something",
+            description: "TODO write something in checkRoutes",
             next: '/check/full/software/software_checks',
             prev: getLastRoute(SECURITY),
             progress: calculateProgress()
@@ -342,7 +342,7 @@ export const fullRoutes = [
         component: BasicReport,
         meta: {
             page: "software",
-            description: "TODO write something",
+            description: "TODO write something in checkRoutes",
             next: '/check/full/imvr/experiences',
             prev: getLastRoute(SOFTWARE),
             progress: calculateProgress()
@@ -375,7 +375,7 @@ export const fullRoutes = [
         component: OverallReport,
         meta: {
             page: "overall",
-            description: "TODO write something",
+            description: "TODO write something in checkRoutes",
             next: '',
             prev: getLastRoute(IMVR),
             progress: calculateProgress()

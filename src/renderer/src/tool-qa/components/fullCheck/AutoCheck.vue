@@ -16,23 +16,6 @@ const fullStore = useFullStore();
 const stateStore = useStateStore();
 const checking = ref("");
 
-//TODO run this after the initial connection to load all auto checks into the tracker (NEED TO WORK OUT PARENT VARIABLE)
-/**
- * Run through each of the automatic checks in this section. Adding the required details and target devices to the
- * fullStore.reportTracker.
- */
-const recordChecks = () => {
-  fullStore.qaGroups
-      .filter(group => group.id === checkType.value)
-      .forEach(group => {
-        group.checks.forEach(check => {
-          const targetDevices = determineTargetDevices(check);
-          const checkItems = { key: check.id, description: check.extendedDescription }
-          fullStore.addCheckToReportTracker(<string>route.meta['parent'], <string>checkType.value, checkItems, targetDevices);
-        });
-      });
-}
-
 /**
  * Update the device map with the latest check for a specific entry, based on the Id which may be Station number,
  * tablet ip address, 'NUC' or 'C-Bus'.
@@ -63,15 +46,6 @@ const transformData = () => {
       });
 };
 
-const determineTargetDevices = (check: QaCheckResult) => {
-  return {
-    "station": check.stations.length > 0,
-    "tablet": check.tablets.length > 0,
-    "nuc": check.nuc.length > 0,
-    "cbus": check.cbus.length > 0
-  };
-};
-
 const updateDeviceMaps = (check: QaCheckResult) => {
   check.stations.forEach(station => {
     updateDeviceMap(station.id, station, check);
@@ -97,6 +71,13 @@ watch(() => fullStore.qaGroups, transformData, { deep: true });
 const filteredChecks = computed(() => {
   const filteredGroups = fullStore.qaGroups.filter(group => group.id === checkType.value);
   return filteredGroups.flatMap(group => group.checks);
+});
+
+/**
+ * Collect the 'parent' page which is the section the auto check belongs in. Use this as a title.
+ */
+const getTitle = computed(() => {
+  return stateStore.generateTitle(<string>route.meta['parent']);
 });
 
 /**
@@ -136,7 +117,6 @@ watch(() => fullStore.qaGroups, monitorCheck, { deep: true });
  * Start the auto test once the component has been mounted, check that the server and connection is up first.
  */
 onMounted(() => {
-  recordChecks();
   fullStore.readReportData(<string>route.meta['parent'], <string>checkType.value);
 
   if (typeof checkType.value === "string") {
@@ -160,7 +140,8 @@ onMounted(() => {
 <template>
   <GenericLayout :key="route.name">
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold mb-2">Title</p>
+      <p class="text-2xl text-black font-semibold mb-2">{{getTitle}}</p>
+      <!--TODO work out how to get a description-->
       <p class="text-base text-black mb-4">{{checkType}}</p>
     </template>
 

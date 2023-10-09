@@ -64,9 +64,9 @@ const route = useRoute();
 
   <img v-else-if="mode === 'icon-empty'" v-on:click="openModal" class="cursor-pointer" src="../../assets/icons/comment-empty.svg" alt="comment"/>
 
-  <div v-else-if="mode === 'icon'" class="relative">
-    <span class="w-2.5 text-center text-xs font-semibold text-blue-700 absolute left-[4px] top-0.5">{{currentComments.length}}</span>
-    <img v-on:click="openModal" class="cursor-pointer" src="../../assets/icons/comment.svg" alt="comment"/>
+  <div v-else-if="mode === 'icon'" v-on:click="openModal" class="relative">
+    <span class="w-2.5 cursor-pointer text-center text-xs font-semibold text-blue-700 absolute left-[4px] top-0.5">{{currentComments.length}}</span>
+    <img class="cursor-pointer" src="../../assets/icons/comment.svg" alt="comment"/>
   </div>
 
 
