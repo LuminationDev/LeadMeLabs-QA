@@ -10,10 +10,11 @@ type Check = {
     guide: Array<CheckGuideItem>
 }
 
-type CheckCategory = {
+export type CheckCategory = {
     checks: Record<string, Check>;
     description: string;
-    devices: {
+    devices: {}
+    targets: {
         station: boolean;
         tablet: boolean;
         nuc: boolean;

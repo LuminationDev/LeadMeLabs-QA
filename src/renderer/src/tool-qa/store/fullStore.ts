@@ -45,6 +45,8 @@ export const useFullStore = defineStore({
         connected: false,
         //Compared against the number of Station's contacted
         numberOfStations: 0,
+        //The most progress a user has made
+        maxProgress: 0,
         //The IP address entered by a user that should be the NUC
         nucAddress: '',
         mostRecentAutoCheck: '',
@@ -428,6 +430,15 @@ export const useFullStore = defineStore({
                     }
                 }
             }
+        },
+
+        /**
+         * Update the max progress if the user's current progress is greater. The max progress tracks the overall progress
+         * of the report (hence is never reduced).
+         * @param progress
+         */
+        updateMaxProgress(progress: number) {
+            this.maxProgress = progress > this.maxProgress ? progress : this.maxProgress;
         }
     },
     getters: {
@@ -436,6 +447,14 @@ export const useFullStore = defineStore({
         },
         connectedTabletCount(state) {
             return state.tablets.filter(tablet => tablet.connected).length
+        },
+        /**
+         * Order the devices from the fullStore.deviceMap into a constant order based
+         * on the device type.
+         */
+        orderedDevices(state) {
+            const typeOrder: { [key: string]: number } = { 'station': 0, 'tablet': 1, 'nuc': 2, 'cbus': 3 };
+            return state.deviceMap.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
         }
     }
 });

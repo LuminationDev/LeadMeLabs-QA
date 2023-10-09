@@ -7,6 +7,8 @@ import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/
 import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
 import TheIMVR from "../tool-qa/components/fullCheck/screens/TheIMVR.vue";
 import BasicAutoCheck from "../tool-qa/components/fullCheck/AutoCheck.vue";
+import BasicReport from "../tool-qa/components/fullCheck/Report/BasicReport.vue";
+import OverallReport from "../tool-qa/components/fullCheck/Report/OverallReport.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -49,7 +51,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/27 * 100); //TODO WARNING: 27 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/34 * 100); //TODO WARNING: 34 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -176,24 +178,26 @@ const getLastRoute = (checkArray: CheckObject[]) => {
  */
 export const fullRoutes = [
     {
-        path: '/check/full',
-        name: 'full-description',
+        path: '/check/full/setup/devices',
+        name: 'full-setup-devices',
         component: FullCheck,
         meta: {
-            next: '/check/full/stations',
+            next: '/check/full/setup/config',
             nextText: 'Start Test',
-            prev: '/'
+            prev: '/',
+            progress: calculateProgress()
         }
     },
 
     {
-        path: '/check/full/stations',
-        name: 'full-stations',
+        path: '/check/full/setup/config',
+        name: 'full-setup-stations',
         component: Stations,
         meta: {
             next: '/check/full/appliances',
             nextText: 'Station Connection',
-            prev: '/check/full'
+            prev: '/check/full/setup/devices',
+            progress: calculateProgress()
         }
     },
 
@@ -207,19 +211,49 @@ export const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
-            prev: '/check/full/stations',
+            prev: '/check/full/setup/config',
             progress: calculateProgress()
         }
     },
 
-    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', getFirstRoute(NETWORK)),
-    ...generateRoutesFromObjectArray(NETWORK, getLastRoute(HARDWARE), '/check/full/windows/windows_checks'),
+    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', '/check/full/hardware/report'),
+
+    //HARDWARE REPORT
+    {
+        path: '/check/full/hardware/report',
+        name: 'full-hardware-report',
+        component: BasicReport,
+        meta: {
+            page: "hardware",
+            description: "Physical checks of Lab hardware",
+            next: getFirstRoute(NETWORK),
+            prev: getLastRoute(HARDWARE),
+            progress: calculateProgress()
+        }
+    },
+
+    ...generateRoutesFromObjectArray(NETWORK, '/check/full/hardware/report', '/check/full/network/report'),
     {
         // todo IPv4 settings
     },
     {
         // todo network checks from matt's notion, also station can access heroku, nuc can access heroku, cbus script id is correct
     },
+
+    //NETWORK REPORT
+    {
+        path: '/check/full/network/report',
+        name: 'full-network-report',
+        component: BasicReport,
+        meta: {
+            page: "network",
+            description: "TODO write something",
+            next: '/check/full/windows/windows_checks',
+            prev: getLastRoute(NETWORK),
+            progress: calculateProgress()
+        }
+    },
+
     //Manually add the automatic routes between the necessary checks
     {
         // todo - WOL -> Wake on magic packet
@@ -233,14 +267,44 @@ export const fullRoutes = [
             addComment: true,
             canRetry: true,
             next: getFirstRoute(WINDOWS),
-            prev: getLastRoute(NETWORK),
+            prev: '/check/full/network/report',
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(WINDOWS, '/check/full/windows/windows_checks',  getFirstRoute(SECURITY)),
-    // todo for security - and projector is not default
+    ...generateRoutesFromObjectArray(WINDOWS, '/check/full/windows/windows_checks',  '/check/full/windows/report'),
+
+    //WINDOWS REPORT
+    {
+        path: '/check/full/windows/report',
+        name: 'full-windows-report',
+        component: BasicReport,
+        meta: {
+            page: "windows",
+            description: "TODO write something",
+            next: getFirstRoute(SECURITY),
+            prev: getLastRoute(WINDOWS),
+            progress: calculateProgress()
+        }
+    },
+
+    // todo for security - projector is not default
     // todo - bring the auto tablet checks in here
-    ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  '/check/full/software/software_checks'),
+    ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  '/check/full/security/report'),
+
+    //SECURITY REPORT
+    {
+        path: '/check/full/security/report',
+        name: 'full-security-report',
+        component: BasicReport,
+        meta: {
+            page: "security",
+            description: "TODO write something",
+            next: '/check/full/software/software_checks',
+            prev: getLastRoute(SECURITY),
+            progress: calculateProgress()
+        }
+    },
+
     {
         path: '/check/full/software/software_checks',
         name: 'full-software-software_checks',
@@ -251,7 +315,7 @@ export const fullRoutes = [
             addComment: true,
             canRetry: true,
             next: '/check/full/software/steam_config_checks',
-            prev: getLastRoute(SECURITY),
+            prev: '/check/full/security/report',
             progress: calculateProgress()
         }
     },
@@ -269,7 +333,22 @@ export const fullRoutes = [
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(SOFTWARE, '/check/full/software/steam_config_checks',  '/check/full/imvr/experiences'),
+    ...generateRoutesFromObjectArray(SOFTWARE, '/check/full/software/steam_config_checks',  '/check/full/software/report'),
+
+    //SOFTWARE REPORT
+    {
+        path: '/check/full/software/report',
+        name: 'full-software-report',
+        component: BasicReport,
+        meta: {
+            page: "software",
+            description: "TODO write something",
+            next: '/check/full/imvr/experiences',
+            prev: getLastRoute(SOFTWARE),
+            progress: calculateProgress()
+        }
+    },
+
     {
         // todo - block this behind IMVR connection
         // todo - headset, base station and controller firmware, each station can detect two controllers, headset connection
@@ -285,7 +364,21 @@ export const fullRoutes = [
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  ""),
+    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  "/check/full/overall/report"),
     // todo - decide if needed - manual leadme labs ux checks
     // todo export and upload, including all json files
+
+    //OVERALL REPORT
+    {
+        path: '/check/full/overall/report',
+        name: 'full-overall-report',
+        component: OverallReport,
+        meta: {
+            page: "overall",
+            description: "TODO write something",
+            next: '',
+            prev: getLastRoute(IMVR),
+            progress: calculateProgress()
+        }
+    },
 ];

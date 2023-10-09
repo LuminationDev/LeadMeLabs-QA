@@ -16,6 +16,7 @@ const fullStore = useFullStore();
 const stateStore = useStateStore();
 const checking = ref("");
 
+//TODO run this after the initial connection to load all auto checks into the tracker (NEED TO WORK OUT PARENT VARIABLE)
 /**
  * Run through each of the automatic checks in this section. Adding the required details and target devices to the
  * fullStore.reportTracker.
@@ -159,8 +160,8 @@ onMounted(() => {
 <template>
   <GenericLayout :key="route.name">
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold">Title</p>
-      <p class="text-base text-black mb-6">{{checkType}}</p>
+      <p class="text-2xl text-black font-semibold mb-2">Title</p>
+      <p class="text-base text-black mb-4">{{checkType}}</p>
     </template>
 
     <template v-slot:content>

@@ -23,7 +23,7 @@ const categories = computed(() => {
     return {
       key: categoryKey,
       description: categoryValue.description,
-      devices: categoryValue.devices
+      targets: categoryValue.targets
     };
   });
 });
@@ -41,7 +41,7 @@ const checks = computed(() => {
     const checks = Object.entries(category.checks).map(([key, checkDetails]) => ({ key, description: checkDetails.description }));
     //Add the checks to the report tracker
     checks.forEach(check => {
-      fullStore.addCheckToReportTracker(parent, page, check, category.devices);
+      fullStore.addCheckToReportTracker(parent, page, check, category.targets);
     });
 
     return checks
@@ -58,14 +58,14 @@ const guides = computed(() => {
   } else {
     return [];
   }
-})
+});
 </script>
 
 <template>
   <GenericLayout>
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold">{{stateStore.generateTitle(route.meta['page'] as string)}}</p>
-      <p class="text-base text-black mb-6">{{checkDetails.description ?? "No description set"}}</p>
+      <p class="text-2xl text-black font-semibold mb-2">{{stateStore.generateTitle(route.meta['page'] as string)}}</p>
+      <p class="text-base text-black mb-4">{{checkDetails.description ?? "No description set"}}</p>
 
       <!--A tab for each category-->
       <div class="flex flex-row w-full overflow-auto">
@@ -105,8 +105,8 @@ const guides = computed(() => {
           <tr v-for="(item, index) in checks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="item.key" :message="item.description "/>
 
-            <td v-for="device in fullStore.deviceMap" class="text-center p-3">
-              <input v-if="categories[currentCategoryIndex].devices[device.type] === true"
+            <td v-for="device in fullStore.orderedDevices" class="text-center p-3">
+              <input v-if="categories[currentCategoryIndex].targets[device.type] === true"
                      :key="index + '-' + item.key"
                      :checked="device.checks[item.key]?.passedStatus === 'passed'"
                      type="checkbox" class="h-4 w-4"
