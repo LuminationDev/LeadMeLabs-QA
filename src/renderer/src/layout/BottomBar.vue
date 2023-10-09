@@ -37,10 +37,12 @@ const canProceed = computed(() => {
 });
 
 const addComment = (comment: string) => {
-  const key = route.meta['trackerName'];
-  if(key !== undefined) {
-    fullStore.reportTracker[key]['comment'] = comment;
-  }
+  //TODO finish this
+  // const key = route.meta['trackerName'];
+  // if(key !== undefined) {
+  //   fullStore.reportTracker[key]['comment'] = comment;
+  // }
+  console.log(comment);
 }
 
 /**

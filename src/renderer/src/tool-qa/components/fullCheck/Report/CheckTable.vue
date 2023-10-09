@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import CheckTableRow from "@renderer/tool-qa/components/fullCheck/Report/CheckTableRow.vue";
-import { CheckCategory } from "@renderer/tool-qa/interfaces/_routeItems";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
+import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
 
 const props = defineProps({
   parent: {
@@ -15,7 +15,7 @@ const props = defineProps({
     required: true
   },
   section: {
-    type: Object as () => {[key: string] :CheckCategory},
+    type: Object as () => {[key: string] :ReportCheck},
     required: true
   }
 });

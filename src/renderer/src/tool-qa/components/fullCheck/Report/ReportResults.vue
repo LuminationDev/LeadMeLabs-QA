@@ -15,7 +15,8 @@ const fullStore = useFullStore();
  * Show the user a quick view of the test results
  */
 const generateCategoryResults = computed(() => {
-  let { failed, skipped, passed, withoutComments, total } = { failed: 0, skipped: 0, passed: 0, withoutComments: 0, total: 0 };
+  let { failed, skipped, passed, failedWithoutComments, failedWithComments, total } =
+      { failed: 0, skipped: 0, passed: 0, failedWithoutComments: 0, failedWithComments: 0, total: 0 };
 
   for (const section in fullStore.reportTracker[props.parent]) {
     const categories = fullStore.reportTracker[props.parent][section];
@@ -46,12 +47,14 @@ const generateCategoryResults = computed(() => {
 
       //A device has failed a test and there is no comments.
       if (updateComments && comments.length === 0) {
-        withoutComments++;
+        failedWithoutComments++;
+      } else if (updateComments) { //A device failed but there was a comment
+        failedWithComments++;
       }
     }
   }
 
-  return { failed, skipped, passed, withoutComments, total };
+  return { failed, skipped, passed, failedWithoutComments, failedWithComments, total };
 });
 
 const passedStatusPercentage = computed(() => {
@@ -110,7 +113,8 @@ const skippedStatusPercentage = computed(() => {
         <div class="flex flex-col text-sm mb-3">
           <div class="font-semibold mb-1">Tests failed</div>
           <div v-if="generateCategoryResults.failed === 0">No tests were failed.</div>
-          <div v-else>{{generateCategoryResults.withoutComments}} without comment.</div>
+          <div v-else-if="generateCategoryResults.failedWithoutComments > 0">{{generateCategoryResults.failedWithoutComments}} without comment.</div>
+          <div v-else>{{generateCategoryResults.failedWithComments}} with comment.</div>
         </div>
 
         <div class="font-semibold text-4xl">{{generateCategoryResults.failed}}</div>
@@ -118,7 +122,10 @@ const skippedStatusPercentage = computed(() => {
 
       <div class="flex flex-row my-3 items-center px-3 pb-4">
         <div v-if="generateCategoryResults.failed === 0" class="w-full bg-green-600 rounded-full h-2 mx-1"/>
-        <div v-else v-for="error in generateCategoryResults.failed" class="w-full bg-red-700 rounded-full h-2 mx-1"/>
+        <template v-else>
+          <div v-for="error in generateCategoryResults.failedWithoutComments" class="w-full bg-red-700 rounded-full h-2 mx-1"/>
+          <div v-for="error in generateCategoryResults.failedWithComments" class="w-full bg-red-300 rounded-full h-2 mx-1"/>
+        </template>
       </div>
     </div>
   </div>

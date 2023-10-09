@@ -5,7 +5,7 @@ import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue"
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed, ref } from "vue";
-import { CheckCategory } from "@renderer/tool-qa/interfaces/_routeItems";
+import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
 
 const props = defineProps({
   checkId: {
@@ -13,7 +13,7 @@ const props = defineProps({
     required: true
   },
   check: {
-    type: Object as () => CheckCategory,
+    type: Object as () => ReportCheck,
     required: true
   },
   status: {
@@ -31,7 +31,10 @@ const expanded = ref(false);
  * Add a comment to the fullStore reportTracker item that has been selected
  */
 const addComment = (comment: string) => {
-  console.log(comment);
+  props.check.comments.push({
+    date: stateStore.formattedDate(true),
+    content: comment
+  });
 }
 
 //TODO ask Matt for clarification if a device that is not part of that test should be shown?
@@ -83,8 +86,7 @@ const generateCategoryStatus = computed(() => {
     </td>
 
     <td class="p-3 w-36 text-center">
-      <!--{{check.date}}-->
-      TODAY
+      {{check.date ?? "No"}}
     </td>
 
     <td class="p-3 w-28 font-semibold">
@@ -98,8 +100,8 @@ const generateCategoryStatus = computed(() => {
     </td>
 
     <td class="pl-6 p-3 w-28" v-on:click="currentlySelected = checkId">
-      <CommentModal :mode="check['comment'] !== undefined && check['comment'].length > 0 ? 'icon' : 'icon-empty'"
-                    :current-comment="check['comment']"
+      <CommentModal :mode="check['comments'] !== undefined && check['comments'].length > 0 ? 'icon' : 'icon-empty'"
+                    :current-comments="check['comments']"
                     :callback="addComment"/>
     </td>
   </tr>

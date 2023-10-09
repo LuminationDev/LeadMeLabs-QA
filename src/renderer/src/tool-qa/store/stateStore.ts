@@ -59,7 +59,7 @@ export const useStateStore = defineStore({
             return result;
         },
 
-        formattedDate(): string {
+        formattedDate(includeTime: boolean): string {
             const currentDate = new Date();
 
             const months = [
@@ -71,7 +71,28 @@ export const useStateStore = defineStore({
             const month = months[currentDate.getMonth()];
             const year = currentDate.getFullYear();
 
-            return `${month}, ${day}, ${year}`;
+            let date = `${month} ${day}, ${year}`;
+
+            if  (includeTime) {
+                date += ` @ ${this.getCurrentTime()}`;
+            }
+
+            return date;
+        },
+
+        getCurrentTime(): string {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const amOrPm = hours >= 12 ? 'pm' : 'am';
+
+            // Convert hours from 24-hour format to 12-hour format
+            hours = hours % 12 || 12;
+
+            // Add leading zero to minutes if needed
+            const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+
+            return `${hours}:${formattedMinutes}${amOrPm}`;
         },
 
         generateTitle(page: string): string {

@@ -6,7 +6,6 @@ defineProps({
     default: true
   }
 });
-
 </script>
 
 <template>
@@ -18,7 +17,7 @@ defineProps({
     leave-from-class="opacity-100 scale-100"
     leave-to-class="opacity-0 scale-110"
   >
-    <div v-if="show" @mousedown="$emit('close')" class="fixed inset-0 bg-modal-site-background grid place-items-center font-poppins">
+    <div v-if="show" @mousedown="$emit('close')" class="fixed inset-0 bg-modal-site-background grid place-items-center font-poppins z-20">
       <div @mousedown.stop class="bg-panel flex flex-col" :class="rounded ? 'rounded-lg' : ''">
         <slot name="header"></slot>
         <slot name="content"></slot>
