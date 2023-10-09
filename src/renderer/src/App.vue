@@ -73,7 +73,7 @@ const populateFullReportTracker = () => {
         fullStore.reportTracker[parent][page][check] ??= {
           description,
           comments: [],
-          targets: subCategory[Object.keys(subCategory)[0]].devices,
+          targets: subCategory[Object.keys(subCategory)[0]].targets,
           devices: {}
         };
       }

@@ -3,9 +3,11 @@ import MenuItem from "@renderer/layout/SideBar/FullCheck/components/MenuItem.vue
 import MenuSeparator from "@renderer/layout/SideBar/FullCheck/components/MenuSeparator.vue";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 
 const router = useRouter();
 const route = useRoute();
+const fullStore = useFullStore();
 
 /**
  * Check if the main category is currently active.
@@ -28,15 +30,13 @@ const isSubActive = (page: string) => {
 const isSeparatorActive = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
   const pageProgress = pageRoute.meta['progress'];
-  const currentProgress = route.meta['progress'];
 
-  return pageProgress < currentProgress;
+  return pageProgress < fullStore.maxProgress;
 }
 
 const currentTitleStatus = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
   const pageProgress = pageRoute.meta['progress'];
-  const currentProgress = route.meta['progress'];
 
   //Progress is equal to the screen's progress OR it is on the same local page but different tab
   if (route.path.includes(localRoute)) {
@@ -46,8 +46,8 @@ const currentTitleStatus = (localRoute: string) => {
     return 'complete';
   }
   //Progress is further than the screen's progress and the report is not complete
-  else if (pageProgress < currentProgress) {
-    return 'incomplete';
+  else if (pageProgress < fullStore.maxProgress) {
+    return 'complete';
   } else {
     return 'pending';
   }
@@ -59,11 +59,11 @@ const currentSubStatus = (localRoute: string) => {
   const currentProgress = route.meta['progress'];
 
   //Progress is less than the screen's progress
-  if (pageProgress > currentProgress) {
+  if (pageProgress > fullStore.maxProgress) {
     return 'pending';
 
     //Progress is equal to the screen's progress OR it is on the same local page but different tab
-  } else if ((pageProgress === currentProgress) || route.path.includes(localRoute)) {
+  } else if ((pageProgress === currentProgress) || (route.path.includes(localRoute) && pageProgress === fullStore.maxProgress)) {
     return 'active';
 
     //TODO relies on a report structure so not implemented yet
@@ -71,8 +71,8 @@ const currentSubStatus = (localRoute: string) => {
     return 'complete';
   }
   //Progress is further than the screen's progress and the report is not complete
-  else if (pageProgress < currentProgress) {
-    return 'incomplete';
+  else if (pageProgress < fullStore.maxProgress || (!route.path.includes(localRoute) && pageProgress === fullStore.maxProgress)) {
+    return 'complete';
   }
 }
 </script>

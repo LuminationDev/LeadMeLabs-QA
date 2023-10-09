@@ -8,6 +8,7 @@ import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
 import TheIMVR from "../tool-qa/components/fullCheck/screens/TheIMVR.vue";
 import BasicAutoCheck from "../tool-qa/components/fullCheck/AutoCheck.vue";
 import BasicReport from "../tool-qa/components/fullCheck/Report/BasicReport.vue";
+import OverallReport from "../tool-qa/components/fullCheck/Report/OverallReport.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -50,7 +51,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/33 * 100); //TODO WARNING: 33 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/34 * 100); //TODO WARNING: 34 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -365,7 +366,21 @@ export const fullRoutes = [
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  ""),
+    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  "/check/full/overall/report"),
     // todo - decide if needed - manual leadme labs ux checks
     // todo export and upload, including all json files
+
+    //OVERALL REPORT
+    {
+        path: '/check/full/overall/report',
+        name: 'full-overall-report',
+        component: OverallReport,
+        meta: {
+            page: "overall",
+            description: "TODO write something",
+            next: '',
+            prev: getLastRoute(IMVR),
+            progress: calculateProgress()
+        }
+    },
 ];

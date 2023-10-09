@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import CheckTableRow from "@renderer/tool-qa/components/fullCheck/Report/CheckTableRow.vue";
-import { CheckObject } from "@renderer/tool-qa/interfaces/_routeItems";
+import { CheckCategory } from "@renderer/tool-qa/interfaces/_routeItems";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
 
 const props = defineProps({
+  parent: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
+  },
   section: {
-    type: Object as () => CheckObject,
+    type: Object as () => {[key: string] :CheckCategory},
     required: true
   }
 });
@@ -16,19 +24,12 @@ const fullStore = useFullStore();
 const stateStore = useStateStore();
 
 /**
- * Condense the multiple categories (with their own sub checks) in a section into one array of checks.
- */
-const condensedChecks = () => {
-  return fullStore.reportTracker[props.section.parent][props.section.page];
-}
-
-/**
  * Show the user a quick view of if the tests were passed by all devices.
  */
 const generateCategoryStatus = computed(() => {
   let { failed, skipped, passed, total } = { failed: 0, skipped: 0, passed: 0, total: 0 };
 
-  const categories = fullStore.reportTracker[props.section.parent][props.section.page];
+  const categories = fullStore.reportTracker[props.parent][props.category];
 
   for (const key in categories) {
     const { devices } = categories[key];
@@ -55,7 +56,7 @@ const generateCategoryStatus = computed(() => {
   <div class="w-full mb-4 flex flex-col rounded-lg border-2 border-gray-200">
     <div class="flex flex-row items-center">
       <!--Category Title-->
-      <h2 class="font-semibold text-lg p-3">{{ stateStore.generateTitle(section.page) }}</h2>
+      <h2 class="font-semibold text-lg p-3">{{ stateStore.generateTitle(category) }}</h2>
 
       <!--Quick look at category status-->
       <div class="p-3 text-sm h-12 w-28 font-semibold">
@@ -77,7 +78,7 @@ const generateCategoryStatus = computed(() => {
         <th></th> <!--Empty on purpose-->
       </tr>
 
-      <template v-for="(check, key) in condensedChecks()">
+      <template v-for="(check, key) in props.section">
         <CheckTableRow :check-id="<string>key" :check="check" :status="'passed'"/>
       </template>
     </table>

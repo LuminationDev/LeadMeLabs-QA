@@ -40,7 +40,7 @@ const addComment = (comment: string) => {
  * @param device
  */
 const generateMessage = (device: any) => {
-  if (!props.check.devices[device.type]) {
+  if (!props.check.targets[device.type]) {
     return "Not applicable";
   }
 
@@ -111,7 +111,7 @@ const generateCategoryStatus = computed(() => {
           Devices:
         </div>
 
-        <div v-for="(device, index) in fullStore.deviceMap" :key="index" class="flex flex-row items-center">
+        <div v-for="(device, index) in fullStore.orderedDevices" :key="index" class="flex flex-row items-center">
           {{device.prefix}}{{device.id}}
           <StatusHover class="w-9"
                        :message="generateMessage(device)"

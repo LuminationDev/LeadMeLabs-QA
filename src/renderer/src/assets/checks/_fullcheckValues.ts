@@ -6,7 +6,7 @@
 //      - group
 //          - checks
 //          - description
-//          - devices (software/appliances the check relates to)
+//          - targets (software/appliances the check relates to)
 
 import { CheckObject } from "../../tool-qa/interfaces/_routeItems";
 import milesightSample from '../../assets/images/milesight-sample.png'
@@ -51,12 +51,13 @@ export const BATTERY: CheckObject = {
                     }
                 },
                 "description": "The LeadMe Storage Cabinet",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         },
         {
@@ -77,12 +78,13 @@ export const BATTERY: CheckObject = {
                     }
                 },
                 "description": "Samsung Tablets",
-                "devices": {
+                "targets": {
                     "station": false,
                     "tablet": true,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -111,12 +113,13 @@ export const VIDEO_CABLES: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             },
         },
         {
@@ -137,12 +140,13 @@ export const VIDEO_CABLES: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -184,12 +188,13 @@ export const PROJECTORS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             },
         }
     ]
@@ -257,12 +262,13 @@ export const KEYBOARD: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -304,12 +310,13 @@ export const BIOS_SETTINGS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": true,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -371,12 +378,13 @@ export const MILESIGHT_ROUTER: CheckObject = {
                     },
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": true,
                     "nuc": true,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -418,12 +426,13 @@ export const CBUS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": false,
                     "tablet": false,
                     "nuc": false,
                     "cbus": true
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -470,12 +479,13 @@ export const HANDOVER: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": true,
                     "nuc": true,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -530,12 +540,13 @@ export const DRIVERS: CheckObject = {
                     },
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": true,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         },
         {
@@ -556,12 +567,13 @@ export const DRIVERS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -590,12 +602,13 @@ export const EXECUTABLES: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": true,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -627,12 +640,13 @@ export const PASSWORDS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         },
         {
@@ -653,12 +667,13 @@ export const PASSWORDS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": false,
                     "tablet": false,
                     "nuc": true,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         },
         {
@@ -692,12 +707,13 @@ export const PASSWORDS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         },
         {
@@ -718,12 +734,13 @@ export const PASSWORDS: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": false,
                     "tablet": false,
                     "nuc": false,
                     "cbus": true
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -765,12 +782,13 @@ export const LEADME_SECURITY: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": false,
                     "tablet": true,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -832,12 +850,13 @@ export const STEAM: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -912,12 +931,13 @@ export const VIVE: CheckObject = {
                     },
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
@@ -998,12 +1018,13 @@ export const VIRTUAL_REALITY: CheckObject = {
                     }
                 },
                 "description": "Put something here later",
-                "devices": {
+                "targets": {
                     "station": true,
                     "tablet": false,
                     "nuc": false,
                     "cbus": false
-                }
+                },
+                "devices": {}
             }
         }
     ]
