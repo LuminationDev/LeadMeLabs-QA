@@ -74,6 +74,13 @@ const filteredChecks = computed(() => {
 });
 
 /**
+ * Collect the 'parent' page which is the section the auto check belongs in. Use this as a title.
+ */
+const getTitle = computed(() => {
+  return stateStore.generateTitle(<string>route.meta['parent']);
+});
+
+/**
  * Watch the qaCheck, iterate over the values when they update looking at the stations/tablets/nuc/cbus values to see
  * if the checkingStatus is still 'checking', when none of them are then it means the qa check is complete or timed out.
  */
@@ -133,7 +140,7 @@ onMounted(() => {
 <template>
   <GenericLayout :key="route.name">
     <template v-slot:title>
-      <p class="text-2xl text-black font-semibold mb-2">{{stateStore.generateTitle(route.meta['parent'])}}</p>
+      <p class="text-2xl text-black font-semibold mb-2">{{getTitle}}</p>
       <!--TODO work out how to get a description-->
       <p class="text-base text-black mb-4">{{checkType}}</p>
     </template>
