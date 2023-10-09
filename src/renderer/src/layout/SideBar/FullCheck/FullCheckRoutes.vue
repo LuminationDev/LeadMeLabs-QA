@@ -47,12 +47,12 @@ const router = useRouter();
         <div class="w-40 relative">
           <div
               class="bg-slate-800 rounded-full h-2 absolute z-10"
-              :style="{ width: route.meta['progress'] + '%' }"
+              :style="{ width: fullStore.maxProgress + '%' }"
           ></div>
           <div class="w-40 bg-zinc-300 rounded-full h-2 absolute"></div>
         </div>
         <div class="flex justify-start h-3.5 ml-3 w-6">
-          <span class="text-sm font-semibold">{{ route.meta['progress'] }}%</span>
+          <span class="text-sm font-semibold">{{ fullStore.maxProgress }}%</span>
         </div>
       </div>
     </div>

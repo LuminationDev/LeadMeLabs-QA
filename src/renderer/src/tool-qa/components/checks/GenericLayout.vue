@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { watch } from "vue";
+import { useRoute } from "vue-router";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+
 defineProps({
   separator: {
     type: Boolean,
@@ -6,6 +10,17 @@ defineProps({
     default: true
   }
 });
+
+const route = useRoute();
+const fullStore = useFullStore();
+
+const updateOverallProgress = () => {
+  if (route.meta['progress']) {
+    fullStore.updateMaxProgress(<number>route.meta['progress']);
+  }
+}
+
+watch(route, updateOverallProgress);
 </script>
 
 <template>

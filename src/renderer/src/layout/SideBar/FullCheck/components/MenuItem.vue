@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import base from '@renderer/assets/icons/nav-icon-base.svg';
-import { useRouter } from "vue-router";
 import NavIconActive from "@renderer/assets/icons/NavIconActive.vue";
 import NavIconComplete from "@renderer/assets/icons/NavIconComplete.vue";
+import { useRouter } from "vue-router";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { computed } from "vue";
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -29,7 +31,30 @@ defineProps({
   }
 });
 
+const fullStore = useFullStore();
 const router = useRouter();
+
+/**
+ * Only allow the user to navigate to a new menu item if they have progressed to that point already.
+ */
+const attemptToPushRoute = () => {
+  const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
+  const pageProgress = pageRoute.meta['progress'];
+
+  if(pageProgress <= fullStore.maxProgress) {
+    router.push(props.route)
+  }
+}
+
+/**
+ * Check if a user is able to click on link.
+ */
+const clickable = computed(() => {
+  const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
+  const pageProgress = pageRoute.meta['progress'];
+
+  return pageProgress <= fullStore.maxProgress;
+});
 </script>
 
 <template>
@@ -41,7 +66,7 @@ const router = useRouter();
       <NavIconComplete v-else-if="status === 'complete'" :fill="setup ? '#7839EE': '#1570EF'"/>
     </div>
 
-    <div @click="router.push(route)" class="cursor-pointer text-sm" :class="{'font-semibold': status === 'active'}">
+    <div @click="attemptToPushRoute" class="text-sm" :class="{'font-semibold': status === 'active', 'cursor-pointer': clickable}">
       {{title}}
     </div>
   </div>

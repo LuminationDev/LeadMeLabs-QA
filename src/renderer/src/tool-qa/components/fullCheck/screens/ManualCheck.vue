@@ -58,7 +58,7 @@ const guides = computed(() => {
   } else {
     return [];
   }
-})
+});
 </script>
 
 <template>
@@ -105,7 +105,7 @@ const guides = computed(() => {
           <tr v-for="(item, index) in checks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="item.key" :message="item.description "/>
 
-            <td v-for="device in fullStore.deviceMap" class="text-center p-3">
+            <td v-for="device in fullStore.orderedDevices" class="text-center p-3">
               <input v-if="categories[currentCategoryIndex].devices[device.type] === true"
                      :key="index + '-' + item.key"
                      :checked="device.checks[item.key]?.passedStatus === 'passed'"

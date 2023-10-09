@@ -40,7 +40,6 @@ const addComment = (comment: string) => {
  * @param device
  */
 const generateMessage = (device: any) => {
-  console.log(props.check);
   if (!props.check.targets[device.type]) {
     return "Not applicable";
   }
@@ -71,6 +70,15 @@ const generateCategoryStatus = computed(() => {
   if (failed > 0) return 'failed';
   if (passed === total) return 'passed';
 });
+
+/**
+ * Order the devices from the fullStore.deviceMap into a constant order based
+ * on the device type.
+ */
+// const orderDevices = computed(() => {
+//   const typeOrder: { [key: string]: number } = { 'station': 0, 'tablet': 1, 'nuc': 2, 'cbus': 3 };
+//   return fullStore.deviceMap.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
+// });
 </script>
 
 <template>
@@ -112,7 +120,7 @@ const generateCategoryStatus = computed(() => {
           Devices:
         </div>
 
-        <div v-for="(device, index) in fullStore.deviceMap" :key="index" class="flex flex-row items-center">
+        <div v-for="(device, index) in fullStore.orderedDevices" :key="index" class="flex flex-row items-center">
           {{device.prefix}}{{device.id}}
           <StatusHover class="w-9"
                        :message="generateMessage(device)"
