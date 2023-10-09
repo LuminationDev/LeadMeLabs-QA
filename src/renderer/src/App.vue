@@ -14,6 +14,7 @@ import { storeToRefs } from "pinia";
 import { Station } from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
+import {QaCheckResult} from "@renderer/tool-qa/types/_qaCheckResult";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -61,7 +62,7 @@ const populateQuickReportTracker = (data: string) => {
  * The individual checks will be added when that page is visited. If no checks are present in a section or category it
  * is considered skipped.
  */
-const populateFullReportTracker = () => {
+const populateFullReportTrackerWithManualChecks = () => {
   for (const { parent, page, category } of ALL_VALUES.flat()) {
     fullStore.reportTracker[parent] ??= {};
     fullStore.reportTracker[parent][page] ??= {};
@@ -80,7 +81,33 @@ const populateFullReportTracker = () => {
     }
   }
 };
-populateFullReportTracker();
+populateFullReportTrackerWithManualChecks();
+
+/**
+ * Run through each of the automatic checks in each section. Adding the required details and target devices to the
+ * fullStore.reportTracker. The specific devices are then added on the auto check page when the results come in.
+ */
+const populateFullReportTrackerWithAutoChecks = () => {
+  fullStore.qaGroups
+    .forEach(group => {
+      if (group.section !== null) {
+        group.checks.forEach(check => {
+          const targetDevices = determineTargetDevices(check);
+          const checkItems = {key: check.id, description: check.extendedDescription}
+          fullStore.addCheckToReportTracker(group.section, group.id, checkItems, targetDevices);
+        });
+      }
+    });
+}
+
+const determineTargetDevices = (check: QaCheckResult) => {
+  return {
+    "station": check.stations.length > 0,
+    "tablet": check.tablets.length > 0,
+    "nuc": check.nuc.length > 0,
+    "cbus": check.cbus.length > 0
+  };
+};
 
 /**
  * Check the value of a Station's key against the known correct values.
@@ -259,6 +286,7 @@ const handleTCPMessage = (info: any) => {
         })
       })
       fullStore.buildQaList(); //Build the QaList on connection response
+      populateFullReportTrackerWithAutoChecks(); //
       break;
     }
     case "TabletConnected": {
