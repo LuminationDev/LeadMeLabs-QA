@@ -362,7 +362,7 @@ export const useFullStore = defineStore({
          * @param check
          * @param targetDevices
          */
-        addCheckToReportTracker(parent: string, page: string, check, targetDevices) {
+        addCheckToReportTracker(parent: string, page: string, check, targetDevices: {}) {
             const checkKey = check.key;
             const reportTracker = this.reportTracker[parent][page] ||= {};
 
@@ -402,6 +402,7 @@ export const useFullStore = defineStore({
 
             // Update the passedStatus based on the event
             if (device) {
+                this.reportTracker[parent][page][checkId]['date'] = useStateStore().formattedDate(false);
                 this.reportTracker[parent][page][checkId].devices[deviceId] = info;
             }
 

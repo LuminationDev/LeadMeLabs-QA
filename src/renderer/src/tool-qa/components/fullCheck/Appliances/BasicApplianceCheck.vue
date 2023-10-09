@@ -55,7 +55,7 @@ const hasPassed = computed(() => {
           <div>{{stateStore.capitalizeFirstLetter(typeof type === "string" ? type : "Unknown")}}</div>
         </td>
         <td class="w-48 flex justify-center">
-          <div>{{stateStore.formattedDate()}}</div>
+          <div>{{stateStore.formattedDate(false)}}</div>
         </td>
         <td class="w-56">
           <div>Status: {{hasPassed}}</div>

@@ -42,7 +42,7 @@ const updateDeviceMap = (idKey, item, check) => {
     passedStatus: item.passedStatus,
     checkingStatus: item.checkingStatus,
     message: item.message,
-    date: stateStore.formattedDate()
+    date: stateStore.formattedDate(false)
   };
 
   fullStore.updateReport(<string>route.meta['parent'], <string>checkType.value, info, check.id, idKey);
