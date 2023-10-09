@@ -238,7 +238,6 @@ export const fullRoutes = [
     },
     {
         // todo network checks from matt's notion, also station can access heroku, nuc can access heroku, cbus script id is correct
-        // todo maybe arp tablet comparison
     },
 
     //NETWORK REPORT
@@ -257,8 +256,8 @@ export const fullRoutes = [
 
     //Manually add the automatic routes between the necessary checks
     {
-        // todo - task scheduler, driver easy, nvidia not installed, WOL -> Wake on magic packet, enabled in firewall, launcher enabled in firewall
-        // todo - wallpaper to station name, date time to be manual when offline
+        // todo - WOL -> Wake on magic packet
+        // todo - date time to be manual when offline
         path: '/check/full/windows/windows_checks',
         name: 'full-windows-windows_checks',
         component: BasicAutoCheck,
@@ -288,7 +287,7 @@ export const fullRoutes = [
         }
     },
 
-    // todo for security - auto check steam and cbus complexity, auto check milesight and projector is not default
+    // todo for security - projector is not default
     // todo - bring the auto tablet checks in here
     ...generateRoutesFromObjectArray(SECURITY, getLastRoute(WINDOWS),  '/check/full/security/report'),
 
@@ -321,7 +320,6 @@ export const fullRoutes = [
         }
     },
     {
-        // todo - steam install location, play area red, steam guard disabled auto
         path: '/check/full/software/steam_config_checks',
         name: 'full-software-steam_config_checks',
         component: BasicAutoCheck,
