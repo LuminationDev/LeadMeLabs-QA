@@ -57,6 +57,12 @@ const generateCategoryResults = computed(() => {
 const passedStatusPercentage = computed(() => {
   return generateCategoryResults.value.total ? ((generateCategoryResults.value.passed / generateCategoryResults.value.total) * 100).toFixed(0) : 0;
 });
+
+const skippedStatusPercentage = computed(() => {
+  const percent = ((generateCategoryResults.value.skipped / generateCategoryResults.value.total) * 100).toFixed(0);
+  const leftover = passedStatusPercentage.value;
+  return parseInt(percent) + parseInt(<string>leftover);
+});
 </script>
 
 <template>
@@ -68,8 +74,13 @@ const passedStatusPercentage = computed(() => {
           <div class="font-semibold mb-1">
             Test results
           </div>
-          <div>
-            {{generateCategoryResults.passed}} out of {{generateCategoryResults.total}} tests were passed.
+          <div class="flex flex-row">
+            <div>
+              {{generateCategoryResults.passed}} out of {{generateCategoryResults.total}} tests were passed.
+            </div>
+            <div v-if="generateCategoryResults.skipped > 0" class="ml-1">
+              {{generateCategoryResults.skipped}} were skipped.
+            </div>
           </div>
         </div>
 
@@ -80,6 +91,10 @@ const passedStatusPercentage = computed(() => {
 
       <div class="flex flex-row my-3 items-center">
         <div class="w-full relative">
+          <div
+              class="bg-blue-300 rounded-full h-2 absolute z-[5]"
+              :style="{ width: skippedStatusPercentage + '%' }"
+          ></div>
           <div
               class="bg-blue-500 rounded-full h-2 absolute z-10"
               :style="{ width: passedStatusPercentage + '%' }"
