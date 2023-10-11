@@ -16,8 +16,8 @@ const props = defineProps({
 });
 
 const status = computed(() => {
-  return props.device.checks[props.title]?.passedStatus;
-})
+  return props.device.checks[props.title]?.passedStatus ?? 'skipped';
+});
 </script>
 
 <template>

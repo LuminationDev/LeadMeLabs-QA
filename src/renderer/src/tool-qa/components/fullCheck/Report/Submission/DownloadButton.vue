@@ -68,7 +68,7 @@ const createHtmlContent = () => {
   </div>
 
   <!--Generate the report to convert to pdf, can be kept hidden and the content is picked up by the id-->
-  <div class="flex flex-col hidden" id="report">
+  <div class="flex flex-col" id="report">
     <PDFStructure v-for="(sections, title) in fullStore.reportTracker" :page="title" />
   </div>
 </template>

@@ -21,6 +21,7 @@ const checkDetails = computed(() => {
 });
 </script>
 
+<!--TODO fix the following for some tests and all auto checks - check.id does not match-->
 <template>
   <div class="flex flex-col" v-for="(section, page) in checkDetails" :key="page">
     <div class="font-semibold text-lg">
@@ -37,7 +38,7 @@ const checkDetails = computed(() => {
       <!--Devices with tests results-->
       <div>Devices:</div>
       <div v-for="(device, index) in fullStore.orderedDevices" :key="index">
-        <PDFDevices v-if="category.targets[device.type]" :title="stateStore.generateTitle(title)" :device="device"/>
+        <PDFDevices v-if="category.targets[device.type]" :title="title" :device="device"/>
       </div>
     </div>
 

@@ -98,7 +98,7 @@ export const VIDEO_CABLES: CheckObject = {
         {
             "HDMI": {
                 "checks": {
-                    "Video cable": {
+                    "Video Cable": {
                         description: "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector.",
                         guide: [
                             {
@@ -125,7 +125,7 @@ export const VIDEO_CABLES: CheckObject = {
         {
             "Other": {
                 "checks": {
-                    "Additional cables": {
+                    "Additional Cables": {
                         description: "If additional cables are connected for Presentation mode, they are connected to a secondary display input.",
                         guide: [
                             {
@@ -160,7 +160,7 @@ export const PROJECTORS: CheckObject = {
         {
             "Projectors": {
                 "checks": {
-                    "Visual quality": {
+                    "Visual Quality": {
                         description: "Projector is displaying in the correct orientation, with no warping or blurriness.",
                         guide: [
                             {
@@ -206,9 +206,9 @@ export const KEYBOARD: CheckObject = {
     "description": "Keyboard connection to station",
     "category": [
         {
-            "Keyboard": {
+            "TODO": {
                 "checks": {
-                    "Usb receiver": {
+                    "USB Receiver": {
                         description: "The keyboard has been paired with a USB receiver.",
                         guide: [
                             {
@@ -221,7 +221,7 @@ export const KEYBOARD: CheckObject = {
                             }
                         ]
                     },
-                    "Recovery mode": {
+                    "Recovery Mode": {
                         description: "The keyboard works in Windows Recovery Mode.",
                         guide: [
                             {
@@ -247,7 +247,7 @@ export const KEYBOARD: CheckObject = {
                             }
                         ]
                     },
-                    "Bios mode": {
+                    "BIOS Mode": {
                         description: "The keyboard works in BIOS menu.",
                         guide: [
                             {
@@ -280,9 +280,9 @@ export const BIOS_SETTINGS: CheckObject = {
     "description": "Startup and reboot settings",
     "category": [
         {
-            "Bios": {
+            "TODO": {
                 "checks": {
-                    "Wake on lan": {
+                    "Wake on LAN": {
                         description: "Wake on LAN is enabled.",
                         guide: [
                             {
@@ -295,7 +295,7 @@ export const BIOS_SETTINGS: CheckObject = {
                             }
                         ]
                     },
-                    "Restore power": {
+                    "Restore Power": {
                         description: "Restore Power after AC loss is set to 'Power On’.",
                         guide: [
                             {
@@ -350,7 +350,7 @@ export const MILESIGHT_ROUTER: CheckObject = {
                             }
                         ]
                     },
-                    "Ip address": {
+                    "IP Address": {
                         description: "Device has the correct IP address in the Milesight Router web interface.",
                         guide: [
                             {
@@ -363,7 +363,7 @@ export const MILESIGHT_ROUTER: CheckObject = {
                             }
                         ]
                     },
-                    "Config file": { // todo - this should only need one check
+                    "Config File": { // todo - this should only need one check
                         description: "The master Config file is uploaded in the Milesight Router web interface.",
                         guide: [
                             {
@@ -464,7 +464,7 @@ export const HANDOVER: CheckObject = {
                             }
                         ]
                     },
-                    "Mac address": {
+                    "MAC Address": {
                         description: "MAC Address is set and recorded in the Lab Handover Doc.",
                         guide: [
                             {
@@ -512,7 +512,7 @@ export const DRIVERS: CheckObject = {
                             }
                         ]
                     },
-                    "Device manager": {
+                    "Devices": {
                         description: "Any device drivers with warning symbols have been resolved.",
                         guide: [
                             {
@@ -552,7 +552,7 @@ export const DRIVERS: CheckObject = {
         {
             "AMD": {
                 "checks": {
-                    "Amd adrenalin": {
+                    "AMD Adrenalin": {
                         description: "AMD Adrenalin is set to only run recommended updates (not recommended + optional).",
                         guide: [
                             {
@@ -652,7 +652,7 @@ export const PASSWORDS: CheckObject = {
         {
             "Router": {
                 "checks": {
-                    "Milesight router": {
+                    "MileSight Router": {
                         description: "The milesight router has a complex password and is logged in Bitwarden.",
                         guide: [
                             {
@@ -679,7 +679,7 @@ export const PASSWORDS: CheckObject = {
         {
             "Steam": {
                 "checks": {
-                    "Steam account": {
+                    "Steam Account": {
                         description: "The Steam accounts have complex passwords and is logged in Bitwarden.",
                         guide: [
                             {
@@ -692,7 +692,7 @@ export const PASSWORDS: CheckObject = {
                             }
                         ]
                     },
-                    "Family mode pin": {
+                    "Family Mode PIN": {
                         description: "Family mode PIN is unique and is logged in Bitwarden.",
                         guide: [
                             {
@@ -719,7 +719,7 @@ export const PASSWORDS: CheckObject = {
         {
             "C-Bus": {
                 "checks": {
-                    "C-bus": {
+                    "C-Bus": {
                         description: "The C-Bus has a complex password and is logged in Bitwarden.",
                         guide: [
                             {
@@ -754,7 +754,7 @@ export const LEADME_SECURITY: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Tablet pin": {
+                    "Tablet PIN": {
                         description: "LeadMe Tablet PIN is unique and is logged in Bitwarden.",
                         guide: [
                             {
@@ -767,7 +767,7 @@ export const LEADME_SECURITY: CheckObject = {
                             }
                         ]
                     },
-                    "Google account": {
+                    "Google Account": {
                         description: "LeadMe Tablet Google account is unique, has a complex password, and is logged in Bitwarden.",
                         guide: [
                             {
@@ -809,7 +809,7 @@ export const STEAM: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Steam guard": {
+                    "Steam Guard": {
                         description: "Security settings: Steamguard is disabled.",
                         guide: [
                             {
@@ -822,7 +822,7 @@ export const STEAM: CheckObject = {
                             }
                         ]
                     },
-                    "Remote play": {
+                    "Remote Play": {
                         description: "Remote Play: Disable all settings.",
                         guide: [
                             {
@@ -877,7 +877,7 @@ export const VIVE: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "Vive wireless": {
+                    "VIVE Wireless": {
                         description: "The display and power cables are plugged in at the back of the wireless unit.",
                         guide: [
                             {
@@ -903,7 +903,7 @@ export const VIVE: CheckObject = {
                             }
                         ]
                     },
-                    "Base stations": {
+                    "Base Stations": {
                         description: "Each base station is operating on a unique channel.",
                         guide: [
                             {
@@ -916,7 +916,7 @@ export const VIVE: CheckObject = {
                             }
                         ]
                     },
-                    "Hardware condition": {
+                    "Hardware Condition": {
                         description: "There aren't signs of physical damage to the headsets or controllers.",
                         guide: [
                             {
@@ -951,7 +951,7 @@ export const VIRTUAL_REALITY: CheckObject = {
         {
             "TODO": {
                 "checks": {
-                    "VR room setup": {
+                    "VR Room Setup": {
                         description: "The floor in-experience is the same height as the physical floor, and the headset experience faces the projector screen.",
                         guide: [
                             {
@@ -964,7 +964,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                             }
                         ]
                     },
-                    "Boundary perimeter": {
+                    "Boundary Perimeter": {
                         description: "The perimeter of the boundary is visible when moving around near the LED ring, and once outside the active experience is hidden.",
                         guide: [
                             {
@@ -977,7 +977,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                             }
                         ]
                     },
-                    "Headset tracking": {
+                    "Headset Tracking": {
                         description: "The headset doesn't drop out when moving around the play space.",
                         guide: [
                             {
@@ -990,7 +990,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                             }
                         ]
                     },
-                    "Controller tracking": {
+                    "Controller Tracking": {
                         description: "When the boundary is traced in Tiltbrush at low, mid and high heights, the end result shows a consistent brush stroke.",
                         guide: [
                             {
@@ -1003,7 +1003,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                             }
                         ]
                     },
-                    "Headset inactivity": {
+                    "Headset Inactivity": {
                         description: "When an experience is left inactive for 5+ minutes, it can be picked up and resumed without the headset going blank.",
                         guide: [
                             {
