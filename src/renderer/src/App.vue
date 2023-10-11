@@ -56,6 +56,30 @@ const populateQuickReportTracker = (data: string) => {
   quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
 };
 
+/**
+ * Check the value of a Station's key against the known correct values.
+ * @param key A string of the object's key
+ * @param value The current value to check if correct.
+ */
+const isCorrectValue = (key: string, value: any) => {
+  const temp = key.toLowerCase();
+
+  switch (temp) {
+    case "id":
+      return value == quickStore.correctStationValues['StationId'];
+
+    case "name":
+      return value == `Station ${quickStore.correctStationValues['StationId']}`;
+
+    case "lablocation":
+      return value == stateStore.labLocation;
+  }
+
+  if (quickStore.correctStationValues[key] === undefined) {
+    return undefined;
+  }
+}
+
 //TODO load in the auto checks?
 /**
  * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
@@ -82,56 +106,6 @@ const populateFullReportTrackerWithManualChecks = () => {
   }
 };
 populateFullReportTrackerWithManualChecks();
-
-/**
- * Run through each of the automatic checks in each section. Adding the required details and target devices to the
- * fullStore.reportTracker. The specific devices are then added on the auto check page when the results come in.
- */
-const populateFullReportTrackerWithAutoChecks = () => {
-  fullStore.qaGroups
-    .forEach(group => {
-      if (group.section !== null) {
-        group.checks.forEach(check => {
-          const targetDevices = determineTargetDevices(check);
-          const checkItems = {key: check.id, description: check.extendedDescription}
-          fullStore.addCheckToReportTracker(group.section, group.id, checkItems, targetDevices);
-        });
-      }
-    });
-}
-
-const determineTargetDevices = (check: QaCheckResult) => {
-  return {
-    "station": check.stations.length > 0,
-    "tablet": check.tablets.length > 0,
-    "nuc": check.nuc.length > 0,
-    "cbus": check.cbus.length > 0
-  };
-};
-
-/**
- * Check the value of a Station's key against the known correct values.
- * @param key A string of the object's key
- * @param value The current value to check if correct.
- */
-const isCorrectValue = (key: string, value: any) => {
-  const temp = key.toLowerCase();
-
-  switch (temp) {
-    case "id":
-      return value == quickStore.correctStationValues['StationId'];
-
-    case "name":
-      return value == `Station ${quickStore.correctStationValues['StationId']}`;
-
-    case "lablocation":
-      return value == stateStore.labLocation;
-  }
-
-  if (quickStore.correctStationValues[key] === undefined) {
-    return undefined;
-  }
-}
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then
@@ -234,6 +208,19 @@ const handleTCPMessage = (info: any) => {
       fullStore.updateQaChecks('nuc', group, qaChecks)
       break;
     }
+    case "RunTabletGroup": {
+      const group = response.responseData.group
+      const qaChecks = response.responseData.data.map(element => {
+        var qa = {} as QaCheck
+        qa.passedStatus = element._passedStatus ?? element.passedStatus
+        qa.message = element._message ?? element.message
+        qa.id = element._id ?? element.id
+        return qa
+      });
+      fullStore.qaChecks.push(...qaChecks)
+      fullStore.updateQaChecks('tablet:' + response.ipAddress, group, qaChecks)
+      break;
+    }
     case "ExperienceLaunchAttempt": {
       const status = response.responseData.result
       const message = response.responseData.message
@@ -286,8 +273,6 @@ const handleTCPMessage = (info: any) => {
           }
         })
       })
-      fullStore.buildQaList(); //Build the QaList on connection response
-      populateFullReportTrackerWithAutoChecks(); //
       break;
     }
     case "TabletConnected": {

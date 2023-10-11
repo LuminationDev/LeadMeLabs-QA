@@ -172,7 +172,11 @@ export const useFullStore = defineStore({
             const stationCanAccessStationHosting = new QaCheckResult("can_access_station_hosting", "auto", 10000, stationIds, false, false, [], "Access Station Hosting", "Checks that we can access the station hosting server")
             const canAccessLauncherHosting = new QaCheckResult("can_access_launcher_hosting", "auto", 10000, stationIds, true, false, [], "Access Launcher Hosting", "Checks that we can access the launcher hosting server")
             const milesightNotDefaultPassword = new QaCheckResult("milesight_not_default_password", "auto", 10000, [], true, false, [], "Milesight not default", "Checks that the milesight router is not set with the default password")
-            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, milesightNotDefaultPassword)
+            const canReachPlayStore = new QaCheckResult("can_reach_play_store", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "Can reach play store", "Tablet can reach play store through the network")
+            const canReachAnalytics = new QaCheckResult("can_reach_analytics", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "Can reach analytics", "Tablet can reach analytics through the network")
+            const canReachSentry = new QaCheckResult("can_reach_sentry", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "Can reach sentry", "Tablet can reach sentry through the network")
+            const canReachSteamStatic = new QaCheckResult("can_reach_steam_static", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "Can reach steam static", "Tablet can reach steam static through the network")
+            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, milesightNotDefaultPassword, canReachPlayStore, canReachAnalytics, canReachSentry, canReachSteamStatic)
             networkChecks.requirements = ["station_connection_checks"]
 
             const windowsChecks = new QaGroup("windows_checks", "windows")
@@ -200,7 +204,9 @@ export const useFullStore = defineStore({
 
             const securityChecks = new QaGroup("security_checks", "security")
             const cbusPasswordComplexity = new QaCheckResult("cbus_password_complexity", "auto", 10000, [], true, false, [], "CBus password complexity", "Is CBus password complex enough?")
-            securityChecks.checks.push(cbusPasswordComplexity)
+            const appAppToDate = new QaCheckResult("app_up_to_date", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "App up to date", "LeadMe Labs is up to date")
+            const pinNotDefault = new QaCheckResult("pin_is_not_default", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "Pin not default", "Pin is not default")
+            securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
 
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
@@ -258,6 +264,14 @@ export const useFullStore = defineStore({
                     actionData: {
                         group: group.id,
                         stationIds: ['all'] // todo, method for this
+                    }
+                })
+
+                this.sendMessage({
+                    action: CONSTANT.ACTION.RUN_TABLET_GROUP,
+                    actionData: {
+                        group: group.id,
+                        tabletIps: this.getConnectedTabletIpAddresses
                     }
                 })
 
@@ -467,6 +481,10 @@ export const useFullStore = defineStore({
         },
         connectedTabletCount(state) {
             return state.tablets.filter(tablet => tablet.connected).length
+        },
+
+        getConnectedTabletIpAddresses(state): Array<string> {
+            return state.tablets.filter(tablet => tablet.connected).map(tablet => tablet.ipAddress)
         },
         /**
          * Order the devices from the fullStore.deviceMap into a constant order based
