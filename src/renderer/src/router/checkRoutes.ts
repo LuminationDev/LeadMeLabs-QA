@@ -51,7 +51,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/34 * 100); //TODO WARNING: 34 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/36 * 100); //TODO WARNING: 36 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -226,13 +226,27 @@ export const fullRoutes = [
         meta: {
             page: "hardware",
             description: "Physical checks of Lab hardware",
-            next: getFirstRoute(NETWORK),
+            next: '/check/full/network/network_checks',
             prev: getLastRoute(HARDWARE),
             progress: calculateProgress()
         }
     },
 
-    ...generateRoutesFromObjectArray(NETWORK, '/check/full/hardware/report', '/check/full/network/report'),
+    {
+        path: '/check/full/network/network_checks',
+        name: 'full-network-network_checks',
+        component: BasicAutoCheck,
+        meta: {
+            parent: 'network',
+            checkType: 'network_checks',
+            addComment: true,
+            canRetry: true,
+            next: getFirstRoute(NETWORK),
+            prev: '/check/full/hardware/report',
+            progress: calculateProgress()
+        }
+    },
+    ...generateRoutesFromObjectArray(NETWORK, '/check/full/network/network_checks', '/check/full/network/report'),
     {
         // todo IPv4 settings
     },
@@ -249,7 +263,7 @@ export const fullRoutes = [
             page: "network",
             description: "TODO write something in checkRoutes",
             next: '/check/full/windows/windows_checks',
-            prev: getLastRoute(NETWORK),
+            prev: '/check/full/network/network_checks',
             progress: calculateProgress()
         }
     },
@@ -281,7 +295,7 @@ export const fullRoutes = [
         meta: {
             page: "windows",
             description: "TODO write something in checkRoutes",
-            next: getFirstRoute(SECURITY),
+            next: '/check/full/security/security_checks',
             prev: getLastRoute(WINDOWS),
             progress: calculateProgress()
         }
@@ -289,7 +303,21 @@ export const fullRoutes = [
 
     // todo for security - projector is not default
     // todo - bring the auto tablet checks in here
-    ...generateRoutesFromObjectArray(SECURITY, '/check/full/windows/report',  '/check/full/security/report'),
+    {
+        path: '/check/full/security/security_checks',
+        name: 'full-security-security_checks',
+        component: BasicAutoCheck,
+        meta: {
+            parent: 'security',
+            checkType: 'security_checks',
+            addComment: true,
+            canRetry: true,
+            next: getFirstRoute(SECURITY),
+            prev: '/check/full/windows/report',
+            progress: calculateProgress()
+        }
+    },
+    ...generateRoutesFromObjectArray(SECURITY, '/check/full/security/security_checks',  '/check/full/security/report'),
 
     //SECURITY REPORT
     {

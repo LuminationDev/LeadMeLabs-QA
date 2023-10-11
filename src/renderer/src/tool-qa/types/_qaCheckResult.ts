@@ -101,6 +101,15 @@ class QaCheckResult {
         }
     }
 
+    updateNucDetail(qaCheck) {
+        if (this.nuc.length > 0) {
+            this.nuc[0].passedStatus = qaCheck.passedStatus
+            this.nuc[0].message = qaCheck.message
+            this.nuc[0].checkingStatus = "checked"
+            this.nuc[0].checkStartTime = null
+        }
+    }
+
     startQa() {
         const unixTime = Date.now()
         this.stations.forEach(station => {
