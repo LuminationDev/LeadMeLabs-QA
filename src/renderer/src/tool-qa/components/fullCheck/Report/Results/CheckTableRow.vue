@@ -79,8 +79,8 @@ const generateCategoryStatus = computed(() => {
   <tr class="h-12 text-sm border border-gray-200">
     <td class="flex flex-row items-center">
       <div class="h-5 w-5 ml-1 -mr-2 cursor-pointer" @click="expanded = !expanded">
-        <img v-if="expanded" src="../../../../assets/icons/chevron-down.svg" alt="close" />
-        <img v-else src="../../../../assets/icons/chevron-right.svg" alt="expand" />
+        <img v-if="expanded" src="../../../../../assets/icons/chevron-down.svg" alt="close" />
+        <img v-else src="../../../../../assets/icons/chevron-right.svg" alt="expand" />
       </div>
       <ItemHover :title="stateStore.generateTitle(checkId)" :message="check.description "/>
     </td>

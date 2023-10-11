@@ -7,6 +7,7 @@ const titleMap = {
   testing: 'Testing...',
   error: 'Error',
   done: 'Done',
+  submitted: 'Successfully uploaded',
 };
 const getTitle = () => titleMap[props.checking] || '';
 
@@ -14,6 +15,7 @@ const classMap = {
   testing: 'text-blue-600',
   error: 'text-red-600',
   done: 'text-green-700',
+  submitted: 'text-green-700',
 };
 const getTextColor = () => classMap[props.checking] || '';
 
@@ -21,23 +23,24 @@ const descriptionMap = {
   testing: 'Running automated QA checks.',
   error: 'An unexpected error has occurred.',
   done: 'Automated tests have been completed.',
+  submitted: 'Your test report has been uploaded to the cloud.',
 };
 const getDescription = () => descriptionMap[props.checking] || '';
 </script>
 
 <template>
   <div
-      class="flex flex-row w-full h-20 border-collapse rounded-lg border-[1px]"
-      :class="{
+    class="flex flex-row w-full h-20 border-collapse rounded-lg border-[1px]"
+    :class="{
       'bg-blue-50 border-blue-400': checking === 'testing',
       'bg-red-50 border-red-400': checking === 'error',
-      'bg-green-50 border-green-500': checking === 'done',
+      'bg-green-50 border-green-500': checking === 'done' || checking === 'submitted',
     }"
   >
     <div class="flex flex-col p-2">
       <img v-if="checking === 'testing'" src="../../../assets/icons/checking-testing.svg" :alt="`${checking} icon`" />
       <img v-else-if="checking === 'error'" src="../../../assets/icons/checking-error.svg" :alt="`${checking} icon`" />
-      <img v-else-if="checking === 'done'" src="../../../assets/icons/checking-done.svg" :alt="`${checking} icon`" />
+      <img v-else-if="checking === 'done' || checking === 'submitted'" src="../../../assets/icons/checking-done.svg" :alt="`${checking} icon`" />
     </div>
 
     <div class="flex flex-col p-2 justify-center">
