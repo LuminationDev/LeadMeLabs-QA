@@ -80,22 +80,30 @@ const currentSubStatus = (localRoute: string) => {
 <template>
   <div class="flex flex-col relative">
     <!--Category title-->
-    <MenuItem title="Setup" route="/check/full/setup/devices" :current="isActive" :status="currentTitleStatus('/check/full/setup')" :setup="true"/>
+    <MenuItem title="Setup" route="/check/full/setup/devices" :current="isActive" :status="currentTitleStatus('/check/full/setup')"/>
 
     <template v-if="isActive">
       <!--Sub-categories-->
       <div class="ml-5 flex flex-col relative">
-        <MenuItem title="Devices" route="/check/full/setup/devices"  :current="isSubActive('devices')" :status="currentSubStatus('/check/full/setup/devices')" :setup="true"/>
+        <MenuItem title="Devices" route="/check/full/setup/devices"  :current="isSubActive('devices')" :status="currentSubStatus('/check/full/setup/devices')"/>
 
-        <MenuSeparator :active="isSeparatorActive('/check/full/setup/devices')" :setup="true"/>
+        <MenuSeparator :active="isSeparatorActive('/check/full/setup/devices')"/>
       </div>
 
       <div class="ml-5 flex flex-col relative">
-        <MenuItem title="Config" route="/check/full/setup/config"  :current="isSubActive('config')" :status="currentSubStatus('/check/full/setup/config')" :setup="true"/>
+        <MenuItem title="Config" route="/check/full/setup/config"  :current="isSubActive('config')" :status="currentSubStatus('/check/full/setup/config')"/>
+
+        <MenuSeparator :active="isSeparatorActive('/check/full/setup/config')"/>
+      </div>
+
+      <div class="ml-5 flex flex-col relative">
+        <MenuItem title="Appliances" route="/check/full/setup/appliances"  :current="isSubActive('appliances')" :status="currentSubStatus('/check/full/setup/appliances')"/>
       </div>
 
       <!--Category separator-->
-      <MenuSeparator v-if="!isSeparatorActive('/check/full/setup/config')" :active="false" :setup="true"/>
+      <MenuSeparator :active="isSeparatorActive('/check/full/setup/appliances')"/>
     </template>
+
+    <MenuSeparator :active="isSeparatorActive('/check/full/setup/appliances')"/>
   </div>
 </template>

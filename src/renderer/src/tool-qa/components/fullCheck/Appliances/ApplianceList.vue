@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import InformationTitle from "@renderer/tool-qa/components/checks/InformationTitle.vue";
-import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
-import { computed, onBeforeMount, ref, watchEffect } from "vue";
+import * as CONSTANT from "@renderer/assets/constants";
+import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
+import IDStatus from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceIdStatus.vue";
+import ApplianceListModal from "@renderer/tool-qa/modals/ApplianceListModal.vue";
+import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { Appliance } from "@renderer/tool-qa/interfaces";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
-import * as CONSTANT from "@renderer/assets/constants";
-import BasicApplianceCheck from "@renderer/tool-qa/components/fullCheck/Appliances/BasicApplianceCheck.vue";
-import CircleSpinner from "@renderer/tool-qa/components/_generic/loading/CircleSpinner.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
+const currentlyChecking = ref('');
 const currentCheckCount = ref(0);
 const typeCheck = ref('all'); //default to all
-const checking = ref(true);
+const checking = ref(false);
 const error = ref('');
 
+/**
+ * Sort through the appliance_list.json sent over by the NUC. The list contains all appliances, both Cbus and Epson.
+ * Group them into their individual types (lights, projectors etc...).
+ */
 const groupedData = computed(() => {
   const data = fullStore.ApplianceList;
 
@@ -39,27 +44,25 @@ const groupedData = computed(() => {
   return groupedData;
 });
 
-const currentlyAnswered = computed(() => {
-  return fullStore.ApplianceList.filter(item => item.correct === true).length;
-});
-
+/**
+ * Collect only the cbus automation type of appliances in list.
+ */
 const cbusAppliances = computed(() => {
   if (typeCheck.value === 'all') {
     return fullStore.ApplianceList.filter(item => item.automationType === 'cbus').length;
   }
   return fullStore.ApplianceList.filter(item => item.automationType === 'cbus' && item.type === typeCheck.value).length;
-})
+});
 
+/**
+ * Return all appliances or just the ones with a certain type (lights, projectors etc...).
+ */
 const specificAppliances = computed(() => {
   if (typeCheck.value === 'all') {
     return fullStore.ApplianceList;
   }
   return fullStore.ApplianceList.filter(item => item.type === typeCheck.value);
-})
-
-const cbusConnection = computed(() => {
-  return fullStore.cbusConnection;
-})
+});
 
 /**
  * Run through the appliance list, asking the NUC to check the values of the appliances against the Cbus.
@@ -69,6 +72,10 @@ const startNewTest = async () => {
   await validateAppliance();
 }
 
+/**
+ * Test a certain type of appliance instead of running through the entire test set again.
+ * @param type A string of the appliance type (lights, blinds, etc...)
+ */
 const retest = async (type: string) => {
   typeCheck.value = type;
 
@@ -83,30 +90,45 @@ const retest = async (type: string) => {
   await validateAppliance();
 }
 
+//TODO need to implement tests for Projectors/Sources (EPSON devices) & Scenes (Same base/group/id - different value)
 const validateAppliance = async () => {
   checking.value = true;
-  for(let i = 0; i < specificAppliances.value.length; i++) {
-    if(specificAppliances.value[i].automationType !== 'cbus') continue;
+
+  for (const appliance of specificAppliances.value) {
     currentCheckCount.value++;
+    currentlyChecking.value = appliance.type;
 
-    fullStore.sendMessage({
-      action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
-      actionData: {
-        automationBase: specificAppliances.value[i]['automationBase'],
-        automationGroup: specificAppliances.value[i]['automationGroup'],
-        automationId: specificAppliances.value[i]['automationId'],
-      }
-    })
+    if (appliance.automationType === 'cbus') {
+      await performCbusCheck(appliance);
+    } else if (appliance.automationType === 'epson') {
+      await performEpsonCheck(appliance);
+    }
 
-    //Wait for a set period before moving to the next one
-    //Todo test how many might overload the cbus?
+    // Wait for a set period before moving to the next one
     await new Promise(resolve => setTimeout(resolve, 500));
-
-    //Break the loop if there is a timeout or error returned
-    //break;
   }
-  checking.value = false;
-  currentCheckCount.value = 0;
+
+  // Reset values after checks
+  resetValues();
+};
+
+/**
+ * Send a message to the NUC to validate the ID that relates the appliance with the supplied automation address.
+ * @param appliance
+ */
+const performCbusCheck = (appliance: Appliance) => {
+  fullStore.sendMessage({
+    action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
+    actionData: {
+      automationBase: appliance.automationBase,
+      automationGroup: appliance.automationGroup,
+      automationId: appliance.automationId,
+    }
+  });
+}
+
+const performEpsonCheck = (appliance: Appliance) => {
+  console.log(`Doing epson stuff for ${JSON.stringify(appliance)}`);
 }
 
 const validateCbusConnection = async () => {
@@ -115,21 +137,23 @@ const validateCbusConnection = async () => {
   fullStore.sendMessage({
     action: CONSTANT.ACTION.CBUS_CONNECTION_VALIDATION,
     actionData: {}
-  })
+  });
 };
 
-/**
- * The precedent for if a user can continue to the next segment.
- */
-const calcProceed = () => {
-  stateStore.canProceed = (currentlyAnswered.value === fullStore.ApplianceList.length && fullStore.ApplianceList.length !== 0);
-}
+const resetValues = () => {
+  checking.value = false;
+  currentCheckCount.value = 0;
+  currentlyChecking.value = "";
+};
 
-/**
- * Watch for any changes in the calcProceed to re-evaluate if the user can continue.
- */
-watchEffect(() => {
-  calcProceed();
+const testStatus = computed(() => {
+  if (fullStore.cbusConnection === "Loading") {
+    return 'testing';
+  } else if(!fullStore.getCbusConnection) {
+    return "error_cbus";
+  } else {
+    return checking.value ? 'testing' : 'done';
+  }
 });
 
 /**
@@ -137,59 +161,44 @@ watchEffect(() => {
  * If not, block the 'Next' button on the BottomBar until they are.
  */
 onBeforeMount(() => {
-  calcProceed();
-
-  if(fullStore.cbusConnection !== "Connection available"){
+  if(!fullStore.getCbusConnection) {
     validateCbusConnection();
+    return;
+  }
+
+  if (fullStore.ApplianceList.length > 0) {
+    startNewTest();
   }
 });
 </script>
 
 <template>
-  <GenericButton
-      v-if="fullStore.ApplianceList.length > 0"
-      type="primary"
-      :callback="validateCbusConnection"
-  >Check Cbus</GenericButton>
+  <!--    Testing Status    -->
+  <CheckStatus
+      :checking="testStatus"
+      :callback="fullStore.getCbusConnection ? startNewTest : validateCbusConnection"
+      :message="checking ? `Checked appliance ${currentCheckCount} out of ${cbusAppliances} appliances.` : undefined"/>
 
-  <div class="mb-4 flex flex-row items-center">
-    CBus Connection:
-    <span class="mx-2" :class="{
-      'text-green-500': cbusConnection === 'Connection available',
-      'text-red-500': cbusConnection !== 'Connection available',
-    }">
-      {{cbusConnection === 'Connection available' ? "Available" : cbusConnection}}
-    </span>
+  <div class="w-full mt-8 flex flex-col rounded-lg border-2 border-gray-200">
+    <table class="w-full border-collapse">
+      <tr class="text-left text-xs bg-gray-100 border border-gray-200">
+        <th class="p-3">Name</th>
+        <th class="w-16 text-center p-3">ID</th>
+        <th class="w-28 text-center p-3"></th>
+      </tr>
 
-    <CircleSpinner v-if="cbusConnection === 'Loading'" :color="'red'" />
-  </div>
+      <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
+      <tr v-for="(appliances, type) in groupedData" :key="type" class="text-sm border border-gray-200">
+        <ItemHover :title="stateStore.capitalizeFirstLetter(type)" :message="'Not sure what to do here'"/>
 
-  <GenericButton
-      v-if="fullStore.ApplianceList.length > 0"
-      :disabled="fullStore.cbusConnection !== 'Connection available'"
-      type="primary"
-      :callback="startNewTest"
-  >Start Test</GenericButton>
+        <IDStatus :currently-checking="type === currentlyChecking" :appliances="appliances"/>
 
-  <div v-if="checking">
-    Checked appliance {{currentCheckCount}} out of {{cbusAppliances}} CBus appliances.
+        <ApplianceListModal :appliance-type="stateStore.capitalizeFirstLetter(type)" :appliances="appliances"/>
+      </tr>
+    </table>
   </div>
 
   <div v-if="error.length > 0" class="text-red-500">
     {{error}}
-  </div>
-
-  <InformationTitle
-      class="mb-4"
-      title="Appliances"
-      :current-keys="currentlyAnswered"
-      :total-keys="fullStore.ApplianceList.length"/>
-
-  <!--Display the NUC response below-->
-  <div class="flex flex-col" v-for="(appliances, type) in groupedData" :key="type">
-    <BasicApplianceCheck
-        :appliances="appliances"
-        :type="type"
-        @retest="retest"/>
   </div>
 </template>

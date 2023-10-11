@@ -9,11 +9,12 @@ const route = useRoute();
 <template>
   <GenericLayout>
     <template v-slot:title>
-      <p class="text-lg text-black mb-3">Appliances</p>
+      <p class="text-2xl text-black font-semibold mb-2">Appliances</p>
+      <p class="text-base text-black mb-4">Connect to your Lab appliances</p>
     </template>
 
     <template v-slot:content>
-      <ApplianceDisplay v-if="route.name === 'full-appliance'"/>
+      <ApplianceDisplay/>
     </template>
   </GenericLayout>
 </template>

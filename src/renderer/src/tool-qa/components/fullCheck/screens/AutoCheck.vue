@@ -114,6 +114,15 @@ const monitorCheck = () => {
 watch(() => fullStore.qaGroups, monitorCheck, { deep: true });
 
 /**
+ * Retry the most recently attempted auto check.
+ */
+const retryAutoCheck = () => {
+  if(fullStore.mostRecentAutoCheck.length === 0) return;
+
+  fullStore.startQa(fullStore.mostRecentAutoCheck);
+}
+
+/**
  * Start the auto test once the component has been mounted, check that the server and connection is up first.
  */
 onMounted(() => {
@@ -141,7 +150,7 @@ onMounted(() => {
     <template v-slot:content>
       <div class="flex flex-col">
         <!--Loading-->
-        <CheckStatus :checking="checking"/>
+        <CheckStatus :callback="retryAutoCheck" :checking="checking"/>
 
         <table class="w-full border-collapse mt-4">
           <tr class="text-left text-xs bg-gray-100 border border-gray-200">

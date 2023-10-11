@@ -195,7 +195,7 @@ export const fullRoutes = [
         name: 'full-setup-stations',
         component: Stations,
         meta: {
-            next: '/check/full/appliances',
+            next: '/check/full/setup/appliances',
             nextText: 'Station Connection',
             prev: '/check/full/setup/devices',
             progress: calculateProgress()
@@ -204,8 +204,8 @@ export const fullRoutes = [
 
     //Appliance Route
     {
-        path: '/check/full/appliances',
-        name: 'full-appliance',
+        path: '/check/full/setup/appliances',
+        name: 'full-setup-appliances',
         component: TheAppliances,
         meta: {
             addComment: true,
@@ -217,7 +217,7 @@ export const fullRoutes = [
         }
     },
 
-    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', '/check/full/hardware/report'),
+    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/setup/appliances', '/check/full/hardware/report'),
 
     //HARDWARE REPORT
     {
@@ -241,7 +241,6 @@ export const fullRoutes = [
             parent: 'network',
             checkType: 'network_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(NETWORK),
             prev: '/check/full/hardware/report',
             progress: calculateProgress()
@@ -280,7 +279,6 @@ export const fullRoutes = [
             parent: 'windows',
             checkType: 'windows_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(WINDOWS),
             prev: '/check/full/network/report',
             progress: calculateProgress()
@@ -312,7 +310,6 @@ export const fullRoutes = [
             parent: 'security',
             checkType: 'security_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(SECURITY),
             prev: '/check/full/windows/report',
             progress: calculateProgress()
@@ -342,7 +339,6 @@ export const fullRoutes = [
             parent: 'software',
             checkType: 'software_checks',
             addComment: true,
-            canRetry: true,
             next: '/check/full/software/steam_config_checks',
             prev: '/check/full/security/report',
             progress: calculateProgress()
@@ -356,7 +352,6 @@ export const fullRoutes = [
             parent: 'software',
             checkType: 'steam_config_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(SOFTWARE),
             prev: '/check/full/software/software_checks',
             progress: calculateProgress()

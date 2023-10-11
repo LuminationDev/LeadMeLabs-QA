@@ -306,9 +306,10 @@ const handleTCPMessage = (info: any) => {
     }
     case "CbusConnectionValidation": {
       fullStore.cbusConnection = response.responseData.result;
+      break;
     }
-    case "CbusValidation": {
-      const details = response.responseData.result;
+    case "CbusApplianceValidation": {
+      const details = response.responseData;
       const foundItem = fullStore.ApplianceList.find(item =>
           item.automationBase == details.automationBase &&
           item.automationGroup == details.automationGroup &&
@@ -325,6 +326,7 @@ const handleTCPMessage = (info: any) => {
           foundItem.correct = correct;
         }
       }
+      foundItem.checked = true;
       break;
     }
   }

@@ -44,16 +44,8 @@ const addComment = (comment: string) => {
   // }
   console.log(comment);
 }
-
-/**
- * Retry the most recently attempted auto check.
- */
-const retryAutoCheck = () => {
-  if(fullStore.mostRecentAutoCheck.length === 0) return;
-
-  fullStore.startQa(fullStore.mostRecentAutoCheck);
-}
 </script>
+
 <template>
   <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
    >Back
@@ -64,10 +56,6 @@ const retryAutoCheck = () => {
   <!--Skip without a comment-->
   <GenericButton class="mr-3" v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] !== undefined && props.meta['next']" type="text" :callback="goNextLink"
   >Skip
-  </GenericButton>
-
-  <GenericButton class="mr-3 hover:opacity-60" v-if="props.meta['canRetry'] !== undefined" type="active-text" :callback="retryAutoCheck"
-  ><img src="../assets/icons/auto-retry.svg" alt="Retry" class="mr-1.5"/> Retry
   </GenericButton>
 
   <!--Modal to handle the skip check comment-->
