@@ -126,14 +126,7 @@ onMounted(() => {
   //TODO check if the tests have already been run before auto starting it again?
   checking.value = "testing";
 
-  // fullStore.startQa(checkType.value);
-  // fullStore.sendMessage({
-  //   action: CONSTANT.ACTION.RUN_STATION_GROUP,
-  //   actionData: {
-  //     group: checkType.value,
-  //     stationIds: ['all']
-  //   }
-  // });
+  fullStore.startQa(checkType.value);
 });
 </script>
 

@@ -52,13 +52,6 @@ const retryAutoCheck = () => {
   if(fullStore.mostRecentAutoCheck.length === 0) return;
 
   fullStore.startQa(fullStore.mostRecentAutoCheck);
-  fullStore.sendMessage({
-    action: CONSTANT.ACTION.RUN_STATION_GROUP,
-    actionData: {
-      group: fullStore.mostRecentAutoCheck,
-      stationIds: ['all']
-    }
-  });
 }
 </script>
 <template>
