@@ -219,18 +219,19 @@ const handleTCPMessage = (info: any) => {
       }
 
       fullStore.updateQaChecks(id, group, qaChecks)
-
-      const groupsToRun = fullStore.processQaList()
-      groupsToRun.forEach(group => {
-        fullStore.startQa(group)
-        fullStore.sendMessage({
-          action: CONSTANT.ACTION.RUN_STATION_GROUP,
-          actionData: {
-            group,
-            stationIds: ['all']
-          }
-        })
-      })
+      break;
+    }
+    case "RunNucGroup": {
+      const group = response.responseData.group
+      const qaChecks = JSON.parse(response.responseData.data).map(element => {
+        var qa = {} as QaCheck
+        qa.passedStatus = element._passedStatus ?? element.passedStatus
+        qa.message = element._message ?? element.message
+        qa.id = element._id ?? element.id
+        return qa
+      });
+      fullStore.qaChecks.push(...qaChecks)
+      fullStore.updateQaChecks('nuc', group, qaChecks)
       break;
     }
     case "ExperienceLaunchAttempt": {

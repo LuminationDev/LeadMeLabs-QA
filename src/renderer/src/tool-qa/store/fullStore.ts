@@ -161,26 +161,52 @@ export const useFullStore = defineStore({
             const stationIsConnected = new QaCheckResult("station_is_connected", "auto", 10000, stationIds, false, false, [], "Station is connected to NUC")
             stationConnectionChecks.checks.push(stationIsConnected)
 
+            const networkChecks = new QaGroup("network_checks", "network")
+            const defaultGateway = new QaCheckResult("default_gateway_is_correct", "auto", 10000, stationIds, true, false, [], "Default Gateway", "Checks that the default gateway is set based on the default setting")
+            const dnsServer = new QaCheckResult("dns_server_is_correct", "auto", 10000, stationIds, true, false, [], "DNS Server", "Checks that the DNS server is set based on the default setting")
+            const altDnsServer = new QaCheckResult("alt_dns_server_is_correct", "auto", 10000, stationIds, true, false, [], "Alt. DNS Server", "Checks that the alternate DNS server is set based on the default setting")
+            const staticIpAddress = new QaCheckResult("static_ip_is_default", "auto", 10000, stationIds, true, false, [], "Static IP", "Checks that the static IP address is set based on the default setting")
+            const allowedThroughFirewall = new QaCheckResult("allowed_through_firewall", "auto", 10000, stationIds, true, false, [], "Firewall", "Checks that the NUC/Station software is allowed through the firewall")
+            const launcherAllowedThroughFirewall = new QaCheckResult("launcher_allowed_through_firewall", "auto", 10000, stationIds, true, false, [], "Launcher firewall", "Checks that the launcher software is allowed through the firewall")
+            const nucCanAccessNucHosting = new QaCheckResult("can_access_nuc_hosting", "auto", 10000, [], true, false, [], "Access NUC Hosting", "Checks that we can access the NUC hosting server")
+            const stationCanAccessStationHosting = new QaCheckResult("can_access_station_hosting", "auto", 10000, stationIds, false, false, [], "Access Station Hosting", "Checks that we can access the station hosting server")
+            const canAccessLauncherHosting = new QaCheckResult("can_access_launcher_hosting", "auto", 10000, stationIds, true, false, [], "Access Launcher Hosting", "Checks that we can access the launcher hosting server")
+            const milesightNotDefaultPassword = new QaCheckResult("milesight_not_default_password", "auto", 10000, [], true, false, [], "Milesight not default", "Checks that the milesight router is not set with the default password")
+            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, milesightNotDefaultPassword)
+            networkChecks.requirements = ["station_connection_checks"]
+
             const windowsChecks = new QaGroup("windows_checks", "windows")
-            const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, stationIds, false, false, [], "Wake On LAN", "Wake on Magic Packet is enabled")
-            const amdInstalled = new QaCheckResult("amd_installed", "auto", 10000, stationIds, false, false, [], "AMD Installed", "Is AMD software installed")
+            const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, stationIds, true, false, [], "Wake On LAN", "Wake on Magic Packet is enabled")
             const envVariable = new QaCheckResult("openssl_environment", "auto", 10000, stationIds, false, false, [], "OPENSSL ENV", "Is OPENSSL_ia32cap set in environment variables")
             const wallpaper = new QaCheckResult("wallpaper_is_set", "auto", 10000, stationIds, false, false, [], "Wallpaper", "Is the Lumination wallpaper set")
-            const timezone = new QaCheckResult("timezone_correct", "auto", 10000, stationIds, false, false, [], "Timezone", "Has the time zone been set to the correct location")
-            const dateTime = new QaCheckResult("correct_datetime", "auto", 10000, stationIds, false, false, [], "Time & Date", "Is the date and time set correctly")
-            windowsChecks.checks.push(wakeOnLAN, amdInstalled, envVariable, wallpaper, timezone, dateTime);
+            const timezone = new QaCheckResult("timezone_correct", "auto", 10000, stationIds, true, false, [], "Timezone", "Has the time zone been set to the correct location")
+            const dateTime = new QaCheckResult("correct_datetime", "auto", 10000, stationIds, true, false, [], "Time & Date", "Is the date and time set correctly")
+            const taskScheduler = new QaCheckResult("task_scheduler_created", "auto", 10000, stationIds, true, false, [], "Task scheduler", "Task scheduler is correctly setup")
+            const oldTaskScheduler = new QaCheckResult("old_task_scheduler_not_existing", "auto", 10000, stationIds, true, false, [], "Old task scheduler", "Old task scheduler is gone")
+            const cbusScriptId = new QaCheckResult("cbus_script_id", "auto", 10000, [], true, false, [], "CBus script id", "CBus script id is correctly set")
+            windowsChecks.checks.push(wakeOnLAN, envVariable, wallpaper, timezone, dateTime, taskScheduler, oldTaskScheduler, cbusScriptId);
 
             const softwareChecks = new QaGroup("software_checks", "software")
-            const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 10000, stationIds, false, false, [], "SetVol Installed", "SetVol is installed at the correct location")
-            const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 10000, stationIds, false, false, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
-            const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 10000, stationIds, false, false, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
-            const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 10000, stationIds, false, false, [], "SteamCMD Configured", "SteamCMD has Steam Guard detail or does not need them")
-            softwareChecks.checks.push(setvolInstalled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured)
+            const amdInstalled = new QaCheckResult("amd_installed", "auto", 20000, stationIds, false, false, [], "AMD Installed", "Is AMD software installed")
+            const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 20000, stationIds, false, false, [], "SetVol Installed", "SetVol is installed at the correct location")
+            const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 20000, stationIds, false, false, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
+            const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 20000, stationIds, false, false, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
+            const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 20000, stationIds, false, false, [], "SteamCMD Configured", "SteamCMD has Steam Guard detail or does not need them")
+            const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 20000, stationIds, false, false, [], "Steam guard disabled", "Steam Guard has been disabled")
+            const driverEasyNotInstalled = new QaCheckResult("drivereasy_not_installed", "auto", 20000, stationIds, true, false, [], "DriverEasy", "DriverEasy is not installed")
+            const nvidiaNotInstalled = new QaCheckResult("nvidia_not_installed", "auto", 20000, stationIds, true, false, [], "NVidia", "No NVidia programs are installed")
+            softwareChecks.checks.push(setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
             softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
+
+            const securityChecks = new QaGroup("security_checks", "security")
+            const cbusPasswordComplexity = new QaCheckResult("cbus_password_complexity", "auto", 10000, [], true, false, [], "CBus password complexity", "Is CBus password complex enough?")
+            securityChecks.checks.push(cbusPasswordComplexity)
+            securityChecks.requirements = ["station_connection_checks"]
 
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, stationIds, false, false, [], "Steam Username is set")
             const isSteamPasswordSet = new QaCheckResult("steam_password", "auto", 10000, stationIds, false, false, [], "Steam Password is set")
+            const isSteamPasswordComplex = new QaCheckResult("steam_password_complexity", "auto", 10000, stationIds, false, false, [], "Steam Password is complex enough")
             const isSteamInitialized = new QaCheckResult("steam_initialized", "auto", 10000, stationIds, false, false, [], "Steam initialised", "Steam has been logged into at least once")
             const isFriendsSettingDisabled = new QaCheckResult("friends_setting", "auto", 10000, stationIds, false, false, [], "Steam friends setting disabled")
             const isDownloadRegionSetCorrectly = new QaCheckResult("download_region", "auto", 10000, stationIds, false, false, [], "Steam download region is correct")
@@ -195,10 +221,10 @@ export const useFullStore = defineStore({
             const pauseCompositorSetToFalse = new QaCheckResult("pause_compositor_set_to_false", "auto", 10000, stationIds, false, false, [], "SteamVR compositor pause set to off")
             const steamVrDashboardDisabled = new QaCheckResult("steamvr_dashboard_disabled", "auto", 10000, stationIds, false, false, [], "SteamVR dashboard is disabled")
             const steamVrStatusNotOnTop = new QaCheckResult("steamvr_status_not_on_top", "auto", 10000, stationIds, false, false, [], "SteamVR status is set to not display on top")
-            steamConfigChecks.checks.push(isSteamUserNameSet, isSteamPasswordSet, isSteamInitialized, isFriendsSettingDisabled, isDownloadRegionSetCorrectly, isCloudEnabledOff, isDefaultPageSetToLibrary, skipOfflineWarning, allowAutoLogin, wantsOfflineMode, homeAppDisabled, controllerTimeoutSetToZero, screenTimeoutSetTo1800, pauseCompositorSetToFalse, steamVrDashboardDisabled, steamVrStatusNotOnTop)
+            steamConfigChecks.checks.push(isSteamUserNameSet, isSteamPasswordSet, isSteamPasswordComplex, isSteamInitialized, isFriendsSettingDisabled, isDownloadRegionSetCorrectly, isCloudEnabledOff, isDefaultPageSetToLibrary, skipOfflineWarning, allowAutoLogin, wantsOfflineMode, homeAppDisabled, controllerTimeoutSetToZero, screenTimeoutSetTo1800, pauseCompositorSetToFalse, steamVrDashboardDisabled, steamVrStatusNotOnTop)
             steamConfigChecks.requirements = ["station_connection_checks"]
 
-            this.qaGroups = [stationConnectionChecks, windowsChecks, softwareChecks, steamConfigChecks];
+            this.qaGroups = [stationConnectionChecks, networkChecks, securityChecks, windowsChecks, softwareChecks, steamConfigChecks];
         },
 
         processQaList() {
@@ -215,10 +241,10 @@ export const useFullStore = defineStore({
             }).map(group => group.id)
         },
 
-        updateQaChecks(stationId, groupName, qaChecks) {
+        updateQaChecks(id, groupName, qaChecks) {
             let index = this.qaGroups.findIndex(group => group.id === groupName)
             if (index !== -1) {
-                this.qaGroups[index].updateQaChecks(stationId, qaChecks)
+                this.qaGroups[index].updateQaChecks(id, qaChecks)
             }
         },
 
@@ -226,6 +252,22 @@ export const useFullStore = defineStore({
             let index = this.qaGroups.findIndex(group => group.id === groupId)
             if (index !== -1) {
                 this.qaGroups[index].startQa()
+                const group = this.qaGroups[index]
+                this.sendMessage({
+                    action: CONSTANT.ACTION.RUN_STATION_GROUP,
+                    actionData: {
+                        group: group.id,
+                        stationIds: ['all'] // todo, method for this
+                    }
+                })
+
+                this.sendMessage({
+                    action: CONSTANT.ACTION.RUN_NUC_GROUP,
+                    actionData: {
+                        group: group.id
+                    }
+                })
+
             }
         },
 
