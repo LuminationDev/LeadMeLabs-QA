@@ -1,7 +1,8 @@
-import {PDFDocument, rgb} from 'pdf-lib';
-import {dialog} from 'electron';
+import { dialog } from 'electron';
 import fs from 'fs';
 import path from "path";
+import { createMockWindow } from "./MockBrowser";
+import os from "os";
 
 export async function DetermineReportType(info: any) {
     switch(info.type) {
@@ -30,28 +31,17 @@ export async function DetermineReportType(info: any) {
  * @param info
  */
 const generatePDF = async (info: any) => {
-    const pdfDoc = await PDFDocument.create();
-    const a4Page = pdfDoc.addPage([595, 842]); // A4 size in points (approximately)
+    //Save the info.data as temp.html
+    const tempDir = os.tmpdir();
+    const filePath = `${tempDir}/temp.html`;
 
-    a4Page.drawText(info.data, {
-        x: 50,
-        y: 150,
-        size: 30,
-        color: rgb(0, 0, 0),
+    fs.writeFile(filePath, info.data, (err) => {
+        if (err) throw err;
+        console.log('HTML content saved to', filePath);
     });
 
-    // Serialize the PDF as a buffer
-    const pdfBytes = await pdfDoc.save();
-    const pdfBuffer = Buffer.from(pdfBytes);
-
-    // Use Electron's dialog to save the PDF
-    const filePath = dialog.showSaveDialogSync({
-        defaultPath: 'document.pdf',
-    });
-
-    if (filePath) {
-        fs.writeFileSync(filePath, pdfBuffer);
-    }
+    //The MockBrowser will open and use that temp.html to generate a pdf
+    createMockWindow();
 }
 
 const generateCSV = async (info: any) => {

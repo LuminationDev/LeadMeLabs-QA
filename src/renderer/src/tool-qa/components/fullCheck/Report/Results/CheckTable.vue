@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CheckTableRow from "@renderer/tool-qa/components/fullCheck/Report/CheckTableRow.vue";
+import CheckTableRow from "@renderer/tool-qa/components/fullCheck/Report/Results/CheckTableRow.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";

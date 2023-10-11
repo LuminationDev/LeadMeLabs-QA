@@ -8,6 +8,7 @@ import { computed } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import GuideModal from "../../../modals/GuideModal.vue";
+import Checkbox from "@renderer/tool-qa/components/fullCheck/screens/Checkbox.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
@@ -106,16 +107,12 @@ const guides = computed(() => {
             <ItemHover :title="item.key" :message="item.description "/>
 
             <td v-for="device in fullStore.orderedDevices" class="text-center p-3">
-              <input v-if="categories[currentCategoryIndex].targets[device.type] === true"
-                     :key="index + '-' + item.key"
-                     :checked="device.checks[item.key]?.passedStatus === 'passed'"
-                     type="checkbox" class="h-4 w-4"
-                     @change="fullStore.updateReport(
-                         checkDetails.parent,
-                         checkDetails.page,
-                         { passedStatus: $event.target.checked ? 'passed' : 'skipped' },
-                         item.key,
-                         device.id)">
+              <Checkbox v-if="categories[currentCategoryIndex].targets[device.type] === true"
+                        :index="0"
+                        :parent="checkDetails.parent"
+                        :page="checkDetails.page"
+                        :item-key="item.key"
+                        :device="device"/>
             </td>
           </tr>
         </table>

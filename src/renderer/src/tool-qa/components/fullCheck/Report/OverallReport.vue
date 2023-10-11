@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/BasicReport.vue";
+import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";

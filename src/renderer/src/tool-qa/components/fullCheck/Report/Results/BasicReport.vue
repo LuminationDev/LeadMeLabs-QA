@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/ReportResults.vue";
-import CheckTable from "@renderer/tool-qa/components/fullCheck/Report/CheckTable.vue";
+import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/Results/ReportResults.vue";
+import CheckTable from "@renderer/tool-qa/components/fullCheck/Report/Results/CheckTable.vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";

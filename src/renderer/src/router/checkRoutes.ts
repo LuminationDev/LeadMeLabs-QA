@@ -6,9 +6,10 @@ import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCh
 import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
 import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
 import TheIMVR from "../tool-qa/components/fullCheck/screens/TheIMVR.vue";
-import BasicAutoCheck from "../tool-qa/components/fullCheck/AutoCheck.vue";
-import BasicReport from "../tool-qa/components/fullCheck/Report/BasicReport.vue";
+import BasicAutoCheck from "../tool-qa/components/fullCheck/screens/AutoCheck.vue";
+import BasicReport from "../tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
 import OverallReport from "../tool-qa/components/fullCheck/Report/OverallReport.vue";
+import FinaliseReport from "../tool-qa/components/fullCheck/Report/FinaliseReport.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -404,9 +405,31 @@ export const fullRoutes = [
         meta: {
             page: "overall",
             description: "TODO write something in checkRoutes",
-            next: '',
+            next: '/check/full/overall/submit',
             prev: getLastRoute(IMVR),
             progress: calculateProgress()
         }
     },
+
+    //SUBMIT REPORT
+    {
+        path: '/check/full/overall/submit',
+        name: 'full-overall-submit',
+        component: FinaliseReport,
+        meta: {
+            next: '/check/full/overall/download',
+            prev: '/check/full/overall/report'
+        }
+    },
+
+    //DOWNLOAD REPORT
+    {
+        path: '/check/full/overall/download',
+        name: 'full-overall-download',
+        component: FinaliseReport,
+        meta: {
+            next: '',
+            prev: '/check/full/overall/submit'
+        }
+    }
 ];

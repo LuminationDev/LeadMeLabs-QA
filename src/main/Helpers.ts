@@ -2,7 +2,7 @@ import TcpServer from './tcp/TcpServer';
 import TcpClient from './tcp/TcpClient';
 import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
-import { DetermineReportType } from "./util/Report";
+import { DetermineReportType } from "./report/Report";
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
