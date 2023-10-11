@@ -8,9 +8,12 @@ import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
 import * as CONSTANT from "@renderer/assets/constants";
+import {QaCheckResult} from "../tool-qa/types/_qaCheckResult";
+import {useQuickStore} from "../tool-qa/store/quickStore";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
+const quickStore = useQuickStore();
 const route = useRoute();
 const props = defineProps({
     meta: {
@@ -26,7 +29,37 @@ const goPrevLink = (): void => {
 const goNextLink = (): void => {
   const { next } = props.meta;
   router.push(next)
+  if (route.name === 'full-setup-devices') {
+    fullStore.buildQaList(); //Build the QaList on connection response
+    populateFullReportTrackerWithAutoChecks(); //
+  }
 }
+
+/**
+ * Run through each of the automatic checks in each section. Adding the required details and target devices to the
+ * fullStore.reportTracker. The specific devices are then added on the auto check page when the results come in.
+ */
+const populateFullReportTrackerWithAutoChecks = () => {
+  fullStore.qaGroups
+      .forEach(group => {
+        if (group.section !== null) {
+          group.checks.forEach(check => {
+            const targetDevices = determineTargetDevices(check);
+            const checkItems = {key: check.id, description: check.extendedDescription}
+            fullStore.addCheckToReportTracker(group.section, group.id, checkItems, targetDevices);
+          });
+        }
+      });
+}
+
+const determineTargetDevices = (check: QaCheckResult) => {
+  return {
+    "station": check.stations.length > 0,
+    "tablet": check.tablets.length > 0,
+    "nuc": check.nuc.length > 0,
+    "cbus": check.cbus.length > 0
+  };
+};
 
 /**
  * If the route requires user input, check the stateStore to see if the user has
