@@ -26,7 +26,7 @@ const route = useRoute();
         <div class="flex flex-col w-full p-4">
           <!--QA tool choice-->
           <div class="w-full h-full pb-4">
-            <OptionButton title="QA Test" subtitle="Run a Quality Assurance Test" to="/check/full/setup/devices"/>
+            <OptionButton title="QA Test" subtitle="Run a Quality Assurance Test" to="/check/full/setup/devices/nuc"/>
           </div>
 
           <!--Generate Handover Doc-->

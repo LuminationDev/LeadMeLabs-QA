@@ -1,6 +1,5 @@
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
-import Stations from "@renderer/tool-qa/screens/Stations.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
 import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
@@ -52,7 +51,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/36 * 100); //TODO WARNING: 36 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/37 * 100); //TODO WARNING: 37 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -179,25 +178,34 @@ const getLastRoute = (checkArray: CheckObject[]) => {
  */
 export const fullRoutes = [
     {
-        path: '/check/full/setup/devices',
-        name: 'full-setup-devices',
+        path: '/check/full/setup/devices/nuc',
+        name: 'full-setup-devices-nuc',
         component: FullCheck,
         meta: {
-            next: '/check/full/setup/config',
-            nextText: 'Start Test',
+            next: '/check/full/setup/devices/tablets',
             prev: '/',
             progress: calculateProgress()
         }
     },
 
     {
-        path: '/check/full/setup/config',
-        name: 'full-setup-stations',
-        component: Stations,
+        path: '/check/full/setup/devices/tablets',
+        name: 'full-setup-devices-tablets',
+        component: FullCheck,
+        meta: {
+            next: '/check/full/setup/devices/stations',
+            prev: '/check/full/setup/devices/nuc',
+            progress: calculateProgress()
+        }
+    },
+
+    {
+        path: '/check/full/setup/devices/stations',
+        name: 'full-setup-devices-stations',
+        component: FullCheck,
         meta: {
             next: '/check/full/setup/appliances',
-            nextText: 'Station Connection',
-            prev: '/check/full/setup/devices',
+            prev: '/check/full/setup/devices/tablets',
             progress: calculateProgress()
         }
     },
@@ -212,7 +220,7 @@ export const fullRoutes = [
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
-            prev: '/check/full/setup/config',
+            prev: '/check/full/setup/devices/stations',
             progress: calculateProgress()
         }
     },

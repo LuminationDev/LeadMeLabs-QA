@@ -7,13 +7,10 @@ import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
-import * as CONSTANT from "@renderer/assets/constants";
-import {QaCheckResult} from "../tool-qa/types/_qaCheckResult";
-import {useQuickStore} from "../tool-qa/store/quickStore";
+import { QaCheckResult } from "../tool-qa/types/_qaCheckResult";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
-const quickStore = useQuickStore();
 const route = useRoute();
 const props = defineProps({
     meta: {
@@ -29,9 +26,9 @@ const goPrevLink = (): void => {
 const goNextLink = (): void => {
   const { next } = props.meta;
   router.push(next)
-  if (route.name === 'full-setup-devices') {
-    fullStore.buildQaList(); //Build the QaList on connection response
-    populateFullReportTrackerWithAutoChecks(); //
+  if (route.name === 'full-setup-devices-tablets') {
+    fullStore.buildQaList();
+    populateFullReportTrackerWithAutoChecks();
   }
 }
 
