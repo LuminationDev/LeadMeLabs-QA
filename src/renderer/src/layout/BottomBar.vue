@@ -7,13 +7,10 @@ import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
-import * as CONSTANT from "@renderer/assets/constants";
-import {QaCheckResult} from "../tool-qa/types/_qaCheckResult";
-import {useQuickStore} from "../tool-qa/store/quickStore";
+import { QaCheckResult } from "../tool-qa/types/_qaCheckResult";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
-const quickStore = useQuickStore();
 const route = useRoute();
 const props = defineProps({
     meta: {
@@ -29,9 +26,9 @@ const goPrevLink = (): void => {
 const goNextLink = (): void => {
   const { next } = props.meta;
   router.push(next)
-  if (route.name === 'full-setup-devices') {
-    fullStore.buildQaList(); //Build the QaList on connection response
-    populateFullReportTrackerWithAutoChecks(); //
+  if (route.name === 'full-setup-devices-tablets') {
+    fullStore.buildQaList();
+    populateFullReportTrackerWithAutoChecks();
   }
 }
 
@@ -77,16 +74,8 @@ const addComment = (comment: string) => {
   // }
   console.log(comment);
 }
-
-/**
- * Retry the most recently attempted auto check.
- */
-const retryAutoCheck = () => {
-  if(fullStore.mostRecentAutoCheck.length === 0) return;
-
-  fullStore.startQa(fullStore.mostRecentAutoCheck);
-}
 </script>
+
 <template>
   <GenericButton v-if="props.meta['prev']" type="light" :callback="goPrevLink"
    >Back
@@ -97,10 +86,6 @@ const retryAutoCheck = () => {
   <!--Skip without a comment-->
   <GenericButton class="mr-3" v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] !== undefined && props.meta['next']" type="text" :callback="goNextLink"
   >Skip
-  </GenericButton>
-
-  <GenericButton class="mr-3 hover:opacity-60" v-if="props.meta['canRetry'] !== undefined" type="active-text" :callback="retryAutoCheck"
-  ><img src="../assets/icons/auto-retry.svg" alt="Retry" class="mr-1.5"/> Retry
   </GenericButton>
 
   <!--Modal to handle the skip check comment-->

@@ -3,12 +3,12 @@ import * as FULL from "../../../../assets/checks/_fullcheckValues";
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
+import GuideModal from "../../../modals/GuideModal.vue";
+import Checkbox from "@renderer/tool-qa/components/fullCheck/screens/Checkbox.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-import GuideModal from "../../../modals/GuideModal.vue";
-import Checkbox from "@renderer/tool-qa/components/fullCheck/screens/Checkbox.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();

@@ -1,6 +1,5 @@
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
-import Stations from "@renderer/tool-qa/screens/Stations.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
 import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
@@ -52,7 +51,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/36 * 100); //TODO WARNING: 36 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/37 * 100); //TODO WARNING: 37 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -179,45 +178,54 @@ const getLastRoute = (checkArray: CheckObject[]) => {
  */
 export const fullRoutes = [
     {
-        path: '/check/full/setup/devices',
-        name: 'full-setup-devices',
+        path: '/check/full/setup/devices/nuc',
+        name: 'full-setup-devices-nuc',
         component: FullCheck,
         meta: {
-            next: '/check/full/setup/config',
-            nextText: 'Start Test',
+            next: '/check/full/setup/devices/tablets',
             prev: '/',
             progress: calculateProgress()
         }
     },
 
     {
-        path: '/check/full/setup/config',
-        name: 'full-setup-stations',
-        component: Stations,
+        path: '/check/full/setup/devices/tablets',
+        name: 'full-setup-devices-tablets',
+        component: FullCheck,
         meta: {
-            next: '/check/full/appliances',
-            nextText: 'Station Connection',
-            prev: '/check/full/setup/devices',
+            next: '/check/full/setup/devices/stations',
+            prev: '/check/full/setup/devices/nuc',
+            progress: calculateProgress()
+        }
+    },
+
+    {
+        path: '/check/full/setup/devices/stations',
+        name: 'full-setup-devices-stations',
+        component: FullCheck,
+        meta: {
+            next: '/check/full/setup/appliances',
+            prev: '/check/full/setup/devices/tablets',
             progress: calculateProgress()
         }
     },
 
     //Appliance Route
     {
-        path: '/check/full/appliances',
-        name: 'full-appliance',
+        path: '/check/full/setup/appliances',
+        name: 'full-setup-appliances',
         component: TheAppliances,
         meta: {
             addComment: true,
             userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
-            prev: '/check/full/setup/config',
+            prev: '/check/full/setup/devices/stations',
             progress: calculateProgress()
         }
     },
 
-    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/appliances', '/check/full/hardware/report'),
+    ...generateRoutesFromObjectArray(HARDWARE, '/check/full/setup/appliances', '/check/full/hardware/report'),
 
     //HARDWARE REPORT
     {
@@ -241,7 +249,6 @@ export const fullRoutes = [
             parent: 'network',
             checkType: 'network_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(NETWORK),
             prev: '/check/full/hardware/report',
             progress: calculateProgress()
@@ -280,7 +287,6 @@ export const fullRoutes = [
             parent: 'windows',
             checkType: 'windows_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(WINDOWS),
             prev: '/check/full/network/report',
             progress: calculateProgress()
@@ -312,7 +318,6 @@ export const fullRoutes = [
             parent: 'security',
             checkType: 'security_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(SECURITY),
             prev: '/check/full/windows/report',
             progress: calculateProgress()
@@ -342,7 +347,6 @@ export const fullRoutes = [
             parent: 'software',
             checkType: 'software_checks',
             addComment: true,
-            canRetry: true,
             next: '/check/full/software/steam_config_checks',
             prev: '/check/full/security/report',
             progress: calculateProgress()
@@ -356,7 +360,6 @@ export const fullRoutes = [
             parent: 'software',
             checkType: 'steam_config_checks',
             addComment: true,
-            canRetry: true,
             next: getFirstRoute(SOFTWARE),
             prev: '/check/full/software/software_checks',
             progress: calculateProgress()
