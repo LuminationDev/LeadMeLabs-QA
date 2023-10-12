@@ -101,6 +101,16 @@ class QaCheckResult {
         }
     }
 
+    updateTabletDetail(tabletIp, qaCheck) {
+        const index = this.tablets.findIndex(element => element.ipAddress == tabletIp)
+        if (index !== -1) {
+            this.tablets[index].passedStatus = qaCheck.passedStatus
+            this.tablets[index].message = qaCheck.message
+            this.tablets[index].checkingStatus = "checked"
+            this.tablets[index].checkStartTime = null
+        }
+    }
+
     updateNucDetail(qaCheck) {
         if (this.nuc.length > 0) {
             this.nuc[0].passedStatus = qaCheck.passedStatus

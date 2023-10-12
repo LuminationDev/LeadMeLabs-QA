@@ -21,10 +21,12 @@ class QaGroup {
     }
 
     updateQaChecks(id, qaChecks) {
-        console.log('updateQaChecks:qaGroup', qaChecks)
         this.checks.forEach(check => {
             if (id === "nuc") {
                 check.updateNucDetail(qaChecks.find(qaCheck => qaCheck.id === check.id))
+            } else if (id.startsWith("tablet")) {
+                var ip = id.split(":")[1]
+                check.updateTabletDetail(ip, qaChecks.find(qaCheck => qaCheck.id === check.id))
             } else {
                 check.updateStationDetail(id, qaChecks.find(qaCheck => qaCheck.id === check.id))
             }
