@@ -40,9 +40,10 @@ const clearHoverTimer = () => {
   <td class="p-3 w-16 relative">
     <div @mouseover="startHoverTimer" @mouseout="clearHoverTimer" class="cursor-help font-semibold rounded-xl w-full justify-center h-4">
       <img v-if="checkingStatus === 'timeout'" alt="error" src="../../../assets/icons/auto-checked-error.svg"/>
-      <img v-else-if="(passedStatus !== 'failed' && passedStatus !== 'passed') || checkingStatus === 'checking'" alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
+      <img v-else-if="checkingStatus === 'checking'" alt="checking" src="../../../assets/icons/checking-loading.svg"/>
       <img v-else-if="passedStatus === 'failed' && checkingStatus !== 'checking'" alt="failed" src="../../../assets/icons/auto-checked-failed.svg"/>
       <img v-else-if="passedStatus === 'passed' && checkingStatus !== 'checking'" alt="passed" src="../../../assets/icons/auto-checked-passed.svg"/>
+      <img v-else alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
     </div>
     <Transition name="fade">
       <div v-if="isHovered" class="absolute w-40 bg-gray-100 border-[1px] border-gray-300 p-2 rounded-lg z-10">{{ message }}</div>

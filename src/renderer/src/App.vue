@@ -173,6 +173,9 @@ const handleTCPMessage = (info: any) => {
 
 
   console.log(info.mainText)
+  if (!info.mainText || info.mainText === "") {
+    return;
+  }
   const response = JSON.parse(info.mainText) // todo expected response type
   switch (response.response) {
     case "RunGroup": {
@@ -238,7 +241,7 @@ const handleTCPMessage = (info: any) => {
     case "ExperienceLaunchFailed": {
       const stationId = response.source.split(",")[1]
       const experienceId = response.responseData.experienceId
-      fullStore.updateExperienceCheck(stationId, experienceId, "failed", "")
+      fullStore.updateExperienceCheck(stationId, experienceId, "failed", response.responseData.message ?? "")
       break;
     }
     case "GetVrStatuses": {
