@@ -305,8 +305,6 @@ const handleTCPMessage = (info: any) => {
           (details.automationValue != undefined ? item.automationValue == details.automationValue : true)
       );
 
-      console.log(foundItem);
-
       if (!foundItem) return;
 
       let expectedId = `${foundItem.type}-${details.address}`;
