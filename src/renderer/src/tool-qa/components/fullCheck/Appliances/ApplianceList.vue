@@ -4,7 +4,7 @@ import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
 import IDStatus from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceIdStatus.vue";
 import ApplianceListModal from "@renderer/tool-qa/modals/ApplianceListModal.vue";
 import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import { Appliance } from "@renderer/tool-qa/interfaces";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
@@ -45,16 +45,6 @@ const groupedData = computed(() => {
 });
 
 /**
- * Collect only the cbus automation type of appliances in list.
- */
-const cbusAppliances = computed(() => {
-  if (typeCheck.value === 'all') {
-    return fullStore.ApplianceList.filter(item => item.automationType === 'cbus').length;
-  }
-  return fullStore.ApplianceList.filter(item => item.automationType === 'cbus' && item.type === typeCheck.value).length;
-});
-
-/**
  * Return all appliances or just the ones with a certain type (lights, projectors etc...).
  */
 const specificAppliances = computed(() => {
@@ -79,8 +69,9 @@ const startNewTest = async () => {
 const retest = async (type: string) => {
   typeCheck.value = type;
 
-  if (cbusAppliances.value === 0) {
-    error.value = "No CBus appliances for type: " + type;
+  const typeLength = fullStore.ApplianceList.filter(item => item.type === type).length;
+  if (typeLength === 0) {
+    error.value = "No appliances for type: " + type;
     setTimeout(() => {
       error.value = "";
     }, 2000)
@@ -90,22 +81,24 @@ const retest = async (type: string) => {
   await validateAppliance();
 }
 
-//TODO need to implement tests for Projectors/Sources (EPSON devices) & Scenes (Same base/group/id - different value)
+//TODO need to implement tests for Scenes (Same base/group/id - different value)
 const validateAppliance = async () => {
   checking.value = true;
+
+  //Reset values on test restart
+  resetTestValues();
 
   for (const appliance of specificAppliances.value) {
     currentCheckCount.value++;
     currentlyChecking.value = appliance.type;
 
     if (appliance.automationType === 'cbus') {
-      await performCbusCheck(appliance);
+      performCbusCheck(appliance);
+      await waitForResponse(appliance, 5000);
     } else if (appliance.automationType === 'epson') {
-      await performEpsonCheck(appliance);
+      performEpsonCheck(appliance);
+      await waitForResponse(appliance, 10000);
     }
-
-    // Wait for a set period before moving to the next one
-    await new Promise(resolve => setTimeout(resolve, 500));
   }
 
   // Reset values after checks
@@ -113,10 +106,53 @@ const validateAppliance = async () => {
 };
 
 /**
+ * Waits for a response on the specified appliance within a specified timeout.
+ * This function watches for changes to the appliance response. If a response is received
+ * within the specified timeout, the returned promise resolves. If no response is received
+ * within the timeout, the promise is rejected with a timeout error.
+ *
+ * @param {object} appliance - The appliance object to monitor for a response.
+ * @param {number} [timeout=5000] - The maximum time in milliseconds to wait for a response.
+ * @returns {Promise} A promise that resolves when a response is received or rejects on a timeout.
+ */
+const waitForResponse = async (appliance, timeout) => {
+  return new Promise((resolve, reject) => {
+    let responseTimer;
+    let watcher;
+
+    // Watch for changes to the appliance response
+    watcher = watch(() => fullStore.ApplianceList, (newValue) => {
+      const newAppliance = newValue.find(item => item.id === appliance.id);
+      if (newAppliance !== undefined && newAppliance.correct !== undefined) {
+        clearTimeout(responseTimer);  // Clear the timeout if a response is received
+        watcher(); // Stop watching once a response is received
+        setTimeout(resolve, 500);
+      }
+    }, { deep: true });
+
+    // Set a timeout to reject the promise if no response is received within the specified timeout
+    responseTimer = setTimeout(() => {
+      watcher(); // Stop watching
+      const foundAppliance = fullStore.ApplianceList.find(item => item.id === appliance.id);
+      if (foundAppliance) {
+        foundAppliance.correct = false;
+        foundAppliance.correctId = false;
+      }
+      resolve();
+    }, timeout);
+  });
+};
+
+/**
  * Send a message to the NUC to validate the ID that relates the appliance with the supplied automation address.
  * @param appliance
  */
 const performCbusCheck = (appliance: Appliance) => {
+  if (appliance.type === 'scenes') {
+    console.log("Check for scene stuff");
+    return;
+  }
+
   fullStore.sendMessage({
     action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
     actionData: {
@@ -128,7 +164,13 @@ const performCbusCheck = (appliance: Appliance) => {
 }
 
 const performEpsonCheck = (appliance: Appliance) => {
-  console.log(`Doing epson stuff for ${JSON.stringify(appliance)}`);
+  fullStore.sendMessage({
+    action: "EpsonApplianceStatusCheck",
+    actionData: {
+      id: appliance.id,
+      check: appliance.type
+    }
+  });
 }
 
 const validateCbusConnection = async () => {
@@ -144,6 +186,19 @@ const resetValues = () => {
   checking.value = false;
   currentCheckCount.value = 0;
   currentlyChecking.value = "";
+};
+
+/**
+ * Reset the 'correct' and 'correctId' value for the appliances that are being tested.
+ */
+const resetTestValues = () => {
+  const resetItem = (item) => { item.correct = undefined; item.correctId = undefined; };
+  const resetCondition = (item) => typeCheck.value === 'all' || item.type === typeCheck.value;
+  fullStore.ApplianceList.forEach((item) => {
+    if (resetCondition(item)) {
+      resetItem(item);
+    }
+  });
 };
 
 const testStatus = computed(() => {
@@ -177,7 +232,7 @@ onBeforeMount(() => {
   <CheckStatus
       :checking="testStatus"
       :callback="fullStore.getCbusConnection ? startNewTest : validateCbusConnection"
-      :message="checking ? `Checked appliance ${currentCheckCount} out of ${cbusAppliances} appliances.` : undefined"/>
+      :message="checking ? `Checked appliance ${currentCheckCount} out of ${fullStore.ApplianceList.length} appliances.` : undefined"/>
 
   <div class="w-full mt-8 flex flex-col rounded-lg border-2 border-gray-200">
     <table class="w-full border-collapse">

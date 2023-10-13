@@ -309,14 +309,21 @@ const handleTCPMessage = (info: any) => {
       const correct = foundItem.id === `${foundItem.type}-${details.address}`;
       if (correct !== null) {
         foundItem.correctId = correct;
-
-        if (correct === false) {
-          foundItem.correct = correct;
-        }
+        foundItem.correct = correct;
       }
       foundItem.checked = true;
       break;
     }
+    case "EpsonApplianceStatusCheck":
+      const details = response.responseData;
+      const foundItem = fullStore.ApplianceList.find(item => item.id === details.id);
+
+      if (!foundItem) return;
+
+      foundItem.correctId = details.result;
+      foundItem.correct = details.result;
+      foundItem.checked = true;
+      break;
   }
 
   // if (info.mainText.includes("StationChecks")) {
