@@ -149,7 +149,15 @@ const waitForResponse = async (appliance, timeout) => {
  */
 const performCbusCheck = (appliance: Appliance) => {
   if (appliance.type === 'scenes') {
-    console.log("Check for scene stuff");
+    fullStore.sendMessage({
+      action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
+      actionData: {
+        automationBase: appliance.automationBase,
+        automationGroup: appliance.automationGroup,
+        automationId: appliance.automationId,
+        automationValue: appliance.automationValue
+      }
+    });
     return;
   }
 
@@ -192,7 +200,7 @@ const resetValues = () => {
  * Reset the 'correct' and 'correctId' value for the appliances that are being tested.
  */
 const resetTestValues = () => {
-  const resetItem = (item) => { item.correct = undefined; item.correctId = undefined; };
+  const resetItem = (item) => { item.correct = undefined; item.correctId = undefined; item.checked = false; };
   const resetCondition = (item) => typeCheck.value === 'all' || item.type === typeCheck.value;
   fullStore.ApplianceList.forEach((item) => {
     if (resetCondition(item)) {
