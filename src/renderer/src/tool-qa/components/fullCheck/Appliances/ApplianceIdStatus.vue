@@ -8,6 +8,10 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
+  automationType: {
+    type: String,
+    required: true
+  },
   appliances: {
     type: Array<Appliance>,
     required: true
@@ -53,13 +57,24 @@ const message = computed(() => {
   } else if (checkedStatus.value.nullCount !== 0) {
     return "Checks have not started";
   } else if (passedStatus.value.falseCount !== 0) {
-    return `${passedStatus.value.falseCount}/${props.appliances.length} appliances do not have the correct ID`;
+    return `${passedStatus.value.falseCount}/${props.appliances.length} ${messageMap[props.automationType].failed}`;
   } else if (passedStatus.value.falseCount === 0) {
-    return 'All appliances have the correct ID';
+    return messageMap[props.automationType].success;
   } else {
     return "Should not reach this....";
   }
 });
+
+const messageMap = {
+  "epson": {
+    failed: `appliances could not be contacted`,
+    success: 'All appliances can be contacted'
+  },
+  "cbus": {
+    failed: `appliances do not have the correct ID`,
+    success: 'All appliances have the correct ID'
+  }
+}
 
 const isHovered = ref(false);
 let hoverTimer;

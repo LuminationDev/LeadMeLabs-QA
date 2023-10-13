@@ -254,7 +254,7 @@ onBeforeMount(() => {
       <tr v-for="(appliances, type) in groupedData" :key="type" class="text-sm border border-gray-200">
         <ItemHover :title="stateStore.capitalizeFirstLetter(type)" :message="'Not sure what to do here'"/>
 
-        <IDStatus :currently-checking="type === currentlyChecking" :appliances="appliances"/>
+        <IDStatus :currently-checking="type === currentlyChecking" :automationType="appliances[0].automationType" :appliances="appliances"/>
 
         <ApplianceListModal :appliance-type="stateStore.capitalizeFirstLetter(type)" :appliances="appliances"/>
       </tr>
