@@ -81,7 +81,6 @@ const retest = async (type: string) => {
   await validateAppliance();
 }
 
-//TODO need to implement tests for Scenes (Same base/group/id - different value)
 const validateAppliance = async () => {
   checking.value = true;
 
@@ -116,7 +115,7 @@ const validateAppliance = async () => {
  * @returns {Promise} A promise that resolves when a response is received or rejects on a timeout.
  */
 const waitForResponse = async (appliance, timeout) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let responseTimer;
     let watcher;
 
