@@ -301,22 +301,35 @@ const handleTCPMessage = (info: any) => {
       const foundItem = fullStore.ApplianceList.find(item =>
           item.automationBase == details.automationBase &&
           item.automationGroup == details.automationGroup &&
-          item.automationId == details.automationId
+          item.automationId == details.automationId &&
+          (details.automationValue != undefined ? item.automationValue == details.automationValue : true)
       );
 
       if (!foundItem) return;
 
-      const correct = foundItem.id === `${foundItem.type}-${details.address}`;
+      let expectedId = `${foundItem.type}-${details.address}`;
+      if (details.automationValue != undefined) {
+        expectedId += `${details.automationValue}`;
+      }
+
+      const correct = foundItem.id === expectedId;
       if (correct !== null) {
         foundItem.correctId = correct;
-
-        if (correct === false) {
-          foundItem.correct = correct;
-        }
+        foundItem.correct = correct;
       }
       foundItem.checked = true;
       break;
     }
+    case "EpsonApplianceStatusCheck":
+      const details = response.responseData;
+      const foundItem = fullStore.ApplianceList.find(item => item.id === details.id);
+
+      if (!foundItem) return;
+
+      foundItem.correctId = details.result;
+      foundItem.correct = details.result;
+      foundItem.checked = true;
+      break;
   }
 
   // if (info.mainText.includes("StationChecks")) {
