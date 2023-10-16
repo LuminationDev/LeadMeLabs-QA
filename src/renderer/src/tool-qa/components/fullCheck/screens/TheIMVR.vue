@@ -45,14 +45,13 @@ function getVrStatuses() {
       return
     }
     getVrStatuses()
-  }, 5000)
+  }, 10000)
 }
 
 const inProgress = ref(false)
-const completedTest = ref(false)
 
 const infoDetails = computed(() => {
-  if (inProgress.value && !completedTest.value) {
+  if (inProgress.value && !experienceChecksCompleted.value) {
     return {
       theme: 'testing',
       title: 'Testing...',
