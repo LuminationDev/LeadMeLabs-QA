@@ -22,13 +22,17 @@ class QaGroup {
 
     updateQaChecks(id, qaChecks) {
         this.checks.forEach(check => {
+            let checkedCheck = qaChecks.find(qaCheck => qaCheck.id === check.id)
+            if (!checkedCheck) {
+                return
+            }
             if (id === "nuc") {
-                check.updateNucDetail(qaChecks.find(qaCheck => qaCheck.id === check.id))
+                check.updateNucDetail(checkedCheck)
             } else if (id.startsWith("tablet")) {
                 var ip = id.split(":")[1]
-                check.updateTabletDetail(ip, qaChecks.find(qaCheck => qaCheck.id === check.id))
+                check.updateTabletDetail(ip, checkedCheck)
             } else {
-                check.updateStationDetail(id, qaChecks.find(qaCheck => qaCheck.id === check.id))
+                check.updateStationDetail(id, checkedCheck)
             }
         })
     }

@@ -9,7 +9,7 @@ const config = defineConfig({
     root: path.join(__dirname, 'src', 'renderer'),
     publicDir: 'public',
     server: {
-        port: 8080,
+        port: 55565,
     },
     open: false,
     build: {

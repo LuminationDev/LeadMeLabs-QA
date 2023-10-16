@@ -303,9 +303,9 @@ export const useFullStore = defineStore({
             })
             setTimeout(() => {
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
-                    // display modal
+                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "failed", "Timed out waiting for response")
                 }
-            }, 30000)
+            }, 35000)
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
@@ -391,7 +391,7 @@ export const useFullStore = defineStore({
             const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 20000, stationIds, false, false, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
             const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 20000, stationIds, false, false, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
             const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 20000, stationIds, false, false, [], "SteamCMD Configured", "SteamCMD has Steam Guard detail or does not need them")
-            const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 20000, stationIds, false, false, [], "Steam guard disabled", "Steam Guard has been disabled")
+            const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 60000, stationIds, false, false, [], "Steam guard disabled", "Steam Guard has been disabled")
             const driverEasyNotInstalled = new QaCheckResult("drivereasy_not_installed", "auto", 20000, stationIds, true, false, [], "DriverEasy", "DriverEasy is not installed")
             const nvidiaNotInstalled = new QaCheckResult("nvidia_not_installed", "auto", 20000, stationIds, true, false, [], "NVidia", "No NVidia programs are installed")
             softwareChecks.checks.push(setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
