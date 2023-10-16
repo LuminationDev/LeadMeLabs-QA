@@ -404,6 +404,16 @@ export const useFullStore = defineStore({
             securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
 
+            const imvrChecks = new QaGroup("imvr_checks", "imvr")
+            const headsetConnected = new QaCheckResult("headset_connected", "auto", 10000, stationIds, false, false, [], "Headset Connected", "Is CBus password complex enough?")
+            const headsetFirmware = new QaCheckResult("headset_firmware", "auto", 10000, stationIds, false, false, [], "Headset Firmware", "Is CBus password complex enough?")
+            const controllersConnected = new QaCheckResult("controllers_connected", "auto", 10000, stationIds, false, false, [], "Controllers Connected", "Is CBus password complex enough?")
+            const controllersFirmware = new QaCheckResult("controllers_firmware", "auto", 10000, stationIds, false, false, [], "Controllers Firmware", "Is CBus password complex enough?")
+            const baseStationsConnected = new QaCheckResult("base_stations_connected", "auto", 10000, stationIds, false, false, [], "Sase Stations Connected", "Is CBus password complex enough?")
+            const baseStationsFirmware = new QaCheckResult("base_stations_firmware", "auto", 10000, stationIds, false, false, [], "Base Stations Firmware", "Is CBus password complex enough?")
+            imvrChecks.checks.push(headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
+            imvrChecks.requirements = ["station_connection_checks"]
+
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, stationIds, false, false, [], "Steam Username is set")
             const isSteamPasswordSet = new QaCheckResult("steam_password", "auto", 10000, stationIds, false, false, [], "Steam Password is set")
@@ -425,7 +435,7 @@ export const useFullStore = defineStore({
             steamConfigChecks.checks.push(isSteamUserNameSet, isSteamPasswordSet, isSteamPasswordComplex, isSteamInitialized, isFriendsSettingDisabled, isDownloadRegionSetCorrectly, isCloudEnabledOff, isDefaultPageSetToLibrary, skipOfflineWarning, allowAutoLogin, wantsOfflineMode, homeAppDisabled, controllerTimeoutSetToZero, screenTimeoutSetTo1800, pauseCompositorSetToFalse, steamVrDashboardDisabled, steamVrStatusNotOnTop)
             steamConfigChecks.requirements = ["station_connection_checks"]
 
-            this.qaGroups = [stationConnectionChecks, networkChecks, securityChecks, windowsChecks, softwareChecks, steamConfigChecks];
+            this.qaGroups = [stationConnectionChecks, networkChecks, securityChecks, windowsChecks, softwareChecks, steamConfigChecks, imvrChecks];
         },
 
         processQaList() {
