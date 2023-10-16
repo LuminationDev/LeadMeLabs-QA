@@ -10,6 +10,6 @@ import MenuGroup from "@renderer/layout/SideBar/FullCheck/components/MenuGroup.v
     <MenuGroup title="Windows" :category="WINDOWS" :auto-checks="['windows_checks']"/>
     <MenuGroup title="Security" :category="SECURITY" :auto-checks="['security_checks']"/>
     <MenuGroup title="Software" :category="SOFTWARE" :auto-checks="['software_checks', 'steam_config_checks']"/>
-    <MenuGroup title="IMVR" :category="IMVR" :separator="false"/>
+    <MenuGroup title="IMVR" :category="IMVR" :auto-checks="['experience_checks']" :separator="false"/>
   </div>
 </template>

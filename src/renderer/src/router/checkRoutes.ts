@@ -375,7 +375,7 @@ export const fullRoutes = [
         meta: {
             page: "software",
             description: "TODO write something in checkRoutes",
-            next: '/check/full/imvr/experiences',
+            next: '/check/full/imvr/experience_checks',
             prev: getLastRoute(SOFTWARE),
             progress: calculateProgress()
         }
@@ -384,10 +384,11 @@ export const fullRoutes = [
     {
         // todo - block this behind IMVR connection
         // todo - headset, base station and controller firmware, each station can detect two controllers, headset connection
-        path: '/check/full/imvr/experiences', // todo this full thing
-        name: 'full-imvr-experiences',
+        path: '/check/full/imvr/experience_checks', // todo this full thing
+        name: 'full-imvr-experience_checks',
         component: TheIMVR,
         meta: {
+            page: 'experience_checks',
             addComment: true,
             userInput: true,
             canSkip: true,
@@ -396,9 +397,23 @@ export const fullRoutes = [
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experiences',  "/check/full/overall/report"),
+    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experience_checks',  '/check/full/imvr/report'),
     // todo - decide if needed - manual leadme labs ux checks
     // todo export and upload, including all json files
+
+    //IMVR REPORT
+    {
+        path: '/check/full/imvr/report',
+        name: 'full-imvr-report',
+        component: BasicReport,
+        meta: {
+            page: "imvr",
+            description: "TODO write something in checkRoutes",
+            next: '/check/full/overall/report',
+            prev: getLastRoute(IMVR),
+            progress: calculateProgress()
+        }
+    },
 
     //OVERALL REPORT
     {
@@ -409,7 +424,7 @@ export const fullRoutes = [
             page: "overall",
             description: "TODO write something in checkRoutes",
             next: '/check/full/overall/submit',
-            prev: getLastRoute(IMVR),
+            prev: '/check/full/imvr/report',
             progress: calculateProgress()
         }
     },

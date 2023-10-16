@@ -256,7 +256,23 @@ export const useFullStore = defineStore({
                 }
             ]
 
+            //Add the experiences to the reportTracker
+
             experiences.forEach(experience => {
+                this.addCheckToReportTracker("imvr", "experience_checks",
+                    {
+                        key: experience.title,
+                        description: ""
+                    },
+                    {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                });
+
+                console.log(experience);
+
                 let stations = Array<any>()
                 stationIds.forEach(stationId => {
                     stations.push({
@@ -319,6 +335,14 @@ export const useFullStore = defineStore({
             }
             this.experienceChecks[index].stations[stationIndex].status = status
             this.experienceChecks[index].stations[stationIndex].message = message
+
+            //Update the report tracker
+            this.updateReport(
+                "imvr",
+                "experience_checks",
+                { passedStatus: status, message: message },
+                this.experienceChecks[index].title,
+                stationId);
 
             if (status === "passed" || status === "failed") {
                 this.experienceChecks[index].stations[stationIndex].checkingStatus = "checked"
@@ -592,6 +616,7 @@ export const useFullStore = defineStore({
          */
         addCheckToReportTracker(parent: string, page: string, check, targetDevices: {}) {
             const checkKey = check.key;
+            this.reportTracker[parent] ||= {};
             const reportTracker = this.reportTracker[parent][page] ||= {};
 
             reportTracker[checkKey] ||= {
