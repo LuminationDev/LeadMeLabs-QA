@@ -101,6 +101,7 @@ const generateCategoryStatus = computed(() => {
 
     <td class="pl-6 p-3 w-28" v-on:click="currentlySelected = checkId">
       <CommentModal :mode="check['comments'] !== undefined && check['comments'].length > 0 ? 'icon' : 'icon-empty'"
+                    :title="stateStore.generateTitle(checkId)"
                     :current-comments="check['comments']"
                     :callback="addComment"/>
     </td>
