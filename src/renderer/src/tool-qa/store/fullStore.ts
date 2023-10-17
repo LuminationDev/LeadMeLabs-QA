@@ -737,6 +737,16 @@ export const useFullStore = defineStore({
             return state.experienceChecks.filter(check => {
                 return check.stations.filter(station => station.checkingStatus !== 'checking' && station.status !== null).length === 0
             }).length === 0
+        },
+        getReportSections(state) {
+            const keysToRemove = ['labLocation', 'technicianName'];
+            const reportWithoutKey = { ...state.reportTracker };
+            keysToRemove.forEach(key => {
+                if (reportWithoutKey.hasOwnProperty(key)) {
+                    delete reportWithoutKey[key];
+                }
+            });
+            return reportWithoutKey;
         }
     }
 });

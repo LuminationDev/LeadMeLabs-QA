@@ -48,7 +48,7 @@ const generateCategoryStatus = (parent: string) => {
       <p class="text-base text-black mb-4">Full report of Learning Lab QA Test</p>
 
       <div class="flex flex-row">
-        <div v-for="(sections, title) in fullStore.reportTracker"
+        <div v-for="(sections, title) in fullStore.getReportSections"
             class="flex items-center mx-2 p-2 rounded-lg cursor-pointer
             font-semibold hover:bg-blue-50 hover:text-blue-500"
             :class="{
@@ -66,7 +66,7 @@ const generateCategoryStatus = (parent: string) => {
     </template>
 
     <template v-slot:content>
-      <template v-for="(sections, title) in fullStore.reportTracker">
+      <template v-for="(sections, title) in fullStore.getReportSections">
         <BasicReport v-if="reportCategory === title" :page="title" />
       </template>
     </template>

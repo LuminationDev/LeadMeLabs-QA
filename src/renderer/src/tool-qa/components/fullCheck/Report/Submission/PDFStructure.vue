@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import PDFTable from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFTable.vue";
+import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/Results/ReportResults.vue";
 import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
-import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/Results/ReportResults.vue";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -24,7 +24,11 @@ const checkDetails = computed(() => {
 
 <template>
   <div class="flex flex-col mt-6">
-    <p class="text-2xl text-black font-semibold mb-2">
+    <p class="text-center text-2xl text-black font-semibold mb-3">QA Lab Report</p>
+    <p class="text-black mb-1"><span class="font-semibold">Lab Location: </span>{{fullStore.reportTracker['labLocation']}}</p>
+    <p class="text-black mb-5"><span class="font-semibold">Prepared by: </span>{{fullStore.reportTracker['technicianName']}}</p>
+
+    <p class="text-xl text-black font-semibold mb-2">
       {{stateStore.generateTitle(props.parent)}} (Report)
     </p>
 

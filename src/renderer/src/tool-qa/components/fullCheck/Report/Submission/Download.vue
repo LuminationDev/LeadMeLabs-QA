@@ -7,7 +7,9 @@ import { getStorage, ref, uploadString } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { computed, onMounted, ref as vueRef, watch } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 
+const stateStore = useStateStore();
 const fullStore = useFullStore();
 const status = vueRef("uploading");
 const auth = getAuth();
@@ -26,10 +28,10 @@ const userMessage = computed(() => {
 const checkUserStatus = () => {
   const user = auth.currentUser;
   if (user && fullStore.uploadFileResult === false) {
-    console.log("User is logged in:", user);
+    console.log("User is logged in");
     uploadReport();
   } else {
-    console.log("No user is logged in.");
+    console.log("No user logged in")
     fullStore.online = false;
   }
 };
@@ -49,8 +51,8 @@ const uploadReport = () => {
 const uploadJSON = () => {
   const storage = getStorage();
   status.value = "uploading";
-  const fileName = 'report.json'
-  const storageRef = ref(storage, `QA/${'Eds Computer'}/${fileName}`);
+  const fileName = `report_${fullStore.reportTracker['labLocation']}_${stateStore.getCurrentDate()}.json`
+  const storageRef = ref(storage, `QA/${fullStore.reportTracker['labLocation']}/${fileName}`);
 
   uploadString(storageRef, JSON.stringify(fullStore.reportTracker), "raw")
       .then(() => {
@@ -71,8 +73,8 @@ const uploadPDF = () => {
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.GENERATE_REPORT,
     type: 'upload_pdf',
-    location: 'Eds Computer',
-    fileName: 'report',
+    location: fullStore.reportTracker['labLocation'],
+    fileName: `report_${fullStore.reportTracker['labLocation']}_${stateStore.getCurrentDate()}`,
     data: createHtmlContent()
   });
 };

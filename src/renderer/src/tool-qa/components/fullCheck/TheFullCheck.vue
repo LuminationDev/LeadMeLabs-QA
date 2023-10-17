@@ -32,6 +32,7 @@ const categories = () => {
   <GenericLayout>
     <template v-slot:title>
       <p class="text-xl font-semibold text-black mb-3">Full Lab Check</p>
+      <p class="text-base text-black mb-4">No description set</p>
 
       <!--A tab for each category-->
       <div class="flex flex-row w-full overflow-auto">

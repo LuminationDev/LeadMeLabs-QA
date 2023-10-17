@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import PDFStructure from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFStructure.vue";
+import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 
+const stateStore = useStateStore();
 const fullStore = useFullStore();
 const props = defineProps({
   fileType: {
@@ -11,8 +13,7 @@ const props = defineProps({
   }
 });
 
-//TODO generate this somehow
-const fileName = "QAReport_LOCATION_DATE";
+const fileName = `QAReport_${fullStore.reportTracker['labLocation']}_${stateStore.getCurrentDate()}`;
 
 /**
  * Send a message to the backend to generate and download the report as the requested type. The accepted values are
@@ -68,6 +69,6 @@ const createHtmlContent = () => {
 
   <!--Generate the report to convert to pdf, can be kept hidden and the content is picked up by the id-->
   <div class="flex flex-col hidden" id="report">
-    <PDFStructure v-for="(sections, title) in fullStore.reportTracker" :parent="title" />
+    <PDFStructure v-for="(sections, title) in fullStore.getReportSections" :parent="title" />
   </div>
 </template>
