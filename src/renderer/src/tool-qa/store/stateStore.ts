@@ -1,4 +1,18 @@
 import { defineStore } from 'pinia';
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyA5O7Ri4P6nfUX7duZIl19diSuT-wxICRc",
+    authDomain: "leadme-labs.firebaseapp.com",
+    projectId: "leadme-labs",
+    storageBucket: "leadme-labs.appspot.com",
+    messagingSenderId: "676443233497",
+    appId: "1:676443233497:web:6c5fd1e7f5ec334c3972c8",
+    measurementId: "G-VP5XSL3TJR"
+};
+
+// Initialize Firebase
+initializeApp(firebaseConfig);
 
 /**
  * Used to store the general state of the QA tool. This store provides variables and functions that are used across

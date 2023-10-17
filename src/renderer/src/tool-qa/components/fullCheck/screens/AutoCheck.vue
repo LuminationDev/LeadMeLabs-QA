@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import * as CONSTANT from "@renderer/assets/constants";
 import { computed, onMounted, ref, watch } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
-import { useRoute } from "vue-router";
+import { useRoute} from "vue-router";
 import { QaCheckResult } from "@renderer/tool-qa/types/_qaCheckResult";
 import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
 import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue";
@@ -123,24 +122,40 @@ const retryAutoCheck = () => {
 }
 
 /**
- * Start the auto test once the component has been mounted, check that the server and connection is up first.
+ * On mount or route name change run the auto checks related to the current page. The route name change is necessary
+ * as when two AutoCheck pages are back to page the onMounted is not triggered.
  */
-onMounted(() => {
+const autoRun = () => {
   fullStore.readReportData(<string>route.meta['parent'], <string>checkType.value);
-
   if (typeof checkType.value === "string") {
     fullStore.mostRecentAutoCheck = checkType.value;
   }
 
   //TODO check if the tests have already been run before auto starting it again?
   checking.value = "testing";
-
   fullStore.startQa(checkType.value);
+}
+
+/**
+ * Start the auto test once the component has been mounted, check that the server and connection is up first.
+ */
+onMounted(() => {
+  autoRun();
+});
+
+/**
+ * If the route name has changed but the component has not there is another auto check to run. All auto checks
+ * end with _checks. Otherwise, the watch is disregarded.
+ */
+watch(() => route.name, () => {
+  if (route.name.toString().endsWith("_checks")) {
+    autoRun();
+  }
 });
 </script>
 
 <template>
-  <GenericLayout :key="route.name">
+  <GenericLayout>
     <template v-slot:title>
       <p class="text-2xl text-black font-semibold mb-2">{{getTitle}}</p>
       <!--TODO work out how to get a description-->

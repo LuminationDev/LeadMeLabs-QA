@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 
 defineProps({
   passedStatus: {
@@ -17,7 +16,6 @@ defineProps({
   }
 });
 
-const stateStore = useStateStore();
 const isHovered = ref(false);
 let hoverTimer;
 
@@ -46,7 +44,7 @@ const clearHoverTimer = () => {
       <img v-else alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
     </div>
     <Transition name="fade">
-      <div v-if="isHovered" class="absolute w-40 bg-gray-100 border-[1px] border-gray-300 p-2 rounded-lg z-10">{{ message }}</div>
+      <div v-if="isHovered" class="absolute w-44 bg-gray-100 border-[1px] border-gray-300 p-2 rounded-lg -left-36 z-10">{{ message }}</div>
     </Transition>
   </td>
 </template>

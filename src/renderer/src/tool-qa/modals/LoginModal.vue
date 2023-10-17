@@ -4,7 +4,6 @@ import Modal from "./Modal.vue";
 import useVuelidate from "@vuelidate/core";
 import TextInput from "@renderer/tool-qa/components/_generic/inputs/TextInput.vue";
 import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
-import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";
@@ -42,18 +41,6 @@ const state = reactive({
 const v$ = useVuelidate(rules, state);
 const errorText = vueRef("");
 const showModal = vueRef(false);
-const firebaseConfig = {
-  apiKey: "AIzaSyA5O7Ri4P6nfUX7duZIl19diSuT-wxICRc",
-  authDomain: "leadme-labs.firebaseapp.com",
-  projectId: "leadme-labs",
-  storageBucket: "leadme-labs.appspot.com",
-  messagingSenderId: "676443233497",
-  appId: "1:676443233497:web:6c5fd1e7f5ec334c3972c8",
-  measurementId: "G-VP5XSL3TJR"
-};
-
-// Initialize Firebase
-initializeApp(firebaseConfig);
 const auth = getAuth();
 
 const checkUserStatus = () => {
