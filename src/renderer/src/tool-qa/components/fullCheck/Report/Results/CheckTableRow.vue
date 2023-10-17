@@ -86,7 +86,7 @@ const generateCategoryStatus = computed(() => {
     </td>
 
     <td class="p-3 w-36 text-center">
-      {{check.date ?? "No"}}
+      {{check.date ?? "-"}}
     </td>
 
     <td class="p-3 w-28 font-semibold">

@@ -228,7 +228,7 @@ onBeforeMount(() => {
     return;
   }
 
-  if (fullStore.ApplianceList.length > 0) {
+  if (fullStore.ApplianceList.length > 0 && fullStore.getCbusConnection) {
     startNewTest();
   }
 });
