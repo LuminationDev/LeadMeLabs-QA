@@ -27,9 +27,10 @@ const checkUserStatus = () => {
   const user = auth.currentUser;
   if (user && fullStore.uploadFileResult === false) {
     console.log("User is logged in:", user);
-    //uploadReport();
+    uploadReport();
   } else {
     console.log("No user is logged in.");
+    fullStore.online = false;
   }
 };
 

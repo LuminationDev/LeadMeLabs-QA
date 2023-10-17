@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 
 defineProps({
   passedStatus: {
@@ -17,7 +16,6 @@ defineProps({
   }
 });
 
-const stateStore = useStateStore();
 const isHovered = ref(false);
 let hoverTimer;
 

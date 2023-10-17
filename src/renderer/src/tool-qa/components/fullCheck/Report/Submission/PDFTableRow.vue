@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
-import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
-import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed, ref } from "vue";
 import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
+import PDFDeviceStatus from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFDeviceStatus.vue";
 
 const props = defineProps({
   checkId: {
@@ -24,18 +22,6 @@ const props = defineProps({
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
-const currentlySelected = ref("");
-const expanded = ref(false);
-
-/**
- * Add a comment to the fullStore reportTracker item that has been selected
- */
-const addComment = (comment: string) => {
-  props.check.comments.push({
-    date: stateStore.formattedDate(true),
-    content: comment
-  });
-}
 
 //TODO ask Matt for clarification if a device that is not part of that test should be shown?
 /**
@@ -76,13 +62,9 @@ const generateCategoryStatus = computed(() => {
 </script>
 
 <template>
-  <tr class="h-12 text-sm border border-gray-200">
+  <tr class="h-12 w-full text-sm border-l border-t border-r border-gray-200">
     <td class="flex flex-row items-center">
-      <div class="h-5 w-5 ml-1 -mr-2 cursor-pointer" @click="expanded = !expanded">
-        <img v-if="expanded" src="../../../../../assets/icons/chevron-down.svg" alt="close" />
-        <img v-else src="../../../../../assets/icons/chevron-right.svg" alt="expand" />
-      </div>
-      <ItemHover :title="stateStore.generateTitle(checkId)" :message="check.description "/>
+      <div class="p-3 font-semibold mr-1">{{ stateStore.generateTitle(checkId) }}</div>
     </td>
 
     <td class="p-3 w-36 text-center">
@@ -98,25 +80,26 @@ const generateCategoryStatus = computed(() => {
         {{ stateStore.capitalizeFirstLetter(generateCategoryStatus ?? "Skipped") }}
       </div>
     </td>
+  </tr>
 
-    <td class="pl-6 p-3 w-28" v-on:click="currentlySelected = checkId">
-      <CommentModal :mode="check['comments'] !== undefined && check['comments'].length > 0 ? 'icon' : 'icon-empty'"
-                    :title="stateStore.generateTitle(checkId)"
-                    :current-comments="check['comments']"
-                    :callback="addComment"/>
+  <tr class="text-xs">
+    <td colspan="3" class="px-3 pb-2">
+      {{check.description}}
     </td>
   </tr>
 
-  <tr v-if="expanded" class="h-12 bg-gray-100 border border-gray-200">
-    <td colspan="4" class="pl-8 text-xs">
+  <tr class="h-12 bg-gray-100 border border-gray-200">
+    <td colspan="3" class="pl-8 text-xs">
       <div class="flex flex-row items-center">
         <div class="mr-4">
           Devices:
         </div>
 
         <div v-for="(device, index) in fullStore.orderedDevices" :key="index" class="flex flex-row items-center">
-          {{device.prefix}}{{device.id}}
-          <StatusHover class="w-9"
+          <div>
+            {{device.prefix}}{{device.id}}
+          </div>
+          <PDFDeviceStatus class="w-9"
                        :message="generateMessage(device)"
                        :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
                        :passed-status="device.checks[checkId]?.passedStatus ?? 'unknown'"/>
@@ -124,5 +107,15 @@ const generateCategoryStatus = computed(() => {
       </div>
     </td>
   </tr>
-</template>
 
+  <tr class="bg-gray-50 text-xs" v-for="(comment, index) in check['comments']">
+    <td colspan="3" class="pl-8 p-3">
+      <div>
+        {{comment.date}}
+      </div>
+      <div>
+        <span class="font-semibold mr-1">Comment:</span> {{comment.content}}
+      </div>
+    </td>
+  </tr>
+</template>

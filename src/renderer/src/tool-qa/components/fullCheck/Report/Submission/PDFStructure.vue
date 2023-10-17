@@ -23,14 +23,14 @@ const checkDetails = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col mt-6">
     <p class="text-2xl text-black font-semibold mb-2">
       {{stateStore.generateTitle(props.parent)}} (Report)
     </p>
 
-    <hr>
+    <hr class="my-2">
 
-    <div class="flex flex-col">
+    <div class="flex flex-col mb-6">
       <ReportResults :parent="props.parent"/>
 
       <PDFTable v-for="(section, page) in checkDetails" :key="page"

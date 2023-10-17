@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import CheckTableRow from "@renderer/tool-qa/components/fullCheck/Report/Results/CheckTableRow.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
 import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
+import PDFTableRow from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFTableRow.vue";
 
 const props = defineProps({
   parent: {
@@ -79,7 +79,7 @@ const generateCategoryStatus = computed(() => {
       </tr>
 
       <template v-for="(check, key) in props.section">
-        <CheckTableRow :check-id="<string>key" :check="check" :status="'passed'"/>
+        <PDFTableRow :check-id="<string>key" :check="check" :status="'passed'"/>
       </template>
     </table>
   </div>
