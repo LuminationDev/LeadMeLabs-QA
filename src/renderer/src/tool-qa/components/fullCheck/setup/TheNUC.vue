@@ -67,6 +67,17 @@ async function connectToNuc() {
     }
   }, 10000)
 }
+
+async function retryStationConnection() {
+  fullStore.stations.forEach(station => {
+    fullStore.sendStationMessage(station.id, {
+      action: CONSTANT.ACTION.CONNECT_STATION,
+      actionData: {
+        expectedStationId: station.id
+      }
+    })
+  })
+}
 </script>
 
 <template>
@@ -111,13 +122,19 @@ async function connectToNuc() {
 
     <!--    Stations    -->
     <div class="w-full border-2 border-gray-200 rounded-xl p-4 flex flex-col mb-4">
-      <div class="flex flex-row items-center h-full">
-        <StatusIcon :status="fullStore.stations.length === fullStore.stations.filter(station => station.details).length ? 'green' : 'red'" class="w-16 h-16 mr-8">
-          <template v-slot:icon="{ fill }">
-            <ComputerSvg :fill="fill" />
-          </template>
-        </StatusIcon>
-        <span class="text-lg font-semibold col-span-4">Connected to {{ fullStore.stations.filter(station => station.details).length }}/{{ fullStore.stations.length }} stations</span>
+      <div class="flex flex-row items-center h-full justify-between">
+        <div class="flex flex-row items-center h-full">
+          <StatusIcon :status="fullStore.stations.length === fullStore.stations.filter(station => station.details).length ? 'green' : 'red'" class="w-16 h-16 mr-8">
+            <template v-slot:icon="{ fill }">
+              <ComputerSvg :fill="fill" />
+            </template>
+          </StatusIcon>
+          <span class="text-lg font-semibold col-span-4">Connected to {{ fullStore.stations.filter(station => station.details).length }}/{{ fullStore.stations.length }} stations</span>
+        </div>
+        <div v-if="fullStore.stations.length !== fullStore.stations.filter(station => station.details).length"
+          @click="retryStationConnection">
+          Retry
+        </div>
       </div>
     </div>
   </div>

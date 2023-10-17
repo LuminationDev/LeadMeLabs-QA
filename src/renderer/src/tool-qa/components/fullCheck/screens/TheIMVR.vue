@@ -28,6 +28,10 @@ function startTesting() {
   inProgress.value = true
 }
 
+function retryExperience(experienceIndex) {
+  fullStore.launchExperienceOnAll(experienceIndex)
+}
+
 function cancelTesting() {
   allowRunningExperienceChecks.value = false
   inProgress.value = false
@@ -154,6 +158,7 @@ onMounted(() => {
             <th class="w-16 text-center p-3" v-for="device in fullStore.experienceChecks[0].stations">
               S{{device.id}}
             </th>
+            <th/>
           </tr>
 
           <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
@@ -165,6 +170,10 @@ onMounted(() => {
                            :checking-status="station.checkingStatus ?? 'not checked'"
                            :passed-status="station.status ?? 'unknown'"/>
             </template>
+            <th v-if="check.stations.filter(station => station.status === 'failed').length > 0" @click="() => { retryExperience(index) }">
+              Retry
+            </th>
+            <th v-else/>
           </tr>
         </table>
       </div>
