@@ -1,14 +1,15 @@
 import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
-import FullCheck from "@renderer/tool-qa/screens/FullCheck.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
+import TheIMVR from "@renderer/tool-qa/components/fullCheck/screens/TheIMVR.vue";
+import BasicAutoCheck from "@renderer/tool-qa/components/fullCheck/screens/AutoCheck.vue";
+import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
+import OverallReport from "@renderer/tool-qa/components/fullCheck/Report/OverallReport.vue";
+import FinaliseReport from "@renderer/tool-qa/components/fullCheck/Report/FinaliseReport.vue";
+import TheDetails from "@renderer/tool-qa/components/fullCheck/screens/TheDetails.vue";
+import TheFullCheck from "@renderer/tool-qa/components/fullCheck/TheFullCheck.vue";
 import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
 import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
-import TheIMVR from "../tool-qa/components/fullCheck/screens/TheIMVR.vue";
-import BasicAutoCheck from "../tool-qa/components/fullCheck/screens/AutoCheck.vue";
-import BasicReport from "../tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
-import OverallReport from "../tool-qa/components/fullCheck/Report/OverallReport.vue";
-import FinaliseReport from "../tool-qa/components/fullCheck/Report/FinaliseReport.vue";
 
 /**
  * Routes used for the Quick Lab Check
@@ -51,7 +52,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/39 * 100); //TODO WARNING: 39 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/40 * 100); //TODO WARNING: 40 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -178,12 +179,23 @@ const getLastRoute = (checkArray: CheckObject[]) => {
  */
 export const fullRoutes = [
     {
+        path: '/check/full/setup/details',
+        name: 'full-setup-devices-details',
+        component: TheDetails,
+        meta: {
+            next: '/check/full/setup/devices/nuc',
+            prev: '/',
+            progress: calculateProgress()
+        }
+    },
+
+    {
         path: '/check/full/setup/devices/nuc',
         name: 'full-setup-devices-nuc',
-        component: FullCheck,
+        component: TheFullCheck,
         meta: {
             next: '/check/full/setup/devices/tablets',
-            prev: '/',
+            prev: '/check/full/setup/details',
             progress: calculateProgress()
         }
     },
@@ -191,7 +203,7 @@ export const fullRoutes = [
     {
         path: '/check/full/setup/devices/tablets',
         name: 'full-setup-devices-tablets',
-        component: FullCheck,
+        component: TheFullCheck,
         meta: {
             next: '/check/full/setup/devices/stations',
             prev: '/check/full/setup/devices/nuc',
@@ -202,7 +214,7 @@ export const fullRoutes = [
     {
         path: '/check/full/setup/devices/stations',
         name: 'full-setup-devices-stations',
-        component: FullCheck,
+        component: TheFullCheck,
         meta: {
             next: '/check/full/setup/appliances',
             prev: '/check/full/setup/devices/tablets',

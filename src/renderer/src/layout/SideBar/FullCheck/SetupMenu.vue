@@ -80,12 +80,21 @@ const currentSubStatus = (localRoute: string) => {
 <template>
   <div class="flex flex-col relative">
     <!--Category title-->
-    <MenuItem title="Setup" route="/check/full/setup/devices/nuc"
+    <MenuItem title="Setup" route="/check/full/setup/details"
               :current="isActive"
               :status="currentTitleStatus('/check/full/setup')"/>
 
     <template v-if="isActive">
       <!--Sub-categories-->
+      <div class="ml-5 flex flex-col relative">
+        <MenuItem title="Details"
+                  route="/check/full/setup/details"
+                  :current="isSubActive('details')"
+                  :status="currentTitleStatus('/check/full/setup/details')"/>
+
+        <MenuSeparator :active="isSeparatorActive('/check/full/setup/details')"/>
+      </div>
+
       <div class="ml-5 flex flex-col relative">
         <MenuItem title="Devices"
                   route="/check/full/setup/devices"

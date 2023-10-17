@@ -89,7 +89,7 @@ const closeModal = () => {
  */
 const processCallback = () => {
   if (props.callback === undefined) {
-    router.push("/check/full/setup/devices/nuc");
+    router.push("/check/full/setup/details");
   } else {
     props.callback();
   }
