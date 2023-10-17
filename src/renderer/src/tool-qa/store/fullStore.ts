@@ -319,9 +319,9 @@ export const useFullStore = defineStore({
             })
             setTimeout(() => {
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
-                    // display modal
+                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "failed", "Timed out waiting for response")
                 }
-            }, 30000)
+            }, 35000)
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
@@ -415,7 +415,7 @@ export const useFullStore = defineStore({
             const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 20000, stationIds, false, false, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
             const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 20000, stationIds, false, false, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
             const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 20000, stationIds, false, false, [], "SteamCMD Configured", "SteamCMD has Steam Guard detail or does not need them")
-            const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 20000, stationIds, false, false, [], "Steam guard disabled", "Steam Guard has been disabled")
+            const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 60000, stationIds, false, false, [], "Steam guard disabled", "Steam Guard has been disabled")
             const driverEasyNotInstalled = new QaCheckResult("drivereasy_not_installed", "auto", 20000, stationIds, true, false, [], "DriverEasy", "DriverEasy is not installed")
             const nvidiaNotInstalled = new QaCheckResult("nvidia_not_installed", "auto", 20000, stationIds, true, false, [], "NVidia", "No NVidia programs are installed")
             softwareChecks.checks.push(setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
@@ -427,6 +427,16 @@ export const useFullStore = defineStore({
             const pinNotDefault = new QaCheckResult("pin_is_not_default", "auto", 10000, [], false, false, this.getConnectedTabletIpAddresses, "Pin not default", "Pin is not default")
             securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
+
+            const imvrChecks = new QaGroup("imvr_checks", "imvr")
+            const headsetConnected = new QaCheckResult("headset_connected", "auto", 10000, stationIds, false, false, [], "Headset Connected", "Is CBus password complex enough?")
+            const headsetFirmware = new QaCheckResult("headset_firmware", "auto", 10000, stationIds, false, false, [], "Headset Firmware", "Is CBus password complex enough?")
+            const controllersConnected = new QaCheckResult("controllers_connected", "auto", 10000, stationIds, false, false, [], "Controllers Connected", "Is CBus password complex enough?")
+            const controllersFirmware = new QaCheckResult("controllers_firmware", "auto", 10000, stationIds, false, false, [], "Controllers Firmware", "Is CBus password complex enough?")
+            const baseStationsConnected = new QaCheckResult("base_stations_connected", "auto", 10000, stationIds, false, false, [], "Sase Stations Connected", "Is CBus password complex enough?")
+            const baseStationsFirmware = new QaCheckResult("base_stations_firmware", "auto", 10000, stationIds, false, false, [], "Base Stations Firmware", "Is CBus password complex enough?")
+            imvrChecks.checks.push(headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
+            imvrChecks.requirements = ["station_connection_checks"]
 
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, stationIds, false, false, [], "Steam Username is set")
@@ -449,7 +459,7 @@ export const useFullStore = defineStore({
             steamConfigChecks.checks.push(isSteamUserNameSet, isSteamPasswordSet, isSteamPasswordComplex, isSteamInitialized, isFriendsSettingDisabled, isDownloadRegionSetCorrectly, isCloudEnabledOff, isDefaultPageSetToLibrary, skipOfflineWarning, allowAutoLogin, wantsOfflineMode, homeAppDisabled, controllerTimeoutSetToZero, screenTimeoutSetTo1800, pauseCompositorSetToFalse, steamVrDashboardDisabled, steamVrStatusNotOnTop)
             steamConfigChecks.requirements = ["station_connection_checks"]
 
-            this.qaGroups = [stationConnectionChecks, networkChecks, securityChecks, windowsChecks, softwareChecks, steamConfigChecks];
+            this.qaGroups = [stationConnectionChecks, networkChecks, securityChecks, windowsChecks, softwareChecks, steamConfigChecks, imvrChecks];
         },
 
         processQaList() {

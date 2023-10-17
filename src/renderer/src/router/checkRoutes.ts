@@ -389,15 +389,29 @@ export const fullRoutes = [
         component: TheIMVR,
         meta: {
             page: 'experience_checks',
+            parent: 'imvr',
             addComment: true,
             userInput: true,
             canSkip: true,
-            next: getFirstRoute(IMVR),
+            next: '/check/full/imvr/imvr_checks',
             prev: getLastRoute(SOFTWARE),
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/experience_checks',  '/check/full/imvr/report'),
+    {
+        path: '/check/full/imvr/imvr_checks',
+        name: 'full-imvr-imvr_checks',
+        component: BasicAutoCheck,
+        meta: {
+            parent: 'imvr',
+            checkType: 'imvr_checks',
+            addComment: true,
+            next: getFirstRoute(IMVR),
+            prev: '/check/full/imvr/experience_checks',
+            progress: calculateProgress()
+        }
+    },
+    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/imvr_checks',  "/check/full/overall/report"),
     // todo - decide if needed - manual leadme labs ux checks
     // todo export and upload, including all json files
 
