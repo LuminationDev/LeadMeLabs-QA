@@ -8,7 +8,8 @@ defineProps({
   },
   message: {
     type: String,
-    required: true
+    required: false,
+    default: "Not provided"
   }
 })
 

@@ -311,6 +311,7 @@ const handleTCPMessage = (info: any) => {
       );
 
       if (!foundItem) return;
+      foundItem.checked = true;
 
       let expectedId = `${foundItem.type}-${details.address}`;
       if (details.automationValue != undefined) {
@@ -322,7 +323,6 @@ const handleTCPMessage = (info: any) => {
         foundItem.correctId = correct;
         foundItem.correct = correct;
       }
-      foundItem.checked = true;
       break;
     }
     case "EpsonApplianceStatusCheck":
