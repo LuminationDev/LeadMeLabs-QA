@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useStateStore } from "../../../store/stateStore";
+import { useStateStore } from "../../store/stateStore";
 import * as CONSTANT from "@renderer/assets/constants";
 const stateStore = useStateStore();
 

@@ -46,29 +46,45 @@ export default class TcpServer {
 
         // Create a TCP server
         this.tcpServer = net.createServer((socket) => {
-            console.log('TCP client connected');
+            const remoteAddress = socket.remoteAddress;
+            console.log(`TCP client connected: ${remoteAddress}`);
+
+            //Set the header length for each socket connection
+            let headerLength: number | null = null;
+            let headerMessage: string | null = null;
+            let encryptedMainText: string = "";
 
             // Handle data received from the TCP client
             socket.on('data', (data) => {
                 // Convert the received data to a buffer
                 const buffer = Buffer.from(data);
 
+                //The socket has already started sending information and no header will be present
+                if (headerLength !== null) {
+                    encryptedMainText += buffer.toString('utf8');
+                    return;
+                }
+
                 // Parse the header length from the first 4 bytes (big-endian)
-                let headerLength = buffer.readUInt32LE(0); //messages from NUC
-                if(headerLength > 16) {
+                headerLength = buffer.readUInt32LE(0); //messages from NUC
+
+                if (headerLength > 16) {
                     headerLength = buffer.readUInt32BE(0); //messages from Station
                 }
 
                 // Parse the header message from the buffer
-                const headerMessage = buffer.slice(4, 4 + headerLength).toString('utf8');
+                headerMessage = buffer.slice(4, 4 + headerLength).toString('utf8');
 
                 // Parse the encrypted main text from the remaining buffer
-                const encryptedMainText = buffer.slice(4 + headerLength);
+                encryptedMainText += buffer.slice(4 + headerLength).toString('utf8');
+            });
 
-                // Decrypt the encrypted main text
-                console.log(key)
-                const mainText = decrypt(encryptedMainText.toString('utf8'), key);
-                console.log('received: ' + mainText)
+            // Handle TCP client disconnections
+            socket.on('end', () => {
+                console.log('TCP client disconnected');
+
+                // Decrypt the collective encrypted main text
+                const mainText = decrypt(encryptedMainText, key);
 
                 // Send to the frontend via Electron.IpcMain
                 this.mainWindow.webContents.send('backend_message', {
@@ -76,11 +92,6 @@ export default class TcpServer {
                     headerMessage,
                     mainText
                 });
-            });
-
-            // Handle TCP client disconnections
-            socket.on('end', () => {
-                console.log('TCP client disconnected');
             });
 
             // Handle TCP client errors

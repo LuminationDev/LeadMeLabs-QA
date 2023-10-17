@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import PDFTable from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFTable.vue";
 import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
-import PDFDevices from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFDevices.vue";
+import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/Results/ReportResults.vue";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
 const props = defineProps({
-  page: {
+  parent: {
     type: String,
     required: false
   }
@@ -17,31 +18,25 @@ const props = defineProps({
  * Collect the information for the different report sections
  */
 const checkDetails = computed(() => {
-  return fullStore.reportTracker[props.page];
+  return fullStore.reportTracker[props.parent];
 });
 </script>
 
-<!--TODO fix the following for some tests and all auto checks - check.id does not match-->
 <template>
-  <div class="flex flex-col" v-for="(section, page) in checkDetails" :key="page">
-    <div class="font-semibold text-lg">
-      {{stateStore.generateTitle(page)}}
-    </div>
-
-    <div v-for="(category, title) in section" class="flex flex-col my-4">
-      <!--Category Title-->
-      <div class="font-semibold text-base">{{stateStore.generateTitle(title)}}</div>
-
-      <!--Category Description-->
-      <div class="mb-2">Description: {{category.description}}</div>
-
-      <!--Devices with tests results-->
-      <div>Devices:</div>
-      <div v-for="(device, index) in fullStore.orderedDevices" :key="index">
-        <PDFDevices v-if="category.targets[device.type]" :title="title" :device="device"/>
-      </div>
-    </div>
+  <div class="flex flex-col">
+    <p class="text-2xl text-black font-semibold mb-2">
+      {{stateStore.generateTitle(props.parent)}} (Report)
+    </p>
 
     <hr>
+
+    <div class="flex flex-col">
+      <ReportResults :parent="props.parent"/>
+
+      <PDFTable v-for="(section, page) in checkDetails" :key="page"
+                  :parent="props.parent"
+                  :category="<string>page"
+                  :section="section"/>
+    </div>
   </div>
 </template>

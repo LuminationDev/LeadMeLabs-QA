@@ -15,6 +15,7 @@ import { Station } from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
 import {QaCheckResult} from "@renderer/tool-qa/types/_qaCheckResult";
+import {REPORT_GENERATED} from "@renderer/assets/constants/_channel";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -136,6 +137,10 @@ api.ipcRenderer.on('backend_message', (event, info) => {
 
     case CONSTANT.CHANNEL.UPDATE_CHANNEL:
       console.log(info);
+      break;
+
+    case CONSTANT.CHANNEL.REPORT_GENERATED:
+      fullStore.uploadFileResult = info.result;
       break;
 
     case CONSTANT.MESSAGE.LOAD_PROGRESS:

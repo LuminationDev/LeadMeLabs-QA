@@ -59,6 +59,7 @@
     "electron-dl": "^3.5.0",
     "electron-updater": "^5.3.0",
     "extract-zip": "^2.0.1",
+    "firebase-admin": "^11.11.0",
     "fs-extra": "^11.1.1",
     "network": "^0.6.1",
     "node-wmi": "^0.0.5",

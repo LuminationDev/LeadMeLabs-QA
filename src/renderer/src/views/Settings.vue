@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheSettings from '../tool-qa/components/_generic/settings/TheSettings.vue'
+import TheSettings from '../tool-qa/components/settings/TheSettings.vue'
 </script>
 
 <template>
