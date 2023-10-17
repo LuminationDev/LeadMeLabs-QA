@@ -411,7 +411,7 @@ export const fullRoutes = [
             progress: calculateProgress()
         }
     },
-    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/imvr_checks',  "/check/full/overall/report"),
+    ...generateRoutesFromObjectArray(IMVR, '/check/full/imvr/imvr_checks',  '/check/full/imvr/report'),
     // todo - decide if needed - manual leadme labs ux checks
     // todo export and upload, including all json files
 
