@@ -291,6 +291,14 @@ export const useFullStore = defineStore({
             })
         },
 
+        launchExperienceOnAll(experienceIndex: number) {
+            var stationIndex = 0
+            this.experienceChecks[experienceIndex].stations.forEach(() => {
+                this.launchExperience(experienceIndex, stationIndex)
+                stationIndex++
+            })
+        },
+
         launchExperience(experienceIndex: number, stationIndex: number) {
             this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus = "checking"
 
