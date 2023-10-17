@@ -3,6 +3,8 @@ import TcpClient from './tcp/TcpClient';
 import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
 import { DetermineReportType } from "./report/Report";
+import admin from 'firebase-admin';
+const serviceAccount = require('./serviceAccount.json');
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -17,6 +19,11 @@ export default class Helpers {
         this.ipcMain = ipcMain;
         this.mainWindow = mainWindow;
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
+
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+            databaseURL: "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
+        });
     }
 
     /**
@@ -55,7 +62,7 @@ export default class Helpers {
                     break;
 
                 case "generate_report":
-                    const details = await DetermineReportType(info);
+                    const details = await DetermineReportType(info, this.mainWindow);
 
                     if (details !== undefined) {
                         this.mainWindow.webContents.send('backend_message', {

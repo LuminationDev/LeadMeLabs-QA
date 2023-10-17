@@ -21,7 +21,7 @@ export const configToolRoutes = [
         component: WelcomeScreen,
         meta: {
             next: '/config/checklist',
-            prev: '/check/selection',
+            prev: '/',
             progress: 0
         }
     },

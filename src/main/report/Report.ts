@@ -1,13 +1,14 @@
-import { dialog } from 'electron';
 import fs from 'fs';
 import path from "path";
-import { createMockWindow } from "./MockBrowser";
 import os from "os";
+import { dialog } from 'electron';
+import { createMockWindow } from "./MockBrowser";
 
-export async function DetermineReportType(info: any) {
+export async function DetermineReportType(info: any, mainWindow: Electron.BrowserWindow) {
     switch(info.type) {
         case "pdf":
-            void generatePDF(info);
+        case "upload_pdf":
+            void generatePDF(info, mainWindow);
             break;
 
         case "csv":
@@ -19,7 +20,7 @@ export async function DetermineReportType(info: any) {
             break;
 
         case "load_progress":
-            return await loadCurrentProgress(info);
+            return await loadCurrentProgress();
 
         default:
             break;
@@ -29,8 +30,9 @@ export async function DetermineReportType(info: any) {
 /**
  * Generate a basic PDF document with the info.data supplied.
  * @param info
+ * @param mainWindow
  */
-const generatePDF = async (info: any) => {
+const generatePDF = async (info: any, mainWindow: Electron.BrowserWindow) => {
     //Save the info.data as temp.html
     const tempDir = os.tmpdir();
     const filePath = `${tempDir}/temp.html`;
@@ -41,7 +43,7 @@ const generatePDF = async (info: any) => {
     });
 
     //The MockBrowser will open and use that temp.html to generate a pdf
-    createMockWindow();
+    await createMockWindow(info.type === 'upload_pdf', info, mainWindow);
 }
 
 const generateCSV = async (info: any) => {
@@ -63,7 +65,7 @@ const saveCurrentProgress = async (info: any) => {
     });
 }
 
-const loadCurrentProgress = async (filepath: string) => {
+const loadCurrentProgress = async () => {
     const res = await dialog.showOpenDialog({properties: ['openFile']});
     if (!res.canceled) {
         const filepath = res.filePaths[0];

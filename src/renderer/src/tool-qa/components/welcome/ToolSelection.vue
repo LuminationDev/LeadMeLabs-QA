@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import OptionButton from "@renderer/tool-qa/components/_generic/welcome/OptionButton.vue";
+import OptionButton from "@renderer/tool-qa/components/welcome/OptionButton.vue";
 import vern from "@renderer/assets/images/vern-stand.svg";
+import LoginModal from "@renderer/tool-qa/modals/LoginModal.vue";
 
 const route = useRoute();
 </script>
@@ -26,7 +27,7 @@ const route = useRoute();
         <div class="flex flex-col w-full p-4">
           <!--QA tool choice-->
           <div class="w-full h-full pb-4">
-            <OptionButton title="QA Test" subtitle="Run a Quality Assurance Test" to="/check/full/setup/devices/nuc"/>
+            <LoginModal/>
           </div>
 
           <!--Generate Handover Doc-->

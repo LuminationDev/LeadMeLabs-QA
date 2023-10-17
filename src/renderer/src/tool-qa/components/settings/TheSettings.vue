@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LauncherDetails from "@renderer/tool-qa/components/_generic/settings/LauncherDetails.vue";
+import LauncherDetails from "@renderer/tool-qa/components/settings/LauncherDetails.vue";
 import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
 import {useRouter} from "vue-router";
 import TcpServer from "@renderer/tool-qa/components/tcp/TcpServer.vue";

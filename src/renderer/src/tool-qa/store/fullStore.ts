@@ -13,6 +13,8 @@ import { Report } from "../interfaces/_report";
 export const useFullStore = defineStore({
     id: 'full',
     state: () => ({
+        online: true,
+        uploadFileResult: false,
         //Track the progress of the checks as an overall report object
         reportTracker: {} as Report,
         //Track all connected devices
@@ -270,8 +272,6 @@ export const useFullStore = defineStore({
                     "nuc": false,
                     "cbus": false
                 });
-
-                console.log(experience);
 
                 let stations = Array<any>()
                 stationIds.forEach(stationId => {

@@ -1,17 +1,17 @@
 import { BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import os from "os";
+import admin from "firebase-admin";
 
-let mainWindow: BrowserWindow | null;
+let tempWindow: BrowserWindow | null;
 
 /**
  * A basic browser window that is not shown to the user. It loads up the temp.html that was saved by the Report page,
  * on finished loading electron uses the printToPDF function to create a replica of the current screen. Hence generating
  * the report.
  */
-export function createMockWindow() {
-    // Create the browser window
-    mainWindow = new BrowserWindow({
+export async function createMockWindow(isTemp: boolean, info: any, mainWindow: Electron.BrowserWindow) {
+    tempWindow = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
@@ -23,38 +23,78 @@ export function createMockWindow() {
     const tempDir = os.tmpdir();
     const tempFilePath = `${tempDir}/temp.html`;
 
-    // Load a blank HTML page
-    mainWindow.loadFile(tempFilePath).then(() => {
+    try {
+        await tempWindow.loadFile(tempFilePath);
+
         const options = {
             landscape: false,
             marginsType: 0,
             printBackground: true,
         };
 
-        // Print to PDF
-        mainWindow?.webContents.printToPDF(options).then((pdfData) => {
-            // Use Electron's dialog to save the PDF
-            const filePath = dialog.showSaveDialogSync({
+        const pdfData = await tempWindow.webContents.printToPDF(options);
+
+        let filePath: fs.PathOrFileDescriptor | undefined;
+
+        if (isTemp) {
+            filePath = `${tempDir}/${info.fileName}.pdf`;
+        } else {
+            filePath = dialog.showSaveDialogSync({
                 defaultPath: 'document.pdf',
             });
+        }
 
-            if (filePath) {
-                //Save the new PDF
-                fs.writeFile(filePath, pdfData, (error) => {
-                    if (error) throw error;
-                });
+        if (filePath) {
+            await fs.promises.writeFile(filePath, pdfData);
 
-                //Delete the temporary file
-                fs.unlink(tempFilePath, (error) => {
-                    if (error) throw error;
-                });
+            if (isTemp) {
+                await uploadFile(filePath, info.fileName, info.location, mainWindow);
             }
 
-            mainWindow?.close();
-        });
-    });
+            await fs.promises.unlink(tempFilePath);
+        }
 
-    mainWindow.on('closed', function () {
-        mainWindow = null;
-    });
+        tempWindow?.close();
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
+
+/**
+ * Upload the temporary PDF to Firebase Storage.
+ */
+const uploadFile = async (filePath: string, fileName: string, location: string, mainWindow: Electron.BrowserWindow) => {
+    const bucket = admin.storage().bucket('leadme-labs.appspot.com');
+    const destination = `QA/${location}/${fileName}.pdf`;
+
+    let result = false;
+
+    try {
+        const fileMetadata = {
+            contentType: 'application/pdf'
+        };
+
+        await bucket.upload(filePath, {
+            destination,
+            metadata: fileMetadata
+        });
+
+        console.log('File uploaded successfully.');
+        result = true;
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        result = false;
+    } finally {
+        try {
+            await fs.promises.unlink(filePath);
+            console.log(`Successfully deleted: ${filePath}`);
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+
+        mainWindow.webContents.send('backend_message', {
+            channelType: 'pdf_uploaded',
+            result,
+        });
+    }
+};
