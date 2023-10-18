@@ -27,6 +27,7 @@ class QaCheckResult {
     id: string
     type: string
     timeout: number = 0
+    targets: {}
     stations: Array<QaCheckResultStation> = []
     tablets: Array<QaCheckResultTablet> = []
     nuc: Array<QaCheckResultNuc> = []
@@ -38,9 +39,13 @@ class QaCheckResult {
         id: string,
         type: string,
         timeout: number,
+        targets: {
+            station: boolean,
+            tablet: boolean,
+            nuc: boolean,
+            cbus: boolean,
+        },
         stationIds: Array<string>,
-        hasNuc: boolean,
-        hasCbus: boolean,
         tabletIps: Array<string>,
         displayName: string,
         extendedDescription: string|null = null
@@ -48,6 +53,7 @@ class QaCheckResult {
         this.id = id;
         this.type = type;
         this.timeout = timeout;
+        this.targets = targets;
         this.displayName = displayName
         this.extendedDescription = extendedDescription
 
@@ -60,7 +66,7 @@ class QaCheckResult {
                 message: null
             })
         })
-        if (hasNuc) {
+        if (targets['nuc']) {
             this.nuc.push({
                 passedStatus: "unchecked",
                 checkingStatus: "not_checking",
@@ -68,7 +74,7 @@ class QaCheckResult {
                 message: null
             })
         }
-        if (hasCbus) {
+        if (targets['cbus']) {
             this.cbus.push({
                 passedStatus: "unchecked",
                 checkingStatus: "not_checking",

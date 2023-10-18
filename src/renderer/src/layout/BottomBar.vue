@@ -51,10 +51,10 @@ const populateFullReportTrackerWithAutoChecks = () => {
 
 const determineTargetDevices = (check: QaCheckResult) => {
   return {
-    "station": check.stations.length > 0,
-    "tablet": check.tablets.length > 0,
-    "nuc": check.nuc.length > 0,
-    "cbus": check.cbus.length > 0
+    "station": check.targets['station'],
+    "tablet": check.targets['tablet'],
+    "nuc": check.targets['nuc'],
+    "cbus": check.targets['cbus']
   };
 };
 

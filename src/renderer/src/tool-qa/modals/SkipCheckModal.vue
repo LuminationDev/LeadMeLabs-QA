@@ -31,8 +31,8 @@ function closeModal() {
 
 const skip = () => {
   //Save the message
-  const key = route.meta['trackerName'];
-  if(key !== undefined && comment.value.length > 0) {
+  const key = <string>route.meta['trackerName'];
+  if(key !== undefined && key !== null && comment.value.length > 0) {
     fullStore.reportTracker[key]['comment'] = comment.value;
   }
 

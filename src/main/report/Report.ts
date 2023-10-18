@@ -25,6 +25,8 @@ export async function DetermineReportType(info: any, mainWindow: Electron.Browse
         default:
             break;
     }
+
+    return null;
 }
 
 /**
@@ -47,7 +49,7 @@ const generatePDF = async (info: any, mainWindow: Electron.BrowserWindow) => {
 }
 
 const generateCSV = async (info: any) => {
-    console.log("Do something good");
+    console.log("Do something good: " + info.data);
 }
 
 const saveCurrentProgress = async (info: any) => {

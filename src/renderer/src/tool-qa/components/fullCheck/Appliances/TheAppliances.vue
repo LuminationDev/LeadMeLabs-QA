@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import ApplianceDisplay from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceList.vue";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
 </script>
 
 <template>

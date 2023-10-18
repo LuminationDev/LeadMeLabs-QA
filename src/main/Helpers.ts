@@ -4,7 +4,7 @@ import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
 import { DetermineReportType } from "./report/Report";
 import admin from 'firebase-admin';
-const serviceAccount = require('./serviceAccount.json');
+const serviceAccount = require('./static/serviceAccount.json');
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -50,7 +50,7 @@ export default class Helpers {
                     break;
 
                 case "network_port_settings":
-                    void CheckOpenPort(this.ipcMain, this.mainWindow, info);
+                    void CheckOpenPort(this.mainWindow, info);
                     break;
 
                 case "refresh_details":
@@ -64,7 +64,7 @@ export default class Helpers {
                 case "generate_report":
                     const details = await DetermineReportType(info, this.mainWindow);
 
-                    if (details !== undefined) {
+                    if (details !== undefined && details !== null) {
                         this.mainWindow.webContents.send('backend_message', {
                             channelType: details['message'],
                             data: details['data'],

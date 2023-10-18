@@ -43,9 +43,9 @@ const showTabletForm = computed(() => {
   return toggleShowTabletForm.value
 });
 
-watch(connectedTabletCount, (newValue) => {
+watch(connectedTabletCount, () => {
   toggleShowTabletForm.value = false
-})
+});
 </script>
 
 <template>

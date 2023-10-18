@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
 import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
-import { ref } from 'vue';
 
 const props = defineProps({
   dynamicContent: {

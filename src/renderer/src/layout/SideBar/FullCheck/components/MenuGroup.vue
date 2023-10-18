@@ -91,9 +91,6 @@ const currentTitleStatus = (localRoute: string) => {
   //Progress is equal to the screen's progress OR it is on the same local page but different tab
   if (route.path.includes(localRoute)) {
     return 'active';
-    //TODO relies on a report structure so not implemented yet
-  } else if (false) {
-    return 'complete';
   }
   //Progress is further than the screen's progress and the report is not complete
   else if (pageProgress < fullStore.maxProgress) {
@@ -121,15 +118,13 @@ const currentSubStatus = (localRoute: string) => {
   //Progress is equal to the screen's progress OR it is on the same local page but different tab
   } else if ((pageProgress === currentProgress) || (route.path.includes(localRoute) || pageProgress === fullStore.maxProgress)) {
     return 'active';
-
-  //TODO relies on a report structure so not implemented yet
-  } else if (false) {
-    return 'complete';
   }
   //Progress is further than the screen's progress and the report is not complete
   else if (pageProgress < fullStore.maxProgress) {
     return 'complete';
   }
+
+  return 'pending';
 }
 </script>
 
@@ -141,7 +136,7 @@ const currentSubStatus = (localRoute: string) => {
     <!--Sub-categories-->
     <!--Auto-checks-->
     <div v-if="isActive" v-for="(subtitle, index) in autoChecks" :key="index" class="ml-5 flex flex-col relative">
-      <MenuItem :title="stateStore.generateTitle(subtitle)"
+      <MenuItem :title="stateStore.generateTitle(<string>subtitle)"
                 :route="`/check/full/${title.toLowerCase()}/${subtitle}`"
                 :current="isAutoSubActive(index)"
                 :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${subtitle}`)"/>
@@ -151,15 +146,15 @@ const currentSubStatus = (localRoute: string) => {
 
     <!--Manual-checks-->
     <div v-if="isActive" v-for="(object, index) in category" :key="index" class="ml-5 flex flex-col relative">
-      <MenuItem :title="stateStore.generateTitle(object.page)"
-                :route="`/check/full/${title.toLowerCase()}/${object.page}/${Object.keys(object.category[0])[0].toLowerCase()}`"
+      <MenuItem :title="stateStore.generateTitle(object['page'])"
+                :route="`/check/full/${title.toLowerCase()}/${object['page']}/${Object.keys(object.category[0])[0].toLowerCase()}`"
                 :current="isSubActive(index)"
-                :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${object.page}`)"/>
+                :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${object['page']}`)"/>
 
-      <MenuSeparator v-if="index < category.length - 1" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${object.page}`)"/>
+      <MenuSeparator v-if="index < category.length - 1" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${object['page']}`)"/>
     </div>
 
     <!--Category separator-->
-    <MenuSeparator v-if="separator" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${category[category.length-1].page}`)"/>
+    <MenuSeparator v-if="separator" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${category[category.length-1]['page']}`)"/>
   </div>
 </template>
