@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
-import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-import {CheckGuideItem} from "../interfaces/_routeItems";
+import { CheckGuideItem } from "../interfaces/_routeItems";
 import vernMatrix from '../../assets/images/vern-matrix.png'
 
 defineExpose({
@@ -17,20 +16,18 @@ const props = defineProps({
   }
 });
 
-const fullStore = useFullStore();
 const showModal = ref(false);
-const comment = ref("");
 
 const currentPage = ref(0)
 function nextPage() {
-  if (currentPage >= (selectedGuide.value.guide.length - 1)) {
+  if (currentPage.value >= (selectedGuide.value.guide.length - 1)) {
     return
   }
   currentPage.value += 1;
 }
 
 function backPage() {
-  if (currentPage < (selectedGuide.value.guide.length - 1)) {
+  if (currentPage.value < (selectedGuide.value.guide.length - 1)) {
     return
   }
   currentPage.value -= 1;

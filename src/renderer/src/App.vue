@@ -193,7 +193,7 @@ const handleTCPMessage = (info: any) => {
         return qa
       });
       fullStore.qaChecks.push(...qaChecks)
-      const index = fullStore.stations.findIndex(element => element.expectedDetails.id == id)
+      const index = fullStore.stations.findIndex(element => element.expectedDetails?.id == id)
       if (index !== -1) {
         fullStore.stations[index].qaChecks.push(...qaChecks)
       }
@@ -424,9 +424,9 @@ const updateApplicationSettings = (info: any) => {
 const title = ref("");
 const message = ref("");
 const notificationRef = ref<InstanceType<typeof NotificationModal> | null>(null)
-const openNotificationModal = (title: string, message: string) => {
-  this.title.value = title;
-  this.message.value = message;
+const openNotificationModal = (s_title: string, s_message: string) => {
+  title.value = s_title;
+  message.value = s_message;
   notificationRef.value?.openModal();
 }
 </script>

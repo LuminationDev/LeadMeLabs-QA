@@ -5,13 +5,11 @@ import CbusSvg from "@renderer/assets/icons/CbusSvg.vue";
 import GenericButton from "@renderer/tool-config/components/GenericButton.vue";
 import ConnectingSpinner from "@renderer/tool-qa/components/_generic/loading/ConnectingSpinner.vue";
 import ComputerSvg from "@renderer/assets/icons/ComputerSvg.vue";
-import { useRoute } from "vue-router";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 
-const route = useRoute();
 const stateStore = useStateStore();
 const fullStore = useFullStore();
 const { connected } = storeToRefs(fullStore);
@@ -34,6 +32,7 @@ onMounted(() => {
 
 watch(connectionState, (newValue) => {
   if (newValue === 'failed') {
+    //@ts-ignore
     api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
       channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
       command: "stop"

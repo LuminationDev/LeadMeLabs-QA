@@ -72,7 +72,17 @@ const generateCategoryStatus = computed(() => {
   if (total === 0 || skipped > 0) return 'skipped';
   if (failed > 0) return 'failed';
   if (passed === total) return 'passed';
+
+  return 'unknown';
 });
+
+const getCheckStatus = (status: string | undefined, required: any) => {
+  if( status !== undefined){
+    return status
+  }
+
+  return required ? 'skipped' : 'unknown';
+}
 </script>
 
 <template>
@@ -119,7 +129,7 @@ const generateCategoryStatus = computed(() => {
           <StatusHover class="w-9"
                        :message="generateMessage(device)"
                        :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
-                       :passed-status="device.checks[checkId]?.passedStatus ?? 'unknown'"/>
+                       :passed-status="getCheckStatus(device.checks[checkId]?.passedStatus, check.targets[device.type])"/>
         </div>
       </div>
     </td>

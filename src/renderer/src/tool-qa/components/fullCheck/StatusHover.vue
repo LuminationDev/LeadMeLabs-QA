@@ -41,7 +41,8 @@ const clearHoverTimer = () => {
       <img v-else-if="checkingStatus === 'checking'" alt="checking" src="../../../assets/icons/checking-loading.svg"/>
       <img v-else-if="passedStatus === 'failed' && checkingStatus !== 'checking'" alt="failed" src="../../../assets/icons/auto-checked-failed.svg"/>
       <img v-else-if="passedStatus === 'passed' && checkingStatus !== 'checking'" alt="passed" src="../../../assets/icons/auto-checked-passed.svg"/>
-      <img v-else alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
+      <img v-else-if="passedStatus === 'skipped'" alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
+      <div v-else>N/A</div>
     </div>
     <Transition name="fade">
       <div v-if="isHovered" class="absolute w-44 bg-gray-100 border-[1px] border-gray-300 p-2 rounded-lg -left-36 z-10">{{ message }}</div>

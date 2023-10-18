@@ -2,16 +2,14 @@
 import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
 import { useRoute } from "vue-router";
 import { useFullStore } from "../../../store/fullStore";
-import {computed, onMounted, ref} from "vue";
+import { computed, onMounted, ref } from "vue";
 import * as CONSTANT from "../../../../assets/constants";
-import { useStateStore } from "../../../store/stateStore";
 import GenericButton from '@renderer/tool-qa/components/_generic/buttons/GenericButton.vue'
 import ItemHover from "../ItemHover.vue";
 import StatusHover from "../StatusHover.vue";
-import {storeToRefs} from "pinia";
+import { storeToRefs } from "pinia";
 
 const fullStore = useFullStore();
-const stateStore = useStateStore();
 
 const { experienceChecksCompleted, allowRunningExperienceChecks } = storeToRefs(fullStore)
 
@@ -104,7 +102,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-row border-gray-100 border-2 rounded-2xl p-4">
           <div v-for="station in fullStore.stations" :id="station.id" class="border-gray-100 border-2 rounded-xl p-2">
-            <img v-if="!station.vrStatuses || (station.vrStatuses.openVrStatus === 'Off' || station.vrStatuses.headsetStatus === 'Off')" src="../../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
+            <img v-if="!station.vrStatuses || (station.vrStatuses['openVrStatus'] === 'Off' || station.vrStatuses['headsetStatus'] === 'Off')" src="../../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
             <img v-else src="../../../../assets/icons/headset-connected.svg" :alt="`connected headset icon`" />
           </div>
         </div>

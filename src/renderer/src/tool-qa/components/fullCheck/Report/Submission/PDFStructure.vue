@@ -10,7 +10,7 @@ const stateStore = useStateStore();
 const props = defineProps({
   parent: {
     type: String,
-    required: false
+    required: true
   }
 });
 

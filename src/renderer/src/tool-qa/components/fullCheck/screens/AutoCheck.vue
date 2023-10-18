@@ -148,7 +148,7 @@ onMounted(() => {
  * end with _checks. Otherwise, the watch is disregarded.
  */
 watch(() => route.name, () => {
-  if (route.name.toString().endsWith("_checks")) {
+  if (route.name.toString()?.endsWith("_checks")) {
     autoRun();
   }
 });

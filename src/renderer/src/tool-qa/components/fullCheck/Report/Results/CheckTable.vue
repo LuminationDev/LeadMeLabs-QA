@@ -49,6 +49,8 @@ const generateCategoryStatus = computed(() => {
   if (total === 0 || skipped > 0) return 'skipped';
   if (failed > 0) return 'failed';
   if (passed === total) return 'passed';
+
+  return 'unknown';
 });
 </script>
 

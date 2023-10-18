@@ -59,6 +59,14 @@ const generateCategoryStatus = computed(() => {
   if (failed > 0) return 'failed';
   if (passed === total) return 'passed';
 });
+
+const getCheckStatus = (status: string | undefined, required: any) => {
+  if( status !== undefined){
+    return status
+  }
+
+  return required ? 'skipped' : 'unknown';
+}
 </script>
 
 <template>
@@ -102,7 +110,7 @@ const generateCategoryStatus = computed(() => {
           <PDFDeviceStatus class="w-9"
                        :message="generateMessage(device)"
                        :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
-                       :passed-status="device.checks[checkId]?.passedStatus ?? 'unknown'"/>
+                       :passed-status="getCheckStatus(device.checks[checkId]?.passedStatus, check.targets[device.type])"/>
         </div>
       </div>
     </td>
