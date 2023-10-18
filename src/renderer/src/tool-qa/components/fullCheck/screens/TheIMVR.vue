@@ -180,8 +180,13 @@ onMounted(() => {
                            :checking-status="station.checkingStatus ?? 'not checked'"
                            :passed-status="station.status ?? 'unknown'"/>
             </template>
-            <th v-if="check.stations.filter(station => station.status === 'failed').length > 0" @click="() => { retryExperience(index) }">
-              <span class="cursor-pointer">Retry</span>
+            <th v-if="check.stations.filter(station => station.status === 'failed').length > 0">
+              <button
+                  @click="() => { retryExperience(index) }"
+                  :disabled="inProgress"
+                  class="cursor-pointer disabled:cursor-not-allowed">
+                Retry
+              </button>
             </th>
             <th v-else/>
           </tr>
