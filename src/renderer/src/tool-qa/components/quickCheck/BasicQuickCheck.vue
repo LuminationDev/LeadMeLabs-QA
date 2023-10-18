@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import InformationRow from "@renderer/tool-qa/components/checks/InformationRow.vue";
-import { ReportTrackerItem } from "@renderer/tool-qa/interfaces";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
 import { computed, ref } from "vue";
@@ -15,7 +14,7 @@ const props = defineProps({
     required: true
   },
   details: {
-    type: Object as () => ReportTrackerItem,
+    type: Object,
     required: true
   }
 });
@@ -32,7 +31,7 @@ const numberOfChecks = computed(() => {
 
 const currentlyCorrect = computed(() => {
   return Object.values(props.details)
-      .filter(item => item.passedStatus === 'passed')
+      .filter(item => item['passedStatus'] === 'passed')
       .length;
 });
 
@@ -99,12 +98,12 @@ const hasPassed = computed(() => {
     </table>
 
     <div v-if="expanded" class="flex flex-col">
-      <div v-for="(check, index) in props.details as ReportTrackerItem" :key="index" class="flex flex-col">
+      <div v-for="(check, index) in props.details" :key="index" class="flex flex-col">
         <InformationRow
             @answered="keyAnswered"
-            :title="check.id"
-            :text="check.message ?? 'No message supplied'"
-            :correct="check.passedStatus"/>
+            :title="check['id']"
+            :text="check['message'] ?? 'No message supplied'"
+            :correct="check['passedStatus']"/>
 
         <div v-if="correctValue(check.id) !== undefined && correctValue(check.id) !== check.message">
           <div class="w-52 text-red-500">

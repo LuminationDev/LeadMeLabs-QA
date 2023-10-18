@@ -5,7 +5,6 @@ import InformationRow from "@renderer/tool-qa/components/checks/InformationRow.v
 import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
-import { ReportTrackerItem } from "@renderer/tool-qa/interfaces";
 import InformationTitle from "@renderer/tool-qa/components/checks/InformationTitle.vue";
 
 const stateStore = useStateStore();
@@ -121,14 +120,14 @@ const correctValue = (key: string) => {
         :current-keys="currentlyAnswered"
         :total-keys="numberOfChecks"/>
 
-    <div v-for="(check, index) in quickStore.stationDetails as ReportTrackerItem" :key="index" class="flex flex-col">
+    <div v-for="(check, index) in quickStore.stationDetails" :key="index" class="flex flex-col">
       <InformationRow
           @answered="keyAnswered"
-          :title="check.id"
-          :text="check.message"
-          :correct="check.passedStatus"/>
+          :title="check['id']"
+          :text="check['message']"
+          :correct="check['passedStatus']"/>
 
-      <div v-if="correctValue(check.id) !== undefined && correctValue(check.id) !== check.message">
+      <div v-if="correctValue(check['id']) !== undefined && correctValue(check['id']) !== check['message']">
         <div class="w-52 text-red-500">
           Expected value:
         </div>

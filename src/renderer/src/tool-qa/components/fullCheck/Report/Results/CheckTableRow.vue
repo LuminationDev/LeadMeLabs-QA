@@ -93,7 +93,7 @@ const generateCategoryStatus = computed(() => {
       <div class="flex mx-auto justify-center rounded-xl w-20 px-2" :class="{
                   'bg-red-100 border-[1px] border-red-300 text-red-700': generateCategoryStatus === 'failed',
                   'bg-green-100 border-[1px] border-green-300 text-green-700': generateCategoryStatus === 'passed',
-                  'bg-blue-100 border-[1px] border-blue-300 text-blue-700': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
+                  'bg-yellow-100 border-[1px] border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
                 }">
         {{ stateStore.capitalizeFirstLetter(generateCategoryStatus ?? "Skipped") }}
       </div>

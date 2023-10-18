@@ -6,10 +6,12 @@ const props = defineProps({
     type: Object as () => { key: string, description: string }
   },
   index: {
-    type: Number
+    type: Number,
+    required: true
   },
   currentCategoryIndex: {
-    type: Number
+    type: Number,
+    required: true
   }
 })
 

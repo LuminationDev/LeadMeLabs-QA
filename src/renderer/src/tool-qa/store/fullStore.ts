@@ -446,6 +446,7 @@ export const useFullStore = defineStore({
             imvrChecks.checks.push(headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
             imvrChecks.requirements = ["station_connection_checks"]
 
+            //TODO add extendedDescriptions for the below checks
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, stationIds, false, false, [], "Steam Username is set")
             const isSteamPasswordSet = new QaCheckResult("steam_password", "auto", 10000, stationIds, false, false, [], "Steam Password is set")

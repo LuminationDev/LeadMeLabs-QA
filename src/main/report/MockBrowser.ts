@@ -40,7 +40,7 @@ export async function createMockWindow(isTemp: boolean, info: any, mainWindow: E
             filePath = `${tempDir}/${info.fileName}.pdf`;
         } else {
             filePath = dialog.showSaveDialogSync({
-                defaultPath: 'document.pdf',
+                defaultPath: `${info.fileName}.pdf`,
             });
         }
 
