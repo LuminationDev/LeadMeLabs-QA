@@ -39,10 +39,18 @@ function cancelTesting() {
 }
 
 function hasStartedExperienceChecks() {
-  return fullStore.experienceChecks.filter(element => element.status !== null).length > 1
+  return fullStore.experienceChecks.filter(element => {
+    return element.stations.filter(station => station.status !== null).length > 1
+  }).length > 1
 }
 
+const animateSpin = ref(false)
+
 function getVrStatuses() {
+  animateSpin.value = true
+  setTimeout(() => {
+    animateSpin.value = false
+  }, 1000)
   fullStore.sendMessage({
     action: CONSTANT.ACTION.GET_VR_STATUSES,
     actionData: {
@@ -103,7 +111,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-row border-gray-100 border-2 rounded-2xl p-4 items-center">
           <div @click="getVrStatuses" class="mr-4">
-            <RetrySvg fill="#6b7280"/>
+            <RetrySvg fill="#6b7280" class="cursor-pointer" :class="animateSpin ? 'animate-spin' : ''"/>
           </div>
           <div v-for="station in fullStore.stations" :id="station.id" class="border-gray-100 border-2 rounded-xl p-2 mr-2 last:mr-0">
             <img v-if="!station.vrStatuses || (station.vrStatuses.openVrStatus === 'Off' || station.vrStatuses.headsetStatus === 'Off')" src="../../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
@@ -149,7 +157,6 @@ onMounted(() => {
           <img v-if="allHeadsetsConnected" src="../../../../assets/icons/start-test.svg" :alt="`start icon`" class="mr-2" />
           <img v-else src="../../../../assets/icons/start-test-gray.svg" :alt="`start icon`" class="mr-2" />
           {{ hasStartedExperienceChecks ? 'Resume' : 'Start test' }}
-          Start test
         </GenericButton>
       </div>
 
@@ -174,7 +181,7 @@ onMounted(() => {
                            :passed-status="station.status ?? 'unknown'"/>
             </template>
             <th v-if="check.stations.filter(station => station.status === 'failed').length > 0" @click="() => { retryExperience(index) }">
-              Retry
+              <span class="cursor-pointer">Retry</span>
             </th>
             <th v-else/>
           </tr>
