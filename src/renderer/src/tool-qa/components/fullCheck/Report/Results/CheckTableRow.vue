@@ -54,7 +54,8 @@ const generateMessage = (device: any) => {
  * Show the user a quick view of if the tests were passed by all devices.
  */
 const generateCategoryStatus = computed(() => {
-  let { failed, skipped, passed, not_applicable, total } = { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
+  let { failed, skipped, passed, not_applicable, total } =
+      { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
 
   const devices = props.check.devices;
   const deviceIds = Object.keys(devices);
@@ -63,17 +64,19 @@ const generateCategoryStatus = computed(() => {
 
   for (const deviceId of deviceIds) {
     const { passedStatus: status } = devices[deviceId];
-
+    
     if (status === 'passed') passed++;
     else if (status === 'failed') failed++;
-    else if (status === 'skipped') skipped++;
     else if (status === 'not_applicable') not_applicable++;
+    else if (status === 'skipped' || status === undefined || 'unchecked') skipped++;
   }
 
-  if (total === 0 || skipped > 0) return 'skipped';
+  if (skipped > 0 && (failed > 0 || passed > 0)) return 'incomplete';
+  if (skipped > 0) return 'skipped';
   if (failed > 0) return 'failed';
   if (passed > 0 && passed + not_applicable === total) return 'passed';
-  if (not_applicable > 0) return 'N/A';
+  if (total === 0 || not_applicable > 0) return 'N/A';
+
   return 'unknown';
 });
 
