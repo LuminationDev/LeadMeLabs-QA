@@ -123,8 +123,8 @@ const skippedStatusPercentage = computed(() => {
       <div class="flex flex-row my-3 items-center px-3 pb-4">
         <div v-if="generateCategoryResults.failed === 0" class="w-full bg-green-600 rounded-full h-2 mx-1"/>
         <template v-else>
-          <div v-for="error in generateCategoryResults.failedWithoutComments" class="w-full bg-red-700 rounded-full h-2 mx-1"/>
-          <div v-for="error in generateCategoryResults.failedWithComments" class="w-full bg-red-300 rounded-full h-2 mx-1"/>
+          <div v-for="index in generateCategoryResults.failedWithoutComments" :key="index" class="w-full bg-red-700 rounded-full h-2 mx-1"/>
+          <div v-for="index in generateCategoryResults.failedWithComments" :key="index" class="w-full bg-red-300 rounded-full h-2 mx-1"/>
         </template>
       </div>
     </div>

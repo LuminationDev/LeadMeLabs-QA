@@ -1,21 +1,27 @@
 <script setup lang="ts">
 import * as FULL from "../../../../assets/checks/_fullcheckValues";
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
-import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
+import CategoryTab from "@renderer/tool-qa/components/_generic/statuses/CategoryTab.vue";
+import ItemHover from "@renderer/tool-qa/components/_generic/statuses/ItemHover.vue";
 import GuideModal from "../../../modals/GuideModal.vue";
-import Checkbox from "@renderer/tool-qa/components/fullCheck/screens/Checkbox.vue";
+import Checkbox from "@renderer/tool-qa/components/_generic/inputs/Checkbox.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { CheckObject } from "@renderer/tool-qa/interfaces/_routeItems";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
 const route = useRoute();
 
-const checkDetails = computed(() => {
-  return FULL[route.meta['page'].toUpperCase()];
+const checkDetails = computed((): CheckObject => {
+  const page = route.meta['page'];
+  if (typeof page === 'string') {
+    return FULL[page.toUpperCase()];
+  } else {
+    return {category: [], description: "", page: "", parent: ""};
+  }
 });
 
 const categories = computed(() => {
@@ -37,7 +43,7 @@ const checks = computed(() => {
   const { parent, page } = checkDetails.value;
   fullStore.readReportData(parent, page);
 
-  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
+  const category = checkDetails.value['category'][currentCategoryIndex.value][<string>route.meta['category']];
   if (category && category.checks) {
     const checks = Object.entries(category.checks).map(([key, checkDetails]) => ({ key, description: checkDetails.description }));
     //Add the checks to the report tracker
@@ -52,7 +58,11 @@ const checks = computed(() => {
 });
 
 const guides = computed(() => {
-  const category = checkDetails.value['category'][currentCategoryIndex.value][route.meta['category']];
+  if (route.meta['category'] === undefined) {
+    return [];
+  }
+
+  const category = checkDetails.value['category'][currentCategoryIndex.value][<string>route.meta['category']];
 
   if (category && category.checks) {
     return Object.entries(category.checks).map(([key, checkDetails]) => ({ key, guide: checkDetails.guide })).filter(object => object.guide.length > 0);

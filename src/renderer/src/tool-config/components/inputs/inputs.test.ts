@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { expect, test } from 'vitest'
 import GenericButton from '../GenericButton.vue'
 import NumberInput from './NumberInput.vue'
 import TextInput from './TextInput.vue'

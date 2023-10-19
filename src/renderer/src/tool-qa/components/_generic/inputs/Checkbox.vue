@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-import {computed, onMounted} from "vue";
+import { computed, onMounted } from "vue";
 import { Device } from "@renderer/tool-qa/interfaces/_deviceMap";
 
 const fullStore = useFullStore();
@@ -31,6 +31,20 @@ const checkedState = computed(() => {
   return props.device.checks[props.itemKey]?.passedStatus === 'passed'
 });
 
+/**
+ * Call the updateReport function after determining if the HTML element is checked
+ * or not.
+ * @param target An html input element.
+ */
+const updateReportHTML = (target: HTMLInputElement) => {
+  const isChecked = target.checked;
+  updateReport(isChecked);
+}
+
+/**
+ * Update the fullStore report.
+ * @param checked A boolean of if the manual check has been determined successful.
+ */
 const updateReport = (checked: boolean) => {
   fullStore.updateReport(
       props.parent,
@@ -51,7 +65,7 @@ onMounted(() => {
     <input :key="index + '-' + itemKey"
            :checked="checkedState"
            type="checkbox"
-           @change="updateReport($event.target.checked)">
+           @change="updateReportHTML($event.target as HTMLInputElement)">
     <span class="checkmark rounded-lg"/>
   </label>
 </template>

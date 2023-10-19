@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TabletSvg from "@renderer/assets/icons/TabletSvg.vue";
-import StatusIcon from "@renderer/tool-qa/components/_generic/StatusIcon.vue";
+import StatusIcon from "@renderer/tool-qa/components/_generic/statuses/StatusIcon.vue";
 import GenericButton from "@renderer/tool-config/components/GenericButton.vue";
 import ConnectingSpinner from "@renderer/tool-qa/components/_generic/loading/ConnectingSpinner.vue";
 import * as CONSTANT from "@renderer/assets/constants";

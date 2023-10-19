@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
-import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
-import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue";
+import ItemHover from "@renderer/tool-qa/components/_generic/statuses/ItemHover.vue";
+import StatusHover from "@renderer/tool-qa/components/_generic/statuses/StatusHover.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed, ref } from "vue";
-import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
+import { Check } from "@renderer/tool-qa/interfaces/_report";
 
 const props = defineProps({
   checkId: {
@@ -13,7 +13,7 @@ const props = defineProps({
     required: true
   },
   check: {
-    type: Object as () => ReportCheck,
+    type: Object as () => Check,
     required: true
   },
   status: {

@@ -2,78 +2,74 @@
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
 import { CheckGuideItem } from "../interfaces/_routeItems";
-import vernMatrix from '../../assets/images/vern-matrix.png'
-
-defineExpose({
-  openModal
-});
+import vernMatrix from '../../assets/images/vern-matrix.png';
 
 const props = defineProps({
   guides: {
-    type: Object as () => Record<string, CheckGuideItem>,
-    required: true,
-    default: ""
+    type: Array<{[key: string], guide: Array<CheckGuideItem>}>,
+    required: true
   }
 });
 
 const showModal = ref(false);
-
 const currentPage = ref(0)
-function nextPage() {
-  if (currentPage.value >= (selectedGuide.value.guide.length - 1)) {
-    return
+const nextPage = () => {
+  if (selectedGuide.value?.guide && currentPage.value < selectedGuide.value.guide.length - 1) {
+    currentPage.value += 1;
   }
-  currentPage.value += 1;
 }
 
-function backPage() {
-  if (currentPage.value < (selectedGuide.value.guide.length - 1)) {
-    return
+const backPage = () => {
+  if (selectedGuide.value?.guide && currentPage.value > 0) {
+    currentPage.value -= 1;
   }
-  currentPage.value -= 1;
 }
 
-function selectPage(index) {
-  if (index < (selectedGuide.value.guide.length - 1) || index >= (selectedGuide.value.guide.length - 1)) {
-    return
+const selectPage = (index) => {
+  if (selectedGuide.value?.guide && index === selectedGuide.value.guide.length - 1) {
+    currentPage.value = index;
   }
-  currentPage.value = index
 }
 
-const selectedGuideKey = ref(null)
+//@ts-ignore
+const selectedGuideKey = ref<string | null>(null);
 const selectedGuide = computed(() => {
   if (props.guides.length === 1) {
     return props.guides[0]
   }
-  if (selectedGuideKey === null) {
+  if (selectedGuideKey.value === null) {
     return null
   }
-  return props.guides.find(element => element.value === selectedGuideKey.value)
-})
 
-function selectGuide(name: string) {
+  return props.guides.find(element => element.key === selectedGuideKey.value)
+});
+
+const selectGuide = (name: string | null) => {
   selectedGuideKey.value = name
 }
 
-function openModal() {
+const openModal = () => {
   selectedGuideKey.value = null
   showModal.value = true;
 }
 
-function closeModal() {
+const closeModal = () => {
   showModal.value = false;
 }
 
 const imageSrc = computed(() => {
-  if (selectedGuide === null) {
+  if (selectedGuide.value === null || selectedGuide.value === undefined) {
     return null
   }
   if (selectedGuide.value.guide[currentPage.value].imageSource) {
     return selectedGuide.value.guide[currentPage.value].imageSource
   }
   return null
-})
+});
 
+defineExpose({
+  openModal
+});
 </script>
 
 <template>
@@ -83,9 +79,9 @@ const imageSrc = computed(() => {
           @click="openModal"
   >
     <img class="w-5 h-5 mr-1" src="../../assets/icons/help-circle.svg" alt="question mark">
-    <div class="text-sm font-semibold">
+    <span class="text-sm font-semibold">
       Guide
-    </div>
+    </span>
   </button>
 
   <Teleport to="body">
@@ -102,16 +98,16 @@ const imageSrc = computed(() => {
         <div class="px-6 w-96 bg-white pb-7 flex flex-col items-center">
           <div v-if="selectedGuide" class="flex flex-col">
 
-            <img v-if="imageSrc" class="h-auto w-full object-contain" :src="imageSrc"/>
+            <img v-if="imageSrc" class="h-auto w-full object-contain" :src="imageSrc" alt="content"/>
             <div v-else class="flex w-full justify-center items-center">
-              <img class="h-32 w-32 object-contain" :src="vernMatrix"/>
+              <img class="h-32 w-32 object-contain" :src="vernMatrix" alt="vern matrix"/>
             </div>
             <div class="flex flex-col items-center mt-4 w-80"
                  v-html="selectedGuide.guide[currentPage].text"/>
           </div>
           <div v-else class="flex flex-col">
             <h3>Multiple guides available:</h3>
-            <div class="flex flex-col" v-for="(guide) in guides" :key="guide.key" @click="() => { selectGuide(key) }">
+            <div class="flex flex-col" v-for="guide in guides" :key="guide['key']" @click="() => { selectGuide(guide['key']) }">
               <span class="cursor-pointer">{{ guide.key }}</span>
             </div>
           </div>
@@ -122,19 +118,19 @@ const imageSrc = computed(() => {
         <footer class="w-full py-2 text-right flex flex-col bg-white rounded-b-lg px-6 pb-6">
 
           <div class="flex flex-row justify-center" v-if="selectedGuide && selectedGuide.guide.length > 1">
-            <div v-for="(guide, index) in selectedGuide.guide" :key="index" class="first:-ml-2 last:-mr-2">
+            <div v-for="index in selectedGuide.guide.length" :key="index" class="first:-ml-2 last:-mr-2">
               <button class="w-3 h-3 rounded-full mx-2 cursor-pointer"
-                      :class="currentPage === index ? 'bg-blue-700' : 'bg-gray-200'"
-                      @click="() => { selectPage(index) }"/>
+                      :class="currentPage === index - 1 ? 'bg-blue-700' : 'bg-gray-200'"
+                      @click="() => { selectPage(index - 1) }"/>
             </div>
           </div>
           <div class="flex flex-row w-full mt-8" v-if="selectedGuide && selectedGuide.guide.length > 1">
-            <button class="w-1/2 h-11 mr-3 text-gray-800 font-semibold text-base border-2 border-gray-300 rounded-lg hover:bg-gray-200 font-medium cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+            <button class="w-1/2 h-11 mr-3 text-gray-800 font-semibold text-base border-2 border-gray-300 rounded-lg hover:bg-gray-200 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
                     :disabled="currentPage < (selectedGuide.guide.length - 1)"
                     v-on:click="backPage"
             >Back</button>
 
-            <button class="w-1/2 h-11 text-white font-semibold text-base rounded-lg font-medium bg-blue-700 disabled:bg-blue-300 cursor-pointer disabled:cursor-not-allowed"
+            <button class="w-1/2 h-11 text-white font-semibold text-base rounded-lg bg-blue-700 disabled:bg-blue-300 cursor-pointer disabled:cursor-not-allowed"
                     :disabled="currentPage >= (selectedGuide.guide.length - 1)"
                     v-on:click="nextPage"
             >Next</button>

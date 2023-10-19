@@ -1,13 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, RouterOptions } from 'vue-router';
 import { configToolRoutes } from "./configRoutes";
-import { fullRoutes, quickRoutes } from "./checkRoutes";
+import { fullRoutes } from "./checkRoutes";
 
 //Generic screens
 import Welcome from '@renderer/views/Welcome.vue';
 import Settings from '@renderer/views/Settings.vue';
-import TheReport from "@renderer/tool-qa/components/reports/TheReport.vue";
+import TheReport from "@renderer/tool-qa/components/handover/TheReport.vue";
 
-const router = createRouter({
+const router = createRouter(<RouterOptions>{
     history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
@@ -36,7 +36,6 @@ const router = createRouter({
             name: 'settings',
             component: Settings,
         },
-        ...quickRoutes, // Merge quickRoutes into the existing routes
         ...fullRoutes, // Merge fullRoutes into the existing routes
         ...configToolRoutes // Merge the config tool into the exiting routes
     ]

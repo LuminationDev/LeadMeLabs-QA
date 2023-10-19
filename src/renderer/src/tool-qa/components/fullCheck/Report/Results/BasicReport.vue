@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
 import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/Results/ReportResults.vue";
 import CheckTable from "@renderer/tool-qa/components/fullCheck/Report/Results/CheckTable.vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
+import {Section} from "@renderer/tool-qa/interfaces/_report";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -21,8 +22,14 @@ const props = defineProps({
 /**
  * Collect the information for the different report sections
  */
-const checkDetails = computed(() => {
-  return fullStore.reportTracker[props.page ?? route.meta['page']];
+const checkDetails = computed((): Section => {
+  const page: string|undefined = <string|undefined>props.page || <string|undefined>route.meta['page'];
+
+  if (page !== undefined) {
+    return fullStore.reportTracker[page];
+  } else {
+    return {};
+  }
 });
 </script>
 
