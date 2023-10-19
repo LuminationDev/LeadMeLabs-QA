@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
 import PDFDeviceStatus from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFDeviceStatus.vue";
 
@@ -61,6 +61,14 @@ const generateCategoryStatus = computed(() => {
   if (passed > 0 && passed + not_applicable === total) return 'passed';
   if (not_applicable > 0) return 'N/A';
 });
+
+const getCheckStatus = (status: string | undefined, required: any) => {
+  if( status !== undefined){
+    return status
+  }
+
+  return required ? 'skipped' : 'unknown';
+}
 </script>
 
 <template>
@@ -77,7 +85,7 @@ const generateCategoryStatus = computed(() => {
       <div class="flex mx-auto justify-center rounded-xl w-20 px-2" :class="{
                   'bg-red-100 border-[1px] border-red-300 text-red-700': generateCategoryStatus === 'failed',
                   'bg-green-100 border-[1px] border-green-300 text-green-700': generateCategoryStatus === 'passed',
-                  'bg-blue-100 border-[1px] border-blue-300 text-blue-700': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
+                  'bg-yellow-100 border-[1px] border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
                 }">
         {{ stateStore.capitalizeFirstLetter(generateCategoryStatus ?? "Skipped") }}
       </div>
@@ -105,9 +113,23 @@ const generateCategoryStatus = computed(() => {
             <PDFDeviceStatus class="w-9"
                          :message="generateMessage(device)"
                          :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
-                         :passed-status="device.checks[checkId]?.passedStatus ?? 'unknown'"/>
+                         :passed-status="getCheckStatus(device.checks[checkId]?.passedStatus, check.targets[device.type])"/>
           </div>
         </div>
+      </div>
+    </td>
+  </tr>
+
+  <tr class="bg-gray-50 text-xs" v-for="(device, index) in fullStore.orderedDevices" :key="index">
+    <td v-if="(device.checks[checkId]?.passedStatus === 'failed' ||
+              device.checks[checkId]?.passedStatus === 'warning') &&
+              device.checks[checkId]?.message !== undefined"
+        colspan="3" class="pl-8 p-3">
+      <div>
+        {{device.prefix}}{{device.id}}
+      </div>
+      <div>
+        <span class="font-semibold mr-1">Message:</span> {{device.checks[props.checkId]?.message}}
       </div>
     </td>
   </tr>

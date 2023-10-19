@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import ItemHover from "../ItemHover.vue";
 import StatusHover from "../StatusHover.vue";
-import { useRoute } from "vue-router";
-import { useStateStore } from "../../../store/stateStore";
 import { useFullStore } from "../../../store/fullStore";
 import { computed } from "vue";
 
-const route = useRoute();
-const stateStore = useStateStore();
 const fullStore = useFullStore();
 
 const checks = computed(() => {
@@ -39,9 +35,9 @@ const checks = computed(() => {
       </tr>
 
       <tr v-for="(check, id) in checks" :key="id" class="text-sm border border-gray-200">
-        <ItemHover :title="check.displayName" :message="check.extendedDescription ?? 'No details provided'"/>
+        <ItemHover :title="check['displayName']" :message="check['extendedDescription'] ?? 'No details provided'"/>
 
-        <template v-for="(station, index) in check.stations" :key="index">
+        <template v-for="(station, index) in check['stations']" :key="index">
           <StatusHover :message="station.message ?? 'No details provided'"
                        :checking-status="'not checked'"
                        :passed-status="station.passedStatus ?? 'unknown'"/>

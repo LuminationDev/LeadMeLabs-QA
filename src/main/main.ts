@@ -5,7 +5,7 @@ import ConfigTool from "./util/ConfigTool";
 import { GetIPAddress } from "./util/Network";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-assembler";
 import { optimizer } from "@electron-toolkit/utils";
-import * as Sentry from '@sentry/electron';
+// import * as Sentry from '@sentry/electron';
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 

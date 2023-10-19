@@ -74,7 +74,16 @@ const generateCategoryStatus = computed(() => {
   if (failed > 0) return 'failed';
   if (passed > 0 && passed + not_applicable === total) return 'passed';
   if (not_applicable > 0) return 'N/A';
+  return 'unknown';
 });
+
+const getCheckStatus = (status: string | undefined, required: any) => {
+  if( status !== undefined){
+    return status
+  }
+
+  return required ? 'skipped' : 'unknown';
+}
 </script>
 
 <template>
@@ -95,7 +104,7 @@ const generateCategoryStatus = computed(() => {
       <div class="flex mx-auto justify-center rounded-xl w-20 px-2" :class="{
                   'bg-red-100 border-[1px] border-red-300 text-red-700': generateCategoryStatus === 'failed',
                   'bg-green-100 border-[1px] border-green-300 text-green-700': generateCategoryStatus === 'passed',
-                  'bg-blue-100 border-[1px] border-blue-300 text-blue-700': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
+                  'bg-yellow-100 border-[1px] border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
                 }">
         {{ stateStore.capitalizeFirstLetter(generateCategoryStatus ?? "Skipped") }}
       </div>
@@ -122,7 +131,7 @@ const generateCategoryStatus = computed(() => {
             <StatusHover class="w-9"
                          :message="generateMessage(device)"
                          :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
-                         :passed-status="device.checks[checkId]?.passedStatus ?? 'unknown'"/>
+                         :passed-status="getCheckStatus(device.checks[checkId]?.passedStatus, check.targets[device.type])"/>
           </div>
         </div>
       </div>

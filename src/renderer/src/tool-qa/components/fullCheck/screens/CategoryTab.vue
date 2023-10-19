@@ -6,10 +6,12 @@ const props = defineProps({
     type: Object as () => { key: string, description: string }
   },
   index: {
-    type: Number
+    type: Number,
+    required: true
   },
   currentCategoryIndex: {
-    type: Number
+    type: Number,
+    required: true
   }
 })
 
@@ -27,7 +29,7 @@ const textClasses = computed(() => ({
 <template>
   <div class="flex flex-col mr-4">
     <div :class="tabClasses"></div>
-    <div class="text-sm font-semibold" :class="textClasses">{{ category.key }}</div>
-    <div class="text-xs" :class="textClasses">{{ category.description }}</div>
+    <div class="text-sm font-semibold" :class="textClasses">{{ category?.key }}</div>
+    <div class="text-xs" :class="textClasses">{{ category?.description }}</div>
   </div>
 </template>

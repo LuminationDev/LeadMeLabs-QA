@@ -13,14 +13,14 @@ const fullStore = useFullStore();
  * Check if the main category is currently active.
  */
 const isActive = computed(() => {
-  return route.name.toString().includes(`full-setup`)
+  return route.name?.toString().includes(`full-setup`)
 });
 
 /**
  * Check if a manual check sub-category is currently active.
  */
 const isSubActive = (page: string) => {
-  return route.name.toString().includes(`full-setup-devices-${page}`)
+  return route.name?.toString().includes(`full-setup-devices-${page}`)
 };
 
 /**
