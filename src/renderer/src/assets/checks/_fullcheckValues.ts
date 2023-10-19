@@ -234,7 +234,7 @@ export const KEYBOARD: CheckObject = {
                             }
                         ]
                     },
-                    "Windows": {
+                    "Windows OS": {
                         description: "The keyboard works in Windows OS.",
                         guide: [
                             {
@@ -526,7 +526,7 @@ export const DRIVERS: CheckObject = {
                             }
                         ]
                     },
-                    "Devices": {
+                    "Device Warnings": {
                         description: "Any device drivers with warning symbols have been resolved.",
                         guide: [
                             {
