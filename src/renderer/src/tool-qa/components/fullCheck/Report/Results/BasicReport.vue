@@ -31,6 +31,20 @@ const checkDetails = computed((): Section => {
     return {};
   }
 });
+
+/**
+ * Split the checks into auto (name includes _checks) and manual (all other ones).
+ */
+const computedChecks = computed(() => {
+  const auto = {};
+  const manual = {};
+
+  for (const [key, value] of Object.entries(checkDetails.value)) {
+    key.includes('_checks') ? auto[key] = value : manual[key] = value;
+  }
+
+  return { auto, manual };
+});
 </script>
 
 <template>
@@ -44,9 +58,16 @@ const checkDetails = computed((): Section => {
       <div class="flex flex-col">
         <ReportResults :parent="props.page ?? <string>route.meta['page']"/>
 
-        <template v-for="(section, page) in checkDetails" :key="page">
-          <CheckTable :parent="props.page ?? <string>route.meta['page']" :category="<string>page" :section="section"/>
-        </template>
+        <!--All auto checks include _checks in their title-->
+        <CheckTable v-for="(section, page) in computedChecks.auto" :key="page"
+                    :parent="props.page ?? <string>route.meta['page']"
+                    :category="<string>page"
+                    :section="section"/>
+
+        <CheckTable v-for="(section, page) in computedChecks.manual" :key="page"
+                    :parent="props.page ?? <string>route.meta['page']"
+                    :category="<string>page"
+                    :section="section"/>
       </div>
     </template>
   </GenericLayout>
