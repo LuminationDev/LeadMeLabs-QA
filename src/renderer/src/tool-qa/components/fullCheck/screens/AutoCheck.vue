@@ -130,6 +130,10 @@ const autoRun = () => {
   if (typeof checkType.value === "string") {
     fullStore.mostRecentAutoCheck = checkType.value;
   }
+  if (fullStore.groupsThatHaveRun.includes(checkType.value)) {
+    checking.value = "done";
+    return
+  }
 
   //TODO check if the tests have already been run before auto starting it again?
   checking.value = "testing";

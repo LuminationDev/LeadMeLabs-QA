@@ -694,7 +694,7 @@ export const PASSWORDS: CheckObject = {
             "Steam": {
                 "checks": {
                     "Steam Account": {
-                        description: "The Steam accounts have complex passwords and is logged in Bitwarden.",
+                        description: "The Steam account passwords are logged in Bitwarden.",
                         guide: [
                             {
                                 imageSource: null,
@@ -734,7 +734,7 @@ export const PASSWORDS: CheckObject = {
             "C-Bus": {
                 "checks": {
                     "C-Bus": {
-                        description: "The C-Bus has a complex password and is logged in Bitwarden.",
+                        description: "The C-Bus password is logged in Bitwarden.",
                         guide: [
                             {
                                 imageSource: null,
