@@ -406,7 +406,7 @@ export const fullRoutes = [
             userInput: true,
             canSkip: true,
             next: '/check/full/imvr/imvr_checks',
-            prev: getLastRoute(SOFTWARE),
+            prev: '/check/full/software/report',
             progress: calculateProgress()
         }
     },

@@ -295,16 +295,36 @@ export const useFullStore = defineStore({
             if (this.experienceChecks.length === 0) {
                 this.buildExperienceChecks()
             }
-            var index = 0
             this.experienceChecks[0].stations.forEach(station => {
-                const i = this.stations.findIndex(s => (station.id == s.getId()) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
-                if (i === -1) {
-                    return;
-                }
-
-                this.launchExperience(0, index)
-                index++
+                this.launchNextExperience(station.id)
             })
+        },
+
+        launchNextExperience(stationId: string) {
+            //find the next unpassed one
+            let nextStationIndex = -1
+            const alreadyChecking = (this.experienceChecks.findIndex(element => {
+                nextStationIndex = element.stations.findIndex(element => element.id == stationId)
+                if (nextStationIndex === -1) return false
+
+                return element.stations[nextStationIndex].checkingStatus === "checking"
+            }) !== -1)
+            if (alreadyChecking) {
+                return
+            }
+            const nextCheckIndex = this.experienceChecks.findIndex(element => {
+                nextStationIndex = element.stations.findIndex(element => element.id == stationId)
+                if (nextStationIndex === -1) return false
+
+                return element.stations[nextStationIndex].checkingStatus === "unchecked"
+            })
+
+            const i = this.stations.findIndex(s => (s.getId() == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
+            if (i === -1) {
+                return;
+            }
+
+            this.launchExperience(nextCheckIndex, nextStationIndex)
         },
 
         launchExperienceOnAll(experienceIndex: number) {
@@ -318,18 +338,20 @@ export const useFullStore = defineStore({
         launchExperience(experienceIndex: number, stationIndex: number) {
             this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus = "checking"
 
-            this.sendMessage({
-                action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
-                actionData: {
-                    stationId: this.experienceChecks[experienceIndex].stations[stationIndex].id,
-                    experienceId: this.experienceChecks[experienceIndex].id
-                }
-            })
+            setTimeout(() => {
+                this.sendMessage({
+                    action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
+                    actionData: {
+                        stationId: this.experienceChecks[experienceIndex].stations[stationIndex].id,
+                        experienceId: this.experienceChecks[experienceIndex].id
+                    }
+                })
+            }, 3000)
             setTimeout(() => {
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
                     this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "failed", "Timed out waiting for response")
                 }
-            }, 35000)
+            }, 35000 + 3000)
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
@@ -357,21 +379,7 @@ export const useFullStore = defineStore({
                 if (!this.allowRunningExperienceChecks) {
                     return
                 }
-                //find the next unpassed one
-                let nextStationIndex = -1
-                const nextCheckIndex = this.experienceChecks.findIndex(element => {
-                    nextStationIndex = element.stations.findIndex(element => element.id == stationId)
-                    if (index === -1) return false
-
-                    return element.stations[nextStationIndex].checkingStatus === "unchecked"
-                })
-
-                const i = this.stations.findIndex(s => (s.getId() == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
-                if (i === -1) {
-                    return;
-                }
-
-                this.launchExperience(nextCheckIndex, nextStationIndex)
+                this.launchNextExperience(stationId)
             }
         },
 
@@ -618,7 +626,7 @@ export const useFullStore = defineStore({
             const index = this.deviceMap.findIndex(item => item.id === id);
             if(index === -1) {
                 this.deviceMap.push({
-                    id: id,
+                    id: type === 'station' ? id : (index + ""),
                     prefix: type === 'station' ? 'S' : 'T', //Assumes only stations or tablets are added
                     type: type,
                     checks: {}
