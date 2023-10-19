@@ -41,6 +41,9 @@ const clearHoverTimer = () => {
       <img v-else-if="checkingStatus === 'checking'" alt="checking" src="../../../assets/icons/checking-loading.svg"/>
       <img v-else-if="passedStatus === 'failed' && checkingStatus !== 'checking'" alt="failed" src="../../../assets/icons/auto-checked-failed.svg"/>
       <img v-else-if="passedStatus === 'passed' && checkingStatus !== 'checking'" alt="passed" src="../../../assets/icons/auto-checked-passed.svg"/>
+      <img v-else-if="passedStatus === 'warning' && checkingStatus !== 'checking'" alt="warning" src="../../../assets/icons/auto-checked-warning.svg"/>
+      <div v-else-if="passedStatus === 'not_applicable' && checkingStatus !== 'checking'">N/A</div>
+      <img v-else-if="passedStatus === 'skipped' && checkingStatus !== 'checking'" alt="skipped" src="../../../assets/icons/auto-checked-empty.svg"/>
       <img v-else alt="empty" src="../../../assets/icons/auto-checked-empty.svg"/>
     </div>
     <Transition name="fade">
