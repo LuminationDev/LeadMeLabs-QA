@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
-import { useRoute } from "vue-router";
 import { useFullStore } from "../../../store/fullStore";
 import { computed, onMounted, ref } from "vue";
 import * as CONSTANT from "../../../../assets/constants";
@@ -11,10 +10,7 @@ import { storeToRefs } from "pinia";
 import RetrySvg from "@renderer/assets/icons/RetrySvg.vue";
 
 const fullStore = useFullStore();
-
 const { experienceChecksCompleted, allowRunningExperienceChecks } = storeToRefs(fullStore)
-
-const route = useRoute();
 
 onMounted(() => {
   if (fullStore.experienceChecks.length === 0) {
@@ -36,11 +32,11 @@ function cancelTesting() {
   inProgress.value = false
 }
 
-function hasStartedExperienceChecks() {
+const hasStartedExperienceChecks = computed(() => {
   return fullStore.experienceChecks.filter(element => {
     return element.stations.filter(station => station.status !== null).length > 1
   }).length > 1
-}
+});
 
 const animateSpin = ref(false)
 
