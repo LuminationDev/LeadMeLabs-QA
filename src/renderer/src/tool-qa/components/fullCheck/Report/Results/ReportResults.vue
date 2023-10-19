@@ -42,6 +42,8 @@ const generateCategoryResults = computed(() => {
             failed++;
             updateComments = true;
             break;
+          case 'unchecked':
+          case undefined:
           case 'skipped':
             skipped++;
             break;
