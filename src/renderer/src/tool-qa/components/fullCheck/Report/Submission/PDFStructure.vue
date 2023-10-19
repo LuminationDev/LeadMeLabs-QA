@@ -4,6 +4,7 @@ import ReportResults from "@renderer/tool-qa/components/fullCheck/Report/Results
 import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+import { Section } from "@renderer/tool-qa/interfaces/_report";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -17,7 +18,7 @@ const props = defineProps({
 /**
  * Collect the information for the different report sections
  */
-const checkDetails = computed(() => {
+const checkDetails = computed((): Section => {
   return fullStore.reportTracker[props.parent];
 });
 </script>

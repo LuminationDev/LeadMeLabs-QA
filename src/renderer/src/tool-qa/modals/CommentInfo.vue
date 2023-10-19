@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TrashSvg from "@renderer/assets/icons/TrashSvg.vue";
 import PencilSvg from "@renderer/assets/icons/PencilSvg.vue";
-import { Comment } from "@renderer/tool-qa/interfaces/_reportCheck";
+import { Comment } from "@renderer/tool-qa/interfaces/_report";
 import { ref, watchEffect } from "vue";
 
 const editing = ref(false);

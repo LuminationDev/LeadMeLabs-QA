@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { ref } from "vue";
@@ -48,7 +48,7 @@ const generateCategoryStatus = (parent: string) => {
       <p class="text-base text-black mb-4">Full report of Learning Lab QA Test</p>
 
       <div class="flex flex-row">
-        <div v-for="(sections, title) in fullStore.getReportSections"
+        <div v-for="title in fullStore.getReportTitles" :key="title"
             class="flex items-center mx-2 p-2 rounded-lg cursor-pointer
             font-semibold hover:bg-blue-50 hover:text-blue-500"
             :class="{
@@ -66,8 +66,8 @@ const generateCategoryStatus = (parent: string) => {
     </template>
 
     <template v-slot:content>
-      <template v-for="(sections, title) in fullStore.getReportSections">
-        <BasicReport v-if="reportCategory === title" :page="title" />
+      <template v-for="title in fullStore.getReportTitles">
+        <BasicReport v-if="reportCategory === title" :page="title" :key="title"/>
       </template>
     </template>
   </GenericLayout>

@@ -2,7 +2,7 @@
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
-import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
+import { Category } from "@renderer/tool-qa/interfaces/_report";
 import PDFTableRow from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFTableRow.vue";
 
 const props = defineProps({
@@ -15,7 +15,7 @@ const props = defineProps({
     required: true
   },
   section: {
-    type: Object as () => {[key: string] :ReportCheck},
+    type: Object as () => Category,
     required: true
   }
 });

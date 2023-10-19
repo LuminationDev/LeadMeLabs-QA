@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TcpServer from "@renderer/tool-qa/components/tcp/TcpServer.vue";
+import TcpServer from "@renderer/tool-qa/components/_generic/tcp/TcpServer.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { onBeforeMount, watchEffect } from "vue";
 

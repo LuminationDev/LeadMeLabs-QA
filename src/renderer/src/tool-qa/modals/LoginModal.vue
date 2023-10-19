@@ -3,7 +3,7 @@ import GenericButton from '@renderer/tool-qa/components/_generic/buttons/Generic
 import Modal from "./Modal.vue";
 import useVuelidate from "@vuelidate/core";
 import TextInput from "@renderer/tool-qa/components/_generic/inputs/TextInput.vue";
-import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
+import CheckStatus from "@renderer/tool-qa/components/_generic/statuses/CheckStatus.vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";

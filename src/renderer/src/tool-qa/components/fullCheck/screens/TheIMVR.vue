@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import { useRoute } from "vue-router";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
 import { useFullStore } from "../../../store/fullStore";
 import { computed, onMounted, ref } from "vue";
 import * as CONSTANT from "../../../../assets/constants";
 import GenericButton from '@renderer/tool-qa/components/_generic/buttons/GenericButton.vue'
-import ItemHover from "../ItemHover.vue";
-import StatusHover from "../StatusHover.vue";
+import ItemHover from "../../_generic/statuses/ItemHover.vue";
+import StatusHover from "../../_generic/statuses/StatusHover.vue";
 import { storeToRefs } from "pinia";
 import RetrySvg from "@renderer/assets/icons/RetrySvg.vue";
 
 const fullStore = useFullStore();
-
 const { experienceChecksCompleted, allowRunningExperienceChecks } = storeToRefs(fullStore)
-
-const route = useRoute();
 
 onMounted(() => {
   if (fullStore.experienceChecks.length === 0) {
@@ -36,11 +32,11 @@ function cancelTesting() {
   inProgress.value = false
 }
 
-function hasStartedExperienceChecks() {
+const hasStartedExperienceChecks = computed(() => {
   return fullStore.experienceChecks.filter(element => {
     return element.stations.filter(station => station.status !== null).length > 1
   }).length > 1
-}
+});
 
 const animateSpin = ref(false)
 
@@ -172,7 +168,7 @@ onMounted(() => {
           <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
           <tr v-for="(check, index) in fullStore.experienceChecks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="check.title" :message="'No details provided'"/>
-            <template v-for="(station, index) in check.stations" :key="index">
+            <template v-for="(station, _index) in check.stations" :key="_index">
               <StatusHover
                            :message="station.message ?? 'No details provided'"
                            :checking-status="station.checkingStatus ?? 'not checked'"

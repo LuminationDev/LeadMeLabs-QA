@@ -2,8 +2,8 @@
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
-import { ReportCheck } from "@renderer/tool-qa/interfaces/_reportCheck";
 import PDFDeviceStatus from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFDeviceStatus.vue";
+import { Check } from "@renderer/tool-qa/interfaces/_report";
 
 const props = defineProps({
   checkId: {
@@ -11,7 +11,7 @@ const props = defineProps({
     required: true
   },
   check: {
-    type: Object as () => ReportCheck,
+    type: Object as () => Check,
     required: true
   },
   status: {
@@ -60,6 +60,8 @@ const generateCategoryStatus = computed(() => {
   if (failed > 0) return 'failed';
   if (passed > 0 && passed + not_applicable === total) return 'passed';
   if (not_applicable > 0) return 'N/A';
+
+  return 'unknown';
 });
 
 const getCheckStatus = (status: string | undefined, required: any) => {
@@ -134,7 +136,7 @@ const getCheckStatus = (status: string | undefined, required: any) => {
     </td>
   </tr>
 
-  <tr class="bg-gray-50 text-xs" v-for="(comment, index) in check['comments']">
+  <tr class="bg-gray-50 text-xs" v-for="comment in check['comments']">
     <td colspan="3" class="pl-8 p-3">
       <div>
         {{comment.date}}

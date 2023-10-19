@@ -5,6 +5,7 @@ import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
+import {CheckObject} from "@renderer/tool-qa/interfaces/_routeItems";
 
 const props = defineProps({
   title: {
@@ -12,7 +13,7 @@ const props = defineProps({
     required: true
   },
   category: {
-    type: Array<Object>,
+    type: Array<CheckObject>,
     required: true
   },
   autoChecks: {
@@ -36,6 +37,10 @@ const route = useRoute();
  * Check if the main category is currently active.
  */
 const isActive = computed(() => {
+  if (route.name === undefined || route.name === null) {
+    return false;
+  }
+
   return route.name.toString().includes(`full-${props.title.toLowerCase()}`)
 });
 
@@ -43,6 +48,10 @@ const isActive = computed(() => {
  * Check if a manual check sub-category is currently active.
  */
 const isSubActive = (index: number) => {
+  if (route.name === undefined || route.name === null) {
+    return false;
+  }
+
   return route.name.toString().includes(`full-${props.title.toLowerCase()}-${props.category[index].page}`)
 };
 
@@ -50,6 +59,10 @@ const isSubActive = (index: number) => {
  * Check if an auto check sub-category is currently active.
  */
 const isAutoSubActive = (index: number) => {
+  if (route.name === undefined || route.name === null) {
+    return false;
+  }
+
   return route.name.toString().includes(`full-${props.title.toLowerCase()}-${props.autoChecks[index]}`)
 };
 
@@ -59,7 +72,11 @@ const isAutoSubActive = (index: number) => {
  */
 const isSeparatorActive = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
-  const pageProgress = pageRoute.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+
+  if (pageProgress === undefined) {
+    return false;
+  }
 
   return pageProgress < fullStore.maxProgress;
 }
@@ -72,7 +89,7 @@ const generateRoute = () => {
   if (props.autoChecks.length > 0) {
     return `/check/full/${props.title.toLowerCase()}/${props.autoChecks[0]}`;
   } else {
-    return `/check/full/${props.title.toLowerCase()}/${props.category[0].page}/${Object.keys(props.category[0].category[0])[0].toLowerCase()}`;
+    return `/check/full/${props.title.toLowerCase()}/${props.category[0]['page']}/${Object.keys(props.category[0].category[0])[0].toLowerCase()}`;
   }
 }
 
@@ -86,7 +103,11 @@ const generateRoute = () => {
  */
 const currentTitleStatus = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
-  const pageProgress = pageRoute.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+
+  if (pageProgress === undefined) {
+    return 'pending';
+  }
 
   //Progress is equal to the screen's progress OR it is on the same local page but different tab
   if (route.path.includes(localRoute)) {
@@ -108,8 +129,12 @@ const currentTitleStatus = (localRoute: string) => {
  */
 const currentSubStatus = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
-  const pageProgress = pageRoute.meta['progress'];
-  const currentProgress = route.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+  const currentProgress = <number|undefined>route?.meta['progress'];
+
+  if (pageProgress === undefined || currentProgress === undefined) {
+    return 'pending';
+  }
 
   //Progress is less than the screen's progress
   if (pageProgress > fullStore.maxProgress) {

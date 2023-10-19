@@ -4,10 +4,10 @@ import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute} from "vue-router";
 import { QaCheckResult } from "@renderer/tool-qa/types/_qaCheckResult";
-import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
-import StatusHover from "@renderer/tool-qa/components/fullCheck/StatusHover.vue";
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
+import ItemHover from "@renderer/tool-qa/components/_generic/statuses/ItemHover.vue";
+import StatusHover from "@renderer/tool-qa/components/_generic/statuses/StatusHover.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
+import CheckStatus from "@renderer/tool-qa/components/_generic/statuses/CheckStatus.vue";
 
 const route = useRoute();
 const checkType = computed(() => { return route.meta['checkType'] });
@@ -148,7 +148,7 @@ onMounted(() => {
  * end with _checks. Otherwise, the watch is disregarded.
  */
 watch(() => route.name, () => {
-  if (route.name.toString()?.endsWith("_checks")) {
+  if (route.name?.toString().endsWith("_checks")) {
     autoRun();
   }
 });
@@ -180,7 +180,7 @@ watch(() => route.name, () => {
           <tr v-for="(check, index) in filteredChecks" :key="index" class="text-sm border border-gray-200">
             <ItemHover :title="check.displayName" :message="check.extendedDescription ?? 'No details provided'"/>
 
-            <template v-for="(device, index) in fullStore.deviceMap" :key="index">
+            <template v-for="(device, _index) in fullStore.deviceMap" :key="_index">
               <StatusHover v-if="device.checks[check.id] !== undefined"
                   :message="device.checks[check.id]?.message ?? 'No details provided'"
                   :checking-status="device.checks[check.id]?.checkingStatus ?? 'not checked'"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
+import CheckStatus from "@renderer/tool-qa/components/_generic/statuses/CheckStatus.vue";
 import DownloadButton from "@renderer/tool-qa/components/fullCheck/Report/Submission/DownloadButton.vue";
 import LoginModal from "@renderer/tool-qa/modals/LoginModal.vue";
 import { getStorage, ref, uploadString } from "firebase/storage";

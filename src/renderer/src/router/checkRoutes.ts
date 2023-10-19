@@ -1,37 +1,14 @@
-import QuickCheck from "@renderer/tool-qa/screens/QuickCheck.vue";
 import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
 import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
 import TheIMVR from "@renderer/tool-qa/components/fullCheck/screens/TheIMVR.vue";
 import BasicAutoCheck from "@renderer/tool-qa/components/fullCheck/screens/AutoCheck.vue";
 import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
-import OverallReport from "@renderer/tool-qa/components/fullCheck/Report/OverallReport.vue";
-import FinaliseReport from "@renderer/tool-qa/components/fullCheck/Report/FinaliseReport.vue";
+import TheOverallReport from "@renderer/tool-qa/components/fullCheck/Report/TheOverallReport.vue";
+import TheFinaliseReport from "@renderer/tool-qa/components/fullCheck/Report/TheFinaliseReport.vue";
 import TheDetails from "@renderer/tool-qa/components/fullCheck/screens/TheDetails.vue";
-import TheFullCheck from "@renderer/tool-qa/components/fullCheck/TheFullCheck.vue";
+import TheFullCheck from "@renderer/tool-qa/components/fullCheck/screens/TheFullCheck.vue";
 import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
 import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
-
-/**
- * Routes used for the Quick Lab Check
- */
-export const quickRoutes = [
-    {
-        path: '/check/quick',
-        name: 'quick-setup',
-        component: QuickCheck,
-        meta: {
-            prev: '/check/selection'
-        }
-    },
-    {
-        path: '/check/quick/auto',
-        name: 'quick-auto',
-        component: QuickCheck,
-        meta: {
-            prev: '/check/quick'
-        }
-    }
-];
 
 /**
  * Generic metadata that is the same across all manual routes
@@ -445,7 +422,7 @@ export const fullRoutes = [
     {
         path: '/check/full/overall/report',
         name: 'full-overall-report',
-        component: OverallReport,
+        component: TheOverallReport,
         meta: {
             page: "overall",
             description: "TODO write something in checkRoutes",
@@ -459,7 +436,7 @@ export const fullRoutes = [
     {
         path: '/check/full/overall/submit',
         name: 'full-overall-submit',
-        component: FinaliseReport,
+        component: TheFinaliseReport,
         meta: {
             next: '/check/full/overall/download',
             prev: '/check/full/overall/report'
@@ -470,7 +447,7 @@ export const fullRoutes = [
     {
         path: '/check/full/overall/download',
         name: 'full-overall-download',
-        component: FinaliseReport,
+        component: TheFinaliseReport,
         meta: {
             next: '',
             prev: '/check/full/overall/submit'

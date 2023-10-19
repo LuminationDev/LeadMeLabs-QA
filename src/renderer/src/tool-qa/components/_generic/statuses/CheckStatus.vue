@@ -49,6 +49,12 @@ const descriptionMap = {
   submitted: 'Your test report has been uploaded to the cloud.',
 };
 const getDescription = () => descriptionMap[props.checking] || '';
+
+const attemptCallback = () => {
+  if (props.callback !== undefined) {
+    props.callback();
+  }
+}
 </script>
 
 <template>
@@ -62,9 +68,9 @@ const getDescription = () => descriptionMap[props.checking] || '';
   >
     <div>
       <div class="flex flex-col p-2">
-        <img v-if="checking === 'testing' || checking === 'uploading'" src="../../../assets/icons/checking-testing.svg" :alt="`${checking} icon`" />
-        <img v-else-if="checking === 'error' || checking === 'error_cbus' || checking === 'sign_in'" src="../../../assets/icons/checking-error.svg" :alt="`${checking} icon`" />
-        <img v-else-if="checking === 'done' || checking === 'submitted'" src="../../../assets/icons/checking-done.svg" :alt="`${checking} icon`" />
+        <img v-if="checking === 'testing' || checking === 'uploading'" src="../../../../assets/icons/checking-testing.svg" :alt="`${checking} icon`" />
+        <img v-else-if="checking === 'error' || checking === 'error_cbus' || checking === 'sign_in'" src="../../../../assets/icons/checking-error.svg" :alt="`${checking} icon`" />
+        <img v-else-if="checking === 'done' || checking === 'submitted'" src="../../../../assets/icons/checking-done.svg" :alt="`${checking} icon`" />
       </div>
 
       <div class="flex flex-col p-2 justify-center">
@@ -78,7 +84,7 @@ const getDescription = () => descriptionMap[props.checking] || '';
       </div>
     </div>
 
-    <div v-if="callback !== undefined && checking !== 'testing' && checking !== 'sign_in'" @click="callback"
+    <div v-if="callback !== undefined && checking !== 'testing' && checking !== 'sign_in'" @click="attemptCallback"
          class="flex flex-row mr-4 cursor-pointer items-center hover:opacity-60">
       <RetrySvg :fill="checking.includes('error') ? '#B42318' : '#067647'" class="w-5 mr-1.5"/>
       <div class="font-semibold" :class="{

@@ -3,7 +3,7 @@ import Modal from "./Modal.vue";
 import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
 import CommentInfo from "@renderer/tool-qa/modals/CommentInfo.vue";
 import { computed, ref } from "vue";
-import { Comment } from "@renderer/tool-qa/interfaces/_reportCheck";
+import { Comment } from "@renderer/tool-qa/interfaces/_report";
 import AddCommentSvg from "@renderer/assets/icons/AddCommentSvg.vue";
 
 defineExpose({
@@ -42,12 +42,12 @@ function closeModal() {
   showModal.value = false;
 }
 
-const inputRef = ref(null);
+const inputRef = ref<HTMLTextAreaElement | null>(null);
 const minHeight = 48;  // Minimum height for the textarea
 const maxHeight = 200;  // Maximum height for the textarea
 
 const updateTextareaHeight = () => {
-  if (inputRef.value) {
+  if (inputRef.value !== null) {
     const lineHeight = parseInt(window.getComputedStyle(inputRef.value).lineHeight, 10);
     const numLines = Math.floor((inputRef.value.scrollHeight - 20) / lineHeight);
     let newHeight;
