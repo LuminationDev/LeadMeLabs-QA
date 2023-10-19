@@ -4,7 +4,6 @@ import GenericButton from "@renderer/tool-qa/components/_generic/buttons/Generic
 import CommentInfo from "@renderer/tool-qa/modals/CommentInfo.vue";
 import { computed, ref } from "vue";
 import { Comment } from "@renderer/tool-qa/interfaces/_report";
-import AddCommentSvg from "@renderer/assets/icons/AddCommentSvg.vue";
 
 defineExpose({
   openModal
@@ -123,13 +122,9 @@ const canConfirm = computed(() => {
           <CommentInfo v-for="(comment, index) in currentComments" @deleteComment="deleteComment" :index="index" :comment="comment"/>
 
           <hr class="my-4">
-          <div class="flex flex-col relative">
-            <textarea v-model="comment" ref="inputRef" @input="updateTextareaHeight"
-                   class="border-2 border-gray-200 rounded-lg"
-                   placeholder="Add a comment"/>
-
-            <AddCommentSvg @click="addComment" fill="#1570EF" class="absolute cursor-pointer right-2 bottom-2.5 hover:opacity-60"/>
-          </div>
+          <textarea v-model="comment" ref="inputRef" @input="updateTextareaHeight"
+                 class="border-2 border-gray-200 rounded-lg"
+                 placeholder="Add a comment"/>
         </div>
       </template>
 
@@ -145,8 +140,8 @@ const canConfirm = computed(() => {
                     'bg-blue-300': !canConfirm,
                   }"
                   :disabled="!canConfirm"
-                  v-on:click="closeModal"
-          >Done</button>
+                  v-on:click="addComment"
+          >Add Comment</button>
         </footer>
       </template>
     </Modal>
@@ -156,7 +151,7 @@ const canConfirm = computed(() => {
 <style scoped>
 textarea {
   width: 100%;
-  padding: 10px 24px 10px 10px;
+  padding: 10px 10px 10px 10px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   resize: none;
