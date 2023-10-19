@@ -8,6 +8,7 @@ import GenericButton from '@renderer/tool-qa/components/_generic/buttons/Generic
 import ItemHover from "../../_generic/statuses/ItemHover.vue";
 import StatusHover from "../../_generic/statuses/StatusHover.vue";
 import { storeToRefs } from "pinia";
+import RetrySvg from "@renderer/assets/icons/RetrySvg.vue";
 
 const fullStore = useFullStore();
 
@@ -35,19 +36,25 @@ function cancelTesting() {
   inProgress.value = false
 }
 
+function hasStartedExperienceChecks() {
+  return fullStore.experienceChecks.filter(element => {
+    return element.stations.filter(station => station.status !== null).length > 1
+  }).length > 1
+}
+
+const animateSpin = ref(false)
+
 function getVrStatuses() {
+  animateSpin.value = true
+  setTimeout(() => {
+    animateSpin.value = false
+  }, 1000)
   fullStore.sendMessage({
     action: CONSTANT.ACTION.GET_VR_STATUSES,
     actionData: {
       stationIds: ['all']
     }
   })
-  setTimeout(() => {
-    if (route.name !== 'full-imvr-experiences') {
-      return
-    }
-    getVrStatuses()
-  }, 10000)
 }
 
 const inProgress = ref(false)
@@ -101,6 +108,9 @@ onMounted(() => {
           <p class="text-base text-black mb-3">All experiences can be launched and played</p>
         </div>
         <div class="flex flex-row border-gray-100 border-2 rounded-2xl p-4">
+          <div @click="getVrStatuses" class="mr-4">
+            <RetrySvg fill="#6b7280" class="cursor-pointer" :class="animateSpin ? 'animate-spin' : ''"/>
+          </div>
           <div v-for="station in fullStore.stations" :id="station.id" class="border-gray-100 border-2 rounded-xl p-2">
             <img v-if="!station.vrStatuses || (station.vrStatuses['openVrStatus'] === 'Off' || station.vrStatuses['headsetStatus'] === 'Off')" src="../../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
             <img v-else src="../../../../assets/icons/headset-connected.svg" :alt="`connected headset icon`" />
@@ -144,7 +154,7 @@ onMounted(() => {
         <GenericButton v-else type="blue" :disabled="!allHeadsetsConnected" class="px-4 mr-8" :callback="startTesting">
           <img v-if="allHeadsetsConnected" src="../../../../assets/icons/start-test.svg" :alt="`start icon`" class="mr-2" />
           <img v-else src="../../../../assets/icons/start-test-gray.svg" :alt="`start icon`" class="mr-2" />
-          Start test
+          {{ hasStartedExperienceChecks ? 'Resume' : 'Start test' }}
         </GenericButton>
       </div>
 
@@ -168,8 +178,13 @@ onMounted(() => {
                            :checking-status="station.checkingStatus ?? 'not checked'"
                            :passed-status="station.status ?? 'unknown'"/>
             </template>
-            <th v-if="check.stations.filter(station => station.status === 'failed').length > 0" @click="() => { retryExperience(index) }">
-              Retry
+            <th v-if="check.stations.filter(station => station.status === 'failed').length > 0">
+              <button
+                  @click="() => { retryExperience(index) }"
+                  :disabled="inProgress"
+                  class="cursor-pointer disabled:cursor-not-allowed">
+                Retry
+              </button>
             </th>
             <th v-else/>
           </tr>

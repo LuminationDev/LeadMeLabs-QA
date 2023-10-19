@@ -40,7 +40,7 @@ const generateMessage = (device: any) => {
  * Show the user a quick view of if the tests were passed by all devices.
  */
 const generateCategoryStatus = computed(() => {
-  let { failed, skipped, passed, total } = { failed: 0, skipped: 0, passed: 0, total: 0 };
+  let { failed, skipped, passed, not_applicable, total } = { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
 
   const devices = props.check.devices;
   const deviceIds = Object.keys(devices);
@@ -53,11 +53,13 @@ const generateCategoryStatus = computed(() => {
     if (status === 'passed') passed++;
     else if (status === 'failed') failed++;
     else if (status === 'skipped') skipped++;
+    else if (status === 'not_applicable') not_applicable++;
   }
 
   if (total === 0 || skipped > 0) return 'skipped';
   if (failed > 0) return 'failed';
-  if (passed === total) return 'passed';
+  if (passed > 0 && passed + not_applicable === total) return 'passed';
+  if (not_applicable > 0) return 'N/A';
 
   return 'unknown';
 });
@@ -106,13 +108,15 @@ const getCheckStatus = (status: string | undefined, required: any) => {
         </div>
 
         <div v-for="(device, index) in fullStore.orderedDevices" :key="index" class="flex flex-row items-center">
-          <div>
-            {{device.prefix}}{{device.id}}
+          <div class="flex flex-row items-center" v-if="props.check.targets[device.type]">
+            <div>
+              {{device.prefix}}{{device.id}}
+            </div>
+            <PDFDeviceStatus class="w-9"
+                         :message="generateMessage(device)"
+                         :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
+                         :passed-status="getCheckStatus(device.checks[checkId]?.passedStatus, check.targets[device.type])"/>
           </div>
-          <PDFDeviceStatus class="w-9"
-                       :message="generateMessage(device)"
-                       :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
-                       :passed-status="getCheckStatus(device.checks[checkId]?.passedStatus, check.targets[device.type])"/>
         </div>
       </div>
     </td>
