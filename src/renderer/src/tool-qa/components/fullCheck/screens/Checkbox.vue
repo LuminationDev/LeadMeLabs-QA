@@ -27,33 +27,64 @@ const props = defineProps({
   }
 });
 
-const checkedState = computed(() => {
-  return props.device.checks[props.itemKey]?.passedStatus === 'passed'
+const status = computed(() => {
+  return props.device.checks[props.itemKey]?.passedStatus
 });
 
-const updateReport = (checked: boolean) => {
+
+//Update a default entry for the device map.
+onMounted(() => {
   fullStore.updateReport(
       props.parent,
       props.page,
-      { passedStatus: checked? 'passed' : 'skipped' },
+      { passedStatus: status.value },
+      props.itemKey,
+      props.device.id);
+});
+
+function nextOption() {
+  var next = ''
+  switch (status.value) {
+    case 'passed':
+      next = 'failed'
+      break;
+    case 'failed':
+      next = 'not_applicable'
+      break;
+    case 'not_applicable':
+      next = 'skipped'
+      break;
+    default:
+      next = 'passed'
+  }
+  console.log(status.value, next)
+  fullStore.updateReport(
+      props.parent,
+      props.page,
+      { passedStatus: next },
       props.itemKey,
       props.device.id)
 }
 
-//Update a default entry for the device map.
-onMounted(() => {
-  updateReport(checkedState.value);
-});
 </script>
 
 <template>
-  <label class="container">
-    <input :key="index + '-' + itemKey"
-           :checked="checkedState"
-           type="checkbox"
-           @change="updateReport($event.target.checked)">
-    <span class="checkmark rounded-lg"/>
-  </label>
+  <div class="container">
+    <button :key="index + '-' + itemKey" @click="nextOption">
+      <div class="checkmark rounded-lg" :class="{
+        'hocus:bg-green-300 bg-green-100 border-green-300 hocus:border-green-400': status === 'passed',
+        'hocus:bg-red-300 bg-red-100 border-red-300 hocus:border-red-400': status === 'failed',
+        'na-icon hocus:bg-blue-300 bg-blue-100 border-blue-300 hocus:border-blue-400': status === 'not_applicable',
+        'border-gray-400 hocus:border-gray-600': status === 'skipped' || !status
+      }">
+        <div  class="flex justify-center items-center text-[8px] w-full h-full">
+          <img v-if="status === 'passed'" src="../../../../assets/icons/check-green.svg"/>
+          <img v-else-if="status === 'failed'" src="../../../../assets/icons/cross.svg"/>
+          <span v-else-if="status === 'not_applicable'">N/A</span>
+        </div>
+      </div>
+    </button>
+  </div>
 </template>
 
 <style scoped>
@@ -71,15 +102,6 @@ onMounted(() => {
   user-select: none;
 }
 
-/* Hide the browser's default checkbox */
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
@@ -87,51 +109,8 @@ onMounted(() => {
   left: 8px;
   height: 25px;
   width: 25px;
-  background-color: white;
-  border: 2px solid #B9C0D4;
+  border-width: 2px;
+  border-style: solid;
 }
 
-/* On mouse-over, add a blue background and border */
-.container:hover input ~ .checkmark {
-  background-color: #D1E0FF;
-  border: 2px solid #1570EF;
-}
-
-/* On focus, add a blue outline color */
-.container input:focus ~ .checkmark {
-  background-color: white;
-  outline: 3px solid #D1E0FF;
-  border: 2px solid #84ADFF;
-}
-
-/* When the checkbox is checked, add a blue background */
-.container input:checked ~ .checkmark {
-  background-color: #D1E0FF;
-  border: 2px solid #1570EF;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.container .checkmark:after {
-  left: 7.5px;
-  top: 2px;
-  width: 7px;
-  height: 14px;
-  border: solid #1570EF;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
 </style>

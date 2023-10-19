@@ -15,8 +15,8 @@ const fullStore = useFullStore();
  * Show the user a quick view of the test results
  */
 const generateCategoryResults = computed(() => {
-  let { failed, skipped, passed, failedWithoutComments, failedWithComments, total } =
-      { failed: 0, skipped: 0, passed: 0, failedWithoutComments: 0, failedWithComments: 0, total: 0 };
+  let { failed, skipped, passed, not_applicable, failedWithoutComments, failedWithComments, total } =
+      { failed: 0, skipped: 0, passed: 0, not_applicable: 0, failedWithoutComments: 0, failedWithComments: 0, total: 0 };
 
   for (const section in fullStore.reportTracker[props.parent]) {
     const categories = fullStore.reportTracker[props.parent][section];
@@ -34,6 +34,9 @@ const generateCategoryResults = computed(() => {
         switch (status) {
           case 'passed':
             passed++;
+            break;
+          case 'not_applicable':
+            not_applicable++;
             break;
           case 'failed':
             failed++;
@@ -54,11 +57,11 @@ const generateCategoryResults = computed(() => {
     }
   }
 
-  return { failed, skipped, passed, failedWithoutComments, failedWithComments, total };
+  return { failed, skipped, passed, not_applicable, failedWithoutComments, failedWithComments, total };
 });
 
 const passedStatusPercentage = computed(() => {
-  return generateCategoryResults.value.total ? ((generateCategoryResults.value.passed / generateCategoryResults.value.total) * 100).toFixed(0) : 0;
+  return generateCategoryResults.value.total ? (((generateCategoryResults.value.passed + generateCategoryResults.value.not_applicable) / generateCategoryResults.value.total) * 100).toFixed(0) : 0;
 });
 
 const skippedStatusPercentage = computed(() => {
@@ -79,7 +82,7 @@ const skippedStatusPercentage = computed(() => {
           </div>
           <div class="flex flex-row">
             <div>
-              {{generateCategoryResults.passed}} out of {{generateCategoryResults.total}} tests were passed.
+              {{generateCategoryResults.passed + generateCategoryResults.not_applicable}} out of {{generateCategoryResults.total}} tests were passed or N/A.
             </div>
             <div v-if="generateCategoryResults.skipped > 0" class="ml-1">
               {{generateCategoryResults.skipped}} were skipped.
