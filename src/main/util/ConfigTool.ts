@@ -283,8 +283,10 @@ export default class ConfigTool {
                 } catch (err) {
                     // @ts-ignore type error has message
                     console.log(err.message)
+                    return undefined;
                 }
             }
+            return undefined;
         });
     }
 

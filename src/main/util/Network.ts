@@ -5,7 +5,7 @@ const networkInterfaces = os.networkInterfaces();
 /**
  * Check a destination IP address and port to see if a connection can be established.
  */
-export async function CheckOpenPort(ipcMain: Electron.IpcMain, mainWindow: Electron.BrowserWindow, info: any) {
+export async function CheckOpenPort(mainWindow: Electron.BrowserWindow, info: any) {
     const details = await CheckPortAsync(info.port, info.address);
 
     // Send to the frontend via Electron.IpcMain

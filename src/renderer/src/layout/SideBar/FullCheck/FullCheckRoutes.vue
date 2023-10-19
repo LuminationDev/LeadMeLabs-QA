@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import logo from '@renderer/assets/images/tool-logo.svg';
 import * as CONSTANT from "@renderer/assets/constants";
-import { useRoute, useRouter } from "vue-router";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import FullMenu from "@renderer/layout/SideBar/FullCheck/FullMenu.vue";
 
@@ -15,9 +14,6 @@ const saveCurrentProgress = async () => {
     data: JSON.stringify(fullStore.reportTracker)
   });
 };
-
-const route = useRoute();
-const router = useRouter();
 </script>
 
 <template>

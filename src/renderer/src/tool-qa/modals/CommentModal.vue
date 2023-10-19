@@ -3,8 +3,6 @@ import Modal from "./Modal.vue";
 import GenericButton from "@renderer/tool-qa/components/_generic/buttons/GenericButton.vue";
 import CommentInfo from "@renderer/tool-qa/modals/CommentInfo.vue";
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { Comment } from "@renderer/tool-qa/interfaces/_reportCheck";
 import AddCommentSvg from "@renderer/assets/icons/AddCommentSvg.vue";
 
@@ -33,7 +31,6 @@ const props = defineProps({
   }
 });
 
-const fullStore = useFullStore();
 const showModal = ref(false);
 const comment = ref("");
 
@@ -90,8 +87,6 @@ const modalTitle = computed(() => {
 const canConfirm = computed(() => {
   return comment.value.length > 0;
 });
-
-const route = useRoute();
 </script>
 
 <template>

@@ -95,7 +95,7 @@ const skippedStatusPercentage = computed(() => {
       <div class="flex flex-row my-3 items-center">
         <div class="w-full relative">
           <div
-              class="bg-blue-300 rounded-full h-2 absolute z-[5]"
+              class="bg-yellow-100 rounded-full h-2 absolute z-[5]"
               :style="{ width: skippedStatusPercentage + '%' }"
           ></div>
           <div

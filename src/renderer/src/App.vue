@@ -3,7 +3,7 @@ import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
-import { QaCheck, TCPMessage } from "tool-qa/interfaces";
+import { QaCheck, TCPMessage } from "@renderer/tool-qa/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
 import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
@@ -14,8 +14,6 @@ import { storeToRefs } from "pinia";
 import { Station } from "./tool-qa/types/_station";
 import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
-import {QaCheckResult} from "@renderer/tool-qa/types/_qaCheckResult";
-import {REPORT_GENERATED} from "@renderer/assets/constants/_channel";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -195,7 +193,7 @@ const handleTCPMessage = (info: any) => {
         return qa
       });
       fullStore.qaChecks.push(...qaChecks)
-      const index = fullStore.stations.findIndex(element => element.expectedDetails.id == id)
+      const index = fullStore.stations.findIndex(element => element.expectedDetails?.id == id)
       if (index !== -1) {
         fullStore.stations[index].qaChecks.push(...qaChecks)
       }
@@ -426,9 +424,9 @@ const updateApplicationSettings = (info: any) => {
 const title = ref("");
 const message = ref("");
 const notificationRef = ref<InstanceType<typeof NotificationModal> | null>(null)
-const openNotificationModal = (title: string, message: string) => {
-  this.title.value = title;
-  this.message.value = message;
+const openNotificationModal = (s_title: string, s_message: string) => {
+  title.value = s_title;
+  message.value = s_message;
   notificationRef.value?.openModal();
 }
 </script>

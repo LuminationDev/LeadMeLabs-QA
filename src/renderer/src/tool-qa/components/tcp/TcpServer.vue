@@ -9,7 +9,6 @@ const stateStore = useStateStore();
 //Server details
 const serverAddress = ref(stateStore.ipAddress);
 const serverPort = ref(stateStore.serverPort);
-const key = ref("");
 
 const startServer = () => {
   //Save the server details for future use

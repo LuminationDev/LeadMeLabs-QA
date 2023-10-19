@@ -15,7 +15,8 @@ const routeNameToIndex = {
 };
 
 const currentIndex = computed(() => {
-  const routeName = route.name.toString();
+  const routeName = route.name?.toString();
+  if(routeName === undefined) return -1;
   return routeNameToIndex[routeName] !== undefined ? routeNameToIndex[routeName] : -1;
 });
 
