@@ -64,7 +64,7 @@ const computedChecks = computed(() => {
                     :category="<string>page"
                     :section="section"/>
 
-        <CheckTable v-for="(section, page) in computedChecks.auto" :key="page"
+        <CheckTable v-for="(section, page) in computedChecks.manual" :key="page"
                     :parent="props.page ?? <string>route.meta['page']"
                     :category="<string>page"
                     :section="section"/>
