@@ -362,8 +362,22 @@ export const MILESIGHT_ROUTER: CheckObject = {
                                 text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
                             }
                         ]
-                    },
-                    "Config File": { // todo - this should only need one check
+                    }
+                },
+                "description": "Put something here later",
+                "targets": {
+                    "station": true,
+                    "tablet": true,
+                    "nuc": true,
+                    "cbus": true
+                },
+                "devices": {}
+            },
+        },
+        {
+            "Milesight config file": {
+                "checks": {
+                    "Config File": {
                         description: "The master Config file is uploaded in the Milesight Router web interface.",
                         guide: [
                             {
@@ -379,8 +393,8 @@ export const MILESIGHT_ROUTER: CheckObject = {
                 },
                 "description": "Put something here later",
                 "targets": {
-                    "station": true,
-                    "tablet": true,
+                    "station": false,
+                    "tablet": false,
                     "nuc": true,
                     "cbus": false
                 },
