@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import GenerateReport from "@renderer/tool-qa/components/reports/GenerateReport.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
+import GenerateReport from "@renderer/tool-qa/components/handover/GenerateReport.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();

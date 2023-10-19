@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import * as CONSTANT from '../../../assets/constants';
-import { useStateStore } from '../../store/stateStore';
-import TcpKey from "@renderer/tool-qa/components/tcp/TcpKey.vue";
+import * as CONSTANT from '../../../../assets/constants';
+import { useStateStore } from '../../../store/stateStore';
+import TcpKey from "@renderer/tool-qa/components/_generic/tcp/TcpKey.vue";
 
 const stateStore = useStateStore();
 

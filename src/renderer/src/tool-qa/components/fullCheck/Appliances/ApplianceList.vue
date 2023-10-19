@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import * as CONSTANT from "@renderer/assets/constants";
-import ItemHover from "@renderer/tool-qa/components/fullCheck/ItemHover.vue";
+import ItemHover from "@renderer/tool-qa/components/_generic/statuses/ItemHover.vue";
 import IDStatus from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceIdStatus.vue";
 import ApplianceListModal from "@renderer/tool-qa/modals/ApplianceListModal.vue";
-import CheckStatus from "@renderer/tool-qa/components/fullCheck/CheckStatus.vue";
+import CheckStatus from "@renderer/tool-qa/components/_generic/statuses/CheckStatus.vue";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { Appliance } from "@renderer/tool-qa/interfaces";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
@@ -21,7 +21,7 @@ const error = ref('');
  * Sort through the appliance_list.json sent over by the NUC. The list contains all appliances, both Cbus and Epson.
  * Group them into their individual types (lights, projectors etc...).
  */
-const groupedData = computed(() => {
+const groupedData = computed((): {[key: string]: Array<Appliance>} => {
   const data = fullStore.ApplianceList;
 
   if (data.length === 0) {
@@ -62,24 +62,24 @@ const startNewTest = async () => {
   await validateAppliance();
 }
 
-/**
- * Test a certain type of appliance instead of running through the entire test set again.
- * @param type A string of the appliance type (lights, blinds, etc...)
- */
-const retest = async (type: string) => {
-  typeCheck.value = type;
-
-  const typeLength = fullStore.ApplianceList.filter(item => item.type === type).length;
-  if (typeLength === 0) {
-    error.value = "No appliances for type: " + type;
-    setTimeout(() => {
-      error.value = "";
-    }, 2000)
-    return;
-  }
-
-  await validateAppliance();
-}
+// /**
+//  * Test a certain type of appliance instead of running through the entire test set again.
+//  * @param type A string of the appliance type (lights, blinds, etc...)
+//  */
+// const retest = async (type: string) => {
+//   typeCheck.value = type;
+//
+//   const typeLength = fullStore.ApplianceList.filter(item => item.type === type).length;
+//   if (typeLength === 0) {
+//     error.value = "No appliances for type: " + type;
+//     setTimeout(() => {
+//       error.value = "";
+//     }, 2000)
+//     return;
+//   }
+//
+//   await validateAppliance();
+// }
 
 const validateAppliance = async () => {
   checking.value = true;
@@ -115,7 +115,7 @@ const validateAppliance = async () => {
  * @returns {Promise} A promise that resolves when a response is received or rejects on a timeout.
  */
 const waitForResponse = async (appliance, timeout) => {
-  return new Promise((resolve) => {
+  new Promise((resolve) => {
     let responseTimer;
     let watcher;
 
@@ -137,7 +137,7 @@ const waitForResponse = async (appliance, timeout) => {
         foundAppliance.correct = false;
         foundAppliance.correctId = false;
       }
-      resolve();
+      resolve(null);
     }, timeout);
   });
 };
@@ -251,11 +251,11 @@ onBeforeMount(() => {
 
       <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
       <tr v-for="(appliances, type) in groupedData" :key="type" class="text-sm border border-gray-200">
-        <ItemHover :title="stateStore.capitalizeFirstLetter(type)" :message="'Not sure what to do here'"/>
+        <ItemHover :title="stateStore.capitalizeFirstLetter(<string>type)" :message="'Not sure what to do here'"/>
 
         <IDStatus :currently-checking="type === currentlyChecking" :automationType="appliances[0]['automationType']" :appliances="appliances"/>
 
-        <ApplianceListModal :appliance-type="stateStore.capitalizeFirstLetter(type)" :appliances="appliances"/>
+        <ApplianceListModal :appliance-type="stateStore.capitalizeFirstLetter(<string>type)" :appliances="appliances"/>
       </tr>
     </table>
   </div>

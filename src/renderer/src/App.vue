@@ -3,16 +3,15 @@ import NotificationModal from "@renderer/tool-qa/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import * as CONSTANT from './assets/constants/index';
+import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 import { QaCheck, TCPMessage } from "@renderer/tool-qa/interfaces";
 import { RouterView, useRoute } from 'vue-router';
 import { ref } from 'vue';
-import { useQuickStore } from "@renderer/tool-qa/store/quickStore";
 import { useStateStore } from './tool-qa/store/stateStore';
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useConfigStore } from "@renderer/tool-config/store/configStore";
 import { storeToRefs } from "pinia";
 import { Station } from "./tool-qa/types/_station";
-import ShowState from "@renderer/tool-config/components/helpers/showState.vue";
 import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
 
 // Sentry.init({
@@ -21,65 +20,10 @@ import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
 
 const route = useRoute()
 const stateStore = useStateStore();
-const quickStore = useQuickStore();
 const fullStore = useFullStore();
 const configStore = useConfigStore()
 const { showPreview } = storeToRefs(configStore)
 
-/**
- * Populate the stationDetails in the quickStore with the data from a Station in the QaCheck interface format.
- * @param data An array of object strings.
- */
-const populateQuickReportTracker = (data: string) => {
-  const items = JSON.parse(data);
-  const qaChecks = items.map((element) => {
-    const qa: QaCheck = {
-      passedStatus: element._passedStatus || element.passedStatus,
-      message: element._message || element.message || element._value || element.value,
-      id: element._id || element.id,
-      displayName: ""
-    };
-
-    //If no status is supplied check the local known values
-    if (qa.passedStatus === undefined) {
-      const correct = isCorrectValue(qa.id, qa.message);
-      qa.passedStatus = correct !== undefined ? (correct ? 'passed' : 'failed') : undefined;
-    }
-
-    return qa;
-  });
-
-  const existingCheckIds = quickStore.stationDetails.map(item => item.id);
-  const uniqueQAChecks = qaChecks.filter(item => !existingCheckIds.includes(item.id));
-
-  quickStore.stationDetails = quickStore.stationDetails.concat(uniqueQAChecks);
-};
-
-/**
- * Check the value of a Station's key against the known correct values.
- * @param key A string of the object's key
- * @param value The current value to check if correct.
- */
-const isCorrectValue = (key: string, value: any) => {
-  const temp = key.toLowerCase();
-
-  switch (temp) {
-    case "id":
-      return value == quickStore.correctStationValues['StationId'];
-
-    case "name":
-      return value == `Station ${quickStore.correctStationValues['StationId']}`;
-
-    case "lablocation":
-      return value == stateStore.labLocation;
-  }
-
-  if (quickStore.correctStationValues[key] === undefined) {
-    return undefined;
-  }
-}
-
-//TODO load in the auto checks?
 /**
  * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
  * The individual checks will be added when that page is visited. If no checks are present in a section or category it
@@ -165,12 +109,6 @@ const handleTCPMessage = (info: any) => {
       break;
     case "ApplianceList":
       fullStore.ApplianceList = JSON.parse(message[1]);
-      break;
-    case "StationNetwork":
-    case "StationConfig":
-    case "StationWindows":
-    case "StationSoftware":
-      populateQuickReportTracker(message[1]);
       break;
   }
 

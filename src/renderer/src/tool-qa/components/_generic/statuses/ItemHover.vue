@@ -35,7 +35,7 @@ const clearHoverTimer = () => {
   <td class="p-3 grow relative">
     <div class="flex flex-row">
       <div class="font-semibold mr-1">{{ title }}</div>
-      <img @mouseover="startHoverTimer" @mouseout="clearHoverTimer" class="cursor-help" src="../../../assets/icons/help-hover.svg" alt="help"/>
+      <img @mouseover="startHoverTimer" @mouseout="clearHoverTimer" class="cursor-help" src="../../../../assets/icons/help-hover.svg" alt="help"/>
     </div>
     <Transition name="fade">
       <div v-if="isHovered" class="absolute bg-gray-100 border-[1px] border-gray-300 p-2 rounded-lg z-10">{{ message }}</div>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import ItemHover from "../ItemHover.vue";
-import StatusHover from "../StatusHover.vue";
+import ItemHover from "../../_generic/statuses/ItemHover.vue";
+import StatusHover from "../../_generic/statuses/StatusHover.vue";
 import { useFullStore } from "../../../store/fullStore";
 import { computed } from "vue";
+import { QaCheck } from "@renderer/tool-qa/interfaces";
 
 const fullStore = useFullStore();
 
@@ -37,7 +38,7 @@ const checks = computed(() => {
       <tr v-for="(check, id) in checks" :key="id" class="text-sm border border-gray-200">
         <ItemHover :title="check['displayName']" :message="check['extendedDescription'] ?? 'No details provided'"/>
 
-        <template v-for="(station, index) in check['stations']" :key="index">
+        <template v-for="(station, _index) in check['stations'] as QaCheck[]" :key="_index">
           <StatusHover :message="station.message ?? 'No details provided'"
                        :checking-status="'not checked'"
                        :passed-status="station.passedStatus ?? 'unknown'"/>

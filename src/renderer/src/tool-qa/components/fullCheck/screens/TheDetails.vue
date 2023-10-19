@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
+import CategoryTab from "@renderer/tool-qa/components/_generic/statuses/CategoryTab.vue";
 import GenericButton from "@renderer/tool-config/components/GenericButton.vue";
-import StatusIcon from "@renderer/tool-qa/components/_generic/StatusIcon.vue";
+import StatusIcon from "@renderer/tool-qa/components/_generic/statuses/StatusIcon.vue";
 import ChecklistSvg from "@renderer/assets/icons/ChecklistSvg.vue";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";

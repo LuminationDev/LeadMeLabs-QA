@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
 import ApplianceDisplay from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceList.vue";
 </script>
 

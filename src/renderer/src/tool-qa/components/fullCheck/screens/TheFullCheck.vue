@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/tool-qa/components/checks/GenericLayout.vue";
-import CategoryTab from "@renderer/tool-qa/components/fullCheck/screens/CategoryTab.vue";
+import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
+import CategoryTab from "@renderer/tool-qa/components/_generic/statuses/CategoryTab.vue";
 import TheNUC from "@renderer/tool-qa/components/fullCheck/setup/TheNUC.vue";
 import TheStations from "@renderer/tool-qa/components/fullCheck/setup/TheStations.vue";
 import TheTablets from "@renderer/tool-qa/components/fullCheck/setup/TheTablets.vue";

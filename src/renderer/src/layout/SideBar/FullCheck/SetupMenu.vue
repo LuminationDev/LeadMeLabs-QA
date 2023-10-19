@@ -13,14 +13,22 @@ const fullStore = useFullStore();
  * Check if the main category is currently active.
  */
 const isActive = computed(() => {
-  return route.name?.toString().includes(`full-setup`)
+  if (route.name === undefined || route.name === null) {
+    return false;
+  }
+
+  return route.name.toString().includes(`full-setup`);
 });
 
 /**
  * Check if a manual check sub-category is currently active.
  */
 const isSubActive = (page: string) => {
-  return route.name?.toString().includes(`full-setup-devices-${page}`)
+  if (route.name === undefined || route.name === null) {
+    return false;
+  }
+
+  return route.name.toString().includes(`full-setup-devices-${page}`);
 };
 
 /**
@@ -29,21 +37,26 @@ const isSubActive = (page: string) => {
  */
 const isSeparatorActive = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
-  const pageProgress = pageRoute.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+
+  if (pageProgress === undefined) {
+    return false;
+  }
 
   return pageProgress < fullStore.maxProgress;
 }
 
 const currentTitleStatus = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
-  const pageProgress = pageRoute.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+
+  if (pageProgress === undefined) {
+    return 'pending';
+  }
 
   //Progress is equal to the screen's progress OR it is on the same local page but different tab
   if (route.path.includes(localRoute)) {
     return 'active';
-    //TODO relies on a report structure so not implemented yet
-  } else if (false) {
-    return 'complete';
   }
   //Progress is further than the screen's progress and the report is not complete
   else if (pageProgress < fullStore.maxProgress) {
@@ -55,8 +68,12 @@ const currentTitleStatus = (localRoute: string) => {
 
 const currentSubStatus = (localRoute: string) => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(localRoute));
-  const pageProgress = pageRoute.meta['progress'];
-  const currentProgress = route.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+  const currentProgress = <number|undefined>route?.meta['progress'];
+
+  if (pageProgress === undefined || currentProgress === undefined) {
+    return 'pending';
+  }
 
   //Progress is less than the screen's progress
   if (pageProgress > fullStore.maxProgress) {
@@ -65,15 +82,13 @@ const currentSubStatus = (localRoute: string) => {
     //Progress is equal to the screen's progress OR it is on the same local page but different tab
   } else if ((pageProgress === currentProgress) || (route.path.includes(localRoute) && pageProgress === fullStore.maxProgress)) {
     return 'active';
-
-    //TODO relies on a report structure so not implemented yet
-  } else if (false) {
-    return 'complete';
   }
   //Progress is further than the screen's progress and the report is not complete
   else if (pageProgress < fullStore.maxProgress || (!route.path.includes(localRoute) && pageProgress === fullStore.maxProgress)) {
     return 'complete';
   }
+
+  return "pending";
 }
 </script>
 

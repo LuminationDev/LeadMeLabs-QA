@@ -20,6 +20,7 @@ import Epson from '../../models/_epson'
 import { Room, Scene, Station } from '../../models'
 import Cbus from '../../models/_cbus'
 import Appliance from '../../models/_appliance'
+import ApplianceInterface from "@renderer/tool-config/models/_appliance_interface";
 
 const labStore = useLabStore()
 const { splicers } = storeToRefs(labStore)
@@ -86,7 +87,7 @@ const isIncomplete = computed(() => {
         case 'stations':
             return isIncompleteStation(props.appliance as Station)
         default:
-            return isIncompleteGenericAppliance(props.appliance)
+            return isIncompleteGenericAppliance(props.appliance as ApplianceInterface)
     }
 })
 

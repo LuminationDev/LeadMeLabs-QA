@@ -43,6 +43,7 @@ const epsonProjectorStatus = ref<number | null>(null)
 const epsonSourceStatus = ref<string | null>(null)
 
 onMounted(async () => {
+    //@ts-ignore
     window.electron.ipcRenderer.on('epson_status_update', async (_event, data) => {
         if (data.type === 'projectors') {
             epsonProjectorStatus.value = data.value
@@ -64,14 +65,17 @@ onMounted(async () => {
 })
 
 onUnmounted(async () => {
+    //@ts-ignore
     window.electron.ipcRenderer.removeAllListeners('epson_status_update')
 })
 
 async function getProjectorStatus(): Promise<any> {
+    //@ts-ignore
     await window.configApi.sendCommandTcpEpson(state.ipAddress, 3629, props.data.name, EPSON.CHECK_POWER)
 }
 
 async function getSourceStatus(): Promise<any> {
+    //@ts-ignore
     await window.configApi.sendCommandTcpEpson(state.ipAddress, 3629, props.data.name, EPSON.CHECK_SOURCE)
 }
 

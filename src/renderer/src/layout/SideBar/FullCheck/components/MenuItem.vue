@@ -41,9 +41,9 @@ const attemptToPushRoute = () => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
   const pageProgress = pageRoute.meta['progress'];
 
-  // if(pageProgress <= fullStore.maxProgress) {
+  if(pageProgress <= fullStore.maxProgress) {
     router.push(props.route)
-  // }
+  }
 }
 
 /**
@@ -51,7 +51,11 @@ const attemptToPushRoute = () => {
  */
 const clickable = computed(() => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
-  const pageProgress = pageRoute.meta['progress'];
+  const pageProgress = <number|undefined>pageRoute?.meta['progress'];
+
+  if (pageProgress === undefined) {
+    return false;
+  }
 
   return pageProgress <= fullStore.maxProgress;
 });

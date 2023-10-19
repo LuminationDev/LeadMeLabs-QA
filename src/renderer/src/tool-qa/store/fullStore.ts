@@ -5,7 +5,7 @@ import { Station as StationClass } from '../types/_station'
 import { QaGroup } from "../types/_qaGroup";
 import { QaCheckResult } from "../types/_qaCheckResult";
 import { useStateStore } from "./stateStore";
-import { Report } from "../interfaces/_report";
+import {Report, Targets} from "../interfaces/_report";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -641,7 +641,7 @@ export const useFullStore = defineStore({
          * @param check
          * @param targetDevices
          */
-        addCheckToReportTracker(parent: string, page: string, check, targetDevices: {}) {
+        addCheckToReportTracker(parent: string, page: string, check, targetDevices: Targets) {
             const checkKey = check.key;
             this.reportTracker[parent] ||= {};
             const reportTracker = this.reportTracker[parent][page] ||= {};
@@ -729,9 +729,10 @@ export const useFullStore = defineStore({
         connectedTabletCount(state) {
             return state.tablets.filter(tablet => tablet.connected).length
         },
-
         getConnectedTabletIpAddresses(state): Array<string> {
-            return state.tablets.filter(tablet => tablet.connected).map(tablet => tablet.ipAddress)
+            return state.tablets
+                .filter(tablet => tablet.connected && tablet.ipAddress !== null)
+                .map(tablet => tablet.ipAddress!);
         },
         /**
          * Order the devices from the fullStore.deviceMap into a constant order based
@@ -760,6 +761,12 @@ export const useFullStore = defineStore({
 
         groupsThatHaveRun(state) {
             return state.qaGroups.filter(element => element.started).map(element => element.id)
+        },
+        /**
+         * Collect just the titles (keys) from the report tracker.
+         */
+        getReportTitles() {
+            return Object.keys(useFullStore().getReportSections);
         }
     }
 });
