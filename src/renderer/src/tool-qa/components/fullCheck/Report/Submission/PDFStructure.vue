@@ -21,6 +21,20 @@ const props = defineProps({
 const checkDetails = computed((): Section => {
   return fullStore.reportTracker[props.parent];
 });
+
+/**
+ * Split the checks into auto (name includes _checks) and manual (all other ones).
+ */
+const computedChecks = computed(() => {
+  const auto = {};
+  const manual = {};
+
+  for (const [key, value] of Object.entries(checkDetails.value)) {
+    key.includes('_checks') ? auto[key] = value : manual[key] = value;
+  }
+
+  return { auto, manual };
+});
 </script>
 
 <template>
@@ -34,10 +48,15 @@ const checkDetails = computed((): Section => {
     <div class="flex flex-col mb-6">
       <ReportResults :parent="props.parent"/>
 
-      <PDFTable v-for="(section, page) in checkDetails" :key="page"
-                  :parent="props.parent"
-                  :category="<string>page"
-                  :section="section"/>
+      <PDFTable v-for="(section, page) in computedChecks.auto" :key="page"
+                :parent="props.parent"
+                :category="<string>page"
+                :section="section"/>
+
+      <PDFTable v-for="(section, page) in computedChecks.manual" :key="page"
+                :parent="props.parent"
+                :category="<string>page"
+                :section="section"/>
     </div>
   </div>
 </template>
