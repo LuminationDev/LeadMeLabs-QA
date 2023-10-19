@@ -38,13 +38,12 @@ const router = useRouter();
  * Only allow the user to navigate to a new menu item if they have progressed to that point already.
  */
 const attemptToPushRoute = () => {
-  //TODO uncomment to limit sidebar navigation to areas the user has already been to
-  // const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
-  // const pageProgress = pageRoute.meta['progress'];
+  const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
+  const pageProgress = pageRoute.meta['progress'];
 
-  // if(pageProgress <= fullStore.maxProgress) {
+  if(pageProgress <= fullStore.maxProgress) {
     router.push(props.route)
-  // }
+  }
 }
 
 /**
