@@ -758,6 +758,10 @@ export const useFullStore = defineStore({
             });
             return reportWithoutKey;
         },
+
+        groupsThatHaveRun(state) {
+            return state.qaGroups.filter(element => element.started).map(element => element.id)
+        },
         /**
          * Collect just the titles (keys) from the report tracker.
          */
