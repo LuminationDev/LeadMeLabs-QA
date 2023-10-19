@@ -2,8 +2,8 @@
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
-import PDFDeviceStatus from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFDeviceStatus.vue";
 import { Check } from "@renderer/tool-qa/interfaces/_report";
+import PDFDeviceStatus from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFDeviceStatus.vue";
 
 const props = defineProps({
   checkId: {
@@ -43,6 +43,7 @@ const generateCategoryStatus = computed(() => {
   let { failed, skipped, passed, not_applicable, total } = { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
 
   const devices = props.check.devices;
+  if(devices === undefined || devices === null) return;
   const deviceIds = Object.keys(devices);
 
   total += deviceIds.length;
@@ -64,6 +65,18 @@ const generateCategoryStatus = computed(() => {
 
   return 'unknown';
 });
+
+const getTargetData = (type: string): boolean => {
+ if (!props.check.hasOwnProperty('targets')) {
+   return false;
+ }
+
+  if (props.check.targets.hasOwnProperty(type)) {
+    return props.check.targets[type];
+  }
+
+  return false;
+}
 
 const getCheckStatus = (status: string | undefined, required: any) => {
   if( status !== undefined){
@@ -109,7 +122,7 @@ const getCheckStatus = (status: string | undefined, required: any) => {
         </div>
 
         <div v-for="(device, index) in fullStore.orderedDevices" :key="index" class="flex flex-row items-center">
-          <div class="flex flex-row items-center" v-if="props.check.targets[device.type]">
+          <div class="flex flex-row items-center" v-if="getTargetData(device.type)">
             <div>
               {{device.prefix}}{{device.id}}
             </div>

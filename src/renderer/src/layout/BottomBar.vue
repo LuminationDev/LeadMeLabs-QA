@@ -3,11 +3,13 @@ import GenericButton from '@renderer/tool-qa/components/_generic/buttons/Generic
 import SkipCheckModal from "@renderer/tool-qa/modals/SkipCheckModal.vue";
 import CommentModal from "@renderer/tool-qa/modals/CommentModal.vue";
 import router from '../router/router'
+import * as FULL from '../assets/checks/_fullcheckValues';
 import { computed } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
 import { QaCheckResult } from "../tool-qa/types/_qaCheckResult";
+import {Comment} from "@renderer/tool-qa/interfaces/_report";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -67,13 +69,35 @@ const canProceed = computed(() => {
 });
 
 const addComment = (comment: string) => {
-  //TODO finish this
-  // const key = route.meta['trackerName'];
-  // if(key !== undefined) {
-  //   fullStore.reportTracker[key]['comment'] = comment;
-  // }
-  console.log(comment);
+  const sectionName = route.meta['parent']; //Auto check
+  const pageName: string = <string>route.meta['page'] || <string>route.meta['checkType'];
+
+  if (!sectionName && !pageName) {
+    return; // Neither sectionName nor pageName is defined
+  }
+
+  const key = sectionName || FULL[pageName?.toUpperCase()]?.parent; //Manual check
+
+  if (key) {
+    const section = fullStore.reportTracker[key][<string>pageName];
+    section['comments'] ||= [];
+    section['comments'].push({ date: stateStore.formattedDate(true), content: comment });
+  }
 }
+
+const currentComments = computed((): Comment[] => {
+  const sectionName = route.meta['parent'];
+  const pageName: string = <string>route.meta['page'] || <string>route.meta['checkType'];
+  let key;
+
+  if (sectionName) {
+    key = sectionName;
+  } else if (pageName) {
+    key = FULL[pageName?.toUpperCase()]?.parent;
+  }
+
+  return (key && fullStore.reportTracker[key]?.[<string>pageName]?.comments) ?? [];
+});
 </script>
 
 <template>
@@ -92,7 +116,7 @@ const addComment = (comment: string) => {
   <SkipCheckModal v-if="props.meta['canSkip'] !== undefined && props.meta['noComment'] === undefined && props.meta['next']" :callback="goNextLink"/>
 
   <!--Modal to handle adding a comment-->
-  <CommentModal v-if="props.meta['addComment'] !== undefined" :callback="addComment" />
+  <CommentModal v-if="props.meta['addComment'] !== undefined" :current-comments="currentComments" :callback="addComment" />
 
   <GenericButton v-if="props.meta['next']" type="blue" :disabled="!canProceed" :callback="goNextLink" class="w-auto px-4"
    > {{props.meta['nextText'] ?? 'Next'}}

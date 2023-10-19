@@ -29,7 +29,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/40 * 100); //TODO WARNING: 40 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/41 * 100); //TODO WARNING: 41 is a static number it will change depending when more checks are added.
 }
 
 /**

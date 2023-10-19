@@ -2,7 +2,7 @@
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
-import { Category } from "@renderer/tool-qa/interfaces/_report";
+import { Category, Comment } from "@renderer/tool-qa/interfaces/_report";
 import PDFTableRow from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFTableRow.vue";
 
 const props = defineProps({
@@ -33,6 +33,7 @@ const generateCategoryStatus = computed(() => {
 
   for (const key in categories) {
     const { devices } = categories[key];
+    if(devices === undefined) continue;
     const deviceIds = Object.keys(devices);
 
     total += deviceIds.length;
@@ -55,6 +56,11 @@ const generateCategoryStatus = computed(() => {
 
   return 'unknown';
 });
+
+const getComments = computed((): Comment[] => {
+  //@ts-ignore
+  return <Comment[]>props.section['comments'] || [];
+});
 </script>
 
 <template>
@@ -76,6 +82,17 @@ const generateCategoryStatus = computed(() => {
     </div>
 
     <table class="w-full border-collapse">
+      <tr class="bg-gray-50 text-xs" v-for="comment in getComments">
+        <td colspan="3" class="pl-8 p-3">
+          <div>
+            {{comment.date}}
+          </div>
+          <div>
+            <span class="font-semibold mr-1">Comment:</span> {{comment.content}}
+          </div>
+        </td>
+      </tr>
+
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
         <th class="p-3 text-center">Date</th>

@@ -704,6 +704,8 @@ export const useFullStore = defineStore({
             if (!reportTracker) return;
 
             for (const [checkId, check] of Object.entries(reportTracker)) {
+                if(checkId === 'comments') continue;
+
                 for (const [deviceId, info] of Object.entries(check.devices)) {
                     const device = this.deviceMap.find(device => device.id === deviceId);
                     if (device) {

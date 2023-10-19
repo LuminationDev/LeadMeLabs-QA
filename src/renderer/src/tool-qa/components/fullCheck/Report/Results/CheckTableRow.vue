@@ -58,6 +58,7 @@ const generateCategoryStatus = computed(() => {
       { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
 
   const devices = props.check.devices;
+  if(devices === undefined || devices === null) return;
   const deviceIds = Object.keys(devices);
 
   total += deviceIds.length;

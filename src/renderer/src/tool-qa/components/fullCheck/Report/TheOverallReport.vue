@@ -23,6 +23,7 @@ const generateCategoryStatus = (parent: string) => {
     //Need to add one more layer for sections?
     for (const key in categories) {
       const {devices} = categories[key];
+      if(devices === undefined) continue;
       const deviceIds = Object.keys(devices);
 
       total += deviceIds.length;
