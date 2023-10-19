@@ -64,7 +64,7 @@ const generateCategoryStatus = computed(() => {
 
   for (const deviceId of deviceIds) {
     const { passedStatus: status } = devices[deviceId];
-    
+
     if (status === 'passed') passed++;
     else if (status === 'failed') failed++;
     else if (status === 'not_applicable') not_applicable++;

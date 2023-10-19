@@ -39,7 +39,11 @@ const router = useRouter();
  */
 const attemptToPushRoute = () => {
   const pageRoute = router.getRoutes().find(entry => entry.path.includes(props.route));
-  const pageProgress = pageRoute.meta['progress'];
+  const pageProgress = pageRoute?.meta['progress'];
+
+  if (pageProgress === undefined || pageProgress === null) {
+    return;
+  }
 
   if(pageProgress <= fullStore.maxProgress) {
     router.push(props.route)
