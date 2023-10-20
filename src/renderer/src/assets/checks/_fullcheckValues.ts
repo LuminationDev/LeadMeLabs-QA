@@ -23,7 +23,7 @@ export const BATTERY: CheckObject = {
         {
             "Cabinet": {
                 "checks": {
-                    "Headsets": {
+                    "Headsets' batteries": {
                         description: "All batteries are charging and capable of a full charge.",
                         guide: [
                             {
