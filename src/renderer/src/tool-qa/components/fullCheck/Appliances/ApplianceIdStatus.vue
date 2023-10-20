@@ -23,6 +23,10 @@ const props = defineProps({
  */
 const passedStatus = computed(() => {
   return props.appliances.reduce((acc, appliance) => {
+    if (appliance.defaultPassword !== null && appliance.defaultPassword === true) {
+      acc.defaultPassword++;
+    }
+
     const correctIdValue = appliance.correctId;
     if (correctIdValue === true) {
       acc.trueCount++;
@@ -30,7 +34,7 @@ const passedStatus = computed(() => {
       acc.falseCount++;
     }
     return acc;
-  }, { trueCount: 0, falseCount: 0 });
+  }, { defaultPassword: 0, trueCount: 0, falseCount: 0 });
 });
 
 /**
@@ -56,6 +60,8 @@ const message = computed(() => {
     return "Currently checking devices";
   } else if (checkedStatus.value.nullCount !== 0) {
     return "Checks have not started";
+  } else if (passedStatus.value.defaultPassword !== 0) {
+    return `${passedStatus.value.defaultPassword}/${props.appliances.length} ${messageMap[props.automationType].password}`;
   } else if (passedStatus.value.falseCount !== 0) {
     return `${passedStatus.value.falseCount}/${props.appliances.length} ${messageMap[props.automationType].failed}`;
   } else if (passedStatus.value.falseCount === 0) {
@@ -67,10 +73,12 @@ const message = computed(() => {
 
 const messageMap = {
   "epson": {
+    password: `projectors have the default password`,
     failed: `appliances could not be contacted`,
     success: 'All appliances can be contacted'
   },
   "cbus": {
+    password: ``,
     failed: `appliances do not have the correct ID`,
     success: 'All appliances have the correct ID'
   }
@@ -100,6 +108,7 @@ const clearHoverTimer = () => {
       <CircleSpinner v-if="currentlyChecking === true" color="#175CD3"/>
       <img v-else-if="checkedStatus.nullCount !== 0" alt="empty" src="../../../../assets/icons/auto-checked-empty.svg"/>
       <img v-else-if="passedStatus.falseCount !== 0" alt="failed" src="../../../../assets/icons/auto-checked-failed.svg"/>
+      <img v-else-if="passedStatus.defaultPassword !== 0" alt="failed" src="../../../../assets/icons/auto-checked-warning.svg"/>
       <img v-else-if="passedStatus.falseCount === 0" alt="passed" src="../../../../assets/icons/auto-checked-passed.svg"/>
     </div>
     <Transition name="fade">

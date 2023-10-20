@@ -21,4 +21,5 @@ export default interface Appliance {
     correct: boolean | null;
     correctId: boolean | null;
     checked: boolean | null;
+    defaultPassword: boolean | null;
 }
