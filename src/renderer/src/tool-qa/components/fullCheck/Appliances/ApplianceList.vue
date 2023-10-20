@@ -127,7 +127,7 @@ const waitForResponse = async (appliance, timeout) => {
       if (newAppliance !== undefined && newAppliance.correct !== undefined) {
         clearTimeout(responseTimer);  // Clear the timeout if a response is received
         watcher(); // Stop watching once a response is received
-        setTimeout(resolve, 1000);
+        setTimeout(resolve, 2000);
       }
     }, { deep: true });
 

@@ -272,9 +272,9 @@ const handleTCPMessage = (info: any) => {
 
       if (details['notDefaultPassword'] !== undefined) {
         foundItem.defaultPassword = !details['notDefaultPassword'];
-      } else {
-        foundItem.correct = details.result;
       }
+
+      foundItem.correct = details.result;
 
       break;
   }
