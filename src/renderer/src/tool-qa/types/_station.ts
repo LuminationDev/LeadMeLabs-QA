@@ -98,12 +98,12 @@ class Station {
             qaCheck.passedStatus = "failed"
             return qaCheck;
         }
-        if (this.details.macAddress !== this.expectedDetails.macAddress) {
+        if (this.details.macAddress.toLowerCase() !== this.expectedDetails.macAddress.toLowerCase()) {
             qaCheck.message = `Station IP address did not match expected MAC address. Station address: ${this.details.macAddress}. Expected address: ${this.expectedDetails.macAddress}`
             qaCheck.passedStatus = "failed"
             return qaCheck
         }
-        if (this.details.macAddress === this.expectedDetails.macAddress) {
+        if (this.details.macAddress.toLowerCase() === this.expectedDetails.macAddress.toLowerCase()) {
             qaCheck.passedStatus = "passed"
             return qaCheck
         }
