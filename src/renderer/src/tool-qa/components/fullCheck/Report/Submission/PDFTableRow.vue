@@ -23,7 +23,6 @@ const props = defineProps({
 const fullStore = useFullStore();
 const stateStore = useStateStore();
 
-//TODO ask Matt for clarification if a device that is not part of that test should be shown?
 /**
  * Generate a message from a passed in device object. The message is displayed when hovered over a devices passedStatus.
  * @param device
@@ -40,7 +39,8 @@ const generateMessage = (device: any) => {
  * Show the user a quick view of if the tests were passed by all devices.
  */
 const generateCategoryStatus = computed(() => {
-  let { failed, skipped, passed, not_applicable, total } = { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
+  let { failed, skipped, passed, warning, not_applicable, total } =
+      { failed: 0, skipped: 0, passed: 0, warning: 0, not_applicable: 0, total: 0 };
 
   const devices = props.check.devices;
   if(devices === undefined || devices === null) return;
@@ -52,14 +52,16 @@ const generateCategoryStatus = computed(() => {
     const { passedStatus: status } = devices[deviceId];
 
     if (status === 'passed') passed++;
+    else if (status === 'warning') warning++;
     else if (status === 'failed') failed++;
     else if (status === 'not_applicable') not_applicable++;
     else if (status === 'skipped' || status === undefined || 'unchecked') skipped++;
   }
 
+  if (failed > 0) return 'failed';
+  if (warning > 0) return 'warning';
   if (skipped > 0 && (failed > 0 || passed > 0)) return 'incomplete';
   if (skipped > 0) return 'skipped';
-  if (failed > 0) return 'failed';
   if (passed > 0 && passed + not_applicable === total) return 'passed';
   if (total === 0 || not_applicable > 0) return 'N/A';
 
