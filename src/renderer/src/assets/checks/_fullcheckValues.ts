@@ -592,42 +592,7 @@ export const DRIVERS: CheckObject = {
         }
     ]
 };
-
-export const EXECUTABLES: CheckObject = {
-    "parent": "windows",
-    "page": "executables",
-    "description": "Launch on start up each time",
-    "category": [
-        { // todo - ensure progress is saved before doing this, particularly if running on a nuc
-            "TODO": {
-                "checks": {
-                    "Rebooting": {
-                        description: "Station.exe & NUC.exe launch on start up each time after rebooting 3 times consecutively.",
-                        guide: [
-                            {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
-                            }
-                        ]
-                    }
-                },
-                "description": "Put something here later",
-                "targets": {
-                    "station": true,
-                    "tablet": false,
-                    "nuc": true,
-                    "cbus": false
-                },
-                "devices": {}
-            }
-        }
-    ]
-};
-export const WINDOWS = [HANDOVER, DRIVERS, EXECUTABLES];
+export const WINDOWS = [HANDOVER, DRIVERS];
 //endregion
 
 //region SECURITY SECTION
@@ -1052,4 +1017,45 @@ export const IMVR = [VIVE, VIRTUAL_REALITY];
 
 //endregion
 
-export const ALL_VALUES = [HARDWARE, NETWORK, WINDOWS, SECURITY, SOFTWARE, IMVR]
+
+//region EXECUTABLES SECTION
+export const EXECUTABLES: CheckObject = {
+    "parent": "programs",
+    "page": "executables",
+    "description": "Launch on start up each time",
+    "category": [
+        { // todo - ensure progress is saved before doing this, particularly if running on a nuc
+            "TODO": {
+                "checks": {
+                    "Rebooting": {
+                        description: "Station.exe & NUC.exe launch on start up each time after rebooting 3 times consecutively.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
+                },
+                "description": "Put something here later",
+                "targets": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": true,
+                    "cbus": false
+                },
+                "devices": {}
+            }
+        }
+    ]
+};
+
+export const PROGRAMS = [EXECUTABLES];
+//endregion
+
+
+export const ALL_VALUES = [HARDWARE, NETWORK, WINDOWS, SECURITY, SOFTWARE, IMVR, PROGRAMS]

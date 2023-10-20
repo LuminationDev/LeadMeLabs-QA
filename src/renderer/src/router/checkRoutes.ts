@@ -7,7 +7,15 @@ import TheOverallReport from "@renderer/tool-qa/components/fullCheck/Report/TheO
 import TheFinaliseReport from "@renderer/tool-qa/components/fullCheck/Report/TheFinaliseReport.vue";
 import TheDetails from "@renderer/tool-qa/components/fullCheck/screens/TheDetails.vue";
 import TheFullCheck from "@renderer/tool-qa/components/fullCheck/screens/TheFullCheck.vue";
-import { HARDWARE, IMVR, NETWORK, SECURITY, SOFTWARE, WINDOWS } from "../assets/checks/_fullcheckValues";
+import {
+    HARDWARE,
+    IMVR,
+    NETWORK,
+    PROGRAMS,
+    SECURITY,
+    SOFTWARE,
+    WINDOWS
+} from "../assets/checks/_fullcheckValues";
 import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
 
 /**
@@ -29,7 +37,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/41 * 100); //TODO WARNING: 41 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/42 * 100); //TODO WARNING: 42 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -412,8 +420,24 @@ export const fullRoutes = [
         meta: {
             page: "imvr",
             description: "TODO write something in checkRoutes",
-            next: '/check/full/overall/report',
+            next: getFirstRoute(PROGRAMS),
             prev: getLastRoute(IMVR),
+            progress: calculateProgress()
+        }
+    },
+
+    ...generateRoutesFromObjectArray(PROGRAMS, '/check/full/imvr/report',  '/check/full/programs/report'),
+
+    //PROGRAMS REPORT
+    {
+        path: '/check/full/programs/report',
+        name: 'full-programs-report',
+        component: BasicReport,
+        meta: {
+            page: "programs",
+            description: "TODO write something in checkRoutes",
+            next: '/check/full/overall/report',
+            prev: getLastRoute(PROGRAMS),
             progress: calculateProgress()
         }
     },
@@ -427,7 +451,7 @@ export const fullRoutes = [
             page: "overall",
             description: "TODO write something in checkRoutes",
             next: '/check/full/overall/submit',
-            prev: '/check/full/imvr/report',
+            prev: '/check/full/programs/report',
             progress: calculateProgress()
         }
     },
