@@ -626,7 +626,7 @@ export const useFullStore = defineStore({
             const index = this.deviceMap.findIndex(item => item.id === id);
             if(index === -1) {
                 this.deviceMap.push({
-                    id: type === 'station' ? id : (index + ""),
+                    id: id,
                     prefix: type === 'station' ? 'S' : 'T', //Assumes only stations or tablets are added
                     type: type,
                     checks: {}
