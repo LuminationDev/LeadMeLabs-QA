@@ -112,7 +112,7 @@ const currentSubStatus = (localRoute: string) => {
 
       <div class="ml-5 flex flex-col relative">
         <MenuItem title="Devices"
-                  route="/check/full/setup/devices"
+                  route="/check/full/setup/devices/nuc"
                   :current="isSubActive('nuc')"
                   :status="currentTitleStatus('/check/full/setup/devices')"/>
 

@@ -16,6 +16,8 @@ const currentCheckCount = ref(0);
 const typeCheck = ref('all'); //default to all
 const checking = ref(false);
 const error = ref('');
+const duplicatesFound = ref(false);
+const duplicates: Record<string, Appliance[]> = {};
 
 /**
  * Sort through the appliance_list.json sent over by the NUC. The list contains all appliances, both Cbus and Epson.
@@ -115,7 +117,7 @@ const validateAppliance = async () => {
  * @returns {Promise} A promise that resolves when a response is received or rejects on a timeout.
  */
 const waitForResponse = async (appliance, timeout) => {
-  new Promise((resolve) => {
+  return new Promise((resolve) => {
     let responseTimer;
     let watcher;
 
@@ -136,6 +138,7 @@ const waitForResponse = async (appliance, timeout) => {
       if (foundAppliance) {
         foundAppliance.correct = false;
         foundAppliance.correctId = false;
+        foundAppliance.checked = true;
       }
       resolve(null);
     }, timeout);
@@ -219,12 +222,60 @@ const testStatus = computed(() => {
 });
 
 /**
+ * Check for duplicate addresses in Appliance list
+ */
+const checkForDuplicates = () => {
+  const uniqueCombinations = new Set<string>();
+
+  fullStore.ApplianceList.forEach((item) => {
+    const { automationBase, automationGroup, automationId, automationValue } = item;
+    if (automationBase === undefined) return;
+
+    let key = `${automationBase}-${automationGroup}-${automationId}`;
+    if (item.type === 'scenes') {
+      key += `-${automationValue}`;
+    }
+
+    if (uniqueCombinations.has(key)) {
+      if (!duplicates[key]) {
+        duplicates[key] = [item];
+      } else {
+        duplicates[key].push(item);
+      }
+    } else {
+      uniqueCombinations.add(key);
+    }
+  });
+
+  return duplicatesFound.value = Object.keys(duplicates).length > 0;
+}
+
+/**
+ * Determine what callback to use.
+ */
+const checkCallback = () => {
+  if(!fullStore.getCbusConnection) {
+    validateCbusConnection();
+  }
+  else if (duplicatesFound.value) {
+    checkForDuplicates();
+  }
+  else {
+    startNewTest();
+  }
+}
+
+/**
  * Determine if the necessary values are currently inputted to allow a user to progress with the tool.
  * If not, block the 'Next' button on the BottomBar until they are.
  */
 onBeforeMount(() => {
   if(!fullStore.getCbusConnection) {
     validateCbusConnection();
+    return;
+  }
+
+  if (checkForDuplicates()) {
     return;
   }
 
@@ -237,11 +288,30 @@ onBeforeMount(() => {
 <template>
   <!--    Testing Status    -->
   <CheckStatus
-      :checking="testStatus"
-      :callback="fullStore.getCbusConnection ? startNewTest : validateCbusConnection"
+      :checking="duplicatesFound ? 'error' : testStatus"
+      :callback="checkCallback"
       :message="checking ? `Checked appliance ${currentCheckCount} out of ${fullStore.ApplianceList.length} appliances.` : undefined"/>
 
-  <div class="w-full mt-8 flex flex-col rounded-lg border-2 border-gray-200">
+  <div v-if="duplicatesFound" class="w-full mt-8 flex flex-col rounded-lg border-2 border-gray-200">
+    <table class="w-full border-collapse">
+      <tr class="text-left text-xs bg-gray-100 border border-gray-200">
+        <th class="p-3">Name</th>
+        <th class="w-16 text-center p-3">Address</th>
+        <th class="w-28 text-center p-3"></th>
+      </tr>
+
+      <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
+      <tr v-for="key in Object.keys(duplicates)" class="text-sm border border-gray-200">
+        <ItemHover title="Duplicate appliance" :message="'Duplicate CBus addresses found in appliance_list.json'"/>
+
+        <td class="text-center">
+          {{key}}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div v-else class="w-full mt-8 flex flex-col rounded-lg border-2 border-gray-200">
     <table class="w-full border-collapse">
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
