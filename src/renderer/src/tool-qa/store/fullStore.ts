@@ -336,6 +336,9 @@ export const useFullStore = defineStore({
         },
 
         launchExperience(experienceIndex: number, stationIndex: number) {
+            if (experienceIndex === -1 || stationIndex === -1) {
+                return;
+            }
             this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus = "checking"
 
             setTimeout(() => {
@@ -443,8 +446,8 @@ export const useFullStore = defineStore({
 
             const securityChecks = new QaGroup("security_checks", "security")
             const cbusPasswordComplexity = new QaCheckResult("cbus_password_complexity", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},  [], [], "CBus password complexity", "Is CBus password complex enough?")
-            const appAppToDate = new QaCheckResult("app_up_to_date", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "App up to date", "LeadMe Labs is up to date")
-            const pinNotDefault = new QaCheckResult("pin_is_not_default", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false},[], this.getConnectedTabletIpAddresses, "Pin not default", "Pin is not default")
+            const appAppToDate = new QaCheckResult("app_up_to_date", "auto", 20000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "App up to date", "LeadMe Labs is up to date")
+            const pinNotDefault = new QaCheckResult("pin_is_not_default", "auto", 20000, {station: false, tablet: true, nuc: false, cbus: false},[], this.getConnectedTabletIpAddresses, "Pin not default", "Pin is not default")
             securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
 

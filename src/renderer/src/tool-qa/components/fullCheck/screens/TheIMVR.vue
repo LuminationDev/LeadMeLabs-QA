@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
 import { useFullStore } from "../../../store/fullStore";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import * as CONSTANT from "../../../../assets/constants";
 import GenericButton from '@renderer/tool-qa/components/_generic/buttons/GenericButton.vue'
 import ItemHover from "../../_generic/statuses/ItemHover.vue";
@@ -17,6 +17,12 @@ onMounted(() => {
     fullStore.buildExperienceChecks()
   }
 })
+
+watch(experienceChecksCompleted, () => {
+  if (experienceChecksCompleted.value) {
+    inProgress.value = false
+  }
+});
 
 function startTesting() {
   fullStore.startExperienceChecks()
@@ -85,7 +91,7 @@ const infoDetails = computed(() => {
 })
 
 const allHeadsetsConnected = computed(() => {
-  const index = fullStore.stations.findIndex(station => station.vrStatuses?.openVrStatus === 'Off')
+  const index = fullStore.stations.findIndex(station => station.vrStatuses?.openVrStatus !== 'Connected')
   return index === -1
 })
 
@@ -103,12 +109,12 @@ onMounted(() => {
           <p class="text-2xl text-black font-semibold mb-3">VR Experiences</p>
           <p class="text-base text-black mb-3">All experiences can be launched and played</p>
         </div>
-        <div class="flex flex-row border-gray-100 border-2 rounded-2xl p-4">
+        <div class="flex flex-row border-gray-100 border-2 rounded-2xl p-4 items-center">
           <div @click="getVrStatuses" class="mr-4">
             <RetrySvg fill="#6b7280" class="cursor-pointer" :class="animateSpin ? 'animate-spin' : ''"/>
           </div>
-          <div v-for="station in fullStore.stations" :id="station.id" class="border-gray-100 border-2 rounded-xl p-2">
-            <img v-if="!station.vrStatuses || (station.vrStatuses['openVrStatus'] === 'Off' || station.vrStatuses['headsetStatus'] === 'Off')" src="../../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
+          <div v-for="station in fullStore.stations" :id="station.id" class="border-gray-100 border-2 rounded-xl p-2 w-10 h-10 ml-1 last-child:ml-0">
+            <img v-if="!station.vrStatuses || (station.vrStatuses['openVrStatus'] !== 'Connected' || station.vrStatuses['headsetStatus'] !== 'Connected')" src="../../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
             <img v-else src="../../../../assets/icons/headset-connected.svg" :alt="`connected headset icon`" />
           </div>
         </div>
