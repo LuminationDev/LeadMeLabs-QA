@@ -403,7 +403,7 @@ export const useFullStore = defineStore({
             const staticIpAddress = new QaCheckResult("static_ip_is_default", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Static IP", "Checks that the static IP address is set based on the default setting")
             const allowedThroughFirewall = new QaCheckResult("allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Firewall", "Checks that the NUC/Station software is allowed through the firewall")
             const launcherAllowedThroughFirewall = new QaCheckResult("launcher_allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Launcher firewall", "Checks that the launcher software is allowed through the firewall")
-            const nucCanAccessNucHosting = new QaCheckResult("can_access_nuc_hosting", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, [], [], "Access NUC Hosting", "Checks that we can access the NUC hosting server")
+            const nucCanAccessNucHosting = new QaCheckResult("can_access_nuc_hosting", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false}, [], [], "Access NUC Hosting", "Checks that we can access the NUC hosting server")
             const stationCanAccessStationHosting = new QaCheckResult("can_access_station_hosting", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Access Station Hosting", "Checks that we can access the station hosting server")
             const canAccessLauncherHosting = new QaCheckResult("can_access_launcher_hosting", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds,  [], "Access Launcher Hosting", "Checks that we can access the launcher hosting server")
             // const milesightNotDefaultPassword = new QaCheckResult("milesight_not_default_password", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, [], [], "Milesight not default", "Checks that the milesight router is not set with the default password")
@@ -704,6 +704,8 @@ export const useFullStore = defineStore({
             if (!reportTracker) return;
 
             for (const [checkId, check] of Object.entries(reportTracker)) {
+                if(checkId === 'comments') continue;
+
                 for (const [deviceId, info] of Object.entries(check.devices)) {
                     const device = this.deviceMap.find(device => device.id === deviceId);
                     if (device) {

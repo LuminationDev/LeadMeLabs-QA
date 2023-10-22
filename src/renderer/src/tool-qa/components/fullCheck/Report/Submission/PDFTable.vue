@@ -2,7 +2,7 @@
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { computed } from "vue";
-import { Category } from "@renderer/tool-qa/interfaces/_report";
+import { Category, Comment } from "@renderer/tool-qa/interfaces/_report";
 import PDFTableRow from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFTableRow.vue";
 
 const props = defineProps({
@@ -27,12 +27,14 @@ const stateStore = useStateStore();
  * Show the user a quick view of if the tests were passed by all devices.
  */
 const generateCategoryStatus = computed(() => {
-  let { failed, skipped, passed, not_applicable, total } = { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
+  let { failed, skipped, passed, warning, not_applicable, total } =
+      { failed: 0, skipped: 0, passed: 0, warning:0, not_applicable: 0, total: 0 };
 
   const categories = fullStore.reportTracker[props.parent][props.category];
 
   for (const key in categories) {
     const { devices } = categories[key];
+    if(devices === undefined) continue;
     const deviceIds = Object.keys(devices);
 
     total += deviceIds.length;
@@ -41,19 +43,26 @@ const generateCategoryStatus = computed(() => {
       const { passedStatus: status } = devices[deviceId];
 
       if (status === 'passed') passed++;
+      else if (status === 'warning') warning++;
       else if (status === 'failed') failed++;
       else if (status === 'not_applicable') not_applicable++;
       else if (status === 'skipped' || status === undefined || 'unchecked') skipped++;
     }
   }
 
+  if (failed > 0) return 'failed';
+  if (warning > 0) return 'warning';
   if (skipped > 0 && (failed > 0 || passed > 0)) return 'incomplete';
   if (skipped > 0) return 'skipped';
-  if (failed > 0) return 'failed';
   if (passed > 0 && passed + not_applicable === total) return 'passed';
   if (total === 0 || not_applicable > 0) return 'N/A';
 
   return 'unknown';
+});
+
+const getComments = computed((): Comment[] => {
+  //@ts-ignore
+  return <Comment[]>props.section['comments'] || [];
 });
 </script>
 
@@ -76,6 +85,17 @@ const generateCategoryStatus = computed(() => {
     </div>
 
     <table class="w-full border-collapse">
+      <tr class="bg-gray-50 text-xs" v-for="comment in getComments">
+        <td colspan="3" class="pl-8 p-3">
+          <div>
+            {{comment.date}}
+          </div>
+          <div>
+            <span class="font-semibold mr-1">Comment:</span> {{comment.content}}
+          </div>
+        </td>
+      </tr>
+
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
         <th class="p-3 text-center">Date</th>

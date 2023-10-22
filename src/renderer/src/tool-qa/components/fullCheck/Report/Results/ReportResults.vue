@@ -23,6 +23,8 @@ const generateCategoryResults = computed(() => {
 
     for (const key in categories) {
       const { devices, comments } = categories[key];
+      if(devices === undefined) continue;
+
       const deviceIds = Object.keys(devices);
 
       total += deviceIds.length;

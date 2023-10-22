@@ -1,4 +1,5 @@
 import QaCheck from "../interfaces/_qaCheck";
+import {useFullStore} from "../store/fullStore";
 
 type StationDetails = {
     ipAddress: string,
@@ -98,12 +99,12 @@ class Station {
             qaCheck.passedStatus = "failed"
             return qaCheck;
         }
-        if (this.details.macAddress !== this.expectedDetails.macAddress) {
+        if (this.details.macAddress.toLowerCase() !== this.expectedDetails.macAddress.toLowerCase()) {
             qaCheck.message = `Station IP address did not match expected MAC address. Station address: ${this.details.macAddress}. Expected address: ${this.expectedDetails.macAddress}`
             qaCheck.passedStatus = "failed"
             return qaCheck
         }
-        if (this.details.macAddress === this.expectedDetails.macAddress) {
+        if (this.details.macAddress.toLowerCase() === this.expectedDetails.macAddress.toLowerCase()) {
             qaCheck.passedStatus = "passed"
             return qaCheck
         }
@@ -131,17 +132,12 @@ class Station {
             qaCheck.passedStatus = "failed"
             return qaCheck;
         }
-        if (!this.expectedDetails.labLocation || this.expectedDetails.labLocation === "") {
-            qaCheck.message = "NUC has not provided Station's expected lab location"
-            qaCheck.passedStatus = "failed"
-            return qaCheck;
-        }
-        if (this.details.labLocation !== this.expectedDetails.labLocation) {
-            qaCheck.message = `Station lab location did not match expected lab location. Station lab location: ${this.details.labLocation}. Expected lab location: ${this.expectedDetails.labLocation}`
+        if (this.details.labLocation !== useFullStore().reportTracker.labLocation) {
+            qaCheck.message = `Station lab location did not match expected lab location. Station lab location: ${this.details.labLocation}. Expected lab location: ${useFullStore().reportTracker.labLocation}`
             qaCheck.passedStatus = "failed"
             return qaCheck
         }
-        if (this.details.labLocation === this.expectedDetails.labLocation) {
+        if (this.details.labLocation === useFullStore().reportTracker.labLocation) {
             qaCheck.passedStatus = "passed"
             return qaCheck
         }

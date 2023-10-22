@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import Modal from "@renderer/tool-qa/modals/Modal.vue";
 import { ref } from "vue";
 import { Appliance } from "@renderer/tool-qa/interfaces";
-import Modal from "@renderer/tool-qa/modals/Modal.vue";
-import {useStateStore} from "@renderer/tool-qa/store/stateStore";
+import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 
 defineProps({
   applianceType: {
@@ -48,10 +48,10 @@ function closeModal() {
             <div class="flex flex-col w-full mt-4">
               <span v-for="(value, key) in appliance" :key="key" class="ml-2">
                 <span v-if="value !== null && value !== '' && key !== 'correct' && key !== 'correctId'"
-                      class="flex flex-row"
-                      :class="{
-                    'text-green-500': key === 'id' && appliance['correctId'] === true,
-                    'text-red-500': key === 'id' && appliance['correctId'] === false,
+                  class="flex flex-row"
+                  :class="{
+                    'text-green-500': (key === 'id' && appliance['correctId'] === true) || (key === 'defaultPassword' && appliance['defaultPassword'] === true),
+                    'text-red-500': (key === 'id' && appliance['correctId'] === false) || (key === 'defaultPassword' && appliance['defaultPassword'] === true),
                   }"
                 >
                   <span class="w-40">{{ stateStore.capitalizeFirstLetter(key) }}:</span>

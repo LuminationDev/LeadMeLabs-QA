@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/tool-qa/components/_generic/layouts/GenericLayout.vue";
-import ApplianceDisplay from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceList.vue";
+import ApplianceList from "@renderer/tool-qa/components/fullCheck/Appliances/ApplianceList.vue";
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import ApplianceDisplay from "@renderer/tool-qa/components/fullCheck/Appliances/
     </template>
 
     <template v-slot:content>
-      <ApplianceDisplay/>
+      <ApplianceList/>
     </template>
   </GenericLayout>
 </template>

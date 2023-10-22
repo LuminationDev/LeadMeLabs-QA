@@ -37,7 +37,6 @@ const addComment = (comment: string) => {
   });
 }
 
-//TODO ask Matt for clarification if a device that is not part of that test should be shown?
 /**
  * Generate a message from a passed in device object. The message is displayed when hovered over a devices passedStatus.
  * @param device
@@ -54,10 +53,11 @@ const generateMessage = (device: any) => {
  * Show the user a quick view of if the tests were passed by all devices.
  */
 const generateCategoryStatus = computed(() => {
-  let { failed, skipped, passed, not_applicable, total } =
-      { failed: 0, skipped: 0, passed: 0, not_applicable: 0, total: 0 };
+  let { failed, skipped, passed, warning, not_applicable, total } =
+      { failed: 0, skipped: 0, passed: 0, warning: 0, not_applicable: 0, total: 0 };
 
   const devices = props.check.devices;
+  if(devices === undefined || devices === null) return;
   const deviceIds = Object.keys(devices);
 
   total += deviceIds.length;
@@ -66,14 +66,16 @@ const generateCategoryStatus = computed(() => {
     const { passedStatus: status } = devices[deviceId];
 
     if (status === 'passed') passed++;
+    else if (status === 'warning') warning++;
     else if (status === 'failed') failed++;
     else if (status === 'not_applicable') not_applicable++;
     else if (status === 'skipped' || status === undefined || 'unchecked') skipped++;
   }
 
+  if (failed > 0) return 'failed';
+  if (warning > 0) return 'warning';
   if (skipped > 0 && (failed > 0 || passed > 0)) return 'incomplete';
   if (skipped > 0) return 'skipped';
-  if (failed > 0) return 'failed';
   if (passed > 0 && passed + not_applicable === total) return 'passed';
   if (total === 0 || not_applicable > 0) return 'N/A';
 
@@ -104,7 +106,7 @@ const getCheckStatus = (status: string | undefined, required: any) => {
     </td>
 
     <td class="p-3 w-28 font-semibold">
-      <div class="flex mx-auto justify-center rounded-xl w-20 px-2" :class="{
+      <div class="flex mx-auto justify-center items-center rounded-xl w-24 px-2" :class="{
                   'bg-red-100 border-[1px] border-red-300 text-red-700': generateCategoryStatus === 'failed',
                   'bg-green-100 border-[1px] border-green-300 text-green-700': generateCategoryStatus === 'passed',
                   'bg-yellow-100 border-[1px] border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
