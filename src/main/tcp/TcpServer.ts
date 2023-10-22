@@ -59,11 +59,15 @@ export default class TcpServer {
                 // Convert the received data to a buffer
                 const buffer = Buffer.from(data);
 
-                //The socket has already started sending information and no header will be present
+                //The socket has already started sending information and a header might be present
                 if (headerLength !== null) {
-                    console.log('Header already set: ' + headerMessage);
-                    encryptedMainText += buffer.toString('utf8');
-                    return;
+                    if(headerLength > 0) {
+                        console.log('Header already set: ' + headerMessage);
+                        encryptedMainText += buffer.toString('utf8');
+                        return;
+                    } else {
+                        console.log("First message was empty, recollect header");
+                    }
                 }
 
                 // Parse the header length from the first 4 bytes (big-endian)

@@ -1,11 +1,6 @@
 const crypto = require('crypto');
 
 export function decrypt(cipherText, passPhrase) {
-    if (cipherText.length % 108 !== 0) {
-        console.log("Does it throw error an here?");
-        console.log(cipherText);
-    }
-
     let decrypted = '';
     for (let i = 0; i < cipherText.length; i += 108) {
         let substringLength = 108;
