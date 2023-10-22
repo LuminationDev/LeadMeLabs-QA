@@ -374,13 +374,17 @@ export const useFullStore = defineStore({
                 this.experienceChecks[index].title,
                 stationId);
 
-            if (status === "passed" || status === "failed") {
-                this.experienceChecks[index].stations[stationIndex].checkingStatus = "checked"
-                if (!this.allowRunningExperienceChecks) {
-                    return
-                }
-                this.launchNextExperience(stationId)
+            if (message.includes('Timed out')) {
+                this.experienceChecks[index].stations[stationIndex].checkingStatus = "timeout";
+            } else if (status === "passed" || status === "failed" || status === "warning") {
+                this.experienceChecks[index].stations[stationIndex].checkingStatus = "checked";
             }
+
+            if (!this.allowRunningExperienceChecks) {
+                return;
+            }
+
+            this.launchNextExperience(stationId);
         },
 
         updateStationVrStatuses(stationId: string, statuses: any) {

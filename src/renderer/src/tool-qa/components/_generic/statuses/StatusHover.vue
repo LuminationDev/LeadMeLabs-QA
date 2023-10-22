@@ -8,7 +8,7 @@ import warningSrc from "@renderer/assets/icons/auto-checked-warning.svg";
 import emptySrc from "@renderer/assets/icons/auto-checked-empty.svg";
 
 defineProps({
-  passedStatus: {
+  message: {
     type: String,
     required: true
   },
@@ -16,7 +16,7 @@ defineProps({
     type: String,
     required: true
   },
-  message: {
+  passedStatus: {
     type: String,
     required: true
   }

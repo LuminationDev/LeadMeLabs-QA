@@ -61,6 +61,7 @@ export default class TcpServer {
 
                 //The socket has already started sending information and no header will be present
                 if (headerLength !== null) {
+                    console.log('Header already set: ' + headerMessage);
                     encryptedMainText += buffer.toString('utf8');
                     return;
                 }
@@ -75,6 +76,8 @@ export default class TcpServer {
                 // Parse the header message from the buffer
                 headerMessage = buffer.slice(4, 4 + headerLength).toString('utf8');
 
+                console.log('Setting header: ' + headerMessage);
+
                 // Parse the encrypted main text from the remaining buffer
                 encryptedMainText += buffer.slice(4 + headerLength).toString('utf8');
             });
@@ -82,6 +85,12 @@ export default class TcpServer {
             // Handle TCP client disconnections
             socket.on('end', () => {
                 console.log('TCP client disconnected');
+
+                // Bail out early if there is nothing to decrypt
+                //if (encryptedMainText.length === 0) return;
+
+                console.log(encryptedMainText.length);
+                console.log(encryptedMainText);
 
                 // Decrypt the collective encrypted main text
                 const mainText = decrypt(encryptedMainText, key);
