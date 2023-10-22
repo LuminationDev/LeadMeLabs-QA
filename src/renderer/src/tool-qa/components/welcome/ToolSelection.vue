@@ -26,27 +26,15 @@ const route = useRoute();
 
         <div class="flex flex-col w-full p-4">
           <!--QA tool choice-->
-          <div class="w-full h-full pb-4">
+          <div class="w-full h-full">
             <LoginModal/>
           </div>
 
           <!--Generate Handover Doc-->
-          <div class="w-full h-full pt-4">
-            <OptionButton title="Handover Doc" subtitle="Generate a Handover Document" to="/report"/>
-          </div>
+<!--          <div class="w-full h-full pt-4">-->
+<!--            <OptionButton title="Handover Doc" subtitle="Generate a Handover Document" to="/report"/>-->
+<!--          </div>-->
         </div>
-      </div>
-
-      <div v-else-if="route.name === 'check-selection'" class="h-96 w-full mt-16 flex flex-row">
-          <!--Quick Check-->
-          <div class="w-full h-full p-4">
-            <OptionButton title="Quick Check" subtitle="Test a Single Station" to="/check/quick"/>
-          </div>
-
-          <!--Full Check-->
-          <div class="w-full h-full p-4">
-            <OptionButton title="Full Check" subtitle="Test the Entire Lab" to="/check/full/setup/devices"/>
-          </div>
       </div>
     </div>
   </div>

@@ -91,7 +91,7 @@ const saveDetails = async () => {
             <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
             <label for="technicianName" class="text-sm font-semibold">Technician Name</label>
-            <input type="text" name="technicianName" v-model="technicianName" placeholder="Key" class="w-80 h-10 mb-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+            <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 mb-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
             <div class="flex flex-row items-center">
               <GenericButton type="light-blue" :callback="saveDetails" class="mr-4">Save</GenericButton>
