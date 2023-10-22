@@ -349,7 +349,7 @@ export const useFullStore = defineStore({
             }, 3000)
             setTimeout(() => {
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
-                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "failed", "Timed out waiting for response")
+                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "timeout", "Timed out waiting for response")
                 }
             }, 35000 + 3000)
         },
