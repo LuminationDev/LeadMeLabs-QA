@@ -349,7 +349,7 @@ export const useFullStore = defineStore({
             }, 3000)
             setTimeout(() => {
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
-                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "timeout", "Timed out waiting for response")
+                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "failed", "Timed out waiting for response")
                 }
             }, 35000 + 3000)
         },
@@ -374,13 +374,17 @@ export const useFullStore = defineStore({
                 this.experienceChecks[index].title,
                 stationId);
 
-            if (status === "passed" || status === "failed") {
-                this.experienceChecks[index].stations[stationIndex].checkingStatus = "checked"
-                if (!this.allowRunningExperienceChecks) {
-                    return
-                }
-                this.launchNextExperience(stationId)
+            if (message.includes('Timed out')) {
+                this.experienceChecks[index].stations[stationIndex].checkingStatus = "timeout";
+            } else if (status === "passed" || status === "failed" || status === "warning") {
+                this.experienceChecks[index].stations[stationIndex].checkingStatus = "checked";
             }
+
+            if (!this.allowRunningExperienceChecks) {
+                return;
+            }
+
+            this.launchNextExperience(stationId);
         },
 
         updateStationVrStatuses(stationId: string, statuses: any) {
