@@ -87,10 +87,9 @@ export default class TcpServer {
                 console.log('TCP client disconnected');
 
                 // Bail out early if there is nothing to decrypt
-                //if (encryptedMainText.length === 0) return;
+                if (encryptedMainText.length === 0) return;
 
                 console.log(encryptedMainText.length);
-                console.log(encryptedMainText);
 
                 // Decrypt the collective encrypted main text
                 const mainText = decrypt(encryptedMainText, key);
