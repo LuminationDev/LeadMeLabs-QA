@@ -5,19 +5,19 @@ import ConfigTool from "./util/ConfigTool";
 import { GetIPAddress } from "./util/Network";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-assembler";
 import { optimizer } from "@electron-toolkit/utils";
-// import * as Sentry from '@sentry/electron';
+import * as Sentry from '@sentry/electron';
 
 const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
 
-// Sentry.init({
-//   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
-// });
+Sentry.init({
+  dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
+});
 
 autoUpdater.autoDownload = false;
-// autoUpdater.setFeedURL({
-//   provider: '_generic',
-//   url: ''
-// })
+autoUpdater.setFeedURL({
+  provider: 'generic',
+  url: 'https://leadme-qa-tool.herokuapp.com/static/'
+})
 
 
 // Listen for update download progress events
