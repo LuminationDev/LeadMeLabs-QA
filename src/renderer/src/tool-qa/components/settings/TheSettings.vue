@@ -5,7 +5,9 @@ import TcpSetup from "@renderer/tool-qa/components/_generic/tcp/TcpSetup.vue";
 import * as CONSTANT from "@renderer/assets/constants";
 import { useRouter } from "vue-router";
 import { getAuth, signOut } from "firebase/auth";
+import { computed } from "vue";
 
+const auth = getAuth();
 const router = useRouter();
 const goBack = () => {
   router.back();
@@ -18,6 +20,15 @@ const loadCurrentProgress = async () => {
     type: CONSTANT.MESSAGE.LOAD_PROGRESS
   });
 };
+
+/**
+ * Check if a user is currently logged in and that the report has not already been uploaded.
+ * Otherwise, attempt to upload the report data.
+ */
+const checkUserStatus = computed(() => {
+  const user = auth.currentUser;
+  return !!user;
+});
 
 const logout = () => {
   const auth = getAuth();
@@ -40,11 +51,19 @@ const logout = () => {
       <hr class="my-4">
 
       <div class="flex flex-row justify-between">
-        <div class="text-sm">
+        <div v-if="checkUserStatus" class="text-sm">
           If you wish to log out of a current session
         </div>
+        <div v-else class="text-sm">
+          No user is currently logged in.
+        </div>
 
-        <div @click="logout" class="w-32 h-8 flex items-center justify-center rounded-lg bg-blue-500 text-white cursor-pointer hover:bg-blue-400">Logout</div>
+        <div @click="logout" class="w-32 h-8 flex items-center justify-center rounded-lg text-white"
+          :class="{
+            'bg-blue-500 hover:bg-blue-400': checkUserStatus,
+            'bg-slate-500 hover:bg-slate-500 cursor-not-allowed': !checkUserStatus,
+          }"
+        >Logout</div>
       </div>
 
       <hr class="my-4">
