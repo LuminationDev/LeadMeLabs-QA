@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   windows: circleci/windows@5.0.0
   macos: circleci/macos@2.4.0
+  node: circleci/node@4.0.0
 
 commands:
   clone_hosting:
@@ -134,6 +135,8 @@ jobs:
         type: string
     steps:
       - mac-nvm
+      - node/install:
+          node-version: "16.17.0"
       - build:
           buildType: <<parameters.buildType>>
           command: m
