@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   windows: circleci/windows@5.0.0
-  mac: circleci/macos@2.3.4
+  mac: circleci/macos@2.4.0
 
 commands:
   clone_hosting:
