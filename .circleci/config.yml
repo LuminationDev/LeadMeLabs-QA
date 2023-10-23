@@ -134,7 +134,6 @@ jobs:
       buildType:
         type: string
     steps:
-      - mac-nvm
       - node/install:
           node-version: "16.17.0"
       - build:
