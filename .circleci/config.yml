@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   windows: circleci/windows@5.0.0
-  mac: circleci/macos@2.4.0
+  macos: circleci/macos@2.4.0
 
 commands:
   clone_hosting:
@@ -128,7 +128,7 @@ jobs:
           command: w
   build-mac:
     macos:
-      xcode: 11.7
+      xcode: 14.2.0
     parameters:
       buildType:
         type: string
