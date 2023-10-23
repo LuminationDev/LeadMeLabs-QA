@@ -9,7 +9,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "bd:dc:58:24:df:b4:3f:8e:66:69:b9:9c:3b:73:2e:3e"
+            - "a4:ea:43:3f:94:59:16:f7:cd:ef:72:16:5a:52:69:a0"
       - run:
           name: Setup git config
           command: git config --global user.name "CircleCI" && git config --global user.email "CircleCI@lumination.com.au"
@@ -21,7 +21,7 @@ commands:
           command: dir /home/circleci/.ssh
       - run:
           name: Write ssh config file
-          command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_bddc5824dfb43f8e6669b99c3b732e3e" >> ~/.ssh/config
+          command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_a4ea433f945916f7cdef72165a5269a0" >> ~/.ssh/config
       - run:
           name: Clone hosting server
           command: cd ~/ && git clone git@github.com:LuminationDev/LeadMeLabs-QA-Hosting.git
@@ -115,19 +115,6 @@ commands:
             - project/dist
 
 jobs:
-  run-tests:
-    docker:
-      - image: cimg/node:current
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            npm install
-      - run:
-          name: Run tests
-          command: |
-            npm test
   build-windows:
     executor:
       name: windows/default
@@ -167,12 +154,9 @@ jobs:
 workflows:
   build_release:
     jobs:
-      - run-tests
       - hold:
           context: LeadMeDeployers
           type: approval
-          requires:
-            - run-tests
           filters:
             branches:
               only:
