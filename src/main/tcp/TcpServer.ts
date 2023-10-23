@@ -49,41 +49,45 @@ export default class TcpServer {
             const remoteAddress = socket.remoteAddress;
             console.log(`TCP client connected: ${remoteAddress}`);
 
-            //Set the header length for each socket connection
+            //Initialise the variables used for each socket connection
+            let headerBytes: number = 4;
             let headerLength: number | null = null;
             let headerMessage: string | null = null;
             let encryptedMainText: string = "";
+            let onlyBytes: boolean = false;
 
             // Handle data received from the TCP client
             socket.on('data', (data) => {
-                // Convert the received data to a buffer
                 const buffer = Buffer.from(data);
 
-                //The socket has already started sending information and a header might be present
-                if (headerLength !== null) {
-                    if(headerLength > 0) {
-                        console.log('Header already set: ' + headerMessage);
-                        encryptedMainText += buffer.toString('utf8');
+                // Parse the header length from the first 4 bytes, considering byte order
+                if (headerLength === null) {
+                    headerLength = buffer.readUInt32LE(0); // Default to little-endian
+
+                    if (headerLength > 16) {
+                        headerLength = buffer.readUInt32BE(0); // Switch to big-endian for large headers
+                    }
+
+                    // Bail out if only the header length was sent
+                    if (buffer.length === headerBytes) {
+                        onlyBytes = true;
                         return;
-                    } else {
-                        console.log("First message was empty, recollect header");
                     }
                 }
 
-                // Parse the header length from the first 4 bytes (big-endian)
-                headerLength = buffer.readUInt32LE(0); //messages from NUC
-
-                if (headerLength > 16) {
-                    headerLength = buffer.readUInt32BE(0); //messages from Station
+                // Slice out the header type from the buffer
+                // BEWARE: headerStart depends on if only the header length was sent in the first message
+                if (headerMessage === null) {
+                    const headerStart = onlyBytes ? 0 : headerBytes;
+                    headerMessage = buffer.slice(headerStart, headerStart + headerLength).toString('utf8');
+                    encryptedMainText += buffer.slice(headerStart + headerLength).toString('utf8');
+                    return;
                 }
 
-                // Parse the header message from the buffer
-                headerMessage = buffer.slice(4, 4 + headerLength).toString('utf8');
-
-                console.log('Setting header: ' + headerMessage);
-
-                // Parse the encrypted main text from the remaining buffer
-                encryptedMainText += buffer.slice(4 + headerLength).toString('utf8');
+                // Message has been split into data chunks, continue to add the chunks to the overall received text
+                if (headerMessage.length > 0) {
+                    encryptedMainText += buffer.toString('utf8');
+                }
             });
 
             // Handle TCP client disconnections
@@ -92,8 +96,6 @@ export default class TcpServer {
 
                 // Bail out early if there is nothing to decrypt
                 if (encryptedMainText.length === 0) return;
-
-                console.log(encryptedMainText.length);
 
                 // Decrypt the collective encrypted main text
                 const mainText = decrypt(encryptedMainText, key);
