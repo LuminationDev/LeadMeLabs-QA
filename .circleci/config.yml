@@ -85,6 +85,10 @@ commands:
         type: string
     steps:
       - checkout
+      - run: ls ~/
+      - run: ls ~/project
+      - run: ls ~/project/src
+      - run: ls ~/project/src/static
       - when:
           condition:
             and:
