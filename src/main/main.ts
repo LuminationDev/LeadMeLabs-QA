@@ -3,7 +3,6 @@ import { join } from 'path';
 import Helpers from "./Helpers";
 import ConfigTool from "./util/ConfigTool";
 import { GetIPAddress } from "./util/Network";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-assembler";
 import { optimizer } from "@electron-toolkit/utils";
 import * as Sentry from '@sentry/electron';
 
@@ -232,7 +231,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 app.whenReady().then(async () => {
   if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-    await installExtension(VUEJS_DEVTOOLS)
+    const installDevtools = await import('./installDevtools')
+    await installDevtools.install()
   }
 
   //Allow dev tools to toggle on F12
