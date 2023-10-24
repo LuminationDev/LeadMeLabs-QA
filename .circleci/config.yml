@@ -91,7 +91,7 @@ commands:
               - equal: [m, <<parameters.command>>]
           steps:
             - run: touch ~/project/src/main/static/.env
-      - run: echo $env:SERVICE_ACCOUNT > ~/project/src/main/static/.env
+      - run: echo ${SERVICE_ACCOUNT} > ~/project/src/main/static/.env
       - run:
           name: "npm install"
           command: "npm install"
