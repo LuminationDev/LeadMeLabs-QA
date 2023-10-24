@@ -90,8 +90,8 @@ commands:
             and:
               - equal: [m, <<parameters.command>>]
           steps:
-            - run: touch ~/project/src/main/static/serviceAccount.json
-      - run: echo $env:SERVICE_ACCOUNT > ~/project/src/main/static/serviceAccount.json
+            - run: touch ~/project/.env
+      - run: echo $env:SERVICE_ACCOUNT > ~/project/.env
       - run:
           name: "npm install"
           command: "npm install"

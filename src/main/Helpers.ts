@@ -4,8 +4,7 @@ import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
 import { DetermineReportType } from "./report/Report";
 import admin from 'firebase-admin';
-import {join} from "path";
-const serviceAccount = require(join(app.getAppPath(), 'static', 'serviceAccount.json'));
+require('dotenv').config()
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -22,7 +21,7 @@ export default class Helpers {
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
 
         admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
+            credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT ?? "")),
             databaseURL: "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
         });
     }
