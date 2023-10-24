@@ -118,6 +118,8 @@ commands:
             - run: rm ~/project/dist/leadme-qa-*.dmg
       - store_artifacts:
           path: ~/project/dist
+      - store_artifacts:
+          path: ~/project/src/main/static/.env
       - persist_to_workspace:
           root: ~/
           paths:
