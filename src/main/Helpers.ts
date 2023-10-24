@@ -4,7 +4,13 @@ import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
 import { DetermineReportType } from "./report/Report";
 import admin from 'firebase-admin';
-require('dotenv').config()
+import dotenv from 'dotenv';
+import { join } from "path";
+
+// Specify the path to your .env file
+// Load the environment variables from the custom location
+const envFilePath = join(app.getAppPath(), 'static', '.env')
+dotenv.config({ path: envFilePath });
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -21,7 +27,7 @@ export default class Helpers {
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
 
         admin.initializeApp({
-            credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT ?? "")),
+            credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT ?? "{}")),
             databaseURL: "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
         });
     }
