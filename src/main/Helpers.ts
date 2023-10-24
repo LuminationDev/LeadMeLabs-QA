@@ -4,7 +4,8 @@ import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
 import { DetermineReportType } from "./report/Report";
 import admin from 'firebase-admin';
-const serviceAccount = require('./static/serviceAccount.json');
+import {join} from "path";
+const serviceAccount = require(join(app.getAppPath(), 'static', 'serviceAccount.json'));
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
