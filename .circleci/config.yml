@@ -85,6 +85,12 @@ commands:
         type: string
     steps:
       - checkout
+      - when:
+          condition:
+            and:
+              - equal: [m, <<parameters.command>>]
+          steps:
+            - run: touch ~/project/src/static/serviceAccount.json
       - run: echo $env:SERVICE_ACCOUNT > ~/project/src/static/serviceAccount.json
       - run:
           name: "npm install"
