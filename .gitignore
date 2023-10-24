@@ -1,5 +1,5 @@
 .DS_Store
-.env
+src/main/static/.env
 .gclient_done
 **/.npmrc
 .tags*
