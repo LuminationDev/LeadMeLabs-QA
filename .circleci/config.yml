@@ -98,36 +98,14 @@ commands:
               - equal: [w, <<parameters.command>>]
           steps:
             - run: echo $env:SERVICE_ACCOUNT > ~/project/src/main/static/serviceAccount.json
-      - run:
-          name: "npm install"
-          command: "npm install"
-      - run:
-          name: "build"
-          command: "npm run build"
-      - run:
-          name: "electron-build"
-          command: "npm run electron-build -- -<<parameters.command>>"
       - when:
           condition:
             and:
               - equal: [w, <<parameters.command>>]
           steps:
-            - run: rm ~/project/dist/builder-debug.yml
-            - run: rm ~/project/dist/win-unpacked/leadme-qa.exe
-      - when:
-          condition:
-            and:
-              - equal: [m, <<parameters.command>>]
-          steps:
-            - run: rm ~/project/dist/mac/leadme-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
-            - run: rm ~/project/dist/leadme-qa-*-mac.zip
-            - run: rm ~/project/dist/leadme-qa-*.dmg
+            - run: echo $env:TEST_VAR > ~/project/src/main/static/test.json
       - store_artifacts:
-          path: ~/project/dist
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/dist
+          path: ~/project/src/main/static/test.json
 
 jobs:
   build-windows:
@@ -178,16 +156,7 @@ workflows:
             branches:
               only:
                 - main
-      - build-mac:
-          buildType: "Release"
-          requires:
-            - hold
       - build-windows:
           buildType: "Release"
           requires:
             - hold
-      - commit-and-push:
-          branch: "main"
-          requires:
-            - build-mac
-            - build-windows
