@@ -1,5 +1,6 @@
 {
     "appId": "com.lumination.leadme.qa.automation",
+    "compression": "maximum",
     "directories": {
         "output": "dist"
     },
@@ -36,6 +37,7 @@
         },
         "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
         "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+        "!**/node_modules/**/{demo,build,deps,doc,docs,samples,benchmark,scss}/**/*",
         "!**/node_modules/*.d.ts",
         "!**/node_modules/.bin",
         "!src",
