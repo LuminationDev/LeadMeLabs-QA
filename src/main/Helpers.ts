@@ -12,7 +12,7 @@ import { join } from "path";
 const envFilePath = join(app.getAppPath(), 'static', '.env')
 dotenv.config({ path: envFilePath });
 import * as Sentry from '@sentry/electron';
-Sentry.captureMessage("Path: " + envFilePath)
+
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -28,6 +28,10 @@ export default class Helpers {
         this.mainWindow = mainWindow;
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
 
+        Sentry.init({
+            dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
+        });
+        Sentry.captureMessage("Path: " + envFilePath)
         Sentry.captureMessage((process.env.SERVICE_ACCOUNT ?? "").length + "")
         admin.initializeApp({
             credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT ?? "{}")),
