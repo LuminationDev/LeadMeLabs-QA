@@ -100,10 +100,6 @@ commands:
       - run: echo $env:{TEST_VAR} > ~/project/src/main/static/test3.env
       - store_artifacts:
           path: ~/project/src/main/static/test*.env
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/dist
 
 jobs:
   build-windows:
