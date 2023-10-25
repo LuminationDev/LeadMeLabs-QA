@@ -215,7 +215,7 @@ onMounted(async () => {
         </div>
     </div>
 </template>
-<style scoped lang="less">
+<style scoped>
 .connected-shadow {
     box-shadow: 0px 5px 6px 0px rgba(0, 0, 0, 0.2);
 }

@@ -70,34 +70,28 @@ const end = (el: any): void => {
     </li>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .accordion__item {
-    cursor: pointer;
-    border-bottom: 1px solid #ebebeb;
-    position: relative;
+  cursor: pointer;
+  border-bottom: 1px solid #ebebeb;
+  position: relative;
 }
-
 .accordion__trigger {
-    display: flex;
-    padding: 10px 20px 10px 20px;
-    justify-content: center;
+  display: flex;
+  padding: 10px 20px 10px 20px;
+  justify-content: center;
 }
-
 .accordion__content {
-    padding-top: 5px;
-    padding-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
-
-.accordion-enter-active,
-.accordion-leave-active {
-    will-change: height, opacity !important;
-    transition: height 0.3s ease, opacity 0.3s ease !important;
-    overflow: hidden !important;
+.accordion-enter-active, .accordion-leave-active {
+  will-change: height, opacity !important;
+  transition: height 0.3s ease, opacity 0.3s ease !important;
+  overflow: hidden !important;
 }
-
-.accordion-enter,
-.accordion-leave-to {
-    height: 0 !important;
-    opacity: 0;
+.accordion-enter, .accordion-leave-to {
+  height: 0 !important;
+  opacity: 0;
 }
 </style>

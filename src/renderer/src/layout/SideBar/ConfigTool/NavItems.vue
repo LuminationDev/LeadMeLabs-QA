@@ -112,12 +112,8 @@ const handleClickCancel = (): void => {
   </button>
 </template>
 
-<style scoped lang="less">
+<style scoped>
 .nav-items-container:hover {
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
-}
-
-.nav-icons-active {
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2);
 }
 </style>

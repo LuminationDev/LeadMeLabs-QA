@@ -23,14 +23,13 @@ provide('Accordion', { Accordion, updateCount, updateActive })
     </ul>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .accordion {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    &__item:last-child {
-        border-bottom: none;
-    }
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.accordion__item:last-child {
+  border-bottom: none;
 }
 </style>

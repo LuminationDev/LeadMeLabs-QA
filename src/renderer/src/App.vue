@@ -398,6 +398,6 @@ const openNotificationModal = (s_title: string, s_message: string) => {
   <NotificationModal ref="notificationRef" :title="title" :message="message"/>
 </template>
 
-<style lang="less">
-@import './assets/css/styles.less';
+<style>
+@import './assets/css/styles.css';
 </style>
