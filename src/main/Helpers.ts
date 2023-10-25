@@ -4,15 +4,8 @@ import { CheckOpenPort, GetIPAddress } from "./util/Network";
 import { app } from "electron";
 import { DetermineReportType } from "./report/Report";
 import admin from 'firebase-admin';
-import dotenv from 'dotenv';
-import { join } from "path";
-
-// Specify the path to your .env file
-// Load the environment variables from the custom location
-const envFilePath = join(app.getAppPath(), 'static', '.env')
-dotenv.config({ path: envFilePath });
-import * as Sentry from '@sentry/electron';
-
+import {join} from "path";
+const serviceAccount = require(join(app.getAppPath(), 'static', 'serviceAccount.json'));
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -28,13 +21,8 @@ export default class Helpers {
         this.mainWindow = mainWindow;
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
 
-        Sentry.init({
-            dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
-        });
-        Sentry.captureMessage("Path: " + envFilePath)
-        Sentry.captureMessage((process.env.SERVICE_ACCOUNT ?? "").length + "")
         admin.initializeApp({
-            credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT ?? "{}")),
+            credential: admin.credential.cert(serviceAccount),
             databaseURL: "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
         });
     }

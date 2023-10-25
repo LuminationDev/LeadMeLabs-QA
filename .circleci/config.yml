@@ -90,14 +90,14 @@ commands:
             and:
               - equal: [m, <<parameters.command>>]
           steps:
-            - run: touch ~/project/src/main/static/.env
-            - run: echo ${SERVICE_ACCOUNT} > ~/project/src/main/static/.env
+            - run: touch ~/project/src/main/static/serviceAccount.json
+            - run: echo ${SERVICE_ACCOUNT} > ~/project/src/main/static/serviceAccount.json
       - when:
           condition:
             and:
               - equal: [w, <<parameters.command>>]
           steps:
-            - run: echo $env:SERVICE_ACCOUNT > ~/project/src/main/static/.env
+            - run: echo $env:SERVICE_ACCOUNT > ~/project/src/main/static/serviceAccount.json
       - run:
           name: "npm install"
           command: "npm install"
