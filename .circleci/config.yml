@@ -122,7 +122,6 @@ commands:
           steps:
             - run: rm ~/project/dist/mac/leadme-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
             - run: rm ~/project/dist/leadme-qa-*-mac.zip
-            - run: rm ~/project/dist/leadme-qa-*.dmg
       - store_artifacts:
           path: ~/project/dist
       - persist_to_workspace:

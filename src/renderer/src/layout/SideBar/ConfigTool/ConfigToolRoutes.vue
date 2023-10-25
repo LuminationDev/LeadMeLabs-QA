@@ -4,7 +4,7 @@ import { useChecklistStore } from "@renderer/tool-config/store/checklistStore";
 import { useRoute } from "vue-router";
 import NavItems from "@renderer/layout/SideBar/ConfigTool/NavItems.vue";
 import logo from '@renderer/assets/icons/leadmeLabsLogo.svg'
-import welcome from '@renderer/assets/images/sidebar-welcome.svg'
+import welcome from '@renderer/assets/images/sidebar-welcome.png'
 
 const labStore = useLabStore();
 const checklistStore = useChecklistStore();
