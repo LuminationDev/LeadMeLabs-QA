@@ -95,9 +95,13 @@ commands:
             - run: touch ~/project/src/main/static/test3.env
       - run: echo ${TEST_VAR} > ~/project/src/main/static/test1.env
       - run: echo $TEST_VAR > ~/project/src/main/static/test2.env
-      - run: echo $env:{TEST_VAR} > ~/project/src/main/static/test3.env
+      - run: echo $env:TEST_VAR > ~/project/src/main/static/test3.env
       - store_artifacts:
-          path: ~/project/src/main/static/*
+          path: ~/project/src/main/static/test1.env
+      - store_artifacts:
+          path: ~/project/src/main/static/test2.env
+      - store_artifacts:
+          path: ~/project/src/main/static/test3.env
 
 jobs:
   build-windows:
