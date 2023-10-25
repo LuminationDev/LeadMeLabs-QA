@@ -90,16 +90,14 @@ commands:
             and:
               - equal: [m, <<parameters.command>>]
           steps:
-            - run: touch ~/project/src/main/static/.env
             - run: touch ~/project/src/main/static/test1.env
             - run: touch ~/project/src/main/static/test2.env
             - run: touch ~/project/src/main/static/test3.env
-      - run: echo ${SERVICE_ACCOUNT} > ~/project/src/main/static/.env
       - run: echo ${TEST_VAR} > ~/project/src/main/static/test1.env
       - run: echo $TEST_VAR > ~/project/src/main/static/test2.env
       - run: echo $env:{TEST_VAR} > ~/project/src/main/static/test3.env
       - store_artifacts:
-          path: ~/project/src/main/static/test*.env
+          path: ~/project/src/main/static/*
 
 jobs:
   build-windows:
