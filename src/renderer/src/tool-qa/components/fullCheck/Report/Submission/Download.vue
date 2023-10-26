@@ -8,6 +8,7 @@ import { getAuth } from "firebase/auth";
 import { computed, onMounted, ref as vueRef, watch } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
+import { generateHtml } from "@renderer/assets/html/htmlContent";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
@@ -83,21 +84,9 @@ const uploadPDF = () => {
  * Grab the content that has been created in the DownloadButton component.
  */
 const createHtmlContent = () => {
-  const head = document.head.outerHTML;
-
-  //Grab the report part of the current html?
+  //Grab the report part of the current html
   const reportDivContent = document.getElementById('report')?.innerHTML;
-
-  return `
-        <!DOCTYPE html>
-        <html lang="en">
-            ${head}
-
-            <body style="background-color:white;">
-                ${reportDivContent}
-            </body>
-        </html>
-    `;
+  return generateHtml(reportDivContent);
 }
 
 /**

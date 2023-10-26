@@ -46,7 +46,7 @@ const computedChecks = computed(() => {
     <hr class="my-2">
 
     <div class="flex flex-col mb-6">
-      <ReportResults :parent="props.parent"/>
+      <ReportResults :parent="props.parent" :margin="false"/>
 
       <PDFTable v-for="(section, page) in computedChecks.auto" :key="page"
                 :parent="props.parent"

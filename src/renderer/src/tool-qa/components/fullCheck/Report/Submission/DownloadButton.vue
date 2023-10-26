@@ -3,6 +3,7 @@ import * as CONSTANT from "@renderer/assets/constants";
 import PDFStructure from "@renderer/tool-qa/components/fullCheck/Report/Submission/PDFStructure.vue";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
+import { generateHtml } from "@renderer/assets/html/htmlContent";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
@@ -34,21 +35,9 @@ const downloadReport = async () => {
  * report.
  */
 const createHtmlContent = () => {
-  const head = document.head.outerHTML;
-
-  //Grab the report part of the current html?
+  //Grab the report part of the current html
   const reportDivContent = document.getElementById('report')?.innerHTML;
-
-  return `
-        <!DOCTYPE html>
-        <html lang="en">
-            ${head}
-
-            <body style="background-color:white;">
-                ${reportDivContent}
-            </body>
-        </html>
-    `;
+  return generateHtml(reportDivContent);
 }
 </script>
 
