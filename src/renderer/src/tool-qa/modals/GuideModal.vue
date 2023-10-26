@@ -87,29 +87,34 @@ defineExpose({
   <Teleport to="body">
     <Modal :show="showModal" @close="closeModal">
       <template v-slot:header>
-        <header class="h-20 px-6 w-96 bg-white flex items-center rounded-t-lg" :class="guides.length > 1 && selectedGuide ? 'justify-between' : 'justify-end'">
+        <header class="h-20 px-6 w-108 bg-white flex items-center rounded-t-lg" :class="guides.length > 1 && selectedGuide ? 'justify-between' : 'justify-end'">
           <img v-if="guides.length > 1 && selectedGuide" v-on:click="() => { selectGuide(null) }" class="cursor-pointer" alt="back icon" src="../../assets/icons/back.svg"/>
-          <span v-if="guides.length > 1 && selectedGuide">{{ selectedGuideKey }}</span>
+          <span v-if="guides.length > 1 && selectedGuide" class="text-lg font-bold text-black">{{ selectedGuideKey }}</span>
           <img v-on:click="showModal = false" class="cursor-pointer" alt="close icon" src="../../assets/icons/close.svg"/>
         </header>
       </template>
 
       <template v-slot:content>
-        <div class="px-6 w-96 bg-white pb-7 flex flex-col items-center">
-          <div v-if="selectedGuide" class="flex flex-col">
+        <div class="px-6 w-[400px] bg-white pb-7 flex flex-col items-center">
+          <div v-if="selectedGuide" class="flex flex-col w-108 items-center">
 
-            <img v-if="imageSrc" class="h-auto w-full object-contain" :src="imageSrc" alt="content"/>
+            <img v-if="imageSrc" class="h-auto w-[300px] object-contain" :src="imageSrc" alt="content"/>
             <div v-else class="flex w-full justify-center items-center">
               <img class="h-32 w-32 object-contain" :src="vernMatrix" alt="vern matrix"/>
             </div>
-            <div class="flex flex-col items-center mt-4 w-80"
+            <div class="flex flex-col items-center mt-4 w-80 rendered-text"
                  v-html="selectedGuide.guide[currentPage].text"/>
           </div>
-          <div v-else class="flex flex-col">
-            <h3>Multiple guides available:</h3>
-            <div class="flex flex-col" v-for="guide in guides" :key="guide['key']" @click="() => { selectGuide(guide['key']) }">
-              <span class="cursor-pointer">{{ guide.key }}</span>
+          <div v-else class="flex flex-col justify-center items-center">
+            <div class="bg-gray-100 rounded-full p-2">
+              <img src="../../assets/icons/question-mark.svg" class="h-full w-full">
             </div>
+            <h3 class="text-black text-lg font-semibold">Multiple guides available</h3>
+            <p class="text-gray-700">Please select which guide you would like to view.</p>
+
+            <button class="flex flex-col border-gray-400 border-2 w-full rounded-lg p-4 items-center font-lg font-bold text-gray-700 mt-4 drop-shadow-md" v-for="guide in guides" :key="guide['key']" @click="() => { selectGuide(guide['key']) }">
+              <span class="cursor-pointer">{{ guide.key }}</span>
+            </button>
           </div>
         </div>
       </template>
@@ -140,3 +145,15 @@ defineExpose({
     </Modal>
   </Teleport>
 </template>
+
+<style lang="scss">
+.rendered-text {
+  h3 {
+    @apply text-black text-lg font-semibold
+  }
+  P {
+    @apply text-sm
+  }
+  @apply flex justify-center w-full
+}
+</style>
