@@ -6,6 +6,11 @@ const props = defineProps({
   parent: {
     type: String,
     required: true
+  },
+  margin: {
+    type: Boolean,
+    required: false,
+    default: true
   }
 });
 
@@ -76,7 +81,7 @@ const skippedStatusPercentage = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <!--Passed tests information-->
     <div class="w-2/3 mb-4 p-4 flex flex-col rounded-lg border-2 border-gray-200">
       <div class="flex flex-row justify-between">
@@ -115,7 +120,7 @@ const skippedStatusPercentage = computed(() => {
     </div>
 
     <!--Failed tests information-->
-    <div v-if="1 > 0" class="w-1/3 ml-4 mb-4 flex flex-col rounded-lg border-2 border-gray-200">
+    <div class="w-1/3 mb-4 flex flex-col rounded-lg border-2 border-gray-200" :class="{ 'ml-4': margin }">
       <div class="flex flex-row pt-4 pl-4 pr-4 justify-between">
         <div class="flex flex-col text-sm mb-3">
           <div class="font-semibold mb-1">Tests failed</div>

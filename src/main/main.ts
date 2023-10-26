@@ -253,7 +253,7 @@ app.whenReady().then(async () => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
-        'Content-Security-Policy': ['script-src \'self\'']
+        'Content-Security-Policy': ['script-src \'self\' https://cdn.tailwindcss.com']
       }
     })
   })
