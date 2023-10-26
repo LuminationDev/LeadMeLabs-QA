@@ -10,6 +10,13 @@
 
 import { CheckObject } from "../../tool-qa/interfaces/_routeItems";
 import milesightSample from '../../assets/images/milesight-sample.png'
+import remotePlay from '../../assets/guidesImages/RemotePlay.png'
+import steamSettings from '../../assets/guidesImages/SteamSettings.png'
+import leadMeLibrary from '../../assets/guidesImages/LeadMeLibrary.jpg'
+import ipConfigAll from '../../assets/guidesImages/IpConfigAll.png'
+import hostname from '../../assets/guidesImages/Hostname.png'
+import batteryScreenshot from '../../assets/guidesImages/BatteryScreenshot.jpg'
+import windowsRecovery from '../../assets/guidesImages/WindowsRecovery.png'
 
 /**
  * This file contains the titles and text for each of the Full Checks.
@@ -18,7 +25,7 @@ import milesightSample from '../../assets/images/milesight-sample.png'
 export const BATTERY: CheckObject = {
     "parent": "hardware",
     "page": "battery",
-    "description": "Headsets, controllers, and tablets",
+    "description": "Headsets and controllers",
     "category": [
         {
             "Cabinet": {
@@ -27,12 +34,8 @@ export const BATTERY: CheckObject = {
                         description: "All batteries are charging and capable of a full charge.",
                         guide: [
                             {
-                                imageSource: milesightSample,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: milesightSample, // todo - image of battery with 4 bars
+                                text: '<h3>Charge batteries</h3><p>After charging, check that batteries can reach 4 bars</p>'
                             }
                         ]
                     },
@@ -40,12 +43,8 @@ export const BATTERY: CheckObject = {
                         description: "All controllers are charging and capable of a full charge.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: null, // todo - screenshot of battery level for controllers in leadme
+                                text: '<h3>Charge controllers</h3><p>After charging, check the controllers battery level using LeadMe</p>'
                             }
                         ]
                     }
@@ -63,16 +62,12 @@ export const BATTERY: CheckObject = {
         {
             "Tablets": {
                 "checks": {
-                    "Tablets": {
+                    "Charging": {
                         description: "All tablets are charging and capable of a full charge.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: batteryScreenshot,
+                                text: '<h3>For each tablet</h3><p>Swipe down from the top and check that the charging symbol is shown. Check that each tablet can reach 100%</p>'
                             }
                         ]
                     }
@@ -102,17 +97,13 @@ export const VIDEO_CABLES: CheckObject = {
                         description: "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: null, // todo image of HDMI to graphics card not motherboard
+                                text: '<h3>For each computer</h3><p>Check that the HDMI cable is in the correct slot following the image above</p>'
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "HDMI to graphics card",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -129,17 +120,13 @@ export const VIDEO_CABLES: CheckObject = {
                         description: "If additional cables are connected for Presentation mode, they are connected to a secondary display input.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: null, // todo image for presentation mode secondary input
+                                text: ''
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Cabling",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -164,12 +151,12 @@ export const PROJECTORS: CheckObject = {
                         description: "Projector is displaying in the correct orientation, with no warping or blurriness.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: null, // todo image of projection edges
+                                text: '<h3>Check edges</h3><p>Check that there is no overlap between the edges of each projection</p>'
                             },
                             {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: null, // todo image of blurry projection
+                                text: '<h3>Check blurriness</h3><p>Check that the image is crisp</p>'
                             }
                         ]
                     },
@@ -177,17 +164,21 @@ export const PROJECTORS: CheckObject = {
                         description: "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: null, // todo image of projector remote
+                                text: '<h3>Pair the remote with the projector</h3><p>Hold the ID button and press the number of the projector</p>'
                             },
                             {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: null, // todo image of projector remote
+                                text: '<h3>Open settings</h3><p>Press the settings button on the remote</p>'
+                            },
+                            {
+                                imageSource: null, // todo image of projector network settings
+                                text: '<h3>Navigate to the network settings</h3><p>Press the settings button on the remote</p>' // todo - navigate to the network settings instructions
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Projector configuration",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -206,23 +197,36 @@ export const KEYBOARD: CheckObject = {
     "description": "Keyboard connection to station",
     "category": [
         {
-            "TODO": {
+            "Keyboard": {
                 "checks": {
-                    "USB Receiver": {
-                        description: "The keyboard has been paired with a USB receiver.",
-                        guide: [
-                            {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
-                            }
-                        ]
-                    },
-                    "Recovery Mode": {
-                        description: "The keyboard works in Windows Recovery Mode.",
+                    // "USB Receiver": {
+                    //     description: "The keyboard has been paired with a USB receiver.",
+                    //     guide: [
+                    //         {
+                    //             imageSource: null,
+                    //             text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                    //         },
+                    //         {
+                    //             imageSource: null,
+                    //             text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                    //         }
+                    //     ]
+                    // },
+                    // "Recovery Mode": {
+                    //     description: "The keyboard works in Windows Recovery Mode.",
+                    //     guide: [
+                    //         {
+                    //             imageSource: null,
+                    //             text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                    //         },
+                    //         {
+                    //             imageSource: null,
+                    //             text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                    //         }
+                    //     ]
+                    // },
+                    "Bluetooth": {
+                        description: "The keyboard is paired via bluetooth.",
                         guide: [
                             {
                                 imageSource: null,
@@ -239,29 +243,25 @@ export const KEYBOARD: CheckObject = {
                         guide: [
                             {
                                 imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
-                            }
-                        ]
-                    },
-                    "BIOS Mode": {
-                        description: "The keyboard works in BIOS menu.",
-                        guide: [
-                            {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Use the keyboard</h3><p>Does it work?</p>'
                             }
                         ]
                     }
+                    // "BIOS Mode": {
+                    //     description: "The keyboard works in BIOS menu.",
+                    //     guide: [
+                    //         {
+                    //             imageSource: null,
+                    //             text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                    //         },
+                    //         {
+                    //             imageSource: null,
+                    //             text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                    //         }
+                    //     ]
+                    // }
                 },
-                "description": "Put something here later",
+                "description": "Keyboard connectivity",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -280,18 +280,14 @@ export const BIOS_SETTINGS: CheckObject = {
     "description": "Startup and reboot settings",
     "category": [
         {
-            "TODO": {
+            "BIOS": {
                 "checks": {
                     "Wake on LAN": {
                         description: "Wake on LAN is enabled.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: windowsRecovery,
+                                text: '<h3>Open the BIOS</h3><p>Windows Settings > Update & Security > Recovery > Advanced Setup > Restart Now > Troubleshoot</p>'
                             }
                         ]
                     },
@@ -299,8 +295,8 @@ export const BIOS_SETTINGS: CheckObject = {
                         description: "Restore Power after AC loss is set to 'Power On’.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: windowsRecovery,
+                                text: '<h3>Open the BIOS</h3><p>Windows Settings > Update & Security > Recovery > Advanced Setup > Restart Now > Troubleshoot</p>'
                             },
                             {
                                 imageSource: null,
@@ -309,7 +305,7 @@ export const BIOS_SETTINGS: CheckObject = {
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Ensure BIOS is setup for power states",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -364,7 +360,7 @@ export const MILESIGHT_ROUTER: CheckObject = {
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Devices successfully connected",
                 "targets": {
                     "station": true,
                     "tablet": true,
@@ -391,7 +387,7 @@ export const MILESIGHT_ROUTER: CheckObject = {
                         ]
                     },
                 },
-                "description": "Put something here later",
+                "description": "Config file",
                 "targets": {
                     "station": false,
                     "tablet": false,
@@ -439,7 +435,7 @@ export const CBUS: CheckObject = {
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "CBus for LeadMe",
                 "targets": {
                     "station": false,
                     "tablet": false,
@@ -463,18 +459,14 @@ export const HANDOVER: CheckObject = {
     "description": "Document Details for Handover",
     "category": [ // todo - we should be able to display the hostname etc on this page to help out
         {
-            "TODO": {
+            "Handover details": {
                 "checks": {
                     "Hostname": {
                         description: "Hostname is set and recorded in the Lab Handover Doc.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: hostname,
+                                text: '<h3>Open Command Prompt</h3><p>Type <code>hostname</code> and press enter. Record the result</p>'
                             }
                         ]
                     },
@@ -482,17 +474,17 @@ export const HANDOVER: CheckObject = {
                         description: "MAC Address is set and recorded in the Lab Handover Doc.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: ipConfigAll,
+                                text: '<h3>Open Command Prompt</h3><p>Once open, type <code>ipconfig /all</code> and press enter</p>'
                             },
                             {
                                 imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Record physical address</h3><p>Record the physical address of the ethernet adapter</p>'
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Document details",
                 "targets": {
                     "station": true,
                     "tablet": true,
@@ -685,7 +677,7 @@ export const PASSWORDS: CheckObject = {
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Steam security details",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -712,7 +704,7 @@ export const PASSWORDS: CheckObject = {
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "C-Bus security details",
                 "targets": {
                     "station": false,
                     "tablet": false,
@@ -731,7 +723,7 @@ export const LEADME_SECURITY: CheckObject = {
     "description": "Passwords are sufficient and stored correctly",
     "category": [
         {
-            "TODO": {
+            "Tablet Security": {
                 "checks": {
                     "Tablet PIN": {
                         description: "LeadMe Tablet PIN is unique and is logged in Bitwarden.",
@@ -760,7 +752,7 @@ export const LEADME_SECURITY: CheckObject = {
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Tablet security details",
                 "targets": {
                     "station": false,
                     "tablet": true,
@@ -786,10 +778,10 @@ export const STEAM: CheckObject = {
     "description": "Steam and SteamVR",
     "category": [
         {
-            "TODO": {
+            "Manual Steam Settings": {
                 "checks": {
                     "Steam Guard": {
-                        description: "Security settings: Steamguard is disabled.",
+                        description: "Security settings: Steam guard is disabled.",
                         guide: [
                             {
                                 imageSource: null,
@@ -805,12 +797,12 @@ export const STEAM: CheckObject = {
                         description: "Remote Play: Disable all settings.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: steamSettings,
+                                text: '<h3>Open Steam Settings</h3><p>Open Steam and open settings</p>'
                             },
                             {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: remotePlay,
+                                text: '<h3>Disable Remote Play</h3><p>Navigate to remote play in the side menu. Disable all settings on the page</p>'
                             }
                         ]
                     },
@@ -818,17 +810,17 @@ export const STEAM: CheckObject = {
                         description: "Broadcasting: Disable broadcasting.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: steamSettings,
+                                text: '<h3>Open Steam Settings</h3><p>Open Steam and open settings</p>'
                             },
                             {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: remotePlay, // todo - broadcasting image
+                                text: '<h3>Disable Broadcasting</h3><p>Navigate to broadcast in the sidemenu and disable all settings on the page</p>'
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Manual steam settings",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -854,9 +846,9 @@ export const VIVE: CheckObject = {
     "description": "Hardware and Software",
     "category": [
         {
-            "TODO": {
+            "Headset Hardware": {
                 "checks": {
-                    "VIVE Wireless": {
+                    "Headset cables": {
                         description: "The display and power cables are plugged in at the back of the wireless unit.",
                         guide: [
                             {
@@ -909,7 +901,7 @@ export const VIVE: CheckObject = {
                         ]
                     },
                 },
-                "description": "Put something here later",
+                "description": "Headset hardware setup",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -934,12 +926,12 @@ export const VIRTUAL_REALITY: CheckObject = {
                         description: "The floor in-experience is the same height as the physical floor, and the headset experience faces the projector screen.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: leadMeLibrary,
+                                text: '<h3>Launch Tilt Brush</h3><p>Using LeadMe Labs, launch Tilt Brush</p>'
                             },
                             {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: null, // todo - photo of controller on floor and on floor in tilt brush in background
+                                text: '<h3>Place a controller on the floor</h3><p>Confirm that the controller in-experience is resting on the floor</p>'
                             }
                         ]
                     },
@@ -948,11 +940,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                         guide: [
                             {
                                 imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Put on the headset</h3><p>Navigate the edges of the LED ring and confirm that the boundary is visible</p>'
                             }
                         ]
                     },
@@ -961,11 +949,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                         guide: [
                             {
                                 imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Put on the headset</h3><p>Move around the play space and monitor for any dropouts</p>'
                             }
                         ]
                     },
@@ -974,11 +958,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                         guide: [
                             {
                                 imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Launch Tilt Brush</h3><p>Trace the boundary with a brush by holding the trigger on the controller. Look for any gaps in the painting.</p>'
                             }
                         ]
                     },
@@ -987,16 +967,12 @@ export const VIRTUAL_REALITY: CheckObject = {
                         guide: [
                             {
                                 imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Leave headset on stand</h3><p>Wait... wait a bit more... pick it up. Does it work?</p>'
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Manual headset checks",
                 "targets": {
                     "station": true,
                     "tablet": false,
@@ -1010,11 +986,6 @@ export const VIRTUAL_REALITY: CheckObject = {
 };
 
 export const IMVR = [VIVE, VIRTUAL_REALITY];
-//endregion
-
-//TODO TO BE COMPLETED - NEEDS NOTION SHEET UPDATE
-//region LEADME SECTION
-
 //endregion
 
 
@@ -1032,16 +1003,16 @@ export const EXECUTABLES: CheckObject = {
                         guide: [
                             {
                                 imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                text: '<h3>Save if needed</h3><p>If running this software on a station or NUC, save and exit.</p>'
                             },
                             {
                                 imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                text: '<h3>Reboot 3 times</h3><p>Use the LeadMe tablet to reboot the lab 3 times</p>'
                             }
                         ]
                     }
                 },
-                "description": "Put something here later",
+                "description": "Rebooting",
                 "targets": {
                     "station": true,
                     "tablet": false,
