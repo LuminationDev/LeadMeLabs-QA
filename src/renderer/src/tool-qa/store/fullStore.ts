@@ -408,8 +408,8 @@ export const useFullStore = defineStore({
             const dnsServer = new QaCheckResult("dns_server_is_correct", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "DNS Server", "Checks that the DNS server is set based on the default setting")
             const altDnsServer = new QaCheckResult("alt_dns_server_is_correct", "auto", 10000,{station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Alt. DNS Server", "Checks that the alternate DNS server is set based on the default setting")
             const staticIpAddress = new QaCheckResult("static_ip_is_default", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Static IP", "Checks that the static IP address is set based on the default setting")
-            const allowedThroughFirewall = new QaCheckResult("allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Firewall", "Checks that the NUC/Station software is allowed through the firewall")
-            const launcherAllowedThroughFirewall = new QaCheckResult("launcher_allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Launcher firewall", "Checks that the launcher software is allowed through the firewall")
+            const allowedThroughFirewall = new QaCheckResult("allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Firewall", "Checks that the NUC/Station software has allow rules in the firewall and is not disallowed")
+            const launcherAllowedThroughFirewall = new QaCheckResult("launcher_allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Launcher firewall", "Checks that the launcher software has allow rules in the firewall and is not disallowed")
             const nucCanAccessNucHosting = new QaCheckResult("can_access_nuc_hosting", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false}, [], [], "Access NUC Hosting", "Checks that we can access the NUC hosting server")
             const stationCanAccessStationHosting = new QaCheckResult("can_access_station_hosting", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Access Station Hosting", "Checks that we can access the station hosting server")
             const canAccessLauncherHosting = new QaCheckResult("can_access_launcher_hosting", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds,  [], "Access Launcher Hosting", "Checks that we can access the launcher hosting server")
@@ -422,13 +422,13 @@ export const useFullStore = defineStore({
             networkChecks.requirements = ["station_connection_checks"]
 
             const windowsChecks = new QaGroup("windows_checks", "windows")
-            const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Wake On LAN", "Wake on Magic Packet is enabled")
-            const envVariable = new QaCheckResult("openssl_environment", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "OPENSSL ENV", "Is OPENSSL_ia32cap set in environment variables")
-            const wallpaper = new QaCheckResult("wallpaper_is_set", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Wallpaper", "Is the Lumination wallpaper set")
-            const timezone = new QaCheckResult("timezone_correct", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Timezone", "Has the time zone been set to the correct location")
+            const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Magic packet enabled", "Wake on Magic Packet is enabled")
+            const envVariable = new QaCheckResult("openssl_environment", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "OPENSSL ENV set", "Is OPENSSL_ia32cap set in environment variables")
+            const wallpaper = new QaCheckResult("wallpaper_is_set", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Correct wallpaper", "Is the Lumination wallpaper set based on the image name")
+            const timezone = new QaCheckResult("timezone_correct", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Timezone", "Has the timezone been set to the correct location")
             const dateTime = new QaCheckResult("correct_datetime", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Time & Date", "Is the date and time set correctly")
             const taskScheduler = new QaCheckResult("task_scheduler_created", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Task scheduler", "Task scheduler is correctly setup")
-            const oldTaskScheduler = new QaCheckResult("old_task_scheduler_not_existing", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Old task scheduler", "Old task scheduler is gone")
+            const oldTaskScheduler = new QaCheckResult("old_task_scheduler_not_existing", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Old task scheduler", "Old task scheduler is not present")
             const cbusScriptId = new QaCheckResult("cbus_script_id", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "CBus script id", "CBus script id is correctly set")
             windowsChecks.checks.push(wakeOnLAN, envVariable, wallpaper, timezone, dateTime, taskScheduler, oldTaskScheduler, cbusScriptId);
 
@@ -446,7 +446,7 @@ export const useFullStore = defineStore({
 
             const securityChecks = new QaGroup("security_checks", "security")
             const cbusPasswordComplexity = new QaCheckResult("cbus_password_complexity", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},  [], [], "CBus password complexity", "Is CBus password complex enough?")
-            const appAppToDate = new QaCheckResult("app_up_to_date", "auto", 20000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "App up to date", "LeadMe Labs is up to date")
+            const appAppToDate = new QaCheckResult("app_up_to_date", "auto", 20000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "App up to date", "Tablet app is up to date")
             const pinNotDefault = new QaCheckResult("pin_is_not_default", "auto", 20000, {station: false, tablet: true, nuc: false, cbus: false},[], this.getConnectedTabletIpAddresses, "Pin not default", "Pin is not default")
             securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
@@ -461,7 +461,6 @@ export const useFullStore = defineStore({
             imvrChecks.checks.push(headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
             imvrChecks.requirements = ["station_connection_checks"]
 
-            //TODO add extendedDescriptions for the below checks
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
             const isSteamUserNameSet = new QaCheckResult("steam_username", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Steam Username", "Can the username be found in the Station config?")
             const isSteamPasswordSet = new QaCheckResult("steam_password", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds,  [], "Steam Password", "Can the password be found in the Station config?")
