@@ -262,8 +262,8 @@ export const useFullStore = defineStore({
             }
 
             sortedExperiences.sort((a, b) => {
-                const titleA = a.title.toLowerCase(); // Convert titles to lowercase for case-insensitive sorting
-                const titleB = b.title.toLowerCase();
+                const titleA = a.title.toLowerCase().replace(/^the /, ''); // Convert titles to lowercase for case-insensitive sorting
+                const titleB = b.title.toLowerCase().replace(/^the /, '');
 
                 if (titleA < titleB) {
                     return -1;
