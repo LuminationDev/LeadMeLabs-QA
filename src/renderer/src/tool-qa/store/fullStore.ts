@@ -430,7 +430,10 @@ export const useFullStore = defineStore({
             const taskScheduler = new QaCheckResult("task_scheduler_created", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Task scheduler", "Task scheduler is correctly setup")
             const oldTaskScheduler = new QaCheckResult("old_task_scheduler_not_existing", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Old task scheduler", "Old task scheduler is gone")
             const cbusScriptId = new QaCheckResult("cbus_script_id", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "CBus script id", "CBus script id is correctly set")
-            windowsChecks.checks.push(wakeOnLAN, envVariable, wallpaper, timezone, dateTime, taskScheduler, oldTaskScheduler, cbusScriptId);
+            windowsChecks.checks.push(wakeOnLAN, envVariable, wallpaper);
+            // @ts-ignore //Only add if the labType equals online
+            if(this.reportTracker['labType'] !== "Offline") {windowsChecks.checks.push(timezone, dateTime)}
+            windowsChecks.checks.push(taskScheduler, oldTaskScheduler, cbusScriptId);
 
             const softwareChecks = new QaGroup("software_checks", "software")
             const amdInstalled = new QaCheckResult("amd_installed", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "AMD Installed", "Is AMD software installed")
@@ -507,7 +510,7 @@ export const useFullStore = defineStore({
             }
         },
 
-        startQa(groupId) {
+        startQa(groupId: string) {
             let index = this.qaGroups.findIndex(group => group.id === groupId)
             if (index !== -1) {
                 this.qaGroups[index].startQa()
@@ -516,6 +519,7 @@ export const useFullStore = defineStore({
                     action: CONSTANT.ACTION.RUN_STATION_GROUP,
                     actionData: {
                         group: group.id,
+                        labType: this.reportTracker["labType"] ?? "Online",
                         stationIds: ['all'] // todo, method for this
                     }
                 })
@@ -524,6 +528,7 @@ export const useFullStore = defineStore({
                     action: CONSTANT.ACTION.RUN_TABLET_GROUP,
                     actionData: {
                         group: group.id,
+                        labType: this.reportTracker["labType"] ?? "Online",
                         tabletIps: this.getConnectedTabletIpAddresses
                     }
                 })
@@ -531,7 +536,8 @@ export const useFullStore = defineStore({
                 this.sendMessage({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
                     actionData: {
-                        group: group.id
+                        group: group.id,
+                        labType: this.reportTracker["labType"] ?? "Online"
                     }
                 })
 
@@ -757,8 +763,9 @@ export const useFullStore = defineStore({
                 return check.stations.filter(station => station.checkingStatus !== 'checking' && station.status !== null).length === 0
             }).length === 0
         },
+
         getReportSections(state) {
-            const keysToRemove = ['labLocation', 'technicianName'];
+            const keysToRemove = ['labLocation', 'technicianName', 'labType'];
             const reportWithoutKey = { ...state.reportTracker };
             keysToRemove.forEach(key => {
                 if (reportWithoutKey.hasOwnProperty(key)) {

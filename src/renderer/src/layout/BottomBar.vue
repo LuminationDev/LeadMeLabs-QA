@@ -9,7 +9,8 @@ import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useRoute } from "vue-router";
 import { QaCheckResult } from "../tool-qa/types/_qaCheckResult";
-import {Comment} from "@renderer/tool-qa/interfaces/_report";
+import { Comment } from "@renderer/tool-qa/interfaces/_report";
+import { ALL_VALUES, HANDOVER } from "../assets/checks/_fullcheckValues";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -29,6 +30,7 @@ const goNextLink = (): void => {
   const { next } = props.meta;
   router.push(next)
   if (route.name === 'full-setup-devices-tablets') {
+    populateFullReportTrackerWithManualChecks();
     fullStore.buildQaList();
     populateFullReportTrackerWithAutoChecks();
   }
@@ -59,6 +61,54 @@ const determineTargetDevices = (check: QaCheckResult) => {
     "cbus": check.targets['cbus']
   };
 };
+
+/**
+ * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
+ * The individual checks will be added when that page is visited. If no checks are present in a section or category it
+ * is considered skipped.
+ */
+const populateFullReportTrackerWithManualChecks = () => {
+  if (fullStore.reportTracker["labType"] === "Offline") {
+    HANDOVER.category[0]['TODO'].checks["Timezone"] = {
+      description: "Has the time zone been set to the correct location.",
+      guide: [
+        {
+          imageSource: null,
+          text: '<h3>Open Settings</h3><p>Check the timezone dropdown.</p>'
+        }
+      ]
+    }
+
+    HANDOVER.category[0]['TODO'].checks["Date time"] = {
+      description: "Is the date and time set correctly.",
+      guide: [
+        {
+          imageSource: null,
+          text: '<h3>Open Settings</h3><p>Check the current date and time section.</p>'
+        }
+      ]
+    }
+  }
+
+  for (const { parent, page, category } of ALL_VALUES.flat()) {
+    fullStore.reportTracker[parent] ??= {};
+    fullStore.reportTracker[parent][page] ??= {};
+
+    for (const subCategory of category) {
+      const checks = Object.entries(subCategory[Object.keys(subCategory)[0]].checks);
+
+      for (const [check, { description }] of checks) {
+        fullStore.reportTracker[parent][page][check] ??= {
+          description,
+          comments: [],
+          targets: subCategory[Object.keys(subCategory)[0]].targets,
+          devices: {}
+        };
+      }
+    }
+  }
+};
+populateFullReportTrackerWithManualChecks();
 
 /**
  * If the route requires user input, check the stateStore to see if the user has

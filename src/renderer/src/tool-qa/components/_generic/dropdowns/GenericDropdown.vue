@@ -22,7 +22,7 @@ defineProps({
 <template>
   <div class="dropdown relative">
     <button @click="isOpen = !isOpen"
-            class="w-80 h-10 px-3 flex items-center justify-between border-[1px] border-gray-400 text-gray-800
+            class="w-80 h-10 px-2 flex items-center justify-between border-[1px] border-gray-400 text-gray-800
             hover:bg-gray-100 rounded-lg shadow-sm"
             :class="{'border-blue-400 outline outline-4 outline-blue-200':isOpen}">
       {{title}}

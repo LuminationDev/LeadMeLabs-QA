@@ -12,7 +12,6 @@ import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { useConfigStore } from "@renderer/tool-config/store/configStore";
 import { storeToRefs } from "pinia";
 import { Station } from "./tool-qa/types/_station";
-import { ALL_VALUES } from "@renderer/assets/checks/_fullcheckValues";
 
 // Sentry.init({
 //   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -23,32 +22,6 @@ const stateStore = useStateStore();
 const fullStore = useFullStore();
 const configStore = useConfigStore()
 const { showPreview } = storeToRefs(configStore)
-
-/**
- * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
- * The individual checks will be added when that page is visited. If no checks are present in a section or category it
- * is considered skipped.
- */
-const populateFullReportTrackerWithManualChecks = () => {
-  for (const { parent, page, category } of ALL_VALUES.flat()) {
-    fullStore.reportTracker[parent] ??= {};
-    fullStore.reportTracker[parent][page] ??= {};
-
-    for (const subCategory of category) {
-      const checks = Object.entries(subCategory[Object.keys(subCategory)[0]].checks);
-
-      for (const [check, { description }] of checks) {
-        fullStore.reportTracker[parent][page][check] ??= {
-          description,
-          comments: [],
-          targets: subCategory[Object.keys(subCategory)[0]].targets,
-          devices: {}
-        };
-      }
-    }
-  }
-};
-populateFullReportTrackerWithManualChecks();
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then
