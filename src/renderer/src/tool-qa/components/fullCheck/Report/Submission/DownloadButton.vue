@@ -4,7 +4,6 @@ import PDFStructure from "@renderer/tool-qa/components/fullCheck/Report/Submissi
 import { useStateStore } from "@renderer/tool-qa/store/stateStore";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
 import { generateHtml } from "@renderer/assets/html/htmlContent";
-import ItemHover from "@renderer/tool-qa/components/_generic/statuses/ItemHover.vue";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();
