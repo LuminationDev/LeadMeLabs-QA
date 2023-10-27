@@ -108,7 +108,8 @@ const guides = computed(() => {
             <th class="p-3">Name</th>
 
             <th class="w-16 text-center p-3" v-for="device in fullStore.deviceMap">
-              {{device.prefix}}{{device.id}}
+              <ItemHover v-if="device.type === 'tablet'" :title="`${device.prefix}${device.id}`" :message="device.ipAddress" :padding="false"/>
+              <span v-else>{{device.prefix}}{{device.id}}</span>
             </th>
           </tr>
 
