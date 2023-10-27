@@ -4,6 +4,7 @@ import CategoryTab from "@renderer/tool-qa/components/_generic/statuses/Category
 import GenericButton from "@renderer/tool-config/components/GenericButton.vue";
 import StatusIcon from "@renderer/tool-qa/components/_generic/statuses/StatusIcon.vue";
 import ChecklistSvg from "@renderer/assets/icons/ChecklistSvg.vue";
+import GenericDropdown from "@renderer/tool-qa/components/_generic/dropdowns/GenericDropdown.vue";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 import { useFullStore } from "@renderer/tool-qa/store/fullStore";
@@ -12,6 +13,7 @@ const fullStore = useFullStore();
 const route = useRoute();
 const labLocation = ref(fullStore.reportTracker['labLocation']);
 const technicianName = ref(fullStore.reportTracker['technicianName']);
+const labType = ref(fullStore.reportTracker['labType'] ?? "Online");
 
 const routeNameToIndex = {
   'full-setup-devices-details': 0
@@ -40,6 +42,10 @@ const status = computed(() => {
   }
 });
 
+const changeLabType = (value: string) => {
+  labType.value = value;
+}
+
 /**
  * Save the lab location and technician name for later use in the report.
  */
@@ -52,7 +58,10 @@ const saveDetails = async () => {
 
   fullStore.reportTracker['labLocation'] = labLocation.value;
   fullStore.reportTracker['technicianName'] = technicianName.value;
+  fullStore.reportTracker['labType'] = labType.value;
 }
+
+
 </script>
 
 <template>
@@ -91,9 +100,12 @@ const saveDetails = async () => {
             <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
             <label for="technicianName" class="text-sm font-semibold">Technician Name</label>
-            <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 mb-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+            <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
-            <div class="flex flex-row items-center">
+            <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
+            <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
+
+            <div class="flex flex-row items-center mt-4">
               <GenericButton type="light-blue" :callback="saveDetails" class="mr-4">Save</GenericButton>
             </div>
           </div>
