@@ -19,8 +19,8 @@ export const useFullStore = defineStore({
         reportTracker: {} as Report,
         //Track all connected devices
         deviceMap: [
-            { id: 'NUC', prefix: '', type: 'nuc', checks: {} },
-            { id: 'C-Bus', prefix: '', type: 'cbus', checks: {}}
+            { id: 'NUC', prefix: '', ipAddress: '', type: 'nuc', checks: {} },
+            { id: 'C-Bus', prefix: '', ipAddress: '', type: 'cbus', checks: {}}
         ],
         allowRunningExperienceChecks: false,
         connected: false,
@@ -651,9 +651,11 @@ export const useFullStore = defineStore({
          */
         addDevice(id: string, type: string) {
             const index = this.deviceMap.findIndex(item => item.id === id);
+            const tabletNum = this.deviceMap.filter(item => item.prefix === 'T');
             if(index === -1) {
                 this.deviceMap.push({
-                    id: id,
+                    id: type === 'tablet' ? `${(tabletNum.length + 1)}` : id,
+                    ipAddress: type === 'tablet' ? id : '',
                     prefix: type === 'station' ? 'S' : 'T', //Assumes only stations or tablets are added
                     type: type,
                     checks: {}

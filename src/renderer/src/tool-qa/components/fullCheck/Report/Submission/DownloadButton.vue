@@ -61,8 +61,16 @@ const createHtmlContent = () => {
     <p class="text-center text-2xl text-black font-semibold mb-3">QA Lab Report</p>
     <p class="text-black mb-1"><span class="font-semibold">Lab Location: </span>{{fullStore.reportTracker['labLocation']}}</p>
     <p class="text-black mb-1"><span class="font-semibold">Lab Type: </span>{{fullStore.reportTracker['labType'] ?? "Online"}}</p>
-    <p class="text-black mb-5"><span class="font-semibold">Prepared by: </span>{{fullStore.reportTracker['technicianName']}}</p>
+    <p class="text-black mb-2"><span class="font-semibold">Prepared by: </span>{{fullStore.reportTracker['technicianName']}}</p>
 
-    <PDFStructure v-for="title in fullStore.getReportTitles" :parent="<string>title" :key="title"/>
+    <p class="text-black font-semibold">Tablet map:</p>
+    <div v-for="device in fullStore.deviceMap">
+      <div v-if="device.type === 'tablet'" class="flex flex-row text-sm ml-3">
+        <span class="mr-1">{{device.prefix}}{{device.id}}:</span>
+        <span>{{device.ipAddress}}</span>
+      </div>
+    </div>
+
+    <PDFStructure v-for="title in fullStore.getReportTitles" class="mt-5" :parent="<string>title" :key="title"/>
   </div>
 </template>

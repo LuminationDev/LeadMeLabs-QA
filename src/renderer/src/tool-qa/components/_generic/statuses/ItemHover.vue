@@ -10,6 +10,11 @@ defineProps({
     type: String,
     required: false,
     default: "Not provided"
+  },
+  padding: {
+    type: Boolean,
+    required: false,
+    default: true
   }
 })
 
@@ -32,7 +37,7 @@ const clearHoverTimer = () => {
 </script>
 
 <template>
-  <td class="p-3 grow relative">
+  <td class="grow relative" :class="{'p-3': padding}">
     <div class="flex flex-row">
       <div class="font-semibold mr-1">{{ title }}</div>
       <img @mouseover="startHoverTimer" @mouseout="clearHoverTimer" class="cursor-help" src="../../../../assets/icons/help-hover.svg" alt="help"/>

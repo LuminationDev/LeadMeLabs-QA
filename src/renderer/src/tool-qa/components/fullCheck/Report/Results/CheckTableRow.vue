@@ -132,7 +132,8 @@ const getCheckStatus = (status: string | undefined, required: any) => {
 
         <div v-for="(device, index) in fullStore.orderedDevices" :key="index" class="flex flex-row items-center">
           <div class="flex flex-row items-center" v-if="props.check.targets[device.type]">
-            {{device.prefix}}{{device.id}}
+            <ItemHover v-if="device.type === 'tablet'" :title="`${device.prefix}${device.id}`" :message="device.ipAddress" :padding="false"/>
+            <span v-else>{{device.prefix}}{{device.id}}</span>
             <StatusHover class="w-9"
                          :message="generateMessage(device)"
                          :checking-status="device.checks[checkId]?.checkingStatus ?? 'not checked'"
