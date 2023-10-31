@@ -86,7 +86,7 @@ const uploadPDF = () => {
 const createHtmlContent = () => {
   //Grab the report part of the current html
   const reportDivContent = document.getElementById('report')?.innerHTML;
-  return generateHtml(reportDivContent);
+  return generateHtml(reportDivContent ?? "Report corruption");
 }
 
 /**

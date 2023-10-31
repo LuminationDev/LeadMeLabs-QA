@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {HARDWARE, IMVR, NETWORK, PROGRAMS, SECURITY, SOFTWARE, WINDOWS} from "@renderer/assets/checks/_fullcheckValues";
+import { HARDWARE, IMVR, NETWORK, PROGRAMS, SECURITY, SOFTWARE, WINDOWS } from "@renderer/assets/checks/_fullcheckValues";
 import MenuGroup from "@renderer/layout/SideBar/FullCheck/components/MenuGroup.vue";
 </script>
 
@@ -10,7 +10,7 @@ import MenuGroup from "@renderer/layout/SideBar/FullCheck/components/MenuGroup.v
     <MenuGroup title="Windows" :category="WINDOWS" :auto-checks="['windows_checks']"/>
     <MenuGroup title="Security" :category="SECURITY" :auto-checks="['security_checks']"/>
     <MenuGroup title="Software" :category="SOFTWARE" :auto-checks="['software_checks', 'steam_config_checks']"/>
-    <MenuGroup title="IMVR" :category="IMVR" :auto-checks="['experience_checks', 'imvr_checks']"/>
+    <MenuGroup title="IMVR" :category="IMVR" :auto-checks="['pre_experience_checks', 'experience_checks', 'imvr_checks']" :pre-check="true"/>
     <MenuGroup title="Programs" :category="PROGRAMS" :separator="false"/>
   </div>
 </template>

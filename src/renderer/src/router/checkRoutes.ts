@@ -37,7 +37,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/42 * 100); //TODO WARNING: 42 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/43 * 100); //TODO WARNING: 43 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -372,12 +372,27 @@ export const fullRoutes = [
         meta: {
             page: "software",
             description: "TODO write something in checkRoutes",
-            next: '/check/full/imvr/experience_checks',
+            next: '/check/full/imvr/pre_experience_checks',
             prev: getLastRoute(SOFTWARE),
             progress: calculateProgress()
         }
     },
 
+    {
+        path: '/check/full/imvr/pre_experience_checks',
+        name: 'full-imvr-pre_experience_checks',
+        component: TheIMVR,
+        meta: {
+            page: 'pre_experience_checks',
+            parent: 'imvr',
+            addComment: true,
+            userInput: true,
+            canSkip: true,
+            next: '/check/full/imvr/experience_checks',
+            prev: '/check/full/software/report',
+            progress: calculateProgress()
+        }
+    },
     {
         // todo - block this behind IMVR connection
         // todo - headset, base station and controller firmware, each station can detect two controllers, headset connection
@@ -391,7 +406,7 @@ export const fullRoutes = [
             userInput: true,
             canSkip: true,
             next: '/check/full/imvr/imvr_checks',
-            prev: '/check/full/software/report',
+            prev: '/check/full/imvr/pre_experience_checks',
             progress: calculateProgress()
         }
     },

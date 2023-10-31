@@ -51,7 +51,8 @@ const updateDeviceMaps = (check: QaCheckResult) => {
   });
 
   check.tablets.forEach(tablet => {
-    updateDeviceMap(tablet.ipAddress, tablet, check);
+    const foundTablet = fullStore.deviceMap.find(device => device.ipAddress == tablet.ipAddress);
+    updateDeviceMap(foundTablet.id, tablet, check);
   });
 
   if (check.nuc.length > 0) {

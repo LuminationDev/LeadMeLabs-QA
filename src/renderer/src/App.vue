@@ -163,6 +163,14 @@ const handleTCPMessage = (info: any) => {
       fullStore.updateStationVrStatuses(stationId, response.responseData.result)
       break;
     }
+    case "GetExperiences": {
+      console.log(response.responseData.stations);
+      response.responseData.stations.forEach(station => {
+        fullStore.checkExperiencesForErrors(station.id, station.applications);
+      });
+      fullStore.updateExperienceChecksWithErrors();
+      break;
+    }
     case "Connected": {
       fullStore.connected = true
       fullStore.ApplianceList = response.responseData.appliances;
@@ -181,6 +189,7 @@ const handleTCPMessage = (info: any) => {
           ledRingId: station.ledRingId,
           labLocation: ""
         }
+        fullStore.checkExperiencesForErrors(station.id, station.installedApplications);
         fullStore.stations.push(s)
         fullStore.addDevice(s.id, 'station');
         fullStore.sendStationMessage(s.id, {
@@ -251,69 +260,6 @@ const handleTCPMessage = (info: any) => {
 
       break;
   }
-
-  // if (info.mainText.includes("StationChecks")) {
-  //   const split = info.mainText.split(":::")
-  //   console.log(split)
-  //   const expectedId = split[2]
-  //   const group = split[4]
-  //   const qaChecks = JSON.parse(split[5]).map(element => {
-  //     var qa = {} as QaCheck
-  //     qa.passedStatus = element._passedStatus ?? element.passedStatus
-  //     qa.message = element._message ?? element.message
-  //     qa.id = element._id ?? element.id
-  //     return qa
-  //   });
-  //   fullStore.qaChecks.push(...qaChecks)
-  //   const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
-  //   if (index !== -1) {
-  //     fullStore.Stations[index].qaChecks.push(...qaChecks)
-  //   }
-  //
-  //   fullStore.updateQaChecks(expectedId, group, qaChecks)
-  //
-  //   const groupsToRun = fullStore.processQaList()
-  //   groupsToRun.forEach(group => {
-  //     fullStore.startQa(group)
-  //     fullStore.sendMessage({
-  //       action: CONSTANT.ACTION.RUN_STATION_GROUP,
-  //       actionData: {
-  //         group,
-  //         stationIds: ['all']
-  //       }
-  //     })
-  //   })
-  //
-  //   return
-  // }
-
-  // if (info.mainText.includes("StationDetails")) {
-  //   const split = info.mainText.split(":::")
-  //   console.log(split)
-  //   const expectedId = split[2]
-  //   const index = fullStore.Stations.findIndex(element => element.expectedDetails.id == expectedId)
-  //   let stationDetails = {} as StationDetails
-  //   const qaDetails = JSON.parse(split[4]).map(element => {
-  //     var qa = {} as QaDetail
-  //     qa.value = element._value ?? element.value
-  //     qa.message = element._message ?? element.message
-  //     qa.id = element._id ?? element.id
-  //     if (index !== -1) {
-  //       console.log(qa.id, qa.value, fullStore.Stations[index].details)
-  //       stationDetails[qa.id] = qa.value
-  //       // todo go from key to detail
-  //     }
-  //     return qa
-  //   });
-  //   if (fullStore.Stations[index].details) {
-  //     fullStore.Stations[index].details = { ...stationDetails, ...fullStore.Stations[index].details }
-  //   } else {
-  //     fullStore.Stations[index].details = stationDetails
-  //   }
-  //   fullStore.qaDetails.push(...qaDetails)
-  //
-  //   return
-  // }
 }
 
 /**

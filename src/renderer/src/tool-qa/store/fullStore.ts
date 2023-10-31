@@ -5,7 +5,8 @@ import { Station as StationClass } from '../types/_station'
 import { QaGroup } from "../types/_qaGroup";
 import { QaCheckResult } from "../types/_qaCheckResult";
 import { useStateStore } from "./stateStore";
-import {Report, Targets} from "../interfaces/_report";
+import { Report, Targets } from "../interfaces/_report";
+import { ExperienceCheck } from "../interfaces/_experiences";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -40,7 +41,8 @@ export const useFullStore = defineStore({
         //List of appliance objects
         ApplianceList: Array<Appliance>(),
         tablets: Array<Tablet>(),
-        experienceChecks: Array<any>(),
+        experienceErrors: Array<ExperienceCheck>(),
+        experienceChecks: Array<ExperienceCheck>(),
         qaGroups: [] as Array<QaGroup>,
         experiences: [
             {
@@ -252,16 +254,105 @@ export const useFullStore = defineStore({
         ]
     }),
     actions: {
-        buildExperienceChecks() {
-            let stationIds = this.stations.map(station => station.getId())
-
-            let sortedExperiences = this.experiences;
-            // @ts-ignore
-            if (this.reportTracker["labType"] === "Online") {
-                sortedExperiences.push(...this.onlineExperiences);
+        /**
+         * Check a Station's installed experiences for errors, these can be extra experiences that are installed and not
+         * on the tier list or experiences that are missing that should be installed.
+         */
+        checkExperiencesForErrors(stationId: string, installedExperiences: string) {
+            if (installedExperiences === null || installedExperiences.length === 0) {
+                console.log("Experiences not collected!");
             }
 
-            sortedExperiences.sort((a, b) => {
+            //Build the expected experience list
+            let expectedExperiences = this.experiences;
+            // @ts-ignore
+            if (this.reportTracker["labType"] === "Online") {
+                expectedExperiences.push(...this.onlineExperiences);
+            }
+
+            //Check for unexpected experiences
+            installedExperiences.split("/").forEach(exp => {
+                const [expType, expId, expTitle] = exp.split("|");
+                if (expType === "Launcher") return;
+
+                const isExpected = expectedExperiences.some(expected => expected.id === parseInt(expId));
+                if (isExpected) return;
+
+                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not expected" };
+                const updatedTitle = expTitle.replace(/^"(.*)"$/, '$1'); //Remove the leading and trailing quotes (")
+                this.addOrUpdateError(this.experienceErrors, parseInt(expId), updatedTitle, station);
+            });
+
+            //Check for not installed experiences
+            expectedExperiences.forEach(expected => {
+                const isInstalled = installedExperiences.split("/").some(installed => parseInt(installed.split("|")[1]) === expected.id);
+                if (isInstalled) return;
+
+                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not installed" };
+                this.addOrUpdateError(this.experienceErrors, expected.id, expected.title, station);
+            });
+
+            this.experienceErrors = this.sortExperiences(this.experienceErrors);
+        },
+
+        /**
+         * Add of update an entry in the experienceErrors array.
+         */
+        addOrUpdateError(errors: Array<ExperienceCheck>, id: number, title: string, station) {
+            const index = errors.findIndex(error => error.id === id);
+
+            if (index === -1) {
+                errors.push({ id, title, stations: [station] });
+            } else {
+                const stationIndex = errors[index].stations.findIndex(stationEntry => stationEntry.id === station.id);
+                if (stationIndex !== -1) {
+                    errors[index].stations[stationIndex] = station;
+                } else {
+                    errors[index].stations.push(station);
+                }
+            }
+        },
+
+        /**
+         * Update the experienceChecks array with any errors that were found when the installedAppliances for each
+         * station were received from the NUC.
+         */
+        updateExperienceChecksWithErrors() {
+            this.experienceErrors.forEach(experienceError => {
+                const checkIndex = this.experienceChecks.findIndex(entry => entry.id == experienceError.id);
+                experienceError.stations.forEach(station => {
+                    this.addCheckToReportTracker("imvr", "pre_experience_checks",
+                        {
+                            key: experienceError.title,
+                            description: ""
+                        },
+                        {
+                            "station": true,
+                            "tablet": false,
+                            "nuc": false,
+                            "cbus": false
+                        });
+
+                    this.updateReport(
+                        "imvr",
+                        "pre_experience_checks",
+                        { passedStatus: "warning", checkingStatus: "timeout", message: station.message },
+                        experienceError.title,
+                        station.id);
+
+                    if (checkIndex === -1) return;
+                    const foundStation = this.experienceChecks[checkIndex].stations.find(entry => entry.id === station.id.toString());
+                    if (!foundStation) return;
+
+                    foundStation.status = "failed";
+                    foundStation.checkingStatus = "checked";
+                    foundStation.message = station.message;
+                });
+            });
+        },
+
+        sortExperiences(experienceList: any[]) {
+            return experienceList.sort((a, b) => {
                 const titleA = a.title.toLowerCase().replace(/^the /, ''); // Convert titles to lowercase for case-insensitive sorting
                 const titleB = b.title.toLowerCase().replace(/^the /, '');
 
@@ -273,6 +364,17 @@ export const useFullStore = defineStore({
                     return 0; // Titles are equal
                 }
             });
+        },
+
+        buildExperienceChecks() {
+            let stationIds = this.stations.map(station => station.getId())
+
+            let sortedExperiences = this.experiences;
+            // @ts-ignore
+            if (this.reportTracker["labType"] === "Online") {
+                sortedExperiences.push(...this.onlineExperiences);
+            }
+            sortedExperiences = this.sortExperiences(sortedExperiences);
 
             //Add the experiences to the reportTracker
             sortedExperiences.forEach(experience => {
@@ -296,13 +398,17 @@ export const useFullStore = defineStore({
                         checkingStatus: "unchecked",
                         message: null
                     })
-                })
-                this.experienceChecks.push({
-                    id: experience.id,
-                    title: experience.title,
-                    stations: stations
-                })
-            })
+                });
+
+                const index = this.experienceChecks.findIndex(entry => entry.id === experience.id);
+                if(index === -1) {
+                    this.experienceChecks.push({
+                        id: experience.id,
+                        title: experience.title,
+                        stations: stations
+                    });
+                }
+            });
         },
 
         startExperienceChecks() {
@@ -367,13 +473,13 @@ export const useFullStore = defineStore({
             }, 3000)
             setTimeout(() => {
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
-                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id, "failed", "Timed out waiting for response")
+                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id.toString(), "failed", "Timed out waiting for response")
                 }
             }, 35000 + 3000)
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
-            const index = this.experienceChecks.findIndex(element => element.id == experienceId);
+            const index = this.experienceChecks.findIndex(element => element.id.toString() == experienceId);
             if (index === -1) {
                 return;
             }
@@ -536,7 +642,7 @@ export const useFullStore = defineStore({
                         labType: this.reportTracker["labType"] ?? "Online",
                         stationIds: ['all'] // todo, method for this
                     }
-                })
+                });
 
                 this.sendMessage({
                     action: CONSTANT.ACTION.RUN_TABLET_GROUP,
@@ -545,7 +651,7 @@ export const useFullStore = defineStore({
                         labType: this.reportTracker["labType"] ?? "Online",
                         tabletIps: this.getConnectedTabletIpAddresses
                     }
-                })
+                });
 
                 this.sendMessage({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
@@ -553,8 +659,7 @@ export const useFullStore = defineStore({
                         group: group.id,
                         labType: this.reportTracker["labType"] ?? "Online"
                     }
-                })
-
+                });
             }
         },
 
@@ -654,9 +759,9 @@ export const useFullStore = defineStore({
             const tabletNum = this.deviceMap.filter(item => item.prefix === 'T');
             if(index === -1) {
                 this.deviceMap.push({
-                    id: type === 'tablet' ? `${(tabletNum.length + 1)}` : id,
+                    id: type === 'tablet' ? `T${(tabletNum.length + 1)}` : id,
                     ipAddress: type === 'tablet' ? id : '',
-                    prefix: type === 'station' ? 'S' : 'T', //Assumes only stations or tablets are added
+                    prefix: type === 'station' ? 'S' : '', //Assumes only stations have prefixes
                     type: type,
                     checks: {}
                 });
@@ -716,7 +821,7 @@ export const useFullStore = defineStore({
             }
 
             // Update the fullStore.deviceMap
-            const mapDevice = this.deviceMap.find(device => device.id === deviceId);
+            const mapDevice = this.deviceMap.find(device => device.id == deviceId);
             if (mapDevice) {
                 mapDevice.checks[checkId] = info;
             }

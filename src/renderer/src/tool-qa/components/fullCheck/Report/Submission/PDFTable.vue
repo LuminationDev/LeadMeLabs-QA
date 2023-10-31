@@ -67,7 +67,7 @@ const getComments = computed((): Comment[] => {
 </script>
 
 <template>
-  <div class="w-full mb-4 flex flex-col rounded-lg border-2 border-gray-200">
+  <div class="w-full my-8 flex flex-col rounded-lg border-2 border-gray-200">
     <div class="flex flex-row items-center">
       <!--Category Title-->
       <h2 class="font-semibold text-lg p-3">{{ stateStore.generateTitle(category) }}</h2>
