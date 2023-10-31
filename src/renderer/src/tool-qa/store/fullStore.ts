@@ -642,7 +642,7 @@ export const useFullStore = defineStore({
                         labType: this.reportTracker["labType"] ?? "Online",
                         stationIds: ['all'] // todo, method for this
                     }
-                })
+                });
 
                 this.sendMessage({
                     action: CONSTANT.ACTION.RUN_TABLET_GROUP,
@@ -651,7 +651,7 @@ export const useFullStore = defineStore({
                         labType: this.reportTracker["labType"] ?? "Online",
                         tabletIps: this.getConnectedTabletIpAddresses
                     }
-                })
+                });
 
                 this.sendMessage({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
@@ -659,8 +659,7 @@ export const useFullStore = defineStore({
                         group: group.id,
                         labType: this.reportTracker["labType"] ?? "Online"
                     }
-                })
-
+                });
             }
         },
 
@@ -760,9 +759,9 @@ export const useFullStore = defineStore({
             const tabletNum = this.deviceMap.filter(item => item.prefix === 'T');
             if(index === -1) {
                 this.deviceMap.push({
-                    id: type === 'tablet' ? `${(tabletNum.length + 1)}` : id,
+                    id: type === 'tablet' ? `T${(tabletNum.length + 1)}` : id,
                     ipAddress: type === 'tablet' ? id : '',
-                    prefix: type === 'station' ? 'S' : 'T', //Assumes only stations or tablets are added
+                    prefix: type === 'station' ? 'S' : '', //Assumes only stations have prefixes
                     type: type,
                     checks: {}
                 });
