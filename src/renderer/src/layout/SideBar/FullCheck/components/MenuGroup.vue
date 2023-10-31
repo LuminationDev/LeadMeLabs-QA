@@ -25,7 +25,12 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: true
-  }
+  },
+  preCheck: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
 })
 
 const stateStore = useStateStore();
@@ -156,12 +161,16 @@ const currentSubStatus = (localRoute: string) => {
 <template>
   <div class="flex flex-col relative">
     <!--Category title-->
-    <MenuItem :title="title" :route="generateRoute()" :current="isActive" :status="currentTitleStatus(`/check/full/${props.title.toLowerCase()}`)"/>
+    <MenuItem :title="title"
+              :route="generateRoute()"
+              :current="isActive"
+              :status="currentTitleStatus(`/check/full/${props.title.toLowerCase()}`)"/>
 
+    <!--TODO need to remove any pre-checks?-->
     <!--Sub-categories-->
     <!--Auto-checks-->
     <div v-if="isActive" v-for="(subtitle, index) in autoChecks" :key="index" class="ml-5 flex flex-col relative">
-      <MenuItem :title="stateStore.generateTitle(<string>subtitle)"
+      <MenuItem v-if="preCheck === false || (preCheck === true && index !== 0)" :title="stateStore.generateTitle(<string>subtitle)"
                 :route="`/check/full/${title.toLowerCase()}/${subtitle}`"
                 :current="isAutoSubActive(index)"
                 :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${subtitle}`)"/>

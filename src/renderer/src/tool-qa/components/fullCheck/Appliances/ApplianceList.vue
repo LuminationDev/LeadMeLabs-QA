@@ -315,6 +315,7 @@ onBeforeMount(() => {
     <table class="w-full border-collapse">
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
+        <th class="w-16 text-center p-3">#</th>
         <th class="w-16 text-center p-3">ID</th>
         <th class="w-28 text-center p-3"></th>
       </tr>
@@ -322,6 +323,8 @@ onBeforeMount(() => {
       <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
       <tr v-for="(appliances, type) in groupedData" :key="type" class="text-sm border border-gray-200">
         <ItemHover :title="stateStore.capitalizeFirstLetter(<string>type)" :message="'Not sure what to do here'"/>
+
+        <td class="text-center">{{appliances.length}}</td>
 
         <IDStatus :currently-checking="type === currentlyChecking" :automationType="appliances[0]['automationType']" :appliances="appliances"/>
 

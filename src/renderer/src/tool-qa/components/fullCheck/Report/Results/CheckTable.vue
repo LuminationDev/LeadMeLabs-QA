@@ -111,7 +111,7 @@ const getComments = computed((): Comment[] => {
       </tr>
 
       <template v-for="(check, key) in props.section">
-        <CheckTableRow :check-id="<string>key" :check="check" :status="'passed'"/>
+        <CheckTableRow v-if="key !== 'comments'" :check-id="<string>key" :check="check" :status="'passed'"/>
       </template>
     </table>
   </div>
