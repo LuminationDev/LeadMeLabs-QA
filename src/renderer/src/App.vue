@@ -127,7 +127,8 @@ const handleTCPMessage = (info: any) => {
     }
     case "RunTabletGroup": {
       const group = response.responseData.group
-      const qaChecks = response.responseData.data.map(element => {
+      const data = typeof response.responseData.data === "string" ? JSON.parse(response.responseData.data) : response.responseData.data
+      const qaChecks = data.map(element => {
         var qa = {} as QaCheck
         qa.passedStatus = element._passedStatus ?? element.passedStatus
         qa.message = element._message ?? element.message
