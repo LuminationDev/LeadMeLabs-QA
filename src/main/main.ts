@@ -6,7 +6,7 @@ import { GetIPAddress } from "./util/Network";
 import { optimizer } from "@electron-toolkit/utils";
 import * as Sentry from '@sentry/electron';
 
-const { app, BrowserWindow, ipcMain, Menu, nativeImage, session, shell, Tray } = require('electron');
+const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
 
 Sentry.init({
   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
@@ -185,46 +185,6 @@ async function sendApplicationDetails(): Promise<void> {
 }
 
 /**
- * The following function creates the tray icon and subsequent menu when the application is minimised. Achieved by
- * overriding the base functionality for closing the window.
- * */
-function setupTrayIcon(): void {
-  // Setup tray icon and context menu
-  mainWindow.setMenu(null)
-
-  const iconPath = join(app.getAppPath(), 'static', 'icon.ico')
-  const appIcon = new Tray(nativeImage.createFromPath(iconPath))
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Show App',
-      click: function (): void {
-        mainWindow.show()
-      }
-    },
-    {
-      label: 'Quit',
-      click: function (): void {
-        mainWindow.destroy()
-        app.quit()
-      }
-    }
-  ])
-  appIcon.setToolTip('LeadMe QA')
-  appIcon.setContextMenu(contextMenu)
-
-  // Manage window minimising and tray icon
-  mainWindow.on('minimize', function (event) {
-    event.preventDefault()
-    mainWindow.hide()
-  })
-
-  mainWindow.on('close', function (event) {
-    event.preventDefault()
-    mainWindow.hide()
-  })
-}
-
-/**
  * Ignore certificate errors.
  */
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -241,7 +201,6 @@ app.whenReady().then(async () => {
   });
 
   createWindow();
-  setupTrayIcon();
 
   console.log("Starting electron application");
 
