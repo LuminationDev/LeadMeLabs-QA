@@ -123,7 +123,7 @@ watch(experienceChecksCompleted, () => {
     <GenericButton v-if="inProgress" type="transparent" class="mr-8" :callback="cancelTesting">
       Cancel
     </GenericButton>
-    <GenericButton v-else type="blue" :disabled="!allHeadsetsConnected" class="px-4 mr-8" :callback="startTesting">
+    <GenericButton v-else type="blue" class="px-4 mr-8" :callback="startTesting">
       <img v-if="allHeadsetsConnected" src="../../../../assets/icons/start-test.svg" :alt="`start icon`" class="mr-2" />
       <img v-else src="../../../../assets/icons/start-test-gray.svg" :alt="`start icon`" class="mr-2" />
       {{ hasStartedExperienceChecks ? 'Resume' : 'Start test' }}

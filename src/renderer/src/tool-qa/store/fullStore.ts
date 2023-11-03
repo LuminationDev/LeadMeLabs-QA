@@ -272,6 +272,9 @@ export const useFullStore = defineStore({
 
             //Check for unexpected experiences
             installedExperiences.split("/").forEach(exp => {
+                if (!exp || exp.length > 0) {
+                    return;
+                }
                 const [expType, expId, expTitle] = exp.split("|");
                 if (expType === "Launcher") return;
 
@@ -417,7 +420,10 @@ export const useFullStore = defineStore({
                 this.buildExperienceChecks()
             }
             this.experienceChecks[0].stations.forEach(station => {
-                this.launchNextExperience(station.id)
+                const index = this.stations.findIndex(s => s.id === station.id)
+                if (index !== -1 && this.stations[index].vrStatuses?.openVrStatus === 'Connected') {
+                    this.launchNextExperience(station.id)
+                }
             })
         },
 

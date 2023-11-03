@@ -182,14 +182,14 @@ const handleTCPMessage = (info: any) => {
           ipAddress: station.ipAddress,
           nucIpAddress: "",
           name: station.name,
-          installedApplications: station.installedApplications,
+          installedApplications: station.installedApplications ?? "",
           id: station.id + "",
           room: station.room,
           macAddress: station.macAddress,
           ledRingId: station.ledRingId,
           labLocation: ""
         }
-        fullStore.checkExperiencesForErrors(station.id, station.installedApplications);
+        fullStore.checkExperiencesForErrors(station.id, station.installedApplications ?? "");
         fullStore.stations.push(s)
         fullStore.addDevice(s.id, 'station');
         fullStore.sendStationMessage(s.id, {
