@@ -42,7 +42,7 @@ const infoDetails = computed(() => {
 
 const uncollectedExperiences = computed(() => {
   return fullStore.stations.some(entry => {
-    return entry.details.installedApplications && entry.details.installedApplications.length === 0;
+    return entry.details && entry.details.installedApplications && entry.details.installedApplications.length === 0;
   });
 });
 
