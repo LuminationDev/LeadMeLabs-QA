@@ -545,7 +545,8 @@ export const useFullStore = defineStore({
             const canReachAnalytics = new QaCheckResult("can_reach_analytics", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach analytics", "Tablet can reach analytics through the network")
             const canReachSentry = new QaCheckResult("can_reach_sentry", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach sentry", "Tablet can reach sentry through the network")
             const canReachSteamStatic = new QaCheckResult("can_reach_steam_static", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach steam static", "Tablet can reach steam static through the network")
-            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, canReachPlayStore, canReachAnalytics, canReachSentry, canReachSteamStatic)
+            const speedtest = new QaCheckResult("internet_speedtest", "auto", 150000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Internet Speedtest", "Get speed to download a 100MB file")
+            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, canReachPlayStore, canReachAnalytics, canReachSentry, speedtest, canReachSteamStatic)
             networkChecks.requirements = ["station_connection_checks"]
 
             const windowsChecks = new QaGroup("windows_checks", "windows")
