@@ -201,6 +201,7 @@ app.whenReady().then(async () => {
   });
 
   createWindow();
+  mainWindow.setMenu(null);
 
   console.log("Starting electron application");
 
