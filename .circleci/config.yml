@@ -109,9 +109,6 @@ commands:
           name: "inspect build folder"
           command: "ls ~/project/build"
       - run:
-          name: "inspect dist folder"
-          command: "ls ~/project/dist"
-      - run:
           name: "electron-build"
           command: "npm run electron-build -- -<<parameters.command>>"
       - when:
