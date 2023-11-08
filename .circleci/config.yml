@@ -178,10 +178,10 @@ workflows:
             branches:
               only:
                 - main
-      # - build-mac:
-      #     buildType: "Release"
-      #     requires:
-      #       - hold
+      - build-mac:
+          buildType: "Release"
+          requires:
+            - hold
       - build-windows:
           buildType: "Release"
           requires:
@@ -189,5 +189,5 @@ workflows:
       - commit-and-push:
           branch: "main"
           requires:
-            # - build-mac
+            - build-mac
             - build-windows
