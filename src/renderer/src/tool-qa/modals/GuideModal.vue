@@ -146,14 +146,14 @@ defineExpose({
   </Teleport>
 </template>
 
-<style lang="scss">
-.rendered-text {
-  h3 {
-    @apply text-black text-lg font-semibold
-  }
-  P {
-    @apply text-sm
-  }
-  @apply flex justify-center w-full
-}
-</style>
+<!--<style lang="scss">-->
+<!--.rendered-text {-->
+<!--  h3 {-->
+<!--    @apply text-black text-lg font-semibold-->
+<!--  }-->
+<!--  P {-->
+<!--    @apply text-sm-->
+<!--  }-->
+<!--  @apply flex justify-center w-full-->
+<!--}-->
+<!--</style>-->
