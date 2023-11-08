@@ -1,5 +1,6 @@
 {
     "appId": "com.lumination.leadme.qa.automation",
+    "compression": "maximum",
     "directories": {
         "output": "dist"
     },
