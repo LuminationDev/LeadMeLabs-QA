@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA5O7Ri4P6nfUX7duZIl19diSuT-wxICRc",
+    apiKey: "AIzaSyDeXIbE7PvD5b3VMwkQNhWcvzmkEqD1zEQ",
     authDomain: "leadme-labs.firebaseapp.com",
     projectId: "leadme-labs",
     storageBucket: "leadme-labs.appspot.com",
