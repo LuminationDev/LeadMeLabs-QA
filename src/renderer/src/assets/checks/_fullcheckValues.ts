@@ -9,7 +9,6 @@
 //          - targets (software/appliances the check relates to)
 
 import { CheckObject } from "../../tool-qa/interfaces/_routeItems";
-import milesightSample from '../../assets/images/milesight-sample.png'
 import remotePlay from '../../assets/guidesImages/RemotePlay.png'
 import steamSettings from '../../assets/guidesImages/SteamSettings.png'
 import leadMeLibrary from '../../assets/guidesImages/LeadMeLibrary.jpg'
@@ -17,6 +16,16 @@ import ipConfigAll from '../../assets/guidesImages/IpConfigAll.png'
 import hostname from '../../assets/guidesImages/Hostname.png'
 import batteryScreenshot from '../../assets/guidesImages/BatteryScreenshot.jpg'
 import windowsRecovery from '../../assets/guidesImages/WindowsRecovery.png'
+import batteryFourBars from '../../assets/guidesImages/batteryFourBars.jpg'
+import epsonRemote from '../../assets/guidesImages/epsonRemote.jpg'
+import gpuHDMI from '../../assets/guidesImages/gpuHDMI.jpg'
+import BroadcastSetting from '../../assets/guidesImages/BroadcastSetting.png'
+import CbusScripts from '../../assets/guidesImages/CbusScripts.png'
+import SendToNUC from '../../assets/guidesImages/SendToNUC.png'
+import ControllersCharge from '../../assets/guidesImages/ControllersCharge.jpg'
+import EpsonAccessIpSettings from '../../assets/guidesImages/EpsonAccessIpSettings.jpg'
+import EpsonNetwork from '../../assets/guidesImages/EpsonNetwork.jpg'
+import ControllerTiltBrush from '../../assets/guidesImages/ControllerTiltBrush.jpg'
 
 /**
  * This file contains the titles and text for each of the Full Checks.
@@ -34,7 +43,7 @@ export const BATTERY: CheckObject = {
                         description: "All batteries are charging and capable of a full charge.",
                         guide: [
                             {
-                                imageSource: milesightSample, // todo - image of battery with 4 bars
+                                imageSource: batteryFourBars,
                                 text: '<h3>Charge batteries</h3><p>After charging, check that batteries can reach 4 bars</p>'
                             }
                         ]
@@ -43,7 +52,7 @@ export const BATTERY: CheckObject = {
                         description: "All controllers are charging and capable of a full charge.",
                         guide: [
                             {
-                                imageSource: null, // todo - screenshot of battery level for controllers in leadme
+                                imageSource: ControllersCharge,
                                 text: '<h3>Charge controllers</h3><p>After charging, check the controllers battery level using LeadMe</p>'
                             }
                         ]
@@ -97,7 +106,7 @@ export const VIDEO_CABLES: CheckObject = {
                         description: "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector.",
                         guide: [
                             {
-                                imageSource: null, // todo image of HDMI to graphics card not motherboard
+                                imageSource: gpuHDMI,
                                 text: '<h3>For each computer</h3><p>Check that the HDMI cable is in the correct slot following the image above</p>'
                             }
                         ]
@@ -119,10 +128,6 @@ export const VIDEO_CABLES: CheckObject = {
                     "Additional Cables": {
                         description: "If additional cables are connected for Presentation mode, they are connected to a secondary display input.",
                         guide: [
-                            {
-                                imageSource: null, // todo image for presentation mode secondary input
-                                text: ''
-                            }
                         ]
                     }
                 },
@@ -164,16 +169,16 @@ export const PROJECTORS: CheckObject = {
                         description: "Unique ID, IP Address, Subnet, Gateway and DNS Addresses are set, and listed correctly in the handover document.",
                         guide: [
                             {
-                                imageSource: null, // todo image of projector remote
+                                imageSource: epsonRemote,
                                 text: '<h3>Pair the remote with the projector</h3><p>Hold the ID button and press the number of the projector</p>'
                             },
                             {
-                                imageSource: null, // todo image of projector remote
+                                imageSource: epsonRemote,
                                 text: '<h3>Open settings</h3><p>Press the settings button on the remote</p>'
                             },
                             {
-                                imageSource: null, // todo image of projector network settings
-                                text: '<h3>Navigate to the network settings</h3><p>Press the settings button on the remote</p>' // todo - navigate to the network settings instructions
+                                imageSource: EpsonAccessIpSettings,
+                                text: '<h3>Navigate to the network settings</h3><p>Open Wired Lan Info and then open IP Settings</p>'
                             }
                         ]
                     }
@@ -297,10 +302,6 @@ export const BIOS_SETTINGS: CheckObject = {
                             {
                                 imageSource: windowsRecovery,
                                 text: '<h3>Open the BIOS</h3><p>Windows Settings > Update & Security > Recovery > Advanced Setup > Restart Now > Troubleshoot</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
                             }
                         ]
                     }
@@ -406,18 +407,14 @@ export const CBUS: CheckObject = {
     "description": "Configuration and connectivity",
     "category": [
         {
-            "TODO": {
+            "CBus": {
                 "checks": {
                     "Scripts": {
                         description: "The CBUS template contains the necessary scripts and objects.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: CbusScripts,
+                                text: '<h3>Navigate to Cbus Scripts</h3><p>In the scripts tab in CBus, ensure that Identify and SendToNuc are present</p>'
                             }
                         ]
                     },
@@ -425,12 +422,8 @@ export const CBUS: CheckObject = {
                         description: "The keyword ‘sendToNuc’ has been added to all Lumination C-Bus objects.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: SendToNUC,
+                                text: '<h3>Navigate to CBus objects</h3><p>In the CBus objects page, ensure all objects that are expected to be controller have the "sendToNuc" keyword</p>'
                             }
                         ]
                     }
@@ -503,7 +496,7 @@ export const DRIVERS: CheckObject = {
     "description": "Updates and Drivers",
     "category": [
         {
-            "TODO": {
+            "Windows Updates": {
                 "checks": {
                     "Windows": {
                         description: "Windows is up-to-date.",
@@ -592,7 +585,7 @@ export const PASSWORDS: CheckObject = {
     "parent": "security",
     "page": "passwords",
     "description": "Passwords are sufficient and stored correctly",
-    "category": [ // todo tablet google account
+    "category": [
         {
             "Projectors": {
                 "checks": {
@@ -600,12 +593,16 @@ export const PASSWORDS: CheckObject = {
                         description: "The projector's web interface password has been changed and is logged in Bitwarden.",
                         guide: [
                             {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                                imageSource: epsonRemote,
+                                text: '<h3>Pair the remote with the projector</h3><p>Hold the ID button and press the number of the projector</p>'
                             },
                             {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                                imageSource: epsonRemote,
+                                text: '<h3>Open settings</h3><p>Press the settings button on the remote</p>'
+                            },
+                            {
+                                imageSource: EpsonNetwork,
+                                text: '<h3>Navigate to the network settings</h3><p>Select "web control password" and change the password and record in bitwarden</p>'
                             }
                         ]
                     }
@@ -814,8 +811,8 @@ export const STEAM: CheckObject = {
                                 text: '<h3>Open Steam Settings</h3><p>Open Steam and open settings</p>'
                             },
                             {
-                                imageSource: remotePlay, // todo - broadcasting image
-                                text: '<h3>Disable Broadcasting</h3><p>Navigate to broadcast in the sidemenu and disable all settings on the page</p>'
+                                imageSource: BroadcastSetting,
+                                text: '<h3>Disable Broadcasting</h3><p>Navigate to broadcast in the sidemenu and set the privacy setting to "Broadcasting disabled"</p>'
                             }
                         ]
                     }
@@ -851,14 +848,6 @@ export const VIVE: CheckObject = {
                     "Headset cables": {
                         description: "The display and power cables are plugged in at the back of the wireless unit.",
                         guide: [
-                            {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
-                            }
                         ]
                     },
                     "Headsets": {
@@ -920,7 +909,7 @@ export const VIRTUAL_REALITY: CheckObject = {
     "description": "Functionality in VR (Tiltbush)",
     "category": [
         {
-            "TODO": {
+            "Virtual Reality": {
                 "checks": {
                     "VR Room Setup": {
                         description: "The floor in-experience is the same height as the physical floor, and the headset experience faces the projector screen.",
@@ -930,7 +919,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                                 text: '<h3>Launch Tilt Brush</h3><p>Using LeadMe Labs, launch Tilt Brush</p>'
                             },
                             {
-                                imageSource: null, // todo - photo of controller on floor and on floor in tilt brush in background
+                                imageSource: ControllerTiltBrush,
                                 text: '<h3>Place a controller on the floor</h3><p>Confirm that the controller in-experience is resting on the floor</p>'
                             }
                         ]
@@ -996,7 +985,7 @@ export const EXECUTABLES: CheckObject = {
     "description": "Launch on start up each time",
     "category": [
         { // todo - ensure progress is saved before doing this, particularly if running on a nuc
-            "TODO": {
+            "Executables": {
                 "checks": {
                     "Rebooting": {
                         description: "Station.exe & NUC.exe launch on start up each time after rebooting 3 times consecutively.",
