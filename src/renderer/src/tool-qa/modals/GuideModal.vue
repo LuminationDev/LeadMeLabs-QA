@@ -46,15 +46,18 @@ const selectedGuide = computed(() => {
 
 const selectGuide = (name: string | null) => {
   selectedGuideKey.value = name
+  currentPage.value = 0
 }
 
 const openModal = () => {
   selectedGuideKey.value = null
   showModal.value = true;
+  currentPage.value = 0
 }
 
 const closeModal = () => {
   showModal.value = false;
+  currentPage.value = 0
 }
 
 const imageSrc = computed(() => {
@@ -131,7 +134,7 @@ defineExpose({
           </div>
           <div class="flex flex-row w-full mt-8" v-if="selectedGuide && selectedGuide.guide.length > 1">
             <button class="w-1/2 h-11 mr-3 text-gray-800 font-semibold text-base border-2 border-gray-300 rounded-lg hover:bg-gray-200 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
-                    :disabled="currentPage < (selectedGuide.guide.length - 1)"
+                    :disabled="currentPage < 1"
                     v-on:click="backPage"
             >Back</button>
 
