@@ -106,7 +106,7 @@ const saveDetails = async () => {
             <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
 
             <div class="flex flex-row items-center mt-4">
-              <GenericButton type="light-blue" :callback="saveDetails" class="mr-4">Save</GenericButton>
+              <GenericButton type="light-blue" :callback="saveDetails" class="mr-4">Set</GenericButton>
             </div>
           </div>
         </div>
