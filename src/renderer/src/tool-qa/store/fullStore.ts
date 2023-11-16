@@ -236,10 +236,6 @@ export const useFullStore = defineStore({
                 title: "Curatours"
             },
             {
-                id: 751110,
-                title: "Overview: A Walk Through The Universe"
-            },
-            {
                 id: 1053760,
                 title: "Arkio"
             },
