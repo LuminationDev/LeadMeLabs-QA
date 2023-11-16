@@ -69,7 +69,7 @@ const determineTargetDevices = (check: QaCheckResult) => {
  */
 const populateFullReportTrackerWithManualChecks = () => {
   if (fullStore.reportTracker["labType"] === "Offline") {
-    HANDOVER.category[0]['TODO'].checks["Timezone"] = {
+    HANDOVER.category[0]['Handover details'].checks["Timezone"] = {
       description: "Has the time zone been set to the correct location.",
       guide: [
         {
@@ -79,7 +79,7 @@ const populateFullReportTrackerWithManualChecks = () => {
       ]
     }
 
-    HANDOVER.category[0]['TODO'].checks["Date time"] = {
+    HANDOVER.category[0]['Handover details'].checks["Date time"] = {
       description: "Is the date and time set correctly.",
       guide: [
         {

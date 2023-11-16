@@ -186,7 +186,7 @@ export const useFullStore = defineStore({
                 title: "Colosseum VR"
             },
             {
-                id: 1331260,
+                id: 957070,
                 title: "iB Cricket"
             },
             {
@@ -234,10 +234,6 @@ export const useFullStore = defineStore({
             {
                 id: 1532110,
                 title: "Curatours"
-            },
-            {
-                id: 751110,
-                title: "Overview: A Walk Through The Universe"
             },
             {
                 id: 1053760,
@@ -545,7 +541,9 @@ export const useFullStore = defineStore({
             const canReachAnalytics = new QaCheckResult("can_reach_analytics", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach analytics", "Tablet can reach analytics through the network")
             const canReachSentry = new QaCheckResult("can_reach_sentry", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach sentry", "Tablet can reach sentry through the network")
             const canReachSteamStatic = new QaCheckResult("can_reach_steam_static", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach steam static", "Tablet can reach steam static through the network")
-            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, canReachPlayStore, canReachAnalytics, canReachSentry, canReachSteamStatic, milesightNotDefaultPassword)
+            const speedtest = new QaCheckResult("internet_speedtest", "auto", 150000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Internet Speedtest", "Get speed to download a 100MB file")
+            const packetLossTest = new QaCheckResult("packet_loss_test", "auto", 30000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Packet loss test", "Checks that at most 1 of 20 packets are lost, and that the average response time is less than 300ms")
+            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, canReachPlayStore, canReachAnalytics, canReachSentry, canReachSteamStatic, speedtest, packetLossTest, milesightNotDefaultPassword)
             networkChecks.requirements = ["station_connection_checks"]
 
             const windowsChecks = new QaGroup("windows_checks", "windows")
@@ -583,9 +581,13 @@ export const useFullStore = defineStore({
             const steamcmdInitialised = new QaCheckResult("steamcmd_initialised", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "SteamCMD Initialised", "SteamCMD is initialised with user details")
             const steamcmdConfigured = new QaCheckResult("steamcmd_configured", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "SteamCMD Configured", "SteamCMD has Steam Guard detail or does not need them")
             const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 60000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Steam guard disabled", "Steam Guard has been disabled")
+            const softwareVersion = new QaCheckResult("latest_software_version", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Software Version", "Is the software up-to-date?")
+            const productionMode = new QaCheckResult("production_mode", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Production Mode", "Is the launcher set to Production")
             const driverEasyNotInstalled = new QaCheckResult("drivereasy_not_installed", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "DriverEasy", "DriverEasy is not installed")
             const nvidiaNotInstalled = new QaCheckResult("nvidia_not_installed", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "NVidia", "No NVidia programs are installed")
-            softwareChecks.checks.push(setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
+            softwareChecks.checks.push(productionMode, setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
+            // @ts-ignore //Only add if the labType equals online
+            if(this.reportTracker['labType'] !== "Offline") {softwareChecks.checks.push(softwareVersion)}
             softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
 
             const securityChecks = new QaGroup("security_checks", "security")
@@ -776,7 +778,7 @@ export const useFullStore = defineStore({
          */
         addDevice(id: string, type: string) {
             const index = this.deviceMap.findIndex(item => item.id === id);
-            const tabletNum = this.deviceMap.filter(item => item.prefix === 'T');
+            const tabletNum = this.deviceMap.filter(item => item.type === 'tablet');
             if(index === -1) {
                 this.deviceMap.push({
                     id: type === 'tablet' ? `T${(tabletNum.length + 1)}` : id,

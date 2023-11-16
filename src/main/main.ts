@@ -201,6 +201,7 @@ app.whenReady().then(async () => {
   });
 
   createWindow();
+  mainWindow.setMenu(null); //cannot open inspector in production if this is set to null
 
   console.log("Starting electron application");
 
