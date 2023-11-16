@@ -561,6 +561,7 @@ export const useFullStore = defineStore({
             windowsChecks.checks.push(taskScheduler, oldTaskScheduler, cbusScriptId);
 
             const softwareChecks = new QaGroup("software_checks", "software")
+            const productionMode = new QaCheckResult("production_mode", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Production Mode", "Is the launcher set to Production")
             const amdInstalled = new QaCheckResult("amd_installed", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "AMD Installed", "Is AMD software installed")
             const setvolInstalled = new QaCheckResult("setvol_installed", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "SetVol Installed", "SetVol is installed at the correct location")
             const steamcmdInstalled = new QaCheckResult("steamcmd_installed", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "SteamCMD Installed", "SteamCMD is installed at the correct location")
@@ -569,7 +570,7 @@ export const useFullStore = defineStore({
             const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 60000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Steam guard disabled", "Steam Guard has been disabled")
             const driverEasyNotInstalled = new QaCheckResult("drivereasy_not_installed", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "DriverEasy", "DriverEasy is not installed")
             const nvidiaNotInstalled = new QaCheckResult("nvidia_not_installed", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "NVidia", "No NVidia programs are installed")
-            softwareChecks.checks.push(setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
+            softwareChecks.checks.push(productionMode, setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled)
             softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
 
             const securityChecks = new QaGroup("security_checks", "security")
