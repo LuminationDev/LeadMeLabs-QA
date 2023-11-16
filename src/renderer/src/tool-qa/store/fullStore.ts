@@ -186,7 +186,7 @@ export const useFullStore = defineStore({
                 title: "Colosseum VR"
             },
             {
-                id: 1331260,
+                id: 957070,
                 title: "iB Cricket"
             },
             {
@@ -234,10 +234,6 @@ export const useFullStore = defineStore({
             {
                 id: 1532110,
                 title: "Curatours"
-            },
-            {
-                id: 751110,
-                title: "Overview: A Walk Through The Universe"
             },
             {
                 id: 1053760,
@@ -764,7 +760,7 @@ export const useFullStore = defineStore({
          */
         addDevice(id: string, type: string) {
             const index = this.deviceMap.findIndex(item => item.id === id);
-            const tabletNum = this.deviceMap.filter(item => item.prefix === 'T');
+            const tabletNum = this.deviceMap.filter(item => item.type === 'tablet');
             if(index === -1) {
                 this.deviceMap.push({
                     id: type === 'tablet' ? `T${(tabletNum.length + 1)}` : id,
