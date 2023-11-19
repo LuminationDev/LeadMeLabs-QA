@@ -18,14 +18,12 @@ import batteryScreenshot from '../../assets/guidesImages/BatteryScreenshot.jpg'
 import windowsRecovery from '../../assets/guidesImages/WindowsRecovery.png'
 import batteryFourBars from '../../assets/guidesImages/batteryFourBars.jpg'
 import epsonRemote from '../../assets/guidesImages/epsonRemote.jpg'
-import gpuHDMI from '../../assets/guidesImages/gpuHDMI.jpg'
 import BroadcastSetting from '../../assets/guidesImages/BroadcastSetting.png'
 import CbusScripts from '../../assets/guidesImages/CbusScripts.png'
 import SendToNUC from '../../assets/guidesImages/SendToNUC.png'
 import ControllersCharge from '../../assets/guidesImages/ControllersCharge.jpg'
 import EpsonAccessIpSettings from '../../assets/guidesImages/EpsonAccessIpSettings.jpg'
 import EpsonNetwork from '../../assets/guidesImages/EpsonNetwork.jpg'
-import ControllerTiltBrush from '../../assets/guidesImages/ControllerTiltBrush.jpg'
 
 /**
  * This file contains the titles and text for each of the Full Checks.
@@ -106,7 +104,7 @@ export const VIDEO_CABLES: CheckObject = {
                         description: "A video cable is connected from the Graphics Card (not the motherboard) to HDMI 1 on the projector.",
                         guide: [
                             {
-                                imageSource: gpuHDMI,
+                                imageSource: null,
                                 text: '<h3>For each computer</h3><p>Check that the HDMI cable is in the correct slot following the image above</p>'
                             }
                         ]
@@ -919,7 +917,7 @@ export const VIRTUAL_REALITY: CheckObject = {
                                 text: '<h3>Launch Tilt Brush</h3><p>Using LeadMe Labs, launch Tilt Brush</p>'
                             },
                             {
-                                imageSource: ControllerTiltBrush,
+                                imageSource: null,
                                 text: '<h3>Place a controller on the floor</h3><p>Confirm that the controller in-experience is resting on the floor</p>'
                             }
                         ]
