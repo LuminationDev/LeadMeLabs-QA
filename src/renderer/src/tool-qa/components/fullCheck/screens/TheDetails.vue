@@ -95,18 +95,17 @@ const saveDetails = async () => {
           </div>
         </div>
         <div class="flex flex-col justify-center col-span-4 ml-24">
-            <div class="flex flex-col">
+          <div class="flex flex-col">
 
-              <label for="labLocation" class="text-sm font-semibold mb-2">Lab Location</label>
-              <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+            <label for="labLocation" class="text-sm font-semibold mb-2">Lab Location</label>
+            <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
-              <label for="technicianName" class="text-sm font-semibold mb-2">Technician Name</label>
-              <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+            <label for="technicianName" class="text-sm font-semibold mb-2">Technician Name</label>
+            <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
-              <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
-              <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
+            <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
+            <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
 
-            </div>
           </div>
 
           <div class="flex flex-row items-center mt-4">
