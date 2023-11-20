@@ -14,6 +14,7 @@ const route = useRoute();
 const labLocation = ref(fullStore.reportTracker['labLocation']);
 const technicianName = ref(fullStore.reportTracker['technicianName']);
 const labType = ref(fullStore.reportTracker['labType'] ?? "Online");
+const headsetType = ref(fullStore.reportTracker['headsetType'] ?? "Vive Pro 2");
 
 const routeNameToIndex = {
   'full-setup-devices-details': 0
@@ -46,6 +47,10 @@ const changeLabType = (value: string) => {
   labType.value = value;
 }
 
+const changeHeadsetType = (value: string) => {
+  headsetType.value = value;
+}
+
 /**
  * Save the lab location and technician name for later use in the report.
  */
@@ -59,6 +64,7 @@ const saveDetails = async () => {
   fullStore.reportTracker['labLocation'] = labLocation.value;
   fullStore.reportTracker['technicianName'] = technicianName.value;
   fullStore.reportTracker['labType'] = labType.value;
+  fullStore.reportTracker['headsetType'] = headsetType.value;
 }
 
 
@@ -95,19 +101,27 @@ const saveDetails = async () => {
           </div>
         </div>
         <div class="flex flex-col justify-center col-span-4 ml-24">
-          <div class="flex flex-col">
-            <label for="labLocation" class="text-sm font-semibold">Lab Location</label>
-            <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+          <div class="flex flex-row">
+            <div class="flex flex-col mr-8">
+              <label for="labLocation" class="text-sm font-semibold mb-2">Lab Location</label>
+              <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
-            <label for="technicianName" class="text-sm font-semibold">Technician Name</label>
-            <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 my-2 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
-
-            <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
-            <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
-
-            <div class="flex flex-row items-center mt-4">
-              <GenericButton type="light-blue" :callback="saveDetails" class="mr-4">Set</GenericButton>
+              <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
+              <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
             </div>
+
+            <div class="flex flex-col">
+              <label for="technicianName" class="text-sm font-semibold mb-2">Technician Name</label>
+              <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
+
+              <label for="labType" class="text-sm font-semibold mb-2">Headset Type</label>
+              <GenericDropdown name="labType" @update="changeHeadsetType" :title="<string>headsetType" :items="['Vive Pro 1', 'Vive Pro 2', 'Vive Focus 3']"/>
+
+            </div>
+          </div>
+
+          <div class="flex flex-row items-center mt-4">
+            <GenericButton type="light-blue" :callback="saveDetails" class="mr-4">Set</GenericButton>
           </div>
         </div>
       </div>

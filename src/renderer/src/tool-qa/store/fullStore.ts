@@ -599,14 +599,15 @@ export const useFullStore = defineStore({
             securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
 
-            const imvrChecks = new QaGroup("imvr_checks", "imvr")
+            const imvrChecks = new QaGroup("imvr_checks", "imvr", { headset: this.reportTracker['headsetType'] })
+            const correctHeadset = new QaCheckResult("correct_headset", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Correct Headset Select", "Is the correct headset selected in the launcher?")
             const headsetConnected = new QaCheckResult("headset_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Headset Connected", "Is the headset connected?")
             const headsetFirmware = new QaCheckResult("headset_firmware", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Headset Firmware", "Are there any firmware updates available for the headset?")
             const controllersConnected = new QaCheckResult("controllers_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Controllers Connected", "Are the controllers connected?")
             const controllersFirmware = new QaCheckResult("controllers_firmware", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Controllers Firmware", "Are there any firmware updates available for the controllers?")
             const baseStationsConnected = new QaCheckResult("base_stations_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Sase Stations Connected", "Are there any sase stations connected?")
             const baseStationsFirmware = new QaCheckResult("base_stations_firmware", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Base Stations Firmware", "Are there any firmware updates available for the base stations?")
-            imvrChecks.checks.push(headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
+            imvrChecks.checks.push(correctHeadset, headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
             imvrChecks.requirements = ["station_connection_checks"]
 
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
@@ -664,7 +665,8 @@ export const useFullStore = defineStore({
                     actionData: {
                         group: group.id,
                         labType: this.reportTracker["labType"] ?? "Online",
-                        stationIds: ['all'] // todo, method for this
+                        stationIds: ['all'], // todo, method for this
+                        parameters: group.parameters ?? {}
                     }
                 });
 
@@ -673,7 +675,8 @@ export const useFullStore = defineStore({
                     actionData: {
                         group: group.id,
                         labType: this.reportTracker["labType"] ?? "Online",
-                        tabletIps: this.getConnectedTabletIpAddresses
+                        tabletIps: this.getConnectedTabletIpAddresses,
+                        parameters: group.parameters ?? {}
                     }
                 });
 
@@ -681,7 +684,8 @@ export const useFullStore = defineStore({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
                     actionData: {
                         group: group.id,
-                        labType: this.reportTracker["labType"] ?? "Online"
+                        labType: this.reportTracker["labType"] ?? "Online",
+                        parameters: group.parameters ?? {}
                     }
                 });
             }
