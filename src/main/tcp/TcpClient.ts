@@ -37,7 +37,7 @@ export default function runTcpClient(mainWindow: Electron.BrowserWindow, info: a
     });
 
     const headerMessageType = "text";
-    const headerMessageTypeBytes = Buffer.from(headerMessageType, 'utf8');
+    const headerMessageTypeBytes = Buffer.from(headerMessageType, 'utf16le');
     const headerLength = headerMessageTypeBytes.length;
 
     // Encrypt the message
