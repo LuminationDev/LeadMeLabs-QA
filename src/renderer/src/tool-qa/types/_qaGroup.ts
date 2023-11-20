@@ -6,12 +6,10 @@ class QaGroup {
     requirements: Array<string> = []
     checks: Array<QaCheckResult> = []
     started: boolean = false
-    parameters: {}|null
 
-    constructor(id: string, section: string|null = null, parameters: {}|null = null) {
+    constructor(id: string, section: string|null = null) {
         this.id = id;
         this.section = section;
-        this.parameters = parameters;
     }
 
     allChecksPassed(): boolean {

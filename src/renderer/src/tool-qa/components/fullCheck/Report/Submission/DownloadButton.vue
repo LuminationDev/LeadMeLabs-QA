@@ -63,8 +63,6 @@ const createHtmlContent = () => {
     <p class="text-black mb-1"><span class="font-semibold">Lab Type: </span>{{fullStore.reportTracker['labType'] ?? "Online"}}</p>
     <p class="text-black mb-2"><span class="font-semibold">Prepared by: </span>{{fullStore.reportTracker['technicianName']}}</p>
 
-    <p class="text-black mb-2"><span class="font-semibold">Headset Type: </span>{{fullStore.reportTracker['headsetType']}}</p>
-
     <p class="text-black font-semibold">Tablet map:</p>
     <div v-for="device in fullStore.deviceMap">
       <div v-if="device.type === 'tablet'" class="flex flex-row text-sm ml-3">
