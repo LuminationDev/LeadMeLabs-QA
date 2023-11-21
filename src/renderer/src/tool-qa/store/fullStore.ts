@@ -526,24 +526,33 @@ export const useFullStore = defineStore({
             const stationIsConnected = new QaCheckResult("station_is_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Station is connected to NUC")
             stationConnectionChecks.checks.push(stationIsConnected)
 
-            const networkChecks = new QaGroup("network_checks", "network")
+            const networkChecks = new QaGroup("network_checks", "network", { networkType: this.reportTracker['networkType'] })
+            //Milesight network
             const defaultGateway = new QaCheckResult("default_gateway_is_correct", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Default Gateway", "Checks that the default gateway is set based on the default setting")
             const dnsServer = new QaCheckResult("dns_server_is_correct", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "DNS Server", "Checks that the DNS server is set based on the default setting")
             const altDnsServer = new QaCheckResult("alt_dns_server_is_correct", "auto", 10000,{station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Alt. DNS Server", "Checks that the alternate DNS server is set based on the default setting")
             const staticIpAddress = new QaCheckResult("static_ip_is_default", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Static IP", "Checks that the static IP address is set based on the default setting")
+            const milesightNotDefaultPassword = new QaCheckResult("milesight_not_default_password", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, [], [], "Milesight not default", "Checks that the milesight router is not set with the default password")
+            //School network
+            const staticIpAddressPresent = new QaCheckResult("static_ip_is_present", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Static IP", "Checks that a static IP address is set")
             const allowedThroughFirewall = new QaCheckResult("allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Firewall", "Checks that the NUC/Station software has allow rules in the firewall and is not disallowed")
             const launcherAllowedThroughFirewall = new QaCheckResult("launcher_allowed_through_firewall", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Launcher firewall", "Checks that the launcher software has allow rules in the firewall and is not disallowed")
             const nucCanAccessNucHosting = new QaCheckResult("can_access_nuc_hosting", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false}, [], [], "Access NUC Hosting", "Checks that we can access the NUC hosting server")
             const stationCanAccessStationHosting = new QaCheckResult("can_access_station_hosting", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Access Station Hosting", "Checks that we can access the station hosting server")
             const canAccessLauncherHosting = new QaCheckResult("can_access_launcher_hosting", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds,  [], "Access Launcher Hosting", "Checks that we can access the launcher hosting server")
-            // const milesightNotDefaultPassword = new QaCheckResult("milesight_not_default_password", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, [], [], "Milesight not default", "Checks that the milesight router is not set with the default password")
             const canReachPlayStore = new QaCheckResult("can_reach_play_store", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach play store", "Tablet can reach play store through the network")
             const canReachAnalytics = new QaCheckResult("can_reach_analytics", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach analytics", "Tablet can reach analytics through the network")
             const canReachSentry = new QaCheckResult("can_reach_sentry", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach sentry", "Tablet can reach sentry through the network")
             const canReachSteamStatic = new QaCheckResult("can_reach_steam_static", "auto", 10000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Can reach steam static", "Tablet can reach steam static through the network")
             const speedtest = new QaCheckResult("internet_speedtest", "auto", 150000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Internet Speedtest", "Get speed to download a 100MB file")
             const packetLossTest = new QaCheckResult("packet_loss_test", "auto", 30000, {station: false, tablet: true, nuc: false, cbus: false}, [], this.getConnectedTabletIpAddresses, "Packet loss test", "Checks that at most 1 of 20 packets are lost, and that the average response time is less than 300ms")
-            networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, canReachPlayStore, canReachAnalytics, canReachSentry, canReachSteamStatic, packetLossTest)
+            // @ts-ignore //Only add if the labType equals online
+            if (this.reportTracker['networkType'] === "Milesight") {
+                networkChecks.checks.push(defaultGateway, dnsServer, altDnsServer, staticIpAddress, milesightNotDefaultPassword);
+            } else {
+                networkChecks.checks.push(staticIpAddressPresent);
+            }
+            networkChecks.checks.push(allowedThroughFirewall, launcherAllowedThroughFirewall, nucCanAccessNucHosting, stationCanAccessStationHosting, canAccessLauncherHosting, canReachPlayStore, canReachAnalytics, canReachSentry, canReachSteamStatic, packetLossTest)
             // @ts-ignore //Only add if the labType equals online
             if(this.reportTracker['labType'] !== "Offline") {networkChecks.checks.push(speedtest)}
             networkChecks.requirements = ["station_connection_checks"]
@@ -557,10 +566,24 @@ export const useFullStore = defineStore({
             const taskScheduler = new QaCheckResult("task_scheduler_created", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Task scheduler", "Task scheduler is correctly setup")
             const oldTaskScheduler = new QaCheckResult("old_task_scheduler_not_existing", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Old task scheduler", "Old task scheduler is not present")
             const cbusScriptId = new QaCheckResult("cbus_script_id", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "CBus script id", "CBus script id is correctly set")
+            const environmentLabLocation = new QaCheckResult("environment_lab_location", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false},stationIds, [], "Environment: LabLocation", "Check that the LabLocation environment variable is set in the launcher and not in the system variables")
+            const environmentSteamUsername = new QaCheckResult("environment_steam_username", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: SteamUsername", "Check that the SteamUsername environment variable is set in the launcher and not in the system variables")
+            const environmentSteamPassword = new QaCheckResult("environment_steam_password", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: SteamPassword", "Check that the SteamPassword environment variable is set in the launcher and not in the system variables")
+            const environmentUserDirectory = new QaCheckResult("environment_user_directory", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false},stationIds, [], "Environment: UserDirectory", "Check that the UserDirectory environment variable is set in the launcher and not in the system variables")
+            const environmentNucAddress = new QaCheckResult("environment_nuc_address", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: NucAddress", "Check that the NucAddress environment variable is set in the launcher and not in the system variables")
+            const environmentStationId = new QaCheckResult("environment_station_id", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: StationId", "Check that the StationId environment variable is set in the launcher and not in the system variables")
+            const environmentEncryptionKey = new QaCheckResult("environment_encryption_key", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false},stationIds, [], "Environment: EncryptionKey", "Check that the EncryptionKey environment variable is set in the launcher and not in the system variables")
+            const environmentHeadsetType = new QaCheckResult("environment_headset_type", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: HeadsetType", "Check that the HeadsetType environment variable is set in the launcher and not in the system variables")
+            const environmentRoom = new QaCheckResult("environment_room", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: Room", "Check that the Room environment variable is set in the launcher and not in the system variables")
+            const environmentStationMode = new QaCheckResult("environment_station_mode", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false},stationIds, [], "Environment: StationMode", "Check that the StationMode environment variable is set in the launcher and not in the system variables")
+            const environmentCbusIp = new QaCheckResult("environment_cbus_ip", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "Environment: CbusIp", "Check that the CbusIp environment variable is set in the launcher and not in the system variables")
+            const environmentCbusLogin = new QaCheckResult("environment_cbus_login", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "Environment: CbusLogin", "Check that the CbusLogin environment variable is set in the launcher and not in the system variables")
+            const environmentNucScriptId = new QaCheckResult("environment_nuc_script_id", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "Environment: NucScriptId", "Check that the NucScriptId environment variable is set in the launcher and not in the system variables")
+            const environmentNovastarLogin = new QaCheckResult("environment_novastar_login", "auto", 10000, {station: false, tablet: false, nuc: true, cbus: false},[], [], "Environment: NovastarLogin", "Check that the NovastarLogin environment variable is set in the launcher and not in the system variables")
             windowsChecks.checks.push(wakeOnLAN, envVariable, wallpaper);
             // @ts-ignore //Only add if the labType equals online
             if(this.reportTracker['labType'] !== "Offline") {windowsChecks.checks.push(timezone, dateTime)}
-            windowsChecks.checks.push(taskScheduler, oldTaskScheduler, cbusScriptId);
+            windowsChecks.checks.push(taskScheduler, oldTaskScheduler, cbusScriptId, environmentLabLocation, environmentSteamUsername, environmentSteamPassword, environmentUserDirectory, environmentNucAddress, environmentStationId, environmentEncryptionKey, environmentHeadsetType, environmentRoom, environmentStationMode, environmentCbusIp, environmentCbusLogin, environmentNucScriptId, environmentNovastarLogin);
 
             const softwareChecks = new QaGroup("software_checks", "software")
             const amdInstalled = new QaCheckResult("amd_installed", "auto", 20000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "AMD Installed", "Is AMD software installed")
@@ -585,14 +608,15 @@ export const useFullStore = defineStore({
             securityChecks.checks.push(cbusPasswordComplexity, appAppToDate, pinNotDefault)
             securityChecks.requirements = ["station_connection_checks"]
 
-            const imvrChecks = new QaGroup("imvr_checks", "imvr")
+            const imvrChecks = new QaGroup("imvr_checks", "imvr", { headset: this.reportTracker['headsetType'] })
+            const correctHeadset = new QaCheckResult("correct_headset", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Correct Headset Select", "Is the correct headset selected in the launcher?")
             const headsetConnected = new QaCheckResult("headset_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Headset Connected", "Is the headset connected?")
             const headsetFirmware = new QaCheckResult("headset_firmware", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Headset Firmware", "Are there any firmware updates available for the headset?")
             const controllersConnected = new QaCheckResult("controllers_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Controllers Connected", "Are the controllers connected?")
             const controllersFirmware = new QaCheckResult("controllers_firmware", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Controllers Firmware", "Are there any firmware updates available for the controllers?")
             const baseStationsConnected = new QaCheckResult("base_stations_connected", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Sase Stations Connected", "Are there any sase stations connected?")
             const baseStationsFirmware = new QaCheckResult("base_stations_firmware", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Base Stations Firmware", "Are there any firmware updates available for the base stations?")
-            imvrChecks.checks.push(headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
+            imvrChecks.checks.push(correctHeadset, headsetConnected, headsetFirmware, controllersConnected, controllersFirmware, baseStationsConnected, baseStationsFirmware)
             imvrChecks.requirements = ["station_connection_checks"]
 
             const steamConfigChecks = new QaGroup("steam_config_checks", "software")
@@ -650,7 +674,8 @@ export const useFullStore = defineStore({
                     actionData: {
                         group: group.id,
                         labType: this.reportTracker["labType"] ?? "Online",
-                        stationIds: ['all'] // todo, method for this
+                        stationIds: ['all'], // todo, method for this
+                        parameters: group.parameters ?? {}
                     }
                 });
 
@@ -659,7 +684,8 @@ export const useFullStore = defineStore({
                     actionData: {
                         group: group.id,
                         labType: this.reportTracker["labType"] ?? "Online",
-                        tabletIps: this.getConnectedTabletIpAddresses
+                        tabletIps: this.getConnectedTabletIpAddresses,
+                        parameters: group.parameters ?? {}
                     }
                 });
 
@@ -667,7 +693,8 @@ export const useFullStore = defineStore({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
                     actionData: {
                         group: group.id,
-                        labType: this.reportTracker["labType"] ?? "Online"
+                        labType: this.reportTracker["labType"] ?? "Online",
+                        parameters: group.parameters ?? {}
                     }
                 });
             }
@@ -775,6 +802,20 @@ export const useFullStore = defineStore({
                     type: type,
                     checks: {}
                 });
+            }
+        },
+
+        /**
+         * Remove a device from the deviceMap. If the device is a tablet, compare the id against the ipAddress
+         * otherwise compare against the id.
+         * @param id
+         * @param type
+         */
+        removeDevice(id: string, type: string) {
+            if (type === 'tablet') {
+                this.deviceMap = this.deviceMap.filter(item => item.ipAddress !== id);
+            } else {
+                this.deviceMap = this.deviceMap.filter(item => item.id !== id);
             }
         },
 
