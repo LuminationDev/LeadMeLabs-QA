@@ -2,10 +2,13 @@
 import ItemHover from "../../_generic/statuses/ItemHover.vue";
 import StatusHover from "../../_generic/statuses/StatusHover.vue";
 import { useFullStore } from "../../../store/fullStore";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { QaCheck } from "@renderer/tool-qa/interfaces";
+import * as CONSTANT from "@renderer/assets/constants";
+import CheckStatus from "@renderer/tool-qa/components/_generic/statuses/CheckStatus.vue";
 
 const fullStore = useFullStore();
+const checking = ref("done");
 
 const checks = computed(() => {
   let checks = {}
@@ -22,10 +25,26 @@ const checks = computed(() => {
   })
   return checks
 });
+
+const retryStationConnection = () => {
+  checking.value = "testing";
+  fullStore.stations.forEach(station => {
+    fullStore.sendStationMessage(station.id, {
+      action: CONSTANT.ACTION.CONNECT_STATION,
+      actionData: {
+        expectedStationId: station.id
+      }
+    })
+  });
+  setTimeout(() => { checking.value = "done" }, 1000);
+}
 </script>
 
 <template>
   <div class="flex flex-col">
+    <!--Loading-->
+    <CheckStatus :callback="retryStationConnection" :checking="checking"/>
+
     <table class="w-full border-collapse mt-4">
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>

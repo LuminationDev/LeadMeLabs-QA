@@ -32,6 +32,7 @@ class Station {
         qaChecks.push(this.doesIpAddressMatch())
         qaChecks.push(this.doesMacAddressMatch())
         qaChecks.push(this.doesIdMatch())
+        qaChecks.push(this.doesNameMatch())
         qaChecks.push(this.doesLabLocationMatch())
         qaChecks.push(this.doesRoomMatch())
         return qaChecks
@@ -177,6 +178,45 @@ class Station {
             return qaCheck
         }
         if (this.details.id === this.expectedDetails.id) {
+            qaCheck.passedStatus = "passed"
+            return qaCheck
+        }
+        qaCheck.message = "Unknown failure"
+        qaCheck.passedStatus = "failed"
+        return qaCheck
+    }
+
+    doesNameMatch(): QaCheck {
+        var qaCheck = {} as QaCheck
+        qaCheck.id = "name_match"
+        qaCheck.displayName = "Name matches"
+        if (this.details === null) {
+            qaCheck.message = "Details not sent from station"
+            qaCheck.passedStatus = "failed"
+            return qaCheck;
+        }
+        if (this.expectedDetails === null) {
+            qaCheck.message = "Details not sent from NUC"
+            qaCheck.passedStatus = "failed"
+            return qaCheck;
+        }
+        if (!this.details.id || this.details.id === "") {
+            qaCheck.message = "Station has not provided it's id"
+            qaCheck.passedStatus = "failed"
+            return qaCheck;
+        }
+        if (!this.expectedDetails.name || this.expectedDetails.name === "") {
+            qaCheck.message = "NUC has not provided Station's expected name"
+            qaCheck.passedStatus = "failed"
+            return qaCheck;
+        }
+
+        if (`Station ${this.details.id}` !== this.expectedDetails.name) {
+            qaCheck.message = `Station name did not match expected name. Station name: Station ${this.details.id}. Expected name: ${this.expectedDetails.name}`
+            qaCheck.passedStatus = "failed"
+            return qaCheck
+        }
+        if (`Station ${this.details.id}` === this.expectedDetails.name) {
             qaCheck.passedStatus = "passed"
             return qaCheck
         }
