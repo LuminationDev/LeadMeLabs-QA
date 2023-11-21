@@ -797,6 +797,20 @@ export const useFullStore = defineStore({
         },
 
         /**
+         * Remove a device from the deviceMap. If the device is a tablet, compare the id against the ipAddress
+         * otherwise compare against the id.
+         * @param id
+         * @param type
+         */
+        removeDevice(id: string, type: string) {
+            if (type === 'tablet') {
+                this.deviceMap = this.deviceMap.filter(item => item.ipAddress !== id);
+            } else {
+                this.deviceMap = this.deviceMap.filter(item => item.id !== id);
+            }
+        },
+
+        /**
          * Add a check with its associated information to the report tracker
          * @param parent
          * @param page
