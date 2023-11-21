@@ -21,6 +21,11 @@ const tabletConnectionState = computed(() => {
   if (tablet.connecting) {
     return 'loading'
   }
+  //If connection failed remove from tablet list and deviceMap
+  if (tablet.connected === false) {
+    fullStore.removeDevice(tablet.ipAddress, 'tablet');
+    fullStore.tablets.pop();
+  }
   return tablet.connected ? 'unstarted' : 'failed' // unstarted because it's already in the list in this case
 })
 
