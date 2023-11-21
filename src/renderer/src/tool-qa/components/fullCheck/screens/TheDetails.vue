@@ -115,8 +115,8 @@ const saveDetails = async () => {
               <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
               <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']" class="mb-4"/>
 
-              <label for="labType" class="text-sm font-semibold mb-2">Network Type</label>
-              <GenericDropdown name="labType" @update="changeNetworkType" :title="<string>networkType" :items="['Milesight', 'School']"/>
+              <label for="networkType" class="text-sm font-semibold mb-2">Network Type</label>
+              <GenericDropdown name="networkType" @update="changeNetworkType" :title="<string>networkType" :items="['Milesight', 'School']"/>
             </div>
 
             <div class="flex flex-col">

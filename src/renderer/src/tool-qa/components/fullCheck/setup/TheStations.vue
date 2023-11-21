@@ -15,14 +15,25 @@ const checks = computed(() => {
   fullStore.stations.forEach(station => {
     station.getComputedChecks().forEach((check) => {
       if (!checks[check.id]) {
+        //Add the check to the report
+        fullStore.addCheckToReportTracker("connection", "station_details",
+            { key: check.id, description: check.displayName },
+            { station: true, tablet: false, nuc: false, cbus: false });
+
         checks[check.id] = {
           displayName: check.displayName,
           stations: []
         }
       }
+
+      //Update the report
+      fullStore.updateReport("connection", "station_details",
+          { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
+
       checks[check.id].stations.push(check)
     })
-  })
+  });
+
   return checks
 });
 

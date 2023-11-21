@@ -937,7 +937,7 @@ export const useFullStore = defineStore({
         },
 
         getReportSections(state) {
-            const keysToRemove = ['labLocation', 'technicianName', 'labType'];
+            const keysToRemove = ['labLocation', 'technicianName', 'labType', 'networkType', 'headsetType'];
             const reportWithoutKey = { ...state.reportTracker };
             keysToRemove.forEach(key => {
                 if (reportWithoutKey.hasOwnProperty(key)) {
