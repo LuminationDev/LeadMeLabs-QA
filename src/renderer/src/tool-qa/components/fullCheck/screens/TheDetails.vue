@@ -14,6 +14,7 @@ const route = useRoute();
 const labLocation = ref(fullStore.reportTracker['labLocation']);
 const technicianName = ref(fullStore.reportTracker['technicianName']);
 const labType = ref(fullStore.reportTracker['labType'] ?? "Online");
+const networkType = ref(fullStore.reportTracker['networkType'] ?? "Milesight");
 const headsetType = ref(fullStore.reportTracker['headsetType'] ?? "Vive Pro 2");
 
 const routeNameToIndex = {
@@ -47,6 +48,10 @@ const changeLabType = (value: string) => {
   labType.value = value;
 }
 
+const changeNetworkType = (value: string) => {
+  networkType.value = value;
+}
+
 const changeHeadsetType = (value: string) => {
   headsetType.value = value;
 }
@@ -65,6 +70,7 @@ const saveDetails = async () => {
   fullStore.reportTracker['technicianName'] = technicianName.value;
   fullStore.reportTracker['labType'] = labType.value;
   fullStore.reportTracker['headsetType'] = headsetType.value;
+  fullStore.reportTracker['networkType'] = networkType.value;
 }
 
 
@@ -107,7 +113,10 @@ const saveDetails = async () => {
               <input type="text" name="labLocation" v-model="labLocation" placeholder="Thebarton" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
               <label for="labType" class="text-sm font-semibold mb-2">Lab Type</label>
-              <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']"/>
+              <GenericDropdown name="labType" @update="changeLabType" :title="<string>labType" :items="['Online', 'Offline']" class="mb-4"/>
+
+              <label for="labType" class="text-sm font-semibold mb-2">Network Type</label>
+              <GenericDropdown name="labType" @update="changeNetworkType" :title="<string>networkType" :items="['Milesight', 'School']"/>
             </div>
 
             <div class="flex flex-col">
