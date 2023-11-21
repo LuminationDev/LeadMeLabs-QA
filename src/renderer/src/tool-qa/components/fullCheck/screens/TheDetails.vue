@@ -125,7 +125,6 @@ const saveDetails = async () => {
 
               <label for="labType" class="text-sm font-semibold mb-2">Headset Type</label>
               <GenericDropdown name="labType" @update="changeHeadsetType" :title="<string>headsetType" :items="['Vive Pro 1', 'Vive Pro 2', 'Vive Focus 3']"/>
-
             </div>
           </div>
 

@@ -79,14 +79,14 @@ export default class TcpServer {
                 // BEWARE: headerStart depends on if only the header length was sent in the first message
                 if (headerMessage === null) {
                     const headerStart = onlyBytes ? 0 : headerBytes;
-                    headerMessage = buffer.slice(headerStart, headerStart + headerLength).toString('utf8');
-                    encryptedMainText += buffer.slice(headerStart + headerLength).toString('utf8');
+                    headerMessage = buffer.slice(headerStart, headerStart + headerLength).toString('utf16le');
+                    encryptedMainText += buffer.slice(headerStart + headerLength).toString();
                     return;
                 }
 
                 // Message has been split into data chunks, continue to add the chunks to the overall received text
                 if (headerMessage.length > 0) {
-                    encryptedMainText += buffer.toString('utf8');
+                    encryptedMainText += buffer.toString();
                 }
             });
 
