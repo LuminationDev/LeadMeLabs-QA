@@ -101,9 +101,9 @@ const getCheckStatus = (status: string | undefined, required: any) => {
 
     <td class="p-3 w-28 font-semibold">
       <div class="flex mx-auto justify-center items-center rounded-xl w-24 px-2" :class="{
-                  'bg-red-100 border-[1px] border-red-300 text-red-700': generateCategoryStatus === 'failed',
-                  'bg-green-100 border-[1px] border-green-300 text-green-700': generateCategoryStatus === 'passed',
-                  'bg-yellow-100 border-[1px] border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
+                  'bg-red-100 border border-red-300 text-red-700': generateCategoryStatus === 'failed',
+                  'bg-green-100 border border-green-300 text-green-700': generateCategoryStatus === 'passed',
+                  'bg-yellow-100 border border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
                 }">
         {{ stateStore.capitalizeFirstLetter(generateCategoryStatus ?? "Skipped") }}
       </div>
