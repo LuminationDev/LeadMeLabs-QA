@@ -75,9 +75,9 @@ const getComments = computed((): Comment[] => {
       <!--Quick look at category status-->
       <div class="p-3 text-sm h-12 w-28 font-semibold">
         <div class="rounded-xl w-fit px-2" :class="{
-                      'bg-red-100 border-[1px] border-red-300 text-red-700': generateCategoryStatus === 'failed',
-                      'bg-green-100 border-[1px] border-green-300 text-green-700': generateCategoryStatus === 'passed',
-                      'bg-yellow-100 border-[1px] border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
+                      'bg-red-100 border border-red-300 text-red-700': generateCategoryStatus === 'failed',
+                      'bg-green-100 border border-green-300 text-green-700': generateCategoryStatus === 'passed',
+                      'bg-yellow-100 border border-yellow-300 text-yellow-600': generateCategoryStatus !== 'failed' && generateCategoryStatus !== 'passed',
                     }">
           {{stateStore.capitalizeFirstLetter(typeof generateCategoryStatus === "string" ? generateCategoryStatus : "Skipped") ?? 'Skipped'}}
         </div>
@@ -97,9 +97,9 @@ const getComments = computed((): Comment[] => {
       </tr>
 
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
-        <th class="p-3">Name</th>
-        <th class="p-3 text-center">Date</th>
-        <th class="p-3 text-center">Status</th>
+        <th class="p-3 w-2/3">Name</th>
+        <th class="p-3 w-1/6 text-center">Date</th>
+        <th class="p-3 w-1/6 text-center">Status</th>
         <th></th> <!--Empty on purpose-->
       </tr>
 
