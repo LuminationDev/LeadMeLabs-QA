@@ -1,12 +1,12 @@
-import TheAppliances from "@renderer/tool-qa/components/fullCheck/Appliances/TheAppliances.vue";
-import ManualCheck from "@renderer/tool-qa/components/fullCheck/screens/ManualCheck.vue";
-import TheIMVR from "@renderer/tool-qa/components/fullCheck/screens/TheIMVR.vue";
-import BasicAutoCheck from "@renderer/tool-qa/components/fullCheck/screens/AutoCheck.vue";
-import BasicReport from "@renderer/tool-qa/components/fullCheck/Report/Results/BasicReport.vue";
-import TheOverallReport from "@renderer/tool-qa/components/fullCheck/Report/TheOverallReport.vue";
-import TheFinaliseReport from "@renderer/tool-qa/components/fullCheck/Report/TheFinaliseReport.vue";
-import TheDetails from "@renderer/tool-qa/components/fullCheck/screens/TheDetails.vue";
-import TheFullCheck from "@renderer/tool-qa/components/fullCheck/screens/TheFullCheck.vue";
+import TheAppliances from "@renderer/src-qa/components/Appliances/TheAppliances.vue";
+import ManualCheck from "@renderer/src-qa/components/screens/ManualCheck.vue";
+import TheIMVR from "@renderer/src-qa/components/screens/TheIMVR.vue";
+import BasicAutoCheck from "@renderer/src-qa/components/screens/AutoCheck.vue";
+import BasicReport from "@renderer/src-qa/components/Report/Results/BasicReport.vue";
+import TheOverallReport from "@renderer/src-qa/components/Report/TheOverallReport.vue";
+import TheFinaliseReport from "@renderer/src-qa/components/Report/TheFinaliseReport.vue";
+import TheDetails from "@renderer/src-qa/components/screens/TheDetails.vue";
+import TheFullCheck from "@renderer/src-qa/components/screens/TheFullCheck.vue";
 import {
     HARDWARE,
     IMVR,
@@ -15,8 +15,8 @@ import {
     SECURITY,
     SOFTWARE,
     WINDOWS
-} from "../assets/checks/_fullcheckValues";
-import { CheckObject, Route } from "../tool-qa/interfaces/_routeItems";
+} from "../../assets/checks/_fullcheckValues";
+import { CheckObject, Route } from "../interfaces/_routeItems";
 
 /**
  * Generic metadata that is the same across all manual routes

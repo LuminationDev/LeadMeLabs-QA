@@ -11,7 +11,7 @@ const indexPath = path.join(__dirname, '..', 'src', 'renderer', 'index.html');
 let originalIndexHtml = fs.readFileSync(indexPath, 'utf-8');
 
 // Replace the placeholder with the actual script
-const scriptTag = `<script id="main-script" type="module" src="${scriptName}.ts"></script>`;
+const scriptTag = `<script id="main-script" type="module" src="src-${scriptName}/main.ts"></script>`;
 const searchRegex = /<script id="main-script".*?><\/script>/s;
 const modifiedIndexHtml = originalIndexHtml.replace(searchRegex, scriptTag);
 

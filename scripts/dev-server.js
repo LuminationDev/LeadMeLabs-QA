@@ -38,10 +38,9 @@ async function startElectron() {
         return;
     }
 
-    //Depending on the package.json script run the full QA tool or the separate network diagnostic tool
-    const mainScript = processArgs[0] === 'qa' ? 'main-qa.js' : 'main-network.js';
+    //Depending on the package.json script run the full QA tool or the separate tools
     const args = [
-        Path.join(__dirname, '..', 'build', 'main', `main-${processArgs[0]}`, mainScript), //TODO check if this works
+        Path.join(__dirname, '..', 'build', 'main', `main-${processArgs[0]}`, 'main.js'), //TODO check if this works
         rendererPort,
     ];
     electronProcess = ChildProcess.spawn(Electron, args);

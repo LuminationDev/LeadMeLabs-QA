@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require("path");
 
 const args = process.argv.slice(2);  //First two arguments are the node env and version
-const configPath = `config-${args[0]}/package.main.${args[0]}.js`;
+const configPath = `config-${args[0]}/package.main.js`;
 
 try {
     const config = require(`../config/${configPath}`);

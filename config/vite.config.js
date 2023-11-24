@@ -25,7 +25,7 @@ const config = defineConfig({
     resolve: {
         alias: {
             path: 'path-browserify',
-            '@renderer': path.resolve(__dirname, '..', 'src/renderer/src-qa')
+            '@renderer': path.resolve(__dirname, '..', 'src/renderer')
         }
     },
 });

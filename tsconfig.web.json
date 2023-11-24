@@ -1,19 +1,25 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
+    "src/renderer/src-network/env.d.ts",
+    "src/renderer/src-network/**/*",
+    "src/renderer/src-network/**/*.vue",
     "src/renderer/src-qa/env.d.ts",
     "src/renderer/src-qa/**/*",
     "src/renderer/src-qa/**/*.vue",
-    "src/renderer/src-network/env.d.ts",
-    "src/renderer/src-network/**/*",
-    "src/renderer/src-network/**/*.vue"
+    "src/renderer/src-quick/env.d.ts",
+    "src/renderer/src-quick/**/*",
+    "src/renderer/src-quick/**/*.vue",
+    "src/renderer/src-setup/env.d.ts",
+    "src/renderer/src-setup/**/*",
+    "src/renderer/src-setup/**/*.vue",
   ],
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [
-        "src/renderer/src-qa/*"
+        "src/renderer/*"
       ]
     }
   }
