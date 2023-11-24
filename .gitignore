@@ -16,7 +16,8 @@ src/main/static/.env
 *.vcxproj.user
 *.xcodeproj
 /.idea/
-/dist/
+/dist-network/
+/dist-qa/
 /build/
 /out/
 node_modules/
