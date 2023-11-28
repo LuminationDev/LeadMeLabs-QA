@@ -15,7 +15,7 @@ autoUpdater.autoDownload = false;
 autoUpdater.setFeedURL({
   provider: 'generic',
   url: 'https://leadme-qa-tool.herokuapp.com/static/' //TODO need a new hosting site for the separate tool
-})
+});
 
 
 // Listen for update download progress events
@@ -88,7 +88,7 @@ function createDownloadWindow() {
     return { action: 'deny' }
   });
 
-  downloadWindow.loadFile(join(app.getAppPath(), '..', 'static', 'download.html'));
+  downloadWindow.loadFile(join(app.getAppPath(), 'static', 'download.html'));
 }
 
 //Maintain a reference to the window
@@ -132,7 +132,7 @@ function createWindow () {
     mainWindow.loadURL(`http://localhost:${rendererPort}`);
   }
   else {
-    mainWindow.loadFile(join(app.getAppPath(), '..', 'renderer', 'index.html'));
+    mainWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
   }
 }
 

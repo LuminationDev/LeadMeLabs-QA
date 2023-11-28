@@ -4,8 +4,7 @@ import { CheckOpenPort, GetIPAddress } from "../network/Network";
 import { app } from "electron";
 import { DetermineReportType } from "../report/Report";
 import admin from 'firebase-admin';
-import {join} from "path";
-const serviceAccount = require(join(app.getAppPath(), '..', 'static', 'serviceAccount.json')); //TODO this needs updating for the built version
+import { join } from "path";
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -20,6 +19,13 @@ export default class QAController {
         this.ipcMain = ipcMain;
         this.mainWindow = mainWindow;
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
+
+        let serviceAccount: string | admin.ServiceAccount;
+        if (process.env.NODE_ENV === 'development') {
+            serviceAccount = require(join(app.getAppPath(), '..', 'static', 'serviceAccount.json'));
+        } else {
+            serviceAccount = require(join(app.getAppPath(), 'static', 'serviceAccount.json'));
+        }
 
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
