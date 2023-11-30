@@ -46,10 +46,6 @@ export const useFullStore = defineStore({
         qaGroups: [] as Array<QaGroup>,
         experiences: [
             {
-                id: 871620,
-                title: "Volcano Eruption"
-            },
-            {
                 id: 327140,
                 title: "Tilt Brush"
             },
@@ -84,10 +80,6 @@ export const useFullStore = defineStore({
             {
                 id: 1245640,
                 title: "The Book of Distance"
-            },
-            {
-                id: 972510,
-                title: "Thingamajig"
             },
             {
                 id: 629040,
@@ -220,6 +212,18 @@ export const useFullStore = defineStore({
             {
                 id: 696760,
                 title: "HoloLab Champions"
+            },
+            {
+                id: 1344530,
+                title: "vrkshop"
+            },
+            {
+                id: 685240,
+                title: "Paradiddle"
+            },
+            {
+                id: 855390,
+                title: "Ryte - The Eye of Atlantis"
             }
         ],
         onlineExperiences: [
