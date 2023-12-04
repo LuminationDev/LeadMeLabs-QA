@@ -95,6 +95,7 @@
     "electron-updater": "^5.3.0",
     "firebase-admin": "^11.11.0",
     "pinia": "^2.0.34",
+    "swiper": "^11.0.5",
     "vue-router": "^4.1.6",
     "winreg": "^1.2.4"
   }
