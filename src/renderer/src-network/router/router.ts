@@ -2,16 +2,20 @@ import { createRouter, createWebHashHistory, RouterOptions } from 'vue-router';
 import { diagnosticRoutes } from "./diagnosticRoutes";
 
 //Generic screens
-import Welcome from "../views/Welcome.vue";
 import Settings from '../views/Settings.vue';
+import NetworkSkeleton from "../views/NetworkSkeleton.vue";
 
 const router = createRouter(<RouterOptions>{
     history: createWebHashHistory(),
     routes: [
         {
-            path: '/',
-            name: 'network',
-            component: Welcome
+            path: '/network-diagnostic/device-selection',
+            name: 'device-selection',
+            component: NetworkSkeleton,
+            meta: {
+                prev: '/',
+                progress: 0
+            }
         },
         {
             path: '/settings',
