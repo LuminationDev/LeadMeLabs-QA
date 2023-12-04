@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
-import { ref } from "vue";
+import { useStateStore } from "../store/stateStore";
 
 defineExpose({
   openModal
@@ -17,20 +17,20 @@ defineProps({
   },
 });
 
-const showModal = ref(false);
+const stateStore = useStateStore();
 
 function openModal() {
-  showModal.value = true;
+  stateStore.openModal = true;
 }
 
 function closeModal() {
-  showModal.value = false;
+  stateStore.openModal = false;
 }
 </script>
 
 <template>
   <Teleport to="body">
-    <Modal :show="showModal" @close="closeModal">
+    <Modal :show="stateStore.openModal" @close="closeModal">
       <template v-slot:header>
         <header class="h-12 px-8 w-128 bg-white flex justify-between items-center rounded-t-lg">
           <div class="bg-white flex flex-col">
@@ -48,7 +48,7 @@ function closeModal() {
       <template v-slot:footer>
         <footer class="my-2 text-right flex flex-row justify-end">
           <button class="w-20 h-10 mr-4 text-blue-500 text-base rounded-lg hover:bg-gray-200 font-medium"
-                  v-on:click="showModal = false"
+                  v-on:click="stateStore.openModal = false"
           >Cancel</button>
         </footer>
       </template>

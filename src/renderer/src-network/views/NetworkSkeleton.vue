@@ -3,8 +3,11 @@ import NetworkHeader from "./NetworkHeader.vue";
 import NetworkFooter from "./NetworkFooter.vue";
 import NetworkSidebar from "./NetworkSidebar.vue";
 import NetworkSection from "./NetworkSection.vue";
-import {Swiper, SwiperSlide, useSwiper} from "swiper/vue";
-import {ref} from "vue";
+import NetworkChecks from "../components/screen/NetworkChecks.vue";
+import { useNetworkStore } from "../store/networkStore";
+import { WEBSITES } from "../../assets/checks/_networkValues";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/vue";
+import { onMounted, ref } from "vue";
 import 'swiper/css';
 
 function up() {
@@ -27,6 +30,23 @@ function setSwiper(s) {
   swiper.value = s
 }
 
+const networkStore = useNetworkStore();
+
+const populateReportTracker = async () => {
+  for (const website of WEBSITES) {
+    networkStore.reportTracker[website.name] ||= {
+      type: "website",
+      checkingStatus: "unchecked",
+      passedStatus: "",
+      message: "",
+      id: website.name,
+    };
+  }
+}
+
+onMounted(() => {
+  populateReportTracker();
+});
 </script>
 
 <template>
@@ -50,6 +70,7 @@ function setSwiper(s) {
           <NetworkSection class="bg-green-100 w-full h-full">
             <template v-slot:step>Step 2</template>
             <template v-slot:heading>Short</template>
+            <template v-slot:body><NetworkChecks/></template>
           </NetworkSection>
         </SwiperSlide>
         <SwiperSlide>

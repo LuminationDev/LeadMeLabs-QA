@@ -2,6 +2,7 @@ import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
 import { GetIPAddress } from "../shared/network/Network";
 import { optimizer } from "@electron-toolkit/utils";
+import NetworkController from "../shared/controllers/NetworkController";
 // import * as Sentry from '@sentry/electron';
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
@@ -95,8 +96,8 @@ function createDownloadWindow() {
 let mainWindow
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 400,
+    width: 1200,
+    height: 800,
     show: true,
     webPreferences: {
       preload: join(__dirname, '..', 'preload.js'),
@@ -203,6 +204,8 @@ app.whenReady().then(async () => {
   mainWindow.setMenu(null); //cannot open inspector in production if this is set to null
 
   console.log("Starting electron application");
+
+  new NetworkController(ipcMain, mainWindow).startup();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
