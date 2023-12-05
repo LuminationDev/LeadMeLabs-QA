@@ -1,21 +1,21 @@
 export const DESCRIPTIONS = {
     "Network": {
-        testing: "Go away still testing",
+        testing: "Testing is underway",
         passed: "Your device can access the internet on this network.",
         failed: `<p>Your device <span class="font-semibold">can not</span> access the internet on this network.</p>`,
     },
     "Ports": {
-        testing: "Go away still testing",
+        testing: "Testing is underway",
         passed: "The required ports are open and accessible.",
         failed: `<p>The required ports <span class="font-semibold">are not</span> open and accessible.</p>`,
     },
     "Firewall": {
-        testing: "Go away still testing",
+        testing: "Testing is underway",
         passed: "The required websites can be accessed. (eg. Steam)",
         failed: `<p>The required websites <span class="font-semibold">can not</span> be accessed. (eg. Steam)</p>`,
     },
     "Speed Test": {
-        testing: "Go away still testing",
+        testing: "Testing is underway",
         passed: "The network speed can support a Learning Lab.",
         failed: `<p>The network speed <span class="font-semibold">can not</span> support an online Learning Lab.</p>`,
     }
