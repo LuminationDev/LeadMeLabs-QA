@@ -1,4 +1,3 @@
-import net from "net";
 import os from 'os';
 import axios, { AxiosError } from "axios";
 import now from "performance-now";
@@ -7,51 +6,19 @@ import {BrowserWindow} from "electron";
 const networkInterfaces = os.networkInterfaces();
 
 /**
- * Check a destination IP address and port to see if a connection can be established.
+ * Checks the internet connection by attempting to make a GET request to 'http://www.google.com'.
+ * @returns A Promise resolving to a tuple containing two strings:
+ *   - The first string represents the result status: "passed" if the connection is successful, "failed" otherwise.
+ *   - The second string provides a descriptive message: "Connected" if the connection is successful, "Disconnected" otherwise.
  */
-export async function CheckOpenPort(mainWindow: Electron.BrowserWindow, info: any) {
-    const details = await CheckPortAsync(info.port, info.address);
-
-    // Send to the frontend via Electron.IpcMain
-    mainWindow.webContents.send('backend_message', {
-        channelType: "network_port_settings",
-        data: details,
-    });
+export async function checkInternetConnection(): Promise<[string, string]> {
+    try {
+        await axios.get('http://www.google.com');
+        return ["passed", "Connected"];
+    } catch (error) {
+        return ["failed", "Disconnected"];
+    }
 }
-
-/**
- * Checks if a specific port is open on the local computer by attempting to establish
- * a connection to the port. Uses a client socket to check the port's availability.
- * @param {number} portToCheck - The port number to check for availability.
- * @param {string} ipAddress - The IP address to check for the port's availability (default: '127.0.0.1').
- * @returns {Promise<string>} A Promise that resolves with the result message.
- */
-const CheckPortAsync = async (portToCheck: number, ipAddress: string = '127.0.0.1'): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const client = new net.Socket();
-        client.setTimeout(1000);
-
-        client.on('connect', () => {
-            client.destroy();
-            resolve(`Port ${portToCheck} is open for address ${ipAddress}`);
-        });
-
-        client.on('timeout', () => {
-            client.destroy();
-            resolve(`Port ${portToCheck} is closed for address ${ipAddress}`);
-        });
-
-        client.on('error', (err: NodeJS.ErrnoException) => {
-            if (err.code === 'ECONNREFUSED') {
-                resolve(`Port ${portToCheck} is closed for address ${ipAddress}`);
-            } else {
-                reject(`Error: ${err.message}`);
-            }
-        });
-
-        client.connect(portToCheck, ipAddress);
-    });
-};
 
 /**
  * Downloads data from the specified URL, measures the elapsed time,
@@ -60,7 +27,7 @@ const CheckPortAsync = async (portToCheck: number, ipAddress: string = '127.0.0.
  * @returns {Promise<number|null>} - A Promise that resolves to the download speed
  *                                   in megabits per second, or null if the download fails.
  */
-export async function downloadAndCalculateSpeed(mainWindow: BrowserWindow): Promise<string|null> {
+export async function downloadAndCalculateSpeed(mainWindow: BrowserWindow): Promise<[string, string]> {
     const url = "https://learninglablauncherdevelopment.herokuapp.com/program-nuc";
 
     let started = false;
@@ -105,7 +72,7 @@ export async function downloadAndCalculateSpeed(mainWindow: BrowserWindow): Prom
 
         if (startTime === undefined) {
             console.log("Start time not defined");
-            return null;
+            return ["failed", "Internal error, try again."];
         }
 
         const data = response.data;
@@ -118,10 +85,10 @@ export async function downloadAndCalculateSpeed(mainWindow: BrowserWindow): Prom
 
         console.log(`Download speed: ${speedMbps.toFixed(2)} Mbps`);
 
-        return speedMbps.toFixed(2);
+        return ["passed", `${speedMbps.toFixed(2)} Mbps`];
     } catch (error: any) {
         console.error(`Error downloading data: ${error.message}`);
-        return null;
+        return ["failed", error.message];
     }
 }
 
@@ -135,12 +102,12 @@ export async function downloadAndCalculateSpeed(mainWindow: BrowserWindow): Prom
  *   - 'failed with error: [error message]' if an error occurs during the request.
  */
 export async function checkWebsiteAvailability(info: any): Promise<[string, string]> {
-    const url = info.url;
+    const url = info.value;
 
     try {
         const response = await axios.get(url, { timeout: 10000, validateStatus: null }); // Disable axios's default status validation
         if (response.status === 200) {
-            return ['passed', ''];
+            return ['passed', 'Open'];
         } else {
             // If the request is not successful, return the HTTP error code
             return ['failed', `Status code ${response.status}`];

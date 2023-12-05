@@ -1,5 +1,9 @@
 import { IpcMain, BrowserWindow } from "electron";
-import { checkWebsiteAvailability, CheckOpenPort, downloadAndCalculateSpeed } from "../network/Network";
+import {
+    checkWebsiteAvailability,
+    downloadAndCalculateSpeed,
+    checkInternetConnection
+} from "../network/Network";
 
 export default class NetworkController {
     ipcMain: IpcMain;
@@ -23,14 +27,20 @@ export default class NetworkController {
      */
     networkToolListenerDelegate(): void {
         this.ipcMain.on('network_function', (_event, info) => {
+            console.log(info);
+
             switch (info.channelType) {
+
+                case "internet_online":
+                    this.isInternetAvailable(info);
+                    break;
 
                 case "website_ping":
                     this.checkWebsiteAccess(info);
                     break;
 
-                case "network_port_settings":
-                    void CheckOpenPort(this.mainWindow, info);
+                case "check_port":
+                    console.log("Nothing to see here yet");
                     break;
 
                 case "speed_test":
@@ -44,11 +54,24 @@ export default class NetworkController {
         });
     }
 
+    isInternetAvailable(info: any) {
+        checkInternetConnection().then(([passedStatus, message]) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "internet_result",
+                section: "Network",
+                id: info.id,
+                passedStatus,
+                message
+            });
+        })
+    }
+
     checkWebsiteAccess(info: any): void {
         checkWebsiteAvailability(info).then(([passedStatus, message]) => {
             this.mainWindow.webContents.send('backend_message', {
                 channelType: "website_result",
-                name: info.name,
+                section: "Firewall",
+                id: info.id,
                 passedStatus,
                 message
             });
@@ -56,11 +79,14 @@ export default class NetworkController {
     }
 
     async speedTest(info: any): Promise<void> {
-        const result = await downloadAndCalculateSpeed(this.mainWindow);
-
-        this.mainWindow.webContents.send('backend_message', {
-            channelType: "speed_test_result",
-            speed: result,
+        downloadAndCalculateSpeed(this.mainWindow).then(([passedStatus, message]) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "speed_test_result",
+                section: "Speed Test",
+                id: info.id,
+                passedStatus,
+                message: message
+            });
         });
     }
 }
