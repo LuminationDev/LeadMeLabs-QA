@@ -33,6 +33,13 @@ const requestWebsitePing = (name: string, url: string) => {
   });
 }
 
+function portTest() {
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
+    channelType: "port_test",
+    port: 55556
+  });
+}
+
 /**
  * Run through the list of websites and request a ping for each.
  */
@@ -81,7 +88,7 @@ const retryNetworkChecks = () => {
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
 
-        <th class="w-20 text-center p-3">
+        <th class="w-20 text-center p-3" @click="portTest">
           Status
         </th>
 

@@ -29,6 +29,10 @@ export const listeners = (info: any) => {
             networkStore.speed = info.speed;
             break;
 
+        case "port_result":
+            console.log(info)
+            break;
+
         default:
             console.log(info);
             break;
