@@ -86,20 +86,26 @@ export const useNetworkStore = defineStore({
          * Check if the tests are still running.
          */
         checkReportState: (state) => {
-            let checking = 0;
+            let checked = 0;
+            let unchecked = 0;
             let total = 0;
 
             Object.entries(state.reportTracker).forEach(([index, _]) => {
                 Object.entries(state.reportTracker[index]).forEach(([_, check]) => {
                     total++;
 
-                    if (check.checkingStatus !== "checked") {
-                        checking++;
+                    if (check.checkingStatus === "unchecked" || check.checkingStatus === "checking") {
+                        unchecked++;
+                    }
+                    else if (check.checkingStatus === "checked") {
+                        checked++;
                     }
                 });
             });
 
-            return checking === 0 || checking === total ? 'done' : 'testing';
+            if (unchecked === total) return 'caution'; //Tests have not started yet
+            if (checked === total) return 'done'; //Tests are all complete
+            return 'testing'; //Running tests
         },
     }
 });

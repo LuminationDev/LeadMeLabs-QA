@@ -12,6 +12,7 @@ import UploadComponent from "../assets/icons/NetworkIconUpload.vue";
 import LatencyComponent from "../assets/icons/NetworkIconLatency.vue";
 import DefaultComponent from "../assets/icons/NetworkIconTick.vue";
 import {Check} from "../src-network/interfaces/_report";
+import {DESCRIPTIONS} from "../assets/checks/_networkValues";
 
 const props = defineProps({
   category: {
@@ -94,8 +95,8 @@ const dynamicIcon = (type: string) => {
           </div>
 
           <div class="bg-white flex flex-col mt-3">
-            <span class="text-lg font-semibold text-gray-900">{{category}}</span>
-            <span class="text-sm font-medium text-black">Subheading</span>
+            <span class="text-lg font-semibold text-gray-900 mb-1">{{category}}</span>
+            <span class="text-xs font-medium text-black" v-html="DESCRIPTIONS[category][status]"/>
           </div>
         </header>
       </template>
