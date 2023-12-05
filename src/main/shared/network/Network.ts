@@ -14,8 +14,7 @@ const networkInterfaces = os.networkInterfaces();
 export async function checkInternetConnection(): Promise<[string, string]> {
     try {
         await axios.get('http://www.google.com');
-        // return ["passed", "Connected"];
-        return ["failed", "Disconnected"];
+        return ["passed", "Connected"];
     } catch (error) {
         return ["failed", "Disconnected"];
     }
