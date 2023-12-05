@@ -37,7 +37,7 @@ const manualMetaData = () => {
 let currentProgress = 0;
 const calculateProgress = () => {
     //return ++currentProgress; //Quick way to count how many checks there are.
-    return Math.floor(++currentProgress/43 * 100); //TODO WARNING: 43 is a static number it will change depending when more checks are added.
+    return Math.floor(++currentProgress/45 * 100); //TODO WARNING: 45 is a static number it will change depending when more checks are added.
 }
 
 /**
@@ -275,8 +275,6 @@ export const fullRoutes = [
 
     //Manually add the automatic routes between the necessary checks
     {
-        // todo - WOL -> Wake on magic packet
-        // todo - date time to be manual when offline
         path: '/check/full/windows/windows_checks',
         name: 'full-windows-windows_checks',
         component: BasicAutoCheck,
@@ -299,14 +297,38 @@ export const fullRoutes = [
         meta: {
             page: "windows",
             description: "TODO write something in checkRoutes",
-            next: '/check/full/security/security_checks',
+            next: '/check/full/configuration/configuration_checks',
             prev: getLastRoute(WINDOWS),
             progress: calculateProgress()
         }
     },
+    {
+        path: '/check/full/configuration/configuration_checks',
+        name: 'full-configuration-configuration_checks',
+        component: BasicAutoCheck,
+        meta: {
+            parent: 'configuration',
+            checkType: 'configuration_checks',
+            addComment: true,
+            next: '/check/full/configuration/report',
+            prev: '/check/full/windows/report',
+            progress: calculateProgress()
+        }
+    },
 
-    // todo for security - projector is not default
-    // todo - bring the auto tablet checks in here
+    //CONFIGURATION REPORT
+    {
+        path: '/check/full/configuration/report',
+        name: 'full-configuration-report',
+        component: BasicReport,
+        meta: {
+            page: "configuration",
+            description: "TODO write something in checkRoutes",
+            next: '/check/full/security/security_checks',
+            prev: '/check/full/configuration/configuration_checks',
+            progress: calculateProgress()
+        }
+    },
     {
         path: '/check/full/security/security_checks',
         name: 'full-security-security_checks',
@@ -316,7 +338,7 @@ export const fullRoutes = [
             checkType: 'security_checks',
             addComment: true,
             next: getFirstRoute(SECURITY),
-            prev: '/check/full/windows/report',
+            prev: '/check/full/configuration/report',
             progress: calculateProgress()
         }
     },
@@ -335,7 +357,6 @@ export const fullRoutes = [
             progress: calculateProgress()
         }
     },
-
     {
         path: '/check/full/software/software_checks',
         name: 'full-software-software_checks',

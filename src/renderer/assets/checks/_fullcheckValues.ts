@@ -578,6 +578,10 @@ export const DRIVERS: CheckObject = {
 export const WINDOWS = [HANDOVER, DRIVERS];
 //endregion
 
+//region CONFIGURATION SECTION
+export const CONFIGURATION = [];
+//endregion
+
 //region SECURITY SECTION
 export const PASSWORDS: CheckObject = {
     "parent": "security",
@@ -1016,4 +1020,4 @@ export const PROGRAMS = [EXECUTABLES];
 //endregion
 
 
-export const ALL_VALUES = [HARDWARE, NETWORK, WINDOWS, SECURITY, SOFTWARE, IMVR, PROGRAMS]
+export const ALL_VALUES = [HARDWARE, NETWORK, WINDOWS, CONFIGURATION, SECURITY, SOFTWARE, IMVR, PROGRAMS]
