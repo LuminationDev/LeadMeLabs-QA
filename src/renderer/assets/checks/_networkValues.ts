@@ -23,12 +23,12 @@ export const WEBSITES = [
         "url": "https://learninglablauncher.herokuapp.com/program-nuc-version"
     },
     {
-        "name": "Firebase",
-        "url": "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
-    },
-    {
         "name": "Sentry IO",
         "url": "https://sentry.io/"
+    },
+    {
+        "name": "Firebase",
+        "url": "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
     }
 ]
 

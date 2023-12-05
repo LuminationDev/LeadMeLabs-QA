@@ -1,37 +1,61 @@
 <script setup lang="ts">
 import { useNetworkStore } from "../../store/networkStore";
-import { computed, ref } from "vue";
-import {DESCRIPTIONS, WEBSITES} from "../../../assets/checks/_networkValues";
+import { computed } from "vue";
+import {DESCRIPTIONS, PORTS, WEBSITES} from "../../../assets/checks/_networkValues";
 import { Report } from "../../interfaces/_report";
 import * as CONSTANT from "../../../assets/constants";
 import ItemHover from "../../../components/statuses/ItemHover.vue";
-import StatusHover from "../../../components/statuses/StatusHover.vue";
 import CheckStatus from "../../../components/statuses/CheckStatus.vue";
 import CategoryStatus from "../CategoryStatus.vue";
 import NetworkCheckInfoModal from "../../../modals/NetworkCheckInfoModal.vue";
 
 const networkStore = useNetworkStore();
-const checking = ref("testing");
-
-const networkOnline = computed(() => {
-  return networkStore.networkOnline;
+const networkProgress = computed(() => {
+  return networkStore.progress;
 });
 
-const requestNetworkCheck = () => {
+const sendNetworkRequest = (channelType: string, id: string, timeout: number, value: string = '') => {
   //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
-    channelType: "network_check"
-  });
-}
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, { channelType, id, value });
 
-const requestWebsitePing = (name: string, url: string) => {
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
-    channelType: "website_ping",
-    name,
-    url
-  });
-}
+  setTimeout(() => {
+    const category = getCategoryFromChannelType(channelType);
+    if (networkStore.reportTracker[category][id].passedStatus === '') {
+      networkStore.updateReportTracker(category, id, 'failed', 'Timed out');
+    }
+  }, timeout);
+};
+
+const getCategoryFromChannelType = (channelType) => {
+  switch (channelType) {
+    case 'speed_test':
+      return 'Speed Test';
+    case 'internet_online':
+      return 'Network';
+    case 'website_ping':
+      return 'Firewall';
+    case 'check_port':
+      return 'Ports';
+    default:
+      return '';
+  }
+};
+
+const requestSpeedTest = () => {
+  networkStore.progress = 'Connecting';
+  sendNetworkRequest('speed_test', 'Download', 5000);
+};
+
+const requestNetworkCheck = () => {
+  sendNetworkRequest('internet_online', 'Internet', 5000);
+};
+
+const requestPortCheck = async () => {
+  for (const port of PORTS) {
+    await sendNetworkRequest('check_port', port.name, 5000, port.value);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+};
 
 function portTest() {
   api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
@@ -40,108 +64,58 @@ function portTest() {
   });
 }
 
-/**
- * Run through the list of websites and request a ping for each.
- */
-const checkAllWebsites = async () => {
-  networkStore.resetWebsiteResults();
-
+const requestWebsitePing = async () => {
   for (const website of WEBSITES) {
-    requestWebsitePing(website.name, website.url);
+    await sendNetworkRequest('website_ping', website.name, 5000, website.url);
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 };
+
+const startNetworkChecks = () => {
+  networkStore.resetReportState();
+
+  requestNetworkCheck();
+  requestSpeedTest();
+  Promise.all([requestPortCheck(), requestWebsitePing()]); //Run the loops concurrently
+}
 
 const results = computed((): Report => {
   return networkStore.reportTracker;
 });
-
-
-const networkSpeed = computed(() => {
-  return networkStore.speed;
-});
-
-const progress = computed(() => {
-  return networkStore.progress;
-});
-
-const requestSpeedTest = () => {
-  networkStore.progress = "Connecting...";
-  networkStore.speed = "Calculating...";
-
-  //@ts-ignore
-  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
-    channelType: "speed_test"
-  });
-}
-
-const retryNetworkChecks = () => {
-  console.log("Do all the checks again");
-}
 </script>
 
 <template>
   <div class="flex flex-col w-full h-auto">
     <!--Loading-->
-    <CheckStatus :callback="retryNetworkChecks" :checking="checking"/>
+    <CheckStatus :callback="startNetworkChecks" :checking="networkStore.checkReportState"/>
 
-    <table class="w-full border-collapse mt-4">
-      <tr class="text-left text-xs bg-gray-100 border border-gray-200">
-        <th class="p-3">Name</th>
+    <div class="w-full mt-4 flex flex-col rounded-lg border-2 border-gray-200">
+      <table class="w-full border-collapse">
+        <tr class="text-left text-xs bg-gray-100">
+          <th class="p-3">Name</th>
 
-        <th class="w-20 text-center p-3" @click="portTest">
-          Status
-        </th>
+          <th class="w-20 text-center p-3" @click="portTest">
+            Status
+          </th>
 
-        <!--Required for the empty space-->
-        <th class="w-20 p-3"></th>
-      </tr>
+          <!--Required for the empty space-->
+          <th class="w-20 p-3"></th>
+        </tr>
 
-      <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
-      <tr v-for="(check, index) in networkStore.getReportTitles" :key="index" class="text-sm border border-gray-200">
-        <ItemHover :title="check" :message="DESCRIPTIONS[check] ?? 'No details provided'"/>
+        <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
+        <tr v-for="(check, index) in networkStore.getReportTitles" :key="index" class="text-sm border-b border-gray-200 last:border-0">
+          <ItemHover :title="check" :message="DESCRIPTIONS[check] ?? 'No details provided'"/>
 
-        <CategoryStatus :category="check"/>
+          <CategoryStatus v-if="(networkProgress === '100.00' || networkProgress === '0') || check !== 'Speed Test'" :category="check"/>
+          <td v-else class="p-3 text-sm h-12 w-28 font-semibold">
+            <div class="rounded-xl w-fit min-w-[70px] px-2 bg-blue-100 border-[1px] border-blue-300 text-blue-700">
+              {{networkProgress === 'Connecting' ? networkProgress : `${networkProgress}%`}}
+            </div>
+          </td>
 
-        <NetworkCheckInfoModal :category="check"/>
-      </tr>
-    </table>
+          <NetworkCheckInfoModal :category="check"/>
+        </tr>
+      </table>
+    </div>
   </div>
-
-
-
-<!--  <div class="flex flex-row w-full rounded-3xl px-6">-->
-<!--    <div class="flex flex-col mr-10">-->
-<!--      <div @click="requestNetworkCheck" class="w-44 h-8 bg-blue-500 cursor-pointer rounded text-white my-4 hover:bg-blue-300">Start Network Check</div>-->
-<!--      <div>Connected: {{networkOnline ?? "Checking"}}</div>-->
-<!--    </div>-->
-
-<!--    <div class="flex flex-col mr-10">-->
-<!--      <div @click="checkAllWebsites" class="w-44 h-8 bg-blue-500 cursor-pointer rounded text-white my-4 hover:bg-blue-300">Start Website Check</div>-->
-
-<!--      <div v-for="check in results" :key="check.id" class="flex flex-col mb-4">-->
-<!--        <div>-->
-<!--          <span class="font-bold mr-2">Site:</span> {{ check.id }}-->
-<!--        </div>-->
-
-<!--        <div v-if="check.checkingStatus !== 'unchecked'" class="flex flex-col mb-2">-->
-<!--          <div>-->
-<!--            <span class="font-bold mr-2">Result:</span> {{ check.passedStatus }}-->
-<!--          </div>-->
-<!--          <div>-->
-<!--            <span class="font-bold mr-2">Message:</span> {{ check.message }}-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div v-else>-->
-<!--          Loading...-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    <div class="flex flex-col">-->
-<!--      <div @click="requestSpeedTest" class="w-44 h-8 bg-blue-500 cursor-pointer rounded text-white my-4 hover:bg-blue-300">Start Speed Test</div>-->
-<!--      <div>Progress: {{progress}}</div>-->
-<!--      <div>Speed: {{networkSpeed}}</div>-->
-<!--    </div>-->
-<!--  </div>-->
 </template>

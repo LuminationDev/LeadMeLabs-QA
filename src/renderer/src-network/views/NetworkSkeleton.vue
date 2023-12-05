@@ -72,26 +72,28 @@ const populateReportTracker = async () => {
   //Add the speed test
   networkStore.reportTracker["Speed Test"] ||= {};
   networkStore.reportTracker["Speed Test"]["Download"] ||= {
-    type: "Speed Test",
+    type: "Download",
     checkingStatus: "unchecked",
     passedStatus: "",
     message: "",
     id: "Download",
   };
-  networkStore.reportTracker["Speed Test"]["Upload"] ||= {
-    type: "Speed Test",
-    checkingStatus: "unchecked",
-    passedStatus: "",
-    message: "",
-    id: "Upload",
-  };
-  networkStore.reportTracker["Speed Test"]["Latency"] ||= {
-    type: "Speed Test",
-    checkingStatus: "unchecked",
-    passedStatus: "",
-    message: "",
-    id: "Latency",
-  };
+
+  //TODO not sure if needed
+  // networkStore.reportTracker["Speed Test"]["Upload"] ||= {
+  //   type: "Upload",
+  //   checkingStatus: "unchecked",
+  //   passedStatus: "",
+  //   message: "",
+  //   id: "Upload",
+  // };
+  // networkStore.reportTracker["Speed Test"]["Latency"] ||= {
+  //   type: "Latency",
+  //   checkingStatus: "unchecked",
+  //   passedStatus: "",
+  //   message: "",
+  //   id: "Latency",
+  // };
 }
 
 onMounted(() => {
