@@ -16,17 +16,17 @@ export const initialise = () => {
  */
 //@ts-ignore
 export const listeners = (info: any) => {
+    console.log(info);
+
     switch(info.channelType) {
+        case "speed_test_result":
+        case "internet_result":
         case "website_result":
-            networkStore.updateReportTracker("Firewall", info.name, info.passedStatus, info.message);
+            networkStore.updateReportTracker(info.section, info.id, info.passedStatus, info.message);
             break;
 
         case "speed_test_progress":
             networkStore.progress = info.progress;
-            break;
-
-        case "speed_test_result":
-            networkStore.speed = info.speed;
             break;
 
         default:
