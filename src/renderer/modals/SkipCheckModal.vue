@@ -3,7 +3,7 @@ import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import GenericButton from "@renderer/src-qa/components/_generic/buttons/GenericButton.vue";
+import GenericButton from "@renderer/components/buttons/GenericButton.vue";
 
 defineExpose({
   openModal
@@ -58,9 +58,9 @@ const route = useRoute();
     <Modal :show="showModal" @close="closeModal">
       <template v-slot:header>
         <header class="h-20 px-4 w-96 bg-white flex justify-between items-center rounded-t-lg">
-            <img alt="skip icon" src="../../assets/icons/skip.svg"/>
+            <img alt="skip icon" src="../assets/icons/skip.svg"/>
 
-            <img v-on:click="showModal = false" class="cursor-pointer" alt="skip icon" src="../../assets/icons/close.svg"/>
+            <img v-on:click="showModal = false" class="cursor-pointer" alt="skip icon" src="../assets/icons/close.svg"/>
         </header>
       </template>
 

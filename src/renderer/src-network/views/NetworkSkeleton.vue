@@ -5,7 +5,7 @@ import NetworkSidebar from "./NetworkSidebar.vue";
 import NetworkSection from "./NetworkSection.vue";
 import NetworkChecks from "../components/screen/NetworkChecks.vue";
 import { useNetworkStore } from "../store/networkStore";
-import { WEBSITES } from "../../assets/checks/_networkValues";
+import { PORTS, WEBSITES } from "../../assets/checks/_networkValues";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/vue";
 import { onMounted, ref } from "vue";
 import 'swiper/css';
@@ -33,16 +33,65 @@ function setSwiper(s) {
 
 const networkStore = useNetworkStore();
 
+//TODO clean this up
 const populateReportTracker = async () => {
+  //Add the network checks
+  networkStore.reportTracker["Network"] ||= {};
+  networkStore.reportTracker["Network"]["Internet"] ||= {
+    type: "Network",
+    checkingStatus: "unchecked",
+    passedStatus: "",
+    message: "",
+    id: "Internet",
+  };
+
+  //Add the ports to check
+  networkStore.reportTracker["Ports"] ||= {};
+  for (const port of PORTS) {
+    networkStore.reportTracker["Ports"][port.name] ||= {
+      type: "Ports",
+      checkingStatus: "unchecked",
+      passedStatus: "",
+      message: "",
+      id: port.value,
+    };
+  }
+
+  //Add the websites to check
+  networkStore.reportTracker["Firewall"] ||= {};
   for (const website of WEBSITES) {
-    networkStore.reportTracker[website.name] ||= {
-      type: "website",
+    networkStore.reportTracker["Firewall"][website.name] ||= {
+      type: "Firewall",
       checkingStatus: "unchecked",
       passedStatus: "",
       message: "",
       id: website.name,
     };
   }
+
+  //Add the speed test
+  networkStore.reportTracker["Speed Test"] ||= {};
+  networkStore.reportTracker["Speed Test"]["Download"] ||= {
+    type: "Speed Test",
+    checkingStatus: "unchecked",
+    passedStatus: "",
+    message: "",
+    id: "Download",
+  };
+  networkStore.reportTracker["Speed Test"]["Upload"] ||= {
+    type: "Speed Test",
+    checkingStatus: "unchecked",
+    passedStatus: "",
+    message: "",
+    id: "Upload",
+  };
+  networkStore.reportTracker["Speed Test"]["Latency"] ||= {
+    type: "Speed Test",
+    checkingStatus: "unchecked",
+    passedStatus: "",
+    message: "",
+    id: "Latency",
+  };
 }
 
 onMounted(() => {
@@ -64,7 +113,8 @@ onMounted(() => {
         <SwiperSlide>
           <NetworkSection class="w-full">
             <template v-slot:step>Step 2</template>
-            <template v-slot:heading>Short</template>
+            <template v-slot:heading>Running network checks</template>
+            <template v-slot:subheading>Checking connection between devices and requisite websites</template>
             <template v-slot:body><NetworkChecks/></template>
           </NetworkSection>
         </SwiperSlide>

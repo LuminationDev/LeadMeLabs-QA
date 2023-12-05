@@ -18,7 +18,7 @@ export const initialise = () => {
 export const listeners = (info: any) => {
     switch(info.channelType) {
         case "website_result":
-            networkStore.updateReportTracker(info.name, info.passedStatus, info.message);
+            networkStore.updateReportTracker("Firewall", info.name, info.passedStatus, info.message);
             break;
 
         case "speed_test_progress":

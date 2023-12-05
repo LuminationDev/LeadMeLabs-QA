@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import RetrySvg from "../../../../assets/icons/RetrySvg.vue";
+import RetrySvg from "../../assets/icons/RetrySvg.vue";
 
 const props = defineProps({
   checking: {
@@ -68,9 +68,9 @@ const attemptCallback = () => {
   >
     <div>
       <div class="flex flex-col p-2">
-        <img v-if="checking === 'testing' || checking === 'uploading'" src="../../../../assets/icons/checking-testing.svg" :alt="`${checking} icon`" />
-        <img v-else-if="checking === 'error' || checking === 'error_cbus' || checking === 'sign_in'" src="../../../../assets/icons/checking-error.svg" :alt="`${checking} icon`" />
-        <img v-else-if="checking === 'done' || checking === 'submitted'" src="../../../../assets/icons/checking-done.svg" :alt="`${checking} icon`" />
+        <img v-if="checking === 'testing' || checking === 'uploading'" src="../../assets/icons/checking-testing.svg" :alt="`${checking} icon`" />
+        <img v-else-if="checking === 'error' || checking === 'error_cbus' || checking === 'sign_in'" src="../../assets/icons/checking-error.svg" :alt="`${checking} icon`" />
+        <img v-else-if="checking === 'done' || checking === 'submitted'" src="../../assets/icons/checking-done.svg" :alt="`${checking} icon`" />
       </div>
 
       <div class="flex flex-col p-2 justify-center">

@@ -77,8 +77,8 @@ function nextOption() {
         'border-gray-400 hocus:border-gray-600': status === 'skipped' || !status
       }">
         <span  class="flex justify-center items-center text-[8px] w-full h-full">
-          <img v-if="status === 'passed'" src="../../../../assets/icons/check-green.svg" alt="passed"/>
-          <img v-else-if="status === 'failed'" src="../../../../assets/icons/cross.svg" alt="failed"/>
+          <img v-if="status === 'passed'" src="../../assets/icons/check-green.svg" alt="passed"/>
+          <img v-else-if="status === 'failed'" src="../../assets/icons/cross.svg" alt="failed"/>
           <span v-else-if="status === 'not_applicable'">N/A</span>
         </span>
       </span>

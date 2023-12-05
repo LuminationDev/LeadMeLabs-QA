@@ -27,7 +27,7 @@ defineProps({
             :class="{'border-blue-400 outline outline-4 outline-blue-200':isOpen}">
       {{title}}
 
-      <img alt="down" src="../../../../assets/icons/chevron-down.svg"/>
+      <img alt="down" src="../../assets/icons/chevron-down.svg"/>
     </button>
 
     <ul v-if="isOpen" class="mt-10 absolute left-0 w-80 bg-white border-[1px] border-gray-400 rounded-lg shadow-md z-10">
@@ -37,7 +37,7 @@ defineProps({
 
         {{value}}
 
-        <img v-if="title === value" alt="down" src="../../../../assets/icons/check-blue.svg"/>
+        <img v-if="title === value" alt="down" src="../../assets/icons/check-blue.svg"/>
       </li>
     </ul>
   </div>

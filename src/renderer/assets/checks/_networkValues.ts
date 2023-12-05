@@ -1,3 +1,10 @@
+export const DESCRIPTIONS = {
+    "Network": "Hello",
+    "Ports": "Hello again",
+    "Firewall": "Still hello",
+    "Speed Test": "Goodbye",
+}
+
 export const WEBSITES = [
     {
         "name": "Steam",
@@ -26,7 +33,20 @@ export const WEBSITES = [
 ]
 
 export const PORTS = [
-    55555,
-    55556,
-    55557,
+    {
+        "name": "Tablet",
+        "value": "55555"
+    },
+    {
+        "name": "NUC",
+        "value": "55556"
+    },
+    {
+        "name": "Station",
+        "value": "55557"
+    },
+    {
+        "name": "Projector",
+        "value": "3629"
+    }
 ]

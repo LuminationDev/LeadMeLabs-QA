@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
-import GenericButton from "@renderer/src-qa/components/_generic/buttons/GenericButton.vue";
-import CommentInfo from "@renderer/src-qa/modals/CommentInfo.vue";
+import GenericButton from "@renderer/components/buttons/GenericButton.vue";
+import CommentInfo from "@renderer/modals/CommentInfo.vue";
 import { computed, ref } from "vue";
 import { Comment } from "@renderer/src-qa/interfaces/_report";
 
@@ -93,11 +93,11 @@ const canConfirm = computed(() => {
   >Add Comment
   </GenericButton>
 
-  <img v-else-if="mode === 'icon-empty'" v-on:click="openModal" class="cursor-pointer" src="../../assets/icons/comment-empty.svg" alt="comment"/>
+  <img v-else-if="mode === 'icon-empty'" v-on:click="openModal" class="cursor-pointer" src="../assets/icons/comment-empty.svg" alt="comment"/>
 
   <div v-else-if="mode === 'icon'" v-on:click="openModal" class="relative">
     <span class="w-2.5 cursor-pointer text-center text-xs font-semibold text-blue-700 absolute left-[4px] top-0.5">{{currentComments.length}}</span>
-    <img class="cursor-pointer" src="../../assets/icons/comment.svg" alt="comment"/>
+    <img class="cursor-pointer" src="../assets/icons/comment.svg" alt="comment"/>
   </div>
 
 
@@ -105,9 +105,9 @@ const canConfirm = computed(() => {
     <Modal :show="showModal" @close="closeModal">
       <template v-slot:header>
         <header class="h-20 px-4 w-96 bg-white flex justify-between items-center rounded-t-lg">
-            <img alt="comment icon" src="../../assets/icons/comment-title.svg"/>
+            <img alt="comment icon" src="../assets/icons/comment-title.svg"/>
 
-            <img v-on:click="showModal = false" class="cursor-pointer" alt="skip icon" src="../../assets/icons/close.svg"/>
+            <img v-on:click="showModal = false" class="cursor-pointer" alt="skip icon" src="../assets/icons/close.svg"/>
         </header>
       </template>
 

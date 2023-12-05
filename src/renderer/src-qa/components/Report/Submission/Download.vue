@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import * as CONSTANT from "../../../../assets/constants";
-import CheckStatus from "@renderer/src-qa/components/_generic/statuses/CheckStatus.vue";
+import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
 import DownloadButton from "@renderer/src-qa/components/Report/Submission/DownloadButton.vue";
-import LoginModal from "@renderer/src-qa/modals/LoginModal.vue";
+import LoginModal from "@renderer/modals/LoginModal.vue";
 import { getStorage, ref, uploadString } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { computed, onMounted, ref as vueRef, watch } from "vue";

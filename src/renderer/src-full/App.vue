@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import router from './router/router';
-import NotificationModal from "@renderer/src-qa/modals/NotificationModal.vue";
+import NotificationModal from "@renderer/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
 import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import ShowState from "@renderer/src-setup/components/helpers/showState.vue";

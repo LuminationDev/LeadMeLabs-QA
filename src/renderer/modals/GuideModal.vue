@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
-import { CheckGuideItem } from "../interfaces/_routeItems";
-import vernMatrix from '../../assets/images/vern-matrix.png';
+import { CheckGuideItem } from "../src-qa/interfaces/_routeItems";
+import vernMatrix from '../assets/images/vern-matrix.png';
 
 const props = defineProps({
   guides: {
@@ -81,7 +81,7 @@ defineExpose({
                border-gray-500 rounded-lg cursor-pointer hover:bg-gray-200"
           @click="openModal"
   >
-    <img class="w-5 h-5 mr-1" src="../../assets/icons/help-circle.svg" alt="question mark">
+    <img class="w-5 h-5 mr-1" src="../assets/icons/help-circle.svg" alt="question mark">
     <span class="text-sm font-semibold">
       Guide
     </span>
@@ -91,9 +91,9 @@ defineExpose({
     <Modal :show="showModal" @close="closeModal">
       <template v-slot:header>
         <header class="h-20 px-6 w-108 bg-white flex items-center rounded-t-lg" :class="guides.length > 1 && selectedGuide ? 'justify-between' : 'justify-end'">
-          <img v-if="guides.length > 1 && selectedGuide" v-on:click="() => { selectGuide(null) }" class="cursor-pointer" alt="back icon" src="../../assets/icons/back.svg"/>
+          <img v-if="guides.length > 1 && selectedGuide" v-on:click="() => { selectGuide(null) }" class="cursor-pointer" alt="back icon" src="../assets/icons/back.svg"/>
           <span v-if="guides.length > 1 && selectedGuide" class="text-lg font-bold text-black">{{ selectedGuideKey }}</span>
-          <img v-on:click="showModal = false" class="cursor-pointer" alt="close icon" src="../../assets/icons/close.svg"/>
+          <img v-on:click="showModal = false" class="cursor-pointer" alt="close icon" src="../assets/icons/close.svg"/>
         </header>
       </template>
 
@@ -110,7 +110,7 @@ defineExpose({
           </div>
           <div v-else class="flex flex-col justify-center items-center">
             <div class="bg-gray-100 rounded-full p-2">
-              <img src="../../assets/icons/question-mark.svg" class="h-full w-full">
+              <img src="../assets/icons/question-mark.svg" class="h-full w-full">
             </div>
             <h3 class="text-black text-lg font-semibold">Multiple guides available</h3>
             <p class="text-gray-700">Please select which guide you would like to view.</p>

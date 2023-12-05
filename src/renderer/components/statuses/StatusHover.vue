@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import errorSrc from "../../../../assets/icons/auto-checked-error.svg";
-import checkingSrc from "../../../../assets/icons/checking-loading.svg";
-import failedSrc from "../../../../assets/icons/auto-checked-failed.svg";
-import passedSrc from "../../../../assets/icons/auto-checked-passed.svg";
-import warningSrc from "../../../../assets/icons/auto-checked-warning.svg";
-import emptySrc from "../../../../assets/icons/auto-checked-empty.svg";
+import errorSrc from "../../assets/icons/auto-checked-error.svg";
+import checkingSrc from "../../assets/icons/checking-loading.svg";
+import failedSrc from "../../assets/icons/auto-checked-failed.svg";
+import passedSrc from "../../assets/icons/auto-checked-passed.svg";
+import warningSrc from "../../assets/icons/auto-checked-warning.svg";
+import emptySrc from "../../assets/icons/auto-checked-empty.svg";
 
 defineProps({
   message: {

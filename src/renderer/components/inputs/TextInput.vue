@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useOptionalValidations } from '../../../../composables/requiredOptional'
+import { useOptionalValidations } from '../../composables/requiredOptional'
 const { testIfWouldPassRequired } = useOptionalValidations()
 const props = defineProps({
   v$: {

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import TrashSvg from "../../assets/icons/TrashSvg.vue";
-import PencilSvg from "../../assets/icons/PencilSvg.vue";
+import TrashSvg from "../assets/icons/TrashSvg.vue";
+import PencilSvg from "../assets/icons/PencilSvg.vue";
 import { Comment } from "@renderer/src-qa/interfaces/_report";
 import { ref, watchEffect } from "vue";
-import CrossSvg from "../../assets/icons/CrossSvg.vue";
-import CheckSvg from "../../assets/icons/CheckSvg.vue";
+import CrossSvg from "../assets/icons/CrossSvg.vue";
+import CheckSvg from "../assets/icons/CheckSvg.vue";
 
 const editing = ref(false);
 const inputRef = ref<HTMLTextAreaElement | null>(null);

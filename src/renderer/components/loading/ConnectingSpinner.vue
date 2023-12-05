@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import tick from '../../../../assets/icons/tick.svg'
-import error from '../../../../assets/icons/error.svg'
+import tick from '../../assets/icons/tick.svg'
+import error from '../../assets/icons/error.svg'
 
 const props = defineProps({
   state: {

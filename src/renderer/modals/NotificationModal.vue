@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
-import { useStateStore } from "../store/stateStore";
+import { useStateStore } from "../src-qa/store/stateStore";
 
 defineExpose({
   openModal

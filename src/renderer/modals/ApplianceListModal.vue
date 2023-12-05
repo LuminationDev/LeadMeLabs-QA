@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Modal from "@renderer/src-qa/modals/Modal.vue";
+import Modal from "@renderer/modals/Modal.vue";
 import { ref } from "vue";
 import { Appliance } from "@renderer/src-qa/interfaces";
 import { useStateStore } from "@renderer/src-qa/store/stateStore";

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import * as CONSTANT from "../../../assets/constants";
-import ItemHover from "@renderer/src-qa/components/_generic/statuses/ItemHover.vue";
+import ItemHover from "@renderer/components/statuses/ItemHover.vue";
 import IDStatus from "@renderer/src-qa/components/Appliances/ApplianceIdStatus.vue";
-import ApplianceListModal from "@renderer/src-qa/modals/ApplianceListModal.vue";
-import CheckStatus from "@renderer/src-qa/components/_generic/statuses/CheckStatus.vue";
+import ApplianceListModal from "@renderer/modals/ApplianceListModal.vue";
+import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { Appliance } from "@renderer/src-qa/interfaces";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";

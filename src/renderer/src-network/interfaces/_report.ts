@@ -6,6 +6,10 @@ export interface Check {
     id: string;
 }
 
-export interface Report {
+interface Section {
     [check: string]: Check;
+}
+
+export interface Report {
+    [section: string]: Section;
 }
