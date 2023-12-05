@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ItemHover from "../_generic/statuses/ItemHover.vue";
-import StatusHover from "../_generic/statuses/StatusHover.vue";
+import ItemHover from "../../../components/statuses/ItemHover.vue";
+import StatusHover from "../../../components/statuses/StatusHover.vue";
 import { useFullStore } from "../../store/fullStore";
 import { computed, ref } from "vue";
-import { QaCheck } from "@renderer/src-qa/interfaces";
+import { QaCheck } from "../../interfaces";
 import * as CONSTANT from "../../../assets/constants";
-import CheckStatus from "@renderer/src-qa/components/_generic/statuses/CheckStatus.vue";
+import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
 
 const fullStore = useFullStore();
 const checking = ref("done");

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import * as CONSTANT from "../../../assets/constants";
-import StatusIcon from "@renderer/src-qa/components/_generic/statuses/StatusIcon.vue";
+import StatusIcon from "@renderer/components/statuses/StatusIcon.vue";
 import CbusSvg from "../../../assets/icons/CbusSvg.vue";
-import GenericButton from "@renderer/src-qa/components/_generic/buttons/GenericButton.vue";
-import ConnectingSpinner from "@renderer/src-qa/components/_generic/loading/ConnectingSpinner.vue";
+import GenericButton from "@renderer/components/buttons/GenericButton.vue";
+import ConnectingSpinner from "@renderer/components/loading/ConnectingSpinner.vue";
 import ComputerSvg from "../../../assets/icons/ComputerSvg.vue";
 import { useStateStore } from "@renderer/src-qa/store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/src-qa/components/_generic/layouts/GenericLayout.vue";
+import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
 import Submission from "@renderer/src-qa/components/Report/Submission/Submission.vue";
 import Download from "@renderer/src-qa/components/Report/Submission/Download.vue";
 import { computed } from "vue";

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { Appliance } from "@renderer/src-qa/interfaces";
-import CircleSpinner from "@renderer/src-qa/components/_generic/loading/CircleSpinner.vue";
+import CircleSpinner from "@renderer/components/loading/CircleSpinner.vue";
 
 const props = defineProps({
   currentlyChecking: {

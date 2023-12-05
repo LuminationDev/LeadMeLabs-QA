@@ -2,8 +2,8 @@
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { computed, ref } from "vue";
 import { useStateStore } from "@renderer/src-qa/store/stateStore";
-import StatusHover from "@renderer/src-qa/components/_generic/statuses/StatusHover.vue";
-import ItemHover from "@renderer/src-qa/components/_generic/statuses/ItemHover.vue";
+import StatusHover from "@renderer/components/statuses/StatusHover.vue";
+import ItemHover from "@renderer/components/statuses/ItemHover.vue";
 import RetrySvg from "../../../assets/icons/RetrySvg.vue";
 import * as CONSTANT from "../../../assets/constants";
 

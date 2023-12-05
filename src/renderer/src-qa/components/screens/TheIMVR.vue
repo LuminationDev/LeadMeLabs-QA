@@ -2,10 +2,10 @@
 import { useFullStore } from "../../store/fullStore";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import GenericLayout from "@renderer/src-qa/components/_generic/layouts/GenericLayout.vue";
+import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
 import * as CONSTANT from "../../../assets/constants";
 import RetrySvg from "../../../assets/icons/RetrySvg.vue";
-import CategoryTab from "@renderer/src-qa/components/_generic/statuses/CategoryTab.vue";
+import CategoryTab from "@renderer/components/statuses/CategoryTab.vue";
 import ExperienceChecks from "@renderer/src-qa/components/IMVR/ExperienceChecks.vue";
 import ExperienceLibrary from "@renderer/src-qa/components/IMVR/ExperienceLibrary.vue";
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/src-qa/components/_generic/buttons/GenericButton.vue'
-import SkipCheckModal from "@renderer/src-qa/modals/SkipCheckModal.vue";
-import CommentModal from "@renderer/src-qa/modals/CommentModal.vue";
+import GenericButton from '@renderer/components/buttons/GenericButton.vue'
+import SkipCheckModal from "@renderer/modals/SkipCheckModal.vue";
+import CommentModal from "@renderer/modals/CommentModal.vue";
 import * as FULL from '../assets/checks/_fullcheckValues';
 import { computed } from "vue";
 import { useFullStore } from "../src-qa/store/fullStore";

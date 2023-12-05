@@ -2,7 +2,7 @@
 import { useRoute } from "vue-router";
 import OptionButton from "@renderer/src-full/components/welcome/OptionButton.vue";
 import vern from "../../../assets/images/vern-stand.svg";
-import LoginModal from "@renderer/src-qa/modals/LoginModal.vue";
+import LoginModal from "@renderer/modals/LoginModal.vue";
 
 const route = useRoute();
 </script>
@@ -26,7 +26,7 @@ const route = useRoute();
 
           <!--Network diagnostic tool-->
           <div class="w-full h-full pt-4">
-            <OptionButton title="Network Tool" subtitle="Run a network diagnostic check" to="/network-diagnostic/test"/>
+            <OptionButton title="Network Tool" subtitle="Run a network diagnostic check" to="/network-diagnostic/device-selection"/>
           </div>
         </div>
 

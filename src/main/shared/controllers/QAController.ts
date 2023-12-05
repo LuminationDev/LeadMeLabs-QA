@@ -1,6 +1,6 @@
 import TcpServer from '../tcp/TcpServer';
 import TcpClient from '../tcp/TcpClient';
-import { CheckOpenPort, GetIPAddress } from "../network/Network";
+import { GetIPAddress } from "../network/Network";
 import { app } from "electron";
 import { DetermineReportType } from "../report/Report";
 import admin from 'firebase-admin';
@@ -54,10 +54,6 @@ export default class QAController {
 
                 case "tcp_client_message":
                     new TcpClient(this.mainWindow, info);
-                    break;
-
-                case "network_port_settings":
-                    void CheckOpenPort(this.mainWindow, info);
                     break;
 
                 case "refresh_details":

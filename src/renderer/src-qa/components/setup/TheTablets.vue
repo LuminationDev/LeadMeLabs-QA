@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import TabletSvg from "../../../assets/icons/TabletSvg.vue";
-import StatusIcon from "@renderer/src-qa/components/_generic/statuses/StatusIcon.vue";
-import GenericButton from "@renderer/src-qa/components/_generic/buttons/GenericButton.vue";
-import ConnectingSpinner from "@renderer/src-qa/components/_generic/loading/ConnectingSpinner.vue";
+import StatusIcon from "@renderer/components/statuses/StatusIcon.vue";
+import GenericButton from "@renderer/components/buttons/GenericButton.vue";
+import ConnectingSpinner from "@renderer/components/loading/ConnectingSpinner.vue";
 import * as CONSTANT from "../../../assets/constants";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { computed, ref, watch } from "vue";
