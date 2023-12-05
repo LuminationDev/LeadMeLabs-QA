@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useFullStore } from "../../store/fullStore";
+import { useStateStore } from "../../store/stateStore";
 import { useRoute} from "vue-router";
-import { QaCheckResult } from "@renderer/src-qa/types/_qaCheckResult";
-import ItemHover from "@renderer/src-qa/components/_generic/statuses/ItemHover.vue";
-import StatusHover from "@renderer/src-qa/components/_generic/statuses/StatusHover.vue";
-import GenericLayout from "@renderer/src-qa/components/_generic/layouts/GenericLayout.vue";
-import CheckStatus from "@renderer/src-qa/components/_generic/statuses/CheckStatus.vue";
+import { QaCheckResult } from "../../types/_qaCheckResult";
+import ItemHover from "@renderer/components/statuses/ItemHover.vue";
+import StatusHover from "@renderer/components/statuses/StatusHover.vue";
+import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
+import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
 
 const route = useRoute();
 const checkType = computed(() => { return route.meta['checkType'] });

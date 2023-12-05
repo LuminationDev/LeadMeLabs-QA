@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import * as FULL from "../../../assets/checks/_fullcheckValues";
-import GenericLayout from "@renderer/src-qa/components/_generic/layouts/GenericLayout.vue";
-import CategoryTab from "@renderer/src-qa/components/_generic/statuses/CategoryTab.vue";
-import ItemHover from "@renderer/src-qa/components/_generic/statuses/ItemHover.vue";
-import GuideModal from "../../modals/GuideModal.vue";
-import Checkbox from "@renderer/src-qa/components/_generic/inputs/Checkbox.vue";
+import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
+import CategoryTab from "@renderer/components/statuses/CategoryTab.vue";
+import ItemHover from "@renderer/components/statuses/ItemHover.vue";
+import GuideModal from "../../../modals/GuideModal.vue";
+import Checkbox from "@renderer/components/inputs/Checkbox.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import { CheckObject } from "@renderer/src-qa/interfaces/_routeItems";
+import { useStateStore } from "../../store/stateStore";
+import { useFullStore } from "../../store/fullStore";
+import { CheckObject } from "../../interfaces/_routeItems";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();

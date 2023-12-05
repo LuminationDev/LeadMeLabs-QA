@@ -1,10 +1,11 @@
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
-import Controller from "../shared/controllers/QAController";
+import QAController from "../shared/controllers/QAController";
 import ConfigController from "../shared/controllers/ConfigController";
 import { GetIPAddress } from "../shared/network/Network";
 import { optimizer } from "@electron-toolkit/utils";
 import * as Sentry from '@sentry/electron';
+import NetworkController from "../shared/controllers/NetworkController";
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
 
@@ -206,7 +207,8 @@ app.whenReady().then(async () => {
   console.log("Starting electron application");
 
   //Load in all the helper and config tool functions
-  new Controller(ipcMain, mainWindow).startup();
+  new QAController(ipcMain, mainWindow).startup();
+  new NetworkController(ipcMain, mainWindow).startup();
   new ConfigController(ipcMain, mainWindow).startup();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

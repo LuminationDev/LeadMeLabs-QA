@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LauncherDetails from "@renderer/src-qa/components/settings/LauncherDetails.vue";
-import GenericButton from "@renderer/src-qa/components/_generic/buttons/GenericButton.vue";
-import TcpSetup from "@renderer/src-qa/components/_generic/tcp/TcpSetup.vue";
+import GenericButton from "@renderer/components/buttons/GenericButton.vue";
+import TcpSetup from "@renderer/components/tcp/TcpSetup.vue";
 import * as CONSTANT from "../../../assets/constants";
 import { useRouter } from "vue-router";
 import { getAuth, signOut } from "firebase/auth";

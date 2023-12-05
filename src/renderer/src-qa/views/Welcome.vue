@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LoginModal from "../modals/LoginModal.vue";
+import LoginModal from "../../modals/LoginModal.vue";
 </script>
 
 <template>

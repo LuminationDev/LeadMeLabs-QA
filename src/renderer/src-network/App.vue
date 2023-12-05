@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import * as CONSTANT from "../assets/constants";
+import { listeners } from "./apiListeners";
+import { onBeforeMount } from "vue";
+import { initialise } from "./apiListeners";
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then
@@ -8,22 +10,14 @@ import * as CONSTANT from "../assets/constants";
  */
 //@ts-ignore
 api.ipcRenderer.on('backend_message', (event, info) => {
-  switch(info.channelType) {
-    case CONSTANT.CHANNEL.APPLICATION_CHANNEL:
-      console.log(info); //Software version number
-      break;
+  listeners(info);
+});
 
-    default:
-      console.log(info);
-      break;
-  }
-})
+onBeforeMount(() => {
+  initialise();
+});
 </script>
 
 <template>
   <RouterView />
 </template>
-
-<style scoped>
-
-</style>

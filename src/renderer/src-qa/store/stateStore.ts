@@ -45,6 +45,10 @@ export const useStateStore = defineStore({
         experienceTier: "Select",
         //Compared against the Station results
         labLocation: "",
+        //Notification modal details
+        title: "",
+        message: "",
+        openModal: false
     }),
     actions: {
         insertSpaceBetweenCapitalLetters(str: string): string {
