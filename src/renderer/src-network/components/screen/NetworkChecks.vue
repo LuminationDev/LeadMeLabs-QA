@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useNetworkStore } from "../../store/networkStore";
 import { computed } from "vue";
-import {DESCRIPTIONS, PORTS, WEBSITES} from "../../../assets/checks/_networkValues";
+import { DESCRIPTIONS, PORTS, WEBSITES } from "../../../assets/checks/_networkValues";
 import { Report } from "../../interfaces/_report";
 import * as CONSTANT from "../../../assets/constants";
 import ItemHover from "../../../components/statuses/ItemHover.vue";
-import CheckStatus from "../../../components/statuses/CheckStatus.vue";
 import CategoryStatus from "../CategoryStatus.vue";
 import NetworkCheckInfoModal from "../../../modals/NetworkCheckInfoModal.vue";
+import GenericCheckStatus from "../NetworkCheckStatus.vue";
 
 const networkStore = useNetworkStore();
 const networkProgress = computed(() => {
@@ -43,7 +43,7 @@ const getCategoryFromChannelType = (channelType) => {
 
 const requestSpeedTest = () => {
   networkStore.progress = 'Connecting';
-  sendNetworkRequest('speed_test', 'Download', 5000);
+  sendNetworkRequest('speed_test', 'Download', 10 * 6000);
 };
 
 const requestNetworkCheck = () => {
@@ -87,7 +87,7 @@ const results = computed((): Report => {
 <template>
   <div class="flex flex-col w-full h-auto">
     <!--Loading-->
-    <CheckStatus :callback="startNetworkChecks" :checking="networkStore.checkReportState"/>
+    <GenericCheckStatus :callback="startNetworkChecks" :checking="networkStore.checkReportState"/>
 
     <div class="w-full mt-4 flex flex-col rounded-lg border-2 border-gray-200">
       <table class="w-full border-collapse">
@@ -104,7 +104,7 @@ const results = computed((): Report => {
 
         <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
         <tr v-for="(check, index) in networkStore.getReportTitles" :key="index" class="text-sm border-b border-gray-200 last:border-0">
-          <ItemHover :title="check" :message="DESCRIPTIONS[check] ?? 'No details provided'"/>
+          <ItemHover :title="check" :message="DESCRIPTIONS[check].passed ?? 'No details provided'"/>
 
           <CategoryStatus v-if="(networkProgress === '100.00' || networkProgress === '0') || check !== 'Speed Test'" :category="check"/>
           <td v-else class="p-3 text-sm h-12 w-28 font-semibold">
