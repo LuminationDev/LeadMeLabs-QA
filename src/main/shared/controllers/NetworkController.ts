@@ -148,6 +148,13 @@ export default class NetworkController {
     }
 
     async buildPortCheck() {
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "build_port_check",
+                result: false
+            });
+            return;
+        }
         await this.runRouteCommand(true).catch((error) => {
             this.mainWindow.webContents.send('backend_message', {
                 channelType: "build_port_check",
@@ -161,6 +168,13 @@ export default class NetworkController {
     }
 
     async teardownPortCheck() {
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "teardown_port_check",
+                result: false
+            });
+            return;
+        }
         await this.runRouteCommand(false).catch((error) => {
             this.mainWindow.webContents.send('backend_message', {
                 channelType: "teardown_port_check",
@@ -188,6 +202,18 @@ export default class NetworkController {
         if (caught) {
             return;
         }
+
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "port_result",
+                section: "Ports",
+                id: info.id,
+                passedStatus: "warning",
+                message: "Port check requires Windows"
+            });
+            return;
+        }
+
         const port = info.value
 
         var server = net.createServer();
