@@ -53,6 +53,9 @@ const currentIconStatus = (status: string) => {
     case "passed":
       return "green";
 
+    case "warning":
+      return "#F59E0B";
+
     case "failed":
       return "red";
 
@@ -88,6 +91,7 @@ const dynamicIcon = (type: string) => {
           <div class="flex flex-row justify-between">
             <div class="w-10 h-10 border border-zinc-200 rounded-lg items-center justify-center">
               <TickComponent v-if="status === 'passed'" fill="green" class="w-6 h-6"/>
+              <FailedComponent v-else-if="status === 'warning'" fill="#F59E0B" class="w-6 h-6"/>
               <FailedComponent v-else fill="red" class="w-6 h-6"/>
             </div>
 
@@ -105,10 +109,12 @@ const dynamicIcon = (type: string) => {
         <div class="bg-white px-5 w-96 max-h-96 overflow-auto pt-3 flex flex-col pb-3">
           <div class="flex flex-col border border-zinc-200 rounded-lg p-4 text-sm">
             <div v-for="(check, index) in computedCategory" :key="index"
-                 class="w-full items-center flex justify-between mb-2 last:mb-0 text-blue-500"
+                 class="w-full items-center flex justify-between mb-2 last:mb-0"
                  :class="{
                 'text-green-500': check.passedStatus === 'passed',
+                'text-amber-500': check.passedStatus === 'warning',
                 'text-red-500': check.passedStatus === 'failed',
+                'text-blue-500': check.passedStatus !== 'passed' && check.passedStatus !== 'warning' &&check.passedStatus !== 'failed'
               }">
 
               <div class="items-center">

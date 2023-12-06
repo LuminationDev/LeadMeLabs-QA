@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useNetworkStore } from "../../store/networkStore";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { DESCRIPTIONS, PORTS, WEBSITES } from "../../../assets/checks/_networkValues";
 import { Report } from "../../interfaces/_report";
 import * as CONSTANT from "../../../assets/constants";
@@ -50,12 +50,29 @@ const requestNetworkCheck = () => {
   sendNetworkRequest('internet_online', 'Internet', 5000);
 };
 
+const buildPortCheck = async () => {
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, { channelType: 'build_port_check' });
+};
+
+const teardownPortCheck = async () => {
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, { channelType: 'teardown_port_check' });
+};
+
 const requestPortCheck = async () => {
   for (const port of PORTS) {
-    await sendNetworkRequest('check_port', port.name, 5000, port.value);
+    await sendNetworkRequest('port_check', port.name, 5000, port.value);
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 };
+
+function portTest() {
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
+    channelType: "port_test",
+    port: 55556
+  });
+}
 
 const requestWebsitePing = async () => {
   for (const website of WEBSITES) {
@@ -67,14 +84,22 @@ const requestWebsitePing = async () => {
 const startNetworkChecks = () => {
   networkStore.resetReportState();
 
+  buildPortCheck();
+
   requestNetworkCheck();
   requestSpeedTest();
-  Promise.all([requestPortCheck(), requestWebsitePing()]); //Run the loops concurrently
+  Promise.all([requestWebsitePing()]); //Run the loops concurrently
 }
 
 const results = computed((): Report => {
   return networkStore.reportTracker;
 });
+
+watch(() => networkStore.checkReportState, (newValue, oldValue) => {
+  if (newValue === "done") {
+    teardownPortCheck()
+  }
+})
 </script>
 
 <template>
@@ -87,7 +112,7 @@ const results = computed((): Report => {
         <tr class="text-left text-xs bg-gray-100">
           <th class="p-3">Name</th>
 
-          <th class="w-20 text-center p-3">
+          <th class="w-20 text-center p-3" @click="portTest">
             Status
           </th>
 
