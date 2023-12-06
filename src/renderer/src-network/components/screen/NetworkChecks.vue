@@ -52,7 +52,7 @@ const requestNetworkCheck = () => {
 
 const requestPortCheck = async () => {
   for (const port of PORTS) {
-    await sendNetworkRequest('check_port', port.name, 5000, port.value);
+    await sendNetworkRequest('port_check', port.name, 5000, port.value);
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 };

@@ -1,5 +1,5 @@
 import { IpcMain, BrowserWindow } from "electron";
-import {checkWebsiteAvailability, CheckOpenPort, downloadAndCalculateSpeed, GetIPAddress} from "../network/Network";
+import { GetIPAddress } from "../network/Network";
 const { exec } = require('child_process')
 const defaultGateway = require('default-gateway')
 var net = require('net');
@@ -43,15 +43,11 @@ export default class NetworkController {
                     this.checkWebsiteAccess(info);
                     break;
 
-                case "check_port":
-                    console.log("Nothing to see here yet");
-                    break;
-
                 case "speed_test":
                     void this.speedTest(info);
                     break;
 
-                case "port_test":
+                case "port_check":
                     void this.portTest(info);
                     break;
                 case "build_port_check":
@@ -165,12 +161,13 @@ export default class NetworkController {
         await this.checkRouteExists().catch(() => {
             this.mainWindow.webContents.send('backend_message', {
                 channelType: "port_result",
-                port,
-                result: "warning",
-                message: "Could not configure testing route"
+                section: "Ports",
+                id: info.id,
+                passedStatus: "warning",
+                message: "Could not confirm routing exists"
             });
         })
-        const port = info.port
+        const port = info.value
 
         var server = net.createServer();
         var resolved = false;
@@ -179,8 +176,9 @@ export default class NetworkController {
             resolved = true
             this.mainWindow.webContents.send('backend_message', {
                 channelType: "port_result",
-                port,
-                result: "success",
+                section: "Ports",
+                id: info.id,
+                passedStatus: "passed",
                 message: "Success"
             });
             server.close()
@@ -197,8 +195,9 @@ export default class NetworkController {
                 server.close()
                 this.mainWindow.webContents.send('backend_message', {
                     channelType: "port_result",
-                    port,
-                    result: "failure",
+                    section: "Ports",
+                    id: info.id,
+                    passedStatus: "failed",
                     message: "Could not connect over port"
                 });
             }

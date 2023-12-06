@@ -22,15 +22,12 @@ export const listeners = (info: any) => {
         case "speed_test_result":
         case "internet_result":
         case "website_result":
+        case "port_result":
             networkStore.updateReportTracker(info.section, info.id, info.passedStatus, info.message);
             break;
 
         case "speed_test_progress":
             networkStore.progress = info.progress;
-            break;
-
-        case "port_result":
-            console.log(info)
             break;
 
         default:
