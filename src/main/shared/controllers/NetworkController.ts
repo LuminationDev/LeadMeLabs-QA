@@ -2,7 +2,7 @@ import { IpcMain, BrowserWindow } from "electron";
 import {
     checkWebsiteAvailability,
     downloadAndCalculateSpeed,
-    checkInternetConnection
+    checkInternetConnection, pingIpAddress
 } from "../network/Network";
 
 export default class NetworkController {
@@ -27,8 +27,6 @@ export default class NetworkController {
      */
     networkToolListenerDelegate(): void {
         this.ipcMain.on('network_function', (_event, info) => {
-            console.log(info);
-
             switch (info.channelType) {
 
                 case "internet_online":
@@ -45,6 +43,10 @@ export default class NetworkController {
 
                 case "speed_test":
                     void this.speedTest(info);
+                    break;
+
+                case "attempt_device_connection":
+                    this.attemptToConnectDevice(info);
                     break;
 
                 default:
@@ -86,6 +88,18 @@ export default class NetworkController {
                 id: info.id,
                 passedStatus,
                 message: message
+            });
+        });
+    }
+
+    attemptToConnectDevice(info: any) {
+        pingIpAddress(info).then(([passedStatus, message]) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "attempt_device_connection",
+                section: "Ping",
+                id: info.id,
+                passedStatus,
+                message
             });
         });
     }

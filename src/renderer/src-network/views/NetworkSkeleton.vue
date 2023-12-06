@@ -10,6 +10,8 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/vue";
 import { onMounted, ref } from "vue";
 import 'swiper/css';
 import NetworkDeviceSelection from "./NetworkDeviceSelection.vue";
+import NetworkDevice from "../components/screen/NetworkDeviceConnection.vue";
+import NetworkDeviceConnection from "../components/screen/NetworkDeviceConnection.vue";
 
 function up() {
   swiperRef.value.$el.swiper.slideNext(500)
@@ -78,22 +80,6 @@ const populateReportTracker = async () => {
     message: "",
     id: "Download",
   };
-
-  //TODO not sure if needed
-  // networkStore.reportTracker["Speed Test"]["Upload"] ||= {
-  //   type: "Upload",
-  //   checkingStatus: "unchecked",
-  //   passedStatus: "",
-  //   message: "",
-  //   id: "Upload",
-  // };
-  // networkStore.reportTracker["Speed Test"]["Latency"] ||= {
-  //   type: "Latency",
-  //   checkingStatus: "unchecked",
-  //   passedStatus: "",
-  //   message: "",
-  //   id: "Latency",
-  // };
 }
 
 onMounted(() => {
@@ -123,11 +109,9 @@ onMounted(() => {
         <SwiperSlide>
           <NetworkSection class="w-full">
             <template v-slot:step>Step 3</template>
-            <template v-slot:body><p>Oh my god<br/>
-              so much text<br/>
-              it is overwhelming<br/>
-              pls no more<br/>
-              text</p></template>
+            <template v-slot:heading>Connect to a device <span class="font-medium italic">(Optional)</span></template>
+            <template v-slot:subheading>Test your connection to another device on the network</template>
+            <template v-slot:body><NetworkDeviceConnection/></template>
           </NetworkSection>
         </SwiperSlide>
         <SwiperSlide>

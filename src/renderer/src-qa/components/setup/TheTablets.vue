@@ -4,7 +4,7 @@ import StatusIcon from "@renderer/components/statuses/StatusIcon.vue";
 import GenericButton from "@renderer/components/buttons/GenericButton.vue";
 import ConnectingSpinner from "@renderer/components/loading/ConnectingSpinner.vue";
 import * as CONSTANT from "../../../assets/constants";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { useFullStore } from "../../store/fullStore";
 import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 

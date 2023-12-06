@@ -53,9 +53,8 @@ export const listeners = (info: any) => {
         case CONSTANT.MESSAGE.LOAD_PROGRESS:
             fullStore.reportTracker = info.data;
             break;
-
+s
         default:
-            console.log(info);
             break;
     }
 };

@@ -16,8 +16,6 @@ export const initialise = () => {
  */
 //@ts-ignore
 export const listeners = (info: any) => {
-    console.log(info);
-
     switch(info.channelType) {
         case "speed_test_result":
         case "internet_result":
@@ -29,8 +27,13 @@ export const listeners = (info: any) => {
             networkStore.progress = info.progress;
             break;
 
-        default:
+        case "attempt_device_connection":
+            networkStore.connectionState = info.passedStatus;
+            //TODO in the future dynamically add/update the report tracker
             console.log(info);
+            break;
+
+        default:
             break;
     }
 };

@@ -7,7 +7,9 @@ export const useNetworkStore = defineStore({
         reportTracker: {} as Report,
         //Used to track the progress and result of the speed test
         speed: "0",
-        progress: "0"
+        progress: "0",
+        //Used to track the current device ip connection attempt
+        connectionState: "waiting"
     }),
     actions: {
         /**
