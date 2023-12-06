@@ -188,6 +188,18 @@ export default class NetworkController {
         if (caught) {
             return;
         }
+
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "port_result",
+                section: "Ports",
+                id: info.id,
+                passedStatus: "warning",
+                message: "Port check requires Windows"
+            });
+            return;
+        }
+
         const port = info.value
 
         var server = net.createServer();
