@@ -50,6 +50,9 @@ export default class NetworkController {
                 case "port_check":
                     void this.portTest(info);
                     break;
+                case "is_port_check_initialised":
+                    void this.checkPortCheck();
+                    break;
                 case "build_port_check":
                     void this.buildPortCheck();
                     break;
@@ -131,6 +134,19 @@ export default class NetworkController {
         })
     }
 
+    async checkPortCheck() {
+        await this.checkRouteExists().catch((error) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "is_port_check_initialised",
+                result: false
+            });
+        })
+        this.mainWindow.webContents.send('backend_message', {
+            channelType: "is_port_check_initialised",
+            result: true
+        });
+    }
+
     async buildPortCheck() {
         await this.runRouteCommand(true).catch((error) => {
             this.mainWindow.webContents.send('backend_message', {
@@ -158,15 +174,20 @@ export default class NetworkController {
     }
 
     async portTest(info: any): Promise<void> {
+        var caught = false
         await this.checkRouteExists().catch(() => {
+            caught = true;
             this.mainWindow.webContents.send('backend_message', {
                 channelType: "port_result",
                 section: "Ports",
                 id: info.id,
                 passedStatus: "warning",
-                message: "Could not confirm routing exists"
+                message: "Loopback not created"
             });
         })
+        if (caught) {
+            return;
+        }
         const port = info.value
 
         var server = net.createServer();

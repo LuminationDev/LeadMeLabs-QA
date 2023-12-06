@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useNetworkStore } from "../../store/networkStore";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { DESCRIPTIONS, PORTS, WEBSITES } from "../../../assets/checks/_networkValues";
 import { Report } from "../../interfaces/_report";
 import * as CONSTANT from "../../../assets/constants";
@@ -50,6 +50,16 @@ const requestNetworkCheck = () => {
   sendNetworkRequest('internet_online', 'Internet', 5000);
 };
 
+const buildPortCheck = async () => {
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, { channelType: 'build_port_check' });
+};
+
+const teardownPortCheck = async () => {
+  //@ts-ignore
+  api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, { channelType: 'teardown_port_check' });
+};
+
 const requestPortCheck = async () => {
   for (const port of PORTS) {
     await sendNetworkRequest('port_check', port.name, 5000, port.value);
@@ -74,14 +84,22 @@ const requestWebsitePing = async () => {
 const startNetworkChecks = () => {
   networkStore.resetReportState();
 
+  buildPortCheck();
+
   requestNetworkCheck();
   requestSpeedTest();
-  Promise.all([requestPortCheck(), requestWebsitePing()]); //Run the loops concurrently
+  Promise.all([requestWebsitePing()]); //Run the loops concurrently
 }
 
 const results = computed((): Report => {
   return networkStore.reportTracker;
 });
+
+watch(() => networkStore.checkReportState, (newValue, oldValue) => {
+  if (newValue === "done") {
+    teardownPortCheck()
+  }
+})
 </script>
 
 <template>
