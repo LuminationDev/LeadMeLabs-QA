@@ -9,8 +9,8 @@ const router = createRouter(<RouterOptions>{
     history: createWebHashHistory(),
     routes: [
         {
-            path: '/network-diagnostic/device-selection',
-            name: 'device-selection',
+            path: '/network-diagnostic',
+            name: 'network-diagnostic',
             component: NetworkSkeleton,
             meta: {
                 prev: '/',

@@ -33,9 +33,9 @@ const emit = defineEmits<{
 <template>
   <div class="h-full px-10 flex flex-col">
     <div class="flex flex-col justify-center items-center" v-for="(value, index) in numberOfSections" :key="index" @click="() => { select(index) }">
-      <img v-if="index < currentSection" :src="checkBgBlue" />
-      <img v-else-if="index === currentSection" :src="pendingProgress" />
-      <img v-else-if="index > currentSection" :src="pendingAction" />
+      <img class="cursor-pointer" v-if="index < currentSection" :src="checkBgBlue" />
+      <img class="cursor-pointer" v-else-if="index === currentSection" :src="pendingProgress" />
+      <img class="cursor-pointer" v-else-if="index > currentSection" :src="pendingAction" />
       <div v-if="index < (numberOfSections - 1)" class="w-1 h-20 vertical-bar rounded-full my-3" :class="{
         'vertical-bar--filled': currentSection > index,
         'vertical-bar--duration-50': numberOfSectionsAway === 1,
