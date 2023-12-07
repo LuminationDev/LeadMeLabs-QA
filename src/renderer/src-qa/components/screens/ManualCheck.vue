@@ -7,7 +7,7 @@ import GuideModal from "../../../modals/GuideModal.vue";
 import Checkbox from "@renderer/components/inputs/Checkbox.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import { useStateStore } from "../../store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 import { useFullStore } from "../../store/fullStore";
 import { CheckObject } from "../../interfaces/_routeItems";
 

@@ -5,7 +5,7 @@ import StatusHover from "@renderer/components/statuses/StatusHover.vue";
 import { computed, ref, watch } from "vue";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { storeToRefs } from "pinia";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as CONSTANT from "../../../../assets/constants";
 import PDFStructure from "@renderer/src-qa/components/Report/Submission/PDFStructure.vue";
-import { useStateStore } from "../../../store/stateStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { useFullStore } from "../../../store/fullStore";
 import { generateHtml } from "../../../../assets/html/htmlContent";
 

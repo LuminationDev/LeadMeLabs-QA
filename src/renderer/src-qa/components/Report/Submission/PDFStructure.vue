@@ -3,7 +3,7 @@ import PDFTable from "@renderer/src-qa/components/Report/Submission/PDFTable.vue
 import ReportResults from "@renderer/src-qa/components/Report/Results/ReportResults.vue";
 import { computed } from "vue";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { Section } from "@renderer/src-qa/interfaces/_report";
 
 const fullStore = useFullStore();

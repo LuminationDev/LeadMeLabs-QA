@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { useStateStore } from "../../../../store/stateStore";
+import { useFullStore } from "../../../store/fullStore";
 import { computed } from "vue";
-import { Category, Comment } from "@renderer/src-qa/interfaces/_report";
+import { Category, Comment } from "../../../interfaces/_report";
 import PDFTableRow from "@renderer/src-qa/components/Report/Submission/PDFTableRow.vue";
 
 const props = defineProps({

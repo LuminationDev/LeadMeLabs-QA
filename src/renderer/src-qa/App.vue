@@ -6,7 +6,7 @@ import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
 import ShowState from "@renderer/src-setup/components/helpers/showState.vue";
 import { RouterView, useRoute } from 'vue-router';
 import { computed, onBeforeMount } from 'vue';
-import { useStateStore } from './store/stateStore';
+import { useStateStore } from '../store/stateStore';
 import { useConfigStore } from "../src-setup/store/configStore";
 import { storeToRefs } from "pinia";
 import { initialise, listeners } from "./apiListeners";

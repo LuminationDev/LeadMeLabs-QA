@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Report } from "../interfaces/_report";
+import { useStateStore } from "../../store/stateStore";
 
 export const useNetworkStore = defineStore({
     id: 'network',
@@ -7,7 +8,9 @@ export const useNetworkStore = defineStore({
         reportTracker: {} as Report,
         //Used to track the progress and result of the speed test
         speed: "0",
-        progress: "0"
+        progress: "0",
+        //Used to track the current device ip connection attempt
+        connectionState: "waiting"
     }),
     actions: {
         /**
@@ -23,6 +26,7 @@ export const useNetworkStore = defineStore({
                 checkingStatus: "checked",
                 passedStatus,
                 message,
+                date: useStateStore().formattedDate(true)
             };
         },
 

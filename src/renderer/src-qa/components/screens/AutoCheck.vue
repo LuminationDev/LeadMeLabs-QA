@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useFullStore } from "../../store/fullStore";
-import { useStateStore } from "../../store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 import { useRoute} from "vue-router";
 import { QaCheckResult } from "../../types/_qaCheckResult";
 import ItemHover from "@renderer/components/statuses/ItemHover.vue";

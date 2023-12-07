@@ -1,7 +1,8 @@
 import os from 'os';
 import axios, { AxiosError } from "axios";
 import now from "performance-now";
-import {BrowserWindow} from "electron";
+import { BrowserWindow } from "electron";
+import ping from "ping";
 
 const networkInterfaces = os.networkInterfaces();
 
@@ -120,6 +121,31 @@ export async function checkWebsiteAvailability(info: any): Promise<[string, stri
             // If it's not a timeout error, return the error message
             return ['failed', `ERROR: ${error.message}`];
         }
+    }
+}
+
+/**
+ * Asynchronously checks the reachability of a specified IP address using ICMP ping.
+ *
+ * @param info - An object containing information about the IP address to ping.
+ *               The IP address should be specified in the 'value' property.
+ * @returns A Promise resolving to an array with the ping result and an optional message.
+ *          - If the IP address is reachable, the result is 'passed'.
+ *          - If the IP address is unreachable, the result is 'failed'.
+ *          - The second element of the array may contain additional information or be an empty string.
+ * @throws If an error occurs during the ping operation, the Promise is rejected with an error message.
+ */
+export async function pingIpAddress(info: any): Promise<[string, string]> {
+    const ipAddress = info.value;
+
+    try {
+        return new Promise((resolve) => {
+            ping.sys.probe(ipAddress, function (isAlive: boolean) {
+                resolve([isAlive ? 'passed' : 'failed', '']);
+            });
+        });
+    } catch (error: any) {
+        return ['failed', error.message];
     }
 }
 

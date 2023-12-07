@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CheckTableRow from "@renderer/src-qa/components/Report/Results/CheckTableRow.vue";
 import CommentModal from "@renderer/modals/CommentModal.vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { computed } from "vue";
 import { Category, Comment } from "@renderer/src-qa/interfaces/_report";

@@ -2,7 +2,7 @@
 import Modal from "@renderer/modals/Modal.vue";
 import { ref } from "vue";
 import { Appliance } from "@renderer/src-qa/interfaces";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../store/stateStore";
 
 defineProps({
   applianceType: {

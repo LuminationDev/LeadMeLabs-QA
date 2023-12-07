@@ -7,7 +7,7 @@ import { getStorage, ref, uploadString } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { computed, onMounted, ref as vueRef, watch } from "vue";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { generateHtml } from "../../../../assets/html/htmlContent";
 
 const stateStore = useStateStore();

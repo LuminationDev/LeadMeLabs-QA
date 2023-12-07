@@ -4,9 +4,10 @@ export interface Check {
     passedStatus: string;
     message: string;
     id: string;
+    date?: string;
 }
 
-interface Section {
+export interface Section {
     [check: string]: Check;
 }
 

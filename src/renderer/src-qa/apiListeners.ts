@@ -1,4 +1,4 @@
-import { useStateStore } from "./store/stateStore";
+import { useStateStore } from "../store/stateStore";
 import { useFullStore } from "./store/fullStore";
 import * as CONSTANT from "../assets/constants";
 import { QaCheck, TCPMessage } from "./interfaces";
@@ -53,9 +53,8 @@ export const listeners = (info: any) => {
         case CONSTANT.MESSAGE.LOAD_PROGRESS:
             fullStore.reportTracker = info.data;
             break;
-
+s
         default:
-            console.log(info);
             break;
     }
 };
