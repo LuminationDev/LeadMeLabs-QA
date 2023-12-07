@@ -53,7 +53,7 @@ const createHtmlContent = () => {
     </div>
 
     <!--Generate the report to convert to pdf, can be kept hidden and the content is picked up by the id-->
-    <div class="flex flex-col" id="report">
+    <div class="flex flex-col hidden" id="report">
       <PDFStructure v-for="title in networkStore.getReportTitles" class="mt-5" :parent="<string>title" :key="title"/>
     </div>
   </div>
