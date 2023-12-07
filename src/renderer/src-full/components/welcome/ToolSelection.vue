@@ -26,7 +26,7 @@ const route = useRoute();
 
           <!--Network diagnostic tool-->
           <div class="w-full h-full pt-4">
-            <OptionButton title="Network Tool" subtitle="Run a network diagnostic check" to="/network-diagnostic/device-selection"/>
+            <OptionButton title="Network Tool" subtitle="Run a network diagnostic check" to="/network-diagnostic"/>
           </div>
         </div>
 

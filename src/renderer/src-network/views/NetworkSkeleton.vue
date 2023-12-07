@@ -6,13 +6,18 @@ import NetworkSection from "./NetworkSection.vue";
 import NetworkChecks from "../components/screen/NetworkChecks.vue";
 import { useNetworkStore } from "../store/networkStore";
 import { PORTS, WEBSITES } from "../../assets/checks/_networkValues";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
 import { onMounted, ref } from "vue";
 import 'swiper/css';
 import NetworkDeviceSelection from "./NetworkDeviceSelection.vue";
-import NetworkDevice from "../components/screen/NetworkDeviceConnection.vue";
 import NetworkDeviceConnection from "../components/screen/NetworkDeviceConnection.vue";
 import NetworkReport from "../components/screen/NetworkReport.vue";
+import {useRoute} from "vue-router";
+import ConnectedToNetwork from '../../assets/guidesImages/ConnectedToNetwork.png'
+import RunOnStation from '../../assets/guidesImages/RunOnStation.png'
+import Ports from '../../assets/guidesImages/Ports.png'
+
+const route = useRoute();
 
 function up() {
   swiperRef.value.$el.swiper.slideNext(500)
@@ -86,21 +91,55 @@ const populateReportTracker = async () => {
 onMounted(() => {
   populateReportTracker();
 });
+
+const guideContent = [
+  [
+    {
+      imageSource: ConnectedToNetwork,
+      text: '<h3 class="text-lg text-black font-semibold">Test your local network</h3><p>Make sure the device is connected to the network you are trying to test</p>'
+    },
+    {
+      imageSource: RunOnStation,
+      text: '<h3 class="text-lg text-black font-semibold">Run test on a station</h3><p>If you have access to a Lumination Learning Lab, it is preferred you test your network from a Station PC</p>'
+    }
+  ],
+  [
+    {
+      imageSource: ConnectedToNetwork,
+      text: '<h3 class="text-lg text-black font-semibold">Connect to the internet</h3><p>To pass the network check, ensure that the device is connected to the internet</p>'
+    },
+    {
+      imageSource: Ports,
+      text: '<h3 class="text-lg text-black font-semibold">Open required ports</h3><p>To pass the port checks, ensure that the required ports are able to be used the your device</p>'
+    },
+    {
+      imageSource: null,
+      text: '<h3 class="text-lg text-black font-semibold">Allowlist required websites</h3><p>To pass the website checks, ensure that all required websites are allowlisted</p>'
+    }
+  ],
+  [
+    {
+      imageSource: null,
+      text: '<h3 class="text-lg text-black font-semibold">Upload your report</h3><p>Either use the upload function in app, or download the report and send it to your Lumination contact</p>'
+    }
+  ]
+]
+
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-between">
+  <div class="w-full h-full flex flex-col justify-between overflow-hidden">
     <div class="flex flex-row">
       <NetworkHeader/>
     </div>
-    <div class="flex flex-row w-full h-full">
+    <div class="flex flex-row w-full h-full relative">
       <NetworkSidebar class="w-32 pt-10" :number-of-sections="4" :current-section="swiper?.activeIndex" @select="navigateTo"/>
-      <Swiper ref="swiperRef" @swiper="setSwiper" direction="vertical" :pagination="{ clickable: true }" :slides-per-view="1" class="w-full h-auto pt-10">
+      <Swiper ref="swiperRef" @swiper="setSwiper" direction="vertical" :pagination="{ clickable: true }" :slides-per-view="1" class="w-full h-auto mb-44">
         <SwiperSlide>
-          <NetworkDeviceSelection/>
+          <NetworkDeviceSelection :guide="guideContent[0]"/>
         </SwiperSlide>
         <SwiperSlide>
-          <NetworkSection class="w-full">
+          <NetworkSection :guide="guideContent[1]">
             <template v-slot:step>Step 2</template>
             <template v-slot:heading>Running network checks</template>
             <template v-slot:subheading>Checking connection between devices and requisite websites</template>
@@ -108,7 +147,7 @@ onMounted(() => {
           </NetworkSection>
         </SwiperSlide>
         <SwiperSlide>
-          <NetworkSection class="w-full">
+          <NetworkSection :guide="guideContent[2]">
             <template v-slot:step>Step 3</template>
             <template v-slot:heading>Connect to a device <span class="font-medium italic">(Optional)</span></template>
             <template v-slot:subheading>Test your connection to another device on the network</template>
@@ -116,7 +155,7 @@ onMounted(() => {
           </NetworkSection>
         </SwiperSlide>
         <SwiperSlide>
-          <NetworkSection class="w-full">
+          <NetworkSection :guide="guideContent[2]">
             <template v-slot:step>Step 4</template>
             <template v-slot:heading>Upload your report</template>
             <template v-slot:subheading>Send your generated report to Lumination</template>
@@ -125,7 +164,13 @@ onMounted(() => {
         </SwiperSlide>
       </Swiper>
     </div>
-<!--    <NetworkFooter/>-->
+    <NetworkFooter
+        :current-page="swiper?.activeIndex"
+        :number-of-pages="4"
+        @back="down"
+        @next="up"
+    />
+    />
   </div>
 </template>
 

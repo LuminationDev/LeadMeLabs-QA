@@ -1,20 +1,26 @@
 <script setup lang="ts">
+import GuideModal from "../../modals/GuideModal.vue";
+import {computed} from "vue";
+
+const props = defineProps({
+  guide: {
+    type: Array,
+    required: true
+  }
+})
+
+const guideComp = computed(() => {
+  return [{ key: 'fake-key', guide: props.guide }]
+})
 </script>
 
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-full h-full overflow-y-auto pt-10 pr-6 gray-scrollbar">
     <div class="flex flex-row justify-between items-center w-full">
       <div class="bg-blue-200 border-1 border-blue-400 text-blue-700 rounded-full h-5 font-semibold text-sm px-2">
         <slot name="step">Step 0</slot>
       </div>
-      <button class="w-20 h-10 flex justify-center items-center border-[1px]
-               border-gray-500 rounded-lg cursor-pointer hover:bg-gray-200"
-      >
-        <img class="w-5 h-5 mr-1" src="../../assets/icons/help-circle.svg" alt="question mark">
-        <span class="text-sm font-semibold">
-          Guide
-        </span>
-      </button>
+      <GuideModal :guides="guideComp" />
     </div>
 
     <div>
@@ -31,3 +37,22 @@
 
   </div>
 </template>
+
+<style scoped>
+.gray-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.gray-scrollbar::-webkit-scrollbar-track {
+  background: lightgray;
+  border-radius: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.gray-scrollbar::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 20px;
+  border: 3px solid lightgray;
+}
+</style>
