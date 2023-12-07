@@ -12,6 +12,7 @@ import 'swiper/css';
 import NetworkDeviceSelection from "./NetworkDeviceSelection.vue";
 import NetworkDevice from "../components/screen/NetworkDeviceConnection.vue";
 import NetworkDeviceConnection from "../components/screen/NetworkDeviceConnection.vue";
+import NetworkReport from "../components/screen/NetworkReport.vue";
 
 function up() {
   swiperRef.value.$el.swiper.slideNext(500)
@@ -42,7 +43,7 @@ const populateReportTracker = async () => {
   networkStore.reportTracker["Network"]["Internet"] ||= {
     type: "Network",
     checkingStatus: "unchecked",
-    passedStatus: "",
+    passedStatus: "skipped",
     message: "",
     id: "Internet",
   };
@@ -53,7 +54,7 @@ const populateReportTracker = async () => {
     networkStore.reportTracker["Ports"][port.name] ||= {
       type: "Ports",
       checkingStatus: "unchecked",
-      passedStatus: "",
+      passedStatus: "skipped",
       message: "",
       id: port.value,
     };
@@ -65,7 +66,7 @@ const populateReportTracker = async () => {
     networkStore.reportTracker["Firewall"][website.name] ||= {
       type: "Firewall",
       checkingStatus: "unchecked",
-      passedStatus: "",
+      passedStatus: "skipped",
       message: "",
       id: website.name,
     };
@@ -76,7 +77,7 @@ const populateReportTracker = async () => {
   networkStore.reportTracker["Speed Test"]["Download"] ||= {
     type: "Download",
     checkingStatus: "unchecked",
-    passedStatus: "",
+    passedStatus: "skipped",
     message: "",
     id: "Download",
   };
@@ -117,7 +118,9 @@ onMounted(() => {
         <SwiperSlide>
           <NetworkSection class="w-full">
             <template v-slot:step>Step 4</template>
-            <template v-slot:heading>Short</template>
+            <template v-slot:heading>Upload your report</template>
+            <template v-slot:subheading>Send your generated report to Lumination</template>
+            <template v-slot:body><NetworkReport/></template>
           </NetworkSection>
         </SwiperSlide>
       </Swiper>

@@ -5,7 +5,7 @@ import CommentModal from "@renderer/modals/CommentModal.vue";
 import * as FULL from '../assets/checks/_fullcheckValues';
 import { computed } from "vue";
 import { useFullStore } from "../src-qa/store/fullStore";
-import { useStateStore } from "../src-qa/store/stateStore";
+import { useStateStore } from "../store/stateStore";
 import { useRoute } from "vue-router";
 import { QaCheckResult } from "../src-qa/types/_qaCheckResult";
 import { Comment } from "../src-qa/interfaces/_report";

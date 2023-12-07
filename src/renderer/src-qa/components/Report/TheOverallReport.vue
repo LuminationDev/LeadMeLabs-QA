@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BasicReport from "@renderer/src-qa/components/Report/Results/BasicReport.vue";
 import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { ref } from "vue";
 

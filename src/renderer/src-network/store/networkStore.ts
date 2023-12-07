@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Report } from "../interfaces/_report";
+import { useStateStore } from "../../store/stateStore";
 
 export const useNetworkStore = defineStore({
     id: 'network',
@@ -25,6 +26,7 @@ export const useNetworkStore = defineStore({
                 checkingStatus: "checked",
                 passedStatus,
                 message,
+                date: useStateStore().formattedDate(true)
             };
         },
 

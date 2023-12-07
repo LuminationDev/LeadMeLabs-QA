@@ -2,7 +2,7 @@
 import CommentModal from "@renderer/modals/CommentModal.vue";
 import ItemHover from "@renderer/components/statuses/ItemHover.vue";
 import StatusHover from "@renderer/components/statuses/StatusHover.vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { computed, ref } from "vue";
 import { Check } from "@renderer/src-qa/interfaces/_report";

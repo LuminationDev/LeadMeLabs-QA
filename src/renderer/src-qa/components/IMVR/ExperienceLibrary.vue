@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { computed, ref } from "vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 import StatusHover from "@renderer/components/statuses/StatusHover.vue";
 import ItemHover from "@renderer/components/statuses/ItemHover.vue";
 import RetrySvg from "../../../assets/icons/RetrySvg.vue";

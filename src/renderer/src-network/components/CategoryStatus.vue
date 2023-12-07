@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useStateStore } from "../../src-qa/store/stateStore";
+import { useStateStore } from "../../store/stateStore";
 import { useNetworkStore } from "../store/networkStore";
 import { computed } from "vue";
 

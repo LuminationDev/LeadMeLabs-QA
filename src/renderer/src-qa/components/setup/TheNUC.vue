@@ -5,7 +5,7 @@ import CbusSvg from "../../../assets/icons/CbusSvg.vue";
 import GenericButton from "@renderer/components/buttons/GenericButton.vue";
 import ConnectingSpinner from "@renderer/components/loading/ConnectingSpinner.vue";
 import ComputerSvg from "../../../assets/icons/ComputerSvg.vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";

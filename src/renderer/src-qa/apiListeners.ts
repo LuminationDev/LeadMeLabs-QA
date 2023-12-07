@@ -1,4 +1,4 @@
-import { useStateStore } from "./store/stateStore";
+import { useStateStore } from "../store/stateStore";
 import { useFullStore } from "./store/fullStore";
 import * as CONSTANT from "../assets/constants";
 import { QaCheck, TCPMessage } from "./interfaces";

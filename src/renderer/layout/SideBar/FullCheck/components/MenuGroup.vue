@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MenuItem from "@renderer/layout/SideBar/FullCheck/components/MenuItem.vue";
 import MenuSeparator from "@renderer/layout/SideBar/FullCheck/components/MenuSeparator.vue";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";

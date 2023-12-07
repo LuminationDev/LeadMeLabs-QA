@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import { useStateStore } from "../../src-qa/store/stateStore";
+import { useStateStore } from "../../store/stateStore";
 import RetrySvg from "../../assets/icons/RetrySvg.vue";
 
 const props = defineProps({

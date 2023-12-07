@@ -7,7 +7,7 @@ import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import { Appliance } from "@renderer/src-qa/interfaces";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useStateStore } from "../../../store/stateStore";
 
 const stateStore = useStateStore();
 const fullStore = useFullStore();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useStateStore } from '../../src-qa/store/stateStore';
+import { useStateStore } from '../../store/stateStore';
 
 const stateStore = useStateStore();
 </script>

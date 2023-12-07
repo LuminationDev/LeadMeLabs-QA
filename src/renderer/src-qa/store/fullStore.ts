@@ -4,7 +4,7 @@ import { Appliance, QaCheck, QaDetail, Tablet } from "../interfaces";
 import { Station as StationClass } from '../types/_station'
 import { QaGroup } from "../types/_qaGroup";
 import { QaCheckResult } from "../types/_qaCheckResult";
-import { useStateStore } from "./stateStore";
+import { useStateStore } from "../../store/stateStore";
 import { Report, Targets } from "../interfaces/_report";
 import { ExperienceCheck } from "../interfaces/_experiences";
 

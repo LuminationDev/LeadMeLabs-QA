@@ -4,6 +4,7 @@ import {
     downloadAndCalculateSpeed,
     checkInternetConnection, pingIpAddress
 } from "../network/Network";
+import { DetermineReportType } from "../report/Report";
 
 export default class NetworkController {
     ipcMain: IpcMain;
@@ -26,7 +27,7 @@ export default class NetworkController {
      * been sent. This allows just one listener to be active rather than individual function ones.
      */
     networkToolListenerDelegate(): void {
-        this.ipcMain.on('network_function', (_event, info) => {
+        this.ipcMain.on('network_function', async (_event, info) => {
             switch (info.channelType) {
 
                 case "internet_online":
@@ -47,6 +48,17 @@ export default class NetworkController {
 
                 case "attempt_device_connection":
                     this.attemptToConnectDevice(info);
+                    break;
+
+                case "generate_report":
+                    const details = await DetermineReportType(info, this.mainWindow);
+
+                    if (details !== undefined && details !== null) {
+                        this.mainWindow.webContents.send('backend_message', {
+                            channelType: details['message'],
+                            data: details['data'],
+                        });
+                    }
                     break;
 
                 default:

@@ -2,11 +2,11 @@
 import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
 import ReportResults from "@renderer/src-qa/components/Report/Results/ReportResults.vue";
 import CheckTable from "@renderer/src-qa/components/Report/Results/CheckTable.vue";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import { useStateStore } from "@renderer/src-qa/store/stateStore";
+import { useFullStore } from "../../../store/fullStore";
+import { useStateStore } from "../../../../store/stateStore";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import {Section} from "@renderer/src-qa/interfaces/_report";
+import {Section} from "../../../interfaces/_report";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();

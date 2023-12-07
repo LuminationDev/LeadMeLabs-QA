@@ -8,7 +8,7 @@ import { RouterView, useRoute } from 'vue-router';
 import { computed, onBeforeMount } from 'vue';
 import { useConfigStore } from "../src-setup/store/configStore";
 import { storeToRefs } from "pinia";
-import { useStateStore } from "../src-qa/store/stateStore";
+import { useStateStore } from "../store/stateStore";
 import { listeners as qaListeners, initialise as qaInitialise } from "../src-qa/apiListeners";
 import { listeners as networkListeners, initialise as networkInitialise } from "../src-network/apiListeners";
 
