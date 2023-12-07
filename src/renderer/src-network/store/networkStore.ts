@@ -69,6 +69,7 @@ export const useNetworkStore = defineStore({
                 else if (checking === 'checking') testing++;
                 else if (status === 'passed') passed++;
                 else if (status === 'warning') warning++;
+                else if (status === 'warning') warning++;
                 else if (status === 'failed') failed++;
                 else if (status === 'not_applicable') not_applicable++;
                 else if (status === 'skipped' || status === undefined || checking === 'unchecked') skipped++;

@@ -1,4 +1,8 @@
 import { IpcMain, BrowserWindow } from "electron";
+import { GetIPAddress } from "../network/Network";
+const { exec } = require('child_process')
+const defaultGateway = require('default-gateway')
+var net = require('net');
 import {
     checkWebsiteAvailability,
     downloadAndCalculateSpeed,
@@ -38,10 +42,6 @@ export default class NetworkController {
                     this.checkWebsiteAccess(info);
                     break;
 
-                case "check_port":
-                    console.log("Nothing to see here yet");
-                    break;
-
                 case "speed_test":
                     void this.speedTest(info);
                     break;
@@ -59,6 +59,22 @@ export default class NetworkController {
                             data: details['data'],
                         });
                     }
+                    break;
+
+                case "port_check":
+                    void this.portTest(info);
+                    break;
+                
+                case "is_port_check_initialised":
+                    void this.checkPortCheck();
+                    break;
+                
+                case "build_port_check":
+                    void this.buildPortCheck();
+                    break;
+                
+                case "teardown_port_check":
+                    void this.teardownPortCheck();
                     break;
 
                 default:
@@ -114,5 +130,153 @@ export default class NetworkController {
                 message
             });
         });
+    }
+
+    async runRouteCommand(addOrDelete: boolean) {
+        const {gateway, int} = await defaultGateway.v4();
+        const ipAddress = GetIPAddress()
+        return new Promise(async (resolve, reject) => {
+            exec(`Start-Process cmd -Verb RunAs -ArgumentList '@cmd /k route ${addOrDelete ? 'add' : 'delete'} ${ipAddress} MASK 255.255.255.255 ${gateway}'`, {'shell':'powershell.exe'}, (err, stdout)=> {
+                if (err) {
+                    reject(new Error("Could not create rule"))
+                }
+                resolve('success')
+            });
+        })
+    }
+
+    async checkRouteExists() {
+        const {gateway, int} = await defaultGateway.v4();
+        const ipAddress = GetIPAddress()
+        return new Promise(async (resolve, reject) => {
+            exec(`route print ${ipAddress} MASK 255.255.255.255 ${gateway} | grep ${ipAddress}`, (err, stdout)=> {
+                if (err) {
+                    reject(new Error("Could not run command"))
+                }
+                console.log('stdout', stdout)
+                if (stdout.length > 0) {
+                    resolve('success')
+                } else {
+                    reject(new Error("Could not find rule"))
+                }
+            });
+        })
+    }
+
+    async checkPortCheck() {
+        await this.checkRouteExists().catch((error) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "is_port_check_initialised",
+                result: false
+            });
+        })
+        this.mainWindow.webContents.send('backend_message', {
+            channelType: "is_port_check_initialised",
+            result: true
+        });
+    }
+
+    async buildPortCheck() {
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "build_port_check",
+                result: false
+            });
+            return;
+        }
+        await this.runRouteCommand(true).catch((error) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "build_port_check",
+                result: false
+            });
+        })
+        this.mainWindow.webContents.send('backend_message', {
+            channelType: "build_port_check",
+            result: true
+        });
+    }
+
+    async teardownPortCheck() {
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "teardown_port_check",
+                result: false
+            });
+            return;
+        }
+        await this.runRouteCommand(false).catch((error) => {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "teardown_port_check",
+                result: false
+            });
+        })
+        this.mainWindow.webContents.send('backend_message', {
+            channelType: "teardown_port_check",
+            result: true
+        });
+    }
+
+    async portTest(info: any): Promise<void> {
+        var caught = false
+        await this.checkRouteExists().catch(() => {
+            caught = true;
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "port_result",
+                section: "Ports",
+                id: info.id,
+                passedStatus: "warning",
+                message: "Loopback not created"
+            });
+        })
+        if (caught) {
+            return;
+        }
+
+        if (!process.platform.includes("win")) {
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "port_result",
+                section: "Ports",
+                id: info.id,
+                passedStatus: "warning",
+                message: "Port check requires Windows"
+            });
+            return;
+        }
+
+        const port = info.value
+
+        var server = net.createServer();
+        var resolved = false;
+
+        server.on('connection', async (result) => {
+            resolved = true
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "port_result",
+                section: "Ports",
+                id: info.id,
+                passedStatus: "passed",
+                message: "Success"
+            });
+            server.close()
+        });
+
+        server.listen(port, function() {
+            var client = new net.Socket();
+            const ipAddress = GetIPAddress()
+            client.connect(port, ipAddress, function() {});
+        });
+
+        setTimeout(() => {
+            if (!resolved) {
+                server.close()
+                this.mainWindow.webContents.send('backend_message', {
+                    channelType: "port_result",
+                    section: "Ports",
+                    id: info.id,
+                    passedStatus: "failed",
+                    message: "Could not connect over port"
+                });
+            }
+        }, 5000)
     }
 }

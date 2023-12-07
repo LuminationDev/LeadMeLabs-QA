@@ -5,7 +5,7 @@ import { useStateStore } from "../../../../store/stateStore";
 import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
-import {CheckObject} from "@renderer/src-qa/interfaces/_routeItems";
+import { CheckObject } from "@renderer/src-qa/interfaces/_routeItems";
 
 const props = defineProps({
   title: {
@@ -180,15 +180,22 @@ const currentSubStatus = (localRoute: string) => {
 
     <!--Manual-checks-->
     <div v-if="isActive" v-for="(object, index) in category" :key="index" class="ml-5 flex flex-col relative">
-      <MenuItem :title="stateStore.generateTitle(object['page'])"
-                :route="`/check/full/${title.toLowerCase()}/${object['page']}/${Object.keys(object.category[0])[0].toLowerCase()}`"
-                :current="isSubActive(index)"
-                :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${object['page']}`)"/>
+      <template v-if="object.category !== undefined">
+        <MenuItem :title="stateStore.generateTitle(object['page'])"
+                  :route="`/check/full/${title.toLowerCase()}/${object['page']}/${Object.keys(object.category[0])[0].toLowerCase()}`"
+                  :current="isSubActive(index)"
+                  :status="currentSubStatus(`/check/full/${title.toLowerCase()}/${object['page']}`)"/>
 
-      <MenuSeparator v-if="index < category.length - 1" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${object['page']}`)"/>
+        <MenuSeparator v-if="index < category.length - 1" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${object['page']}`)"/>
+      </template>
     </div>
 
     <!--Category separator-->
-    <MenuSeparator v-if="separator" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${category[category.length-1]['page']}`)"/>
+    <template v-if="category.length > 0"> <!--Used for categories with auto and manual checks, or just manual checks-->
+      <MenuSeparator v-if="separator" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${category[category.length-1]['page']}`)"/>
+    </template>
+    <template v-else> <!--Used for categories with only auto checks-->
+      <MenuSeparator v-if="separator" :active="isSeparatorActive(`/check/full/${title.toLowerCase()}/${autoChecks[0]}`)"/>
+    </template>
   </div>
 </template>
