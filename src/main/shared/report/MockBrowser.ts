@@ -1,4 +1,5 @@
 import { BrowserWindow, dialog } from 'electron';
+import fetch from 'node-fetch'
 import fs from 'fs';
 import os from "os";
 import admin from "firebase-admin";
@@ -48,7 +49,7 @@ export async function createMockWindow(isTemp: boolean, info: any, mainWindow: E
             await fs.promises.writeFile(filePath, pdfData);
 
             if (isTemp) {
-                await uploadFile(filePath, info.fileName, info.location, mainWindow);
+                await uploadFile(filePath, info.fileName, info.location, info, mainWindow);
             }
 
             await fs.promises.unlink(tempFilePath);
@@ -63,7 +64,7 @@ export async function createMockWindow(isTemp: boolean, info: any, mainWindow: E
 /**
  * Upload the temporary PDF to Firebase Storage.
  */
-const uploadFile = async (filePath: string, fileName: string, location: string, mainWindow: Electron.BrowserWindow) => {
+const uploadFile = async (filePath: string, fileName: string, location: string, info: any, mainWindow: Electron.BrowserWindow) => {
     const bucket = admin.storage().bucket('leadme-labs.appspot.com');
     const destination = `QA/${location}/${fileName}.pdf`;
 
@@ -74,10 +75,31 @@ const uploadFile = async (filePath: string, fileName: string, location: string, 
             contentType: 'application/pdf'
         };
 
-        await bucket.upload(filePath, {
-            destination,
-            metadata: fileMetadata
-        });
+        if (fileName.startsWith("Network_Report")) {
+            const response = await fetch("https://us-central1-leadme-labs.cloudfunctions.net/uploadNetworkCheckerReport", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/pdf",
+                    "SiteName": info.siteName,
+                    "Email": info.email
+                },
+                body: fs.readFileSync(filePath)
+            })
+            if (response.status === 200) {
+                mainWindow.webContents.send('backend_message', {
+                    channelType: "network_report_success"
+                });
+            } else {
+                mainWindow.webContents.send('backend_message', {
+                    channelType: "network_report_failed"
+                });
+            }
+        } else {
+            await bucket.upload(filePath, {
+                destination,
+                metadata: fileMetadata
+            });
+        }
 
         console.log('File uploaded successfully.');
         result = true;

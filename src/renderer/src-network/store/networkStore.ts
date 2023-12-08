@@ -10,7 +10,8 @@ export const useNetworkStore = defineStore({
         speed: "0",
         progress: "0",
         //Used to track the current device ip connection attempt
-        connectionState: "waiting"
+        connectionState: "waiting",
+        uploadResult: ""
     }),
     actions: {
         /**

@@ -67,7 +67,7 @@ const attemptCallback = () => {
         </div>
         <div v-else class="text-xs">
           <p>Please <span class="font-semibold">do not close</span> this program or restart your device while checks are running.
-          Also, please be prepared to allow <span class="font-semibold">two admin permissions</span>. Network checks will take approx. 2 minutes.</p>
+          Also, please be prepared to allow <span class="font-semibold">two admin permissions</span>. Network checks will take approx. 1 minute.</p>
         </div>
 
       </div>

@@ -127,7 +127,7 @@ watch(() => networkStore.checkReportState, (newValue, oldValue) => {
           <CategoryStatus v-if="(networkProgress === '100.00' || networkProgress === '0') || check !== 'Speed Test'" :category="check"/>
           <td v-else class="p-3 text-sm h-12 w-28 font-semibold">
             <div class="rounded-xl w-fit min-w-[70px] px-2 bg-blue-100 border-[1px] border-blue-300 text-blue-700">
-              {{networkProgress === 'Connecting' ? networkProgress : `${networkProgress}%`}}
+              {{networkProgress === 'Connecting' ? networkProgress : `${networkProgress ?? 0 }%`}}
             </div>
           </td>
 

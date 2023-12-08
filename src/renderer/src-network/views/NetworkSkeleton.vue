@@ -133,7 +133,7 @@ const guideContent = [
       <NetworkHeader/>
     </div>
     <div class="flex flex-row w-full h-full relative">
-      <NetworkSidebar class="w-32 pt-10" :number-of-sections="4" :current-section="swiper?.activeIndex" @select="navigateTo"/>
+      <NetworkSidebar class="w-32 pt-10" :number-of-sections="3" :current-section="swiper?.activeIndex" @select="navigateTo"/>
       <Swiper ref="swiperRef" @swiper="setSwiper" direction="vertical" :pagination="{ clickable: true }" :slides-per-view="1" class="w-full h-auto mb-44">
         <SwiperSlide>
           <NetworkDeviceSelection :guide="guideContent[0]"/>
@@ -146,14 +146,14 @@ const guideContent = [
             <template v-slot:body><NetworkChecks/></template>
           </NetworkSection>
         </SwiperSlide>
-        <SwiperSlide>
-          <NetworkSection :guide="guideContent[2]">
-            <template v-slot:step>Step 3</template>
-            <template v-slot:heading>Connect to a device <span class="font-medium italic">(Optional)</span></template>
-            <template v-slot:subheading>Test your connection to another device on the network</template>
-            <template v-slot:body><NetworkDeviceConnection/></template>
-          </NetworkSection>
-        </SwiperSlide>
+<!--        <SwiperSlide>-->
+<!--          <NetworkSection :guide="guideContent[2]">-->
+<!--            <template v-slot:step>Step 3</template>-->
+<!--            <template v-slot:heading>Connect to a device <span class="font-medium italic">(Optional)</span></template>-->
+<!--            <template v-slot:subheading>Test your connection to another device on the network</template>-->
+<!--            <template v-slot:body><NetworkDeviceConnection/></template>-->
+<!--          </NetworkSection>-->
+<!--        </SwiperSlide>-->
         <SwiperSlide>
           <NetworkSection :guide="guideContent[2]">
             <template v-slot:step>Step 4</template>
@@ -166,10 +166,9 @@ const guideContent = [
     </div>
     <NetworkFooter
         :current-page="swiper?.activeIndex"
-        :number-of-pages="4"
+        :number-of-pages="3"
         @back="down"
         @next="up"
-    />
     />
   </div>
 </template>

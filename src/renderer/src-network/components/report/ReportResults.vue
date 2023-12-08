@@ -77,7 +77,7 @@ const skippedStatusPercentage = computed(() => {
         </div>
 
         <div class="font-semibold text-4xl">
-          {{passedStatusPercentage}}%
+          {{passedStatusPercentage ?? 0 }}%
         </div>
       </div>
 
