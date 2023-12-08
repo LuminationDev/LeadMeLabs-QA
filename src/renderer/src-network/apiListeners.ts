@@ -42,6 +42,13 @@ export const listeners = async (info: any) => {
             networkStore.progress = info.progress;
             break;
 
+        case "network_report_failed":
+            networkStore.uploadResult = "failed";
+            break;
+        case "network_report_success":
+            networkStore.uploadResult = "success";
+            break;
+
         case "attempt_device_connection":
             networkStore.connectionState = info.passedStatus;
             //TODO in the future dynamically add/update the report tracker

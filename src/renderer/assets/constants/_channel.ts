@@ -13,5 +13,6 @@ export const BUILD_PORT_CHECK = 'build_port_check'; //Collect the computer's net
 export const TEARDOWN_PORT_CHECK = 'teardown_port_check'; //Collect the computer's network settings
 export const REFRESH_LAUNCHER_DETAILS = 'refresh_details'; //Recollect the launcher details from the backend
 export const GENERATE_REPORT = 'generate_report'; //Tell the backend to generate a pdf document
+export const UPLOAD_REPORT = 'upload_report'; //Tell the backend to generate a pdf document
 
 export const REPORT_GENERATED = 'pdf_uploaded'; //The backend has uploaded the report
