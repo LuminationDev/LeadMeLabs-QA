@@ -7,10 +7,16 @@ orbs:
 
 commands:
   clone_hosting:
+    parameters:
+      repo:
+        type: string
+      tool:
+        type: string
     steps:
       - add_ssh_keys:
           fingerprints:
             - "a4:ea:43:3f:94:59:16:f7:cd:ef:72:16:5a:52:69:a0"
+            - "b8:e5:1b:0c:be:bb:b0:bf:a2:e8:a3:73:41:18:61:c2"
       - run:
           name: Setup git config
           command: git config --global user.name "CircleCI" && git config --global user.email "CircleCI@lumination.com.au"
@@ -20,36 +26,55 @@ commands:
       - run:
           name: Add github to known hosts
           command: dir /home/circleci/.ssh
-      - run:
-          name: Write ssh config file
-          command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_a4ea433f945916f7cdef72165a5269a0" >> ~/.ssh/config
+      - when:
+          condition:
+            and:
+              - equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run:
+                name: Write ssh config file
+                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_a4ea433f945916f7cdef72165a5269a0" >> ~/.ssh/config
+      - when:
+          condition:
+            and:
+              - equal: [ network, <<parameters.tool>> ]
+          steps:
+            - run:
+                name: Write ssh config file
+                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_b8e51b0cbebbb0bfa2e8a373411861c2" >> ~/.ssh/config
       - run:
           name: Clone hosting server
-          command: cd ~/ && git clone git@github.com:LuminationDev/LeadMeLabs-QA-Hosting.git
+          command: cd ~/ && git clone git@github.com:LuminationDev/<<parameters.repo>>.git
 
   copy_and_push:
     parameters:
       branch:
         type: string
+      repo:
+        type: string
+      tool:
+        type: string
+      directory:
+        type: string
     steps:
       - run:
           name: Checkout <<parameters.branch>>
-          command: cd ~/LeadMeLabs-QA-Hosting && git checkout <<parameters.branch>>
+          command: cd ~/<<parameters.repo>> && git checkout <<parameters.branch>>
       - run:
           name: Delete old files
-          command: rm -rf ~/LeadMeLabs-QA-Hosting/applications/qa-tool
+          command: rm -rf ~/<<parameters.repo>>/applications/<<parameters.directory>>
       - run:
           name: Copy built files to git repository
-          command: cp -r ./project/dist ~/LeadMeLabs-QA-Hosting/applications/qa-tool
+          command: cp -r ./project/dist ~/<<parameters.repo>>/applications/<<parameters.directory>>
       - run:
           name: Add built files to git
-          command: cd ~/LeadMeLabs-QA-Hosting/applications/qa-tool && git add --all
+          command: cd ~/<<parameters.repo>>/applications/<<parameters.directory>> && git add --all
       - run:
           name: Commit
-          command: cd ~/LeadMeLabs-QA-Hosting && git commit -m "Update QA tool"
+          command: cd ~/<<parameters.repo>> && git commit -m "Update <<parameters.tool>> tool"
       - run:
           name: Push
-          command: cd ~/LeadMeLabs-QA-Hosting && git push
+          command: cd ~/<<parameters.repo>> && git push
 
   windows-npm:
     steps:
@@ -83,6 +108,8 @@ commands:
         type: string
       command:
         type: string
+      tool:
+        type: string
     steps:
       - checkout
       - when:
@@ -102,29 +129,64 @@ commands:
       - run:
           name: "npm install"
           command: "npm install"
-      - run:
-          name: "build"
-          command: "npm run build"
-      - run:
-          name: "inspect build folder"
-          command: "ls ~/project/build"
-      - run:
-          name: "electron-build"
-          command: "npm run electron-build -- -<<parameters.command>>"
       - when:
           condition:
             and:
-              - equal: [w, <<parameters.command>>]
+              - equal: [ m, <<parameters.command>> ]
+          steps:
+            - run:
+                name: "electron-build"
+                command: "npm run build:mac-<<parameters.tool>> -- -<<parameters.command>>"
+      - when:
+          condition:
+            and:
+              - equal: [ w, <<parameters.command>> ]
+          steps:
+            - run:
+                name: "electron-build"
+                command: "npm run build:win-<<parameters.tool>> -- -<<parameters.command>>"
+      - when:
+          condition:
+            and:
+              - and:
+                - equal: [w, <<parameters.command>>]
+              - and:
+                  - not:
+                      equal: [full, <<parameters.tool>>]
           steps:
             - run: rm ~/project/dist/builder-debug.yml
-            - run: rm ~/project/dist/win-unpacked/leadme-qa.exe
+            - run: rm ~/project/dist/win-unpacked/leadme-<<parameters.tool>>.exe
       - when:
           condition:
             and:
-              - equal: [m, <<parameters.command>>]
+              - and:
+                  - equal: [ w, <<parameters.command>> ]
+              - and:
+                  - equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: rm ~/project/dist/mac/leadme-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
-            - run: rm ~/project/dist/leadme-qa-*-mac.zip
+            - run: rm ~/project/dist/builder-debug.yml
+            - run: rm ~/project/dist/win-unpacked/leadme-tools-qa.exe
+      - when:
+          condition:
+            and:
+              - and:
+                  - equal: [ m, <<parameters.command>> ]
+              - and:
+                  - not:
+                      equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run: rm ~/project/dist/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/project/dist/leadme-<<parameters.tool>>-*-mac.zip
+      - when:
+          condition:
+            and:
+              - and:
+                  - equal: [ m, <<parameters.command>> ]
+              - and:
+                  - equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run: rm ~/project/dist/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/project/dist/leadme-tools-qa-*-mac.zip
       - store_artifacts:
           path: ~/project/dist
       - persist_to_workspace:
@@ -144,6 +206,7 @@ jobs:
       - build:
           buildType: <<parameters.buildType>>
           command: w
+          tool: <<parameters.tool>>
   build-mac:
     macos:
       xcode: 14.2.0
@@ -157,19 +220,31 @@ jobs:
       - build:
           buildType: <<parameters.buildType>>
           command: m
+          tool: <<parameters.tool>>
 
   commit-and-push:
     parameters:
       branch:
         type: string
+      repo:
+        type: string
+      tool:
+        type: string
+      directory:
+        type: string
     docker:
       - image: cimg/node:current
     steps:
-      - clone_hosting
+      - clone_hosting:
+          repo: <<parameters.repo>>
+          tool: <<parameters.tool>>
       - attach_workspace:
           at: ./
       - copy_and_push:
           branch: <<parameters.branch>>
+          repo: <<parameters.repo>>
+          tool: <<parameters.tool>>
+          directory: <<parameters.directory>>
 
 workflows:
   build_release:
@@ -183,14 +258,42 @@ workflows:
                 - main
       - build-mac:
           buildType: "Release"
+          tool: "full"
           requires:
             - hold
       - build-windows:
           buildType: "Release"
+          tool: "full"
           requires:
             - hold
       - commit-and-push:
           branch: "main"
+          tool: "full"
+          repo: "LeadMeLabs-QA-Hosting"
+          directory: "qa-tool"
+          requires:
+            - build-mac
+            - build-windows
+  build_network:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+      - build-mac:
+          buildType: "Release"
+          tool: "network"
+          requires:
+            - hold
+      - build-windows:
+          buildType: "Release"
+          tool: "network"
+          requires:
+            - hold
+      - commit-and-push:
+          branch: "main"
+          tool: "network"
+          repo: "LeadMeLabs-Network-Hosting"
+          directory: "network-tool"
           requires:
             - build-mac
             - build-windows
