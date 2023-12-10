@@ -201,6 +201,8 @@ jobs:
     parameters:
       buildType:
         type: string
+      tool:
+        type: string
     steps:
       - windows-npm
       - build:
@@ -212,6 +214,8 @@ jobs:
       xcode: 14.2.0
     parameters:
       buildType:
+        type: string
+      tool:
         type: string
     steps:
       - node/install:
