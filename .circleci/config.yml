@@ -65,7 +65,7 @@ commands:
           command: rm -rf ~/<<parameters.repo>>/applications/<<parameters.directory>>
       - run:
           name: Copy built files to git repository
-          command: cp -r ./project/dist ~/<<parameters.repo>>/applications/<<parameters.directory>>
+          command: cp -r ./project/dist-<<parameters.tool>> ~/<<parameters.repo>>/applications/<<parameters.directory>>
       - run:
           name: Add built files to git
           command: cd ~/<<parameters.repo>>/applications/<<parameters.directory>> && git add --all
@@ -177,11 +177,11 @@ commands:
             - run: rm ~/project/dist-<<parameters.tool>>/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
             - run: rm ~/project/dist-<<parameters.tool>>/leadme-tools-qa-*-mac.zip
       - store_artifacts:
-          path: ~/project/dist
+          path: ~/project/dist-<<parameters.tool>>
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/dist
+            - project/dist-<<parameters.tool>>
 
 jobs:
   build-windows:
