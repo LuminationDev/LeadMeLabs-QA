@@ -1,7 +1,7 @@
 import { IpcMain, BrowserWindow } from "electron";
 import { GetIPAddress } from "../network/Network";
 const { exec } = require('child_process')
-const defaultGateway = require('default-gateway')
+const network = require('network')
 var net = require('net');
 import {
     checkWebsiteAvailability,
@@ -133,33 +133,42 @@ export default class NetworkController {
     }
 
     async runRouteCommand(addOrDelete: boolean) {
-        const {gateway, int} = await defaultGateway.v4();
-        const ipAddress = GetIPAddress()
-        return new Promise(async (resolve, reject) => {
-            exec(`Start-Process cmd -Verb RunAs -ArgumentList '@cmd /k route ${addOrDelete ? 'add' : 'delete'} ${ipAddress} MASK 255.255.255.255 ${gateway}'`, {'shell':'powershell.exe'}, (err, stdout)=> {
-                if (err) {
+        network.get_gateway_ip((error, gateway) => {
+            const ipAddress = GetIPAddress()
+            return new Promise(async (resolve, reject) => {
+                if (error) {
                     reject(new Error("Could not create rule"))
                 }
-                resolve('success')
-            });
+                exec(`Start-Process cmd -Verb RunAs -ArgumentList '@cmd /k route ${addOrDelete ? 'add' : 'delete'} ${ipAddress} MASK 255.255.255.255 ${gateway}'`, {'shell':'powershell.exe'}, (err, stdout)=> {
+                    if (err) {
+                        reject(new Error("Could not create rule"))
+                    }
+                    resolve('success')
+                });
+            })
         })
     }
 
     async checkRouteExists() {
-        const {gateway, int} = await defaultGateway.v4();
-        const ipAddress = GetIPAddress()
-        return new Promise(async (resolve, reject) => {
-            exec(`route print ${ipAddress} MASK 255.255.255.255 ${gateway} | grep ${ipAddress}`, (err, stdout)=> {
-                if (err) {
-                    reject(new Error("Could not run command"))
+        network.get_gateway_ip((error, gateway) => {
+            const ipAddress = GetIPAddress()
+            return new Promise(async (resolve, reject) => {
+                if (error) {
+                    reject(new Error("Could not create rule"))
                 }
-                console.log('stdout', stdout)
-                if (stdout.length > 0) {
-                    resolve('success')
-                } else {
-                    reject(new Error("Could not find rule"))
-                }
-            });
+                exec(`route print ${ipAddress} MASK 255.255.255.255 ${gateway} | grep ${ipAddress}`, (err, stdout)=> {
+                    console.log('err', err, 'gateway', gateway)
+                    if (err) {
+                        reject(new Error("Could not run command"))
+                    }
+                    console.log('stdout', stdout)
+                    if (stdout.length > 0) {
+                        resolve('success')
+                    } else {
+                        reject(new Error("Could not find rule"))
+                    }
+                });
+            })
         })
     }
 
