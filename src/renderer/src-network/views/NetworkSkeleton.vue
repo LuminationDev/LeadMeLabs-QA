@@ -156,7 +156,7 @@ const guideContent = [
 <!--        </SwiperSlide>-->
         <SwiperSlide>
           <NetworkSection :guide="guideContent[2]">
-            <template v-slot:step>Step 4</template>
+            <template v-slot:step>Step 3</template>
             <template v-slot:heading>Upload your report</template>
             <template v-slot:subheading>Send your generated report to Lumination</template>
             <template v-slot:body><NetworkReport/></template>

@@ -106,6 +106,9 @@ const uploadFile = async (filePath: string, fileName: string, location: string, 
     } catch (error) {
         console.error('Error uploading file:', error);
         result = false;
+        mainWindow.webContents.send('backend_message', {
+            channelType: "network_report_failed"
+        });
     } finally {
         try {
             await fs.promises.unlink(filePath);

@@ -2,7 +2,7 @@
     "appId": "com.lumination.leadme.qa.full",
     "compression": "maximum",
     "directories": {
-        "output": "dist"
+        "output": "dist-full"
     },
     "nsis": {
         "oneClick": false,
@@ -46,6 +46,7 @@
         "!scripts",
         "!build/renderer",
         "!dist",
+        "!dist-full",
         "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
     ]
 }
