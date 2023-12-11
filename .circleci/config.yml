@@ -162,6 +162,7 @@ commands:
                   - not:
                       equal: [ full, <<parameters.tool>> ]
           steps:
+            - run: ls ~/project/dist/mac
             - run: rm ~/project/dist/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
             - run: rm ~/project/dist/leadme-<<parameters.tool>>-*-mac.zip
       - when:
