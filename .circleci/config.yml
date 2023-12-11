@@ -141,8 +141,8 @@ commands:
                   - not:
                       equal: [full, <<parameters.tool>>]
           steps:
-            - run: rm ~/project/dist/builder-debug.yml
-            - run: rm ~/project/dist/win-unpacked/leadme-<<parameters.tool>>.exe
+            - run: rm ~/project/dist-<<parameters.tool>>/builder-debug.yml
+            - run: rm ~/project/dist-<<parameters.tool>>/win-unpacked/leadme-<<parameters.tool>>.exe
       - when:
           condition:
             and:
@@ -151,8 +151,8 @@ commands:
               - and:
                   - equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: rm ~/project/dist/builder-debug.yml
-            - run: rm ~/project/dist/win-unpacked/leadme-tools-qa.exe
+            - run: rm ~/project/dist-<<parameters.tool>>/builder-debug.yml
+            - run: rm ~/project/dist-<<parameters.tool>>/win-unpacked/leadme-tools-qa.exe
       - when:
           condition:
             and:
@@ -162,9 +162,9 @@ commands:
                   - not:
                       equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: ls ~/project/dist/mac
-            - run: rm ~/project/dist/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
-            - run: rm ~/project/dist/leadme-<<parameters.tool>>-*-mac.zip
+            - run: ls ~/project/dist-<<parameters.tool>>/mac
+            - run: rm ~/project/dist-<<parameters.tool>>/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/project/dist-<<parameters.tool>>/leadme-<<parameters.tool>>-*-mac.zip
       - when:
           condition:
             and:
@@ -173,9 +173,9 @@ commands:
               - and:
                   - equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: ls ~/project/dist/mac
-            - run: rm ~/project/dist/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
-            - run: rm ~/project/dist/leadme-tools-qa-*-mac.zip
+            - run: ls ~/project/dist-<<parameters.tool>>/mac
+            - run: rm ~/project/dist-<<parameters.tool>>/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/project/dist-<<parameters.tool>>/leadme-tools-qa-*-mac.zip
       - store_artifacts:
           path: ~/project/dist
       - persist_to_workspace:
