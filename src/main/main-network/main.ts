@@ -3,19 +3,18 @@ import { join } from 'path';
 import { GetIPAddress } from "../shared/network/Network";
 import { optimizer } from "@electron-toolkit/utils";
 import NetworkController from "../shared/controllers/NetworkController";
-// import * as Sentry from '@sentry/electron';
+import * as Sentry from '@sentry/electron';
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
 
-//TODO will need a new sentry project for the separate tool
-// Sentry.init({
-//   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
-// });
+Sentry.init({
+  dsn: "https://396e4f7bfb3b4ae856b9b47c829cb556@o1294571.ingest.sentry.io/4506375092633600",
+});
 
 autoUpdater.autoDownload = false;
 autoUpdater.setFeedURL({
   provider: 'generic',
-  url: 'https://leadme-qa-tool.herokuapp.com/static/' //TODO need a new hosting site for the separate tool
+  url: 'https://leadme-network-tool-f81e92d61350.herokuapp.com/static/'
 });
 
 
