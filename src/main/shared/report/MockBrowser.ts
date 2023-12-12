@@ -65,9 +65,6 @@ export async function createMockWindow(isTemp: boolean, info: any, mainWindow: E
  * Upload the temporary PDF to Firebase Storage.
  */
 const uploadFile = async (filePath: string, fileName: string, location: string, info: any, mainWindow: Electron.BrowserWindow) => {
-    const bucket = admin.storage().bucket('leadme-labs.appspot.com');
-    const destination = `QA/${location}/${fileName}.pdf`;
-
     let result = false;
 
     try {
@@ -95,6 +92,8 @@ const uploadFile = async (filePath: string, fileName: string, location: string, 
                 });
             }
         } else {
+            const bucket = admin.storage().bucket('leadme-labs.appspot.com');
+            const destination = `QA/${location}/${fileName}.pdf`;
             await bucket.upload(filePath, {
                 destination,
                 metadata: fileMetadata
