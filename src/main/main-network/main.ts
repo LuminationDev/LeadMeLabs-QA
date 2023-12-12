@@ -11,7 +11,7 @@ Sentry.init({
   dsn: "https://396e4f7bfb3b4ae856b9b47c829cb556@o1294571.ingest.sentry.io/4506375092633600",
 });
 
-autoUpdater.autoDownload = false;
+autoUpdater.autoDownload = true;
 autoUpdater.setFeedURL({
   provider: 'generic',
   url: 'https://leadme-network-tool-f81e92d61350.herokuapp.com/static/'
