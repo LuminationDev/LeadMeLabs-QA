@@ -3,19 +3,17 @@ import { passwordRoutes } from "./passwordRoutes";
 
 //Generic screens
 import Settings from '../views/Settings.vue';
-import NetworkSkeleton from "../views/PasswordSkeleton.vue";
 import PasswordSkeleton from "../views/PasswordSkeleton.vue";
 
 const router = createRouter(<RouterOptions>{
     history: createWebHashHistory(),
     routes: [
         {
-            path: '/password',
-            name: 'password',
+            path: '/password-login',
+            name: 'password-login-main',
             component: PasswordSkeleton,
             meta: {
-                prev: '/',
-                progress: 0
+                next: '/password-generation'
             }
         },
         {

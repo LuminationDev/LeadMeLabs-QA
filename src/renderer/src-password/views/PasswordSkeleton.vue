@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import PasswordHeader from "./PasswordHeader.vue";
 import PasswordFooter from "./PasswordFooter.vue";
+import PasswordLogin from "../components/screen/PasswordLogin.vue";
+import { useRoute } from "vue-router";
+import PasswordGeneration from "../components/screen/PasswordGeneration.vue";
 
-const back = () => {
-  console.log("back");
-}
-
-const next = () => {
-  console.log("next");
-}
+const route = useRoute();
 </script>
 
 <template>
@@ -16,18 +13,12 @@ const next = () => {
     <div class="flex flex-row">
       <PasswordHeader/>
     </div>
+
     <div class="flex flex-row w-full h-full relative">
-      Passwords and stuff
+      <PasswordLogin v-if="route.name === 'password-login' || route.name === 'password-login-main'" />
+      <PasswordGeneration v-if="route.name === 'password-generation'"/>
     </div>
-    <PasswordFooter
-        :current-page="1"
-        :number-of-pages="3"
-        @back="back"
-        @next="next"
-    />
+
+    <PasswordFooter :prev="route.meta['prev']" :next="route.meta['next']" />
   </div>
 </template>
-
-<style>
-
-</style>

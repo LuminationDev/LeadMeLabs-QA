@@ -1,34 +1,30 @@
 <script setup lang="ts">
 import GenericButton from "../../components/buttons/GenericButton.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const props = defineProps({
-  currentPage: {
-    type: Number,
-    required: true
+  next: {
+    type: [String, undefined],
+    required: false
   },
-  numberOfPages: {
-    type: Number,
-    required: true
+  prev: {
+    type: [String, undefined],
+    required: false
   }
-})
-
-const emit = defineEmits<{
-  (e: 'back'): void
-  (e: 'next'): void
-}>()
+});
 
 </script>
 
 <template>
   <div class="py-10 flex-shrink-0 h-20 sticky bottom-0 w-full z-10 bg-white flex flex-row justify-between items-center border-t-2 border-b-gray-200">
-    <GenericButton v-if="currentPage > 0" type="light" :callback="() => { $emit('back') }"
+    <GenericButton v-if="prev !== undefined" type="light" :callback="() => { router.push(prev) }"
     >Back
     </GenericButton>
 
     <div class="grow"></div>
 
-    <!--Skip without a comment-->
-    <GenericButton type="blue" :disabled="currentPage + 1 >= numberOfPages" :callback="() => { $emit('next') }" class="w-auto px-4"
+    <GenericButton type="blue" :disabled="next === undefined" :callback="() => { router.push(next) }" class="w-auto px-4"
     > Next
     </GenericButton>
   </div>

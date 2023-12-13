@@ -3,20 +3,18 @@ import PasswordSkeleton from "../views/PasswordSkeleton.vue";
 export const passwordRoutes = [
     {
         path: '/',
-        name: 'password-main',
+        name: 'password-login',
         component: PasswordSkeleton,
         meta: {
-            prev: '/',
-            progress: 0
+            next: '/password-generation'
         }
     },
     {
-        path: '/password',
-        name: 'password',
+        path: '/password-generation',
+        name: 'password-generation',
         component: PasswordSkeleton,
         meta: {
-            prev: '/',
-            progress: 0
+            prev: '/password-login'
         }
     }
 ]
