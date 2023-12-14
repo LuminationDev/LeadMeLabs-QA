@@ -1,5 +1,6 @@
 export const HELPER_CHANNEL = 'helper_function' //Frontend -> Backend channel
 export const NETWORK_CHANNEL = 'network_function' //Frontend -> Backend channel
+export const PASSWORD_CHANNEL = 'password_function' //Frontend -> Backend channel
 
 export const APPLICATION_CHANNEL = 'application_settings'
 export const ERROR_CHANNEL = 'error'
