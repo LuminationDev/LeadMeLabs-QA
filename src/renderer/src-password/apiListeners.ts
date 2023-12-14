@@ -17,6 +17,33 @@ export const initialise = () => {
 //@ts-ignore
 export const listeners = async (info: any) => {
     switch(info.channelType) {
+        case "password_two_step":
+            passwordStore.statusLogin = "";
+            passwordStore.awaitingTwoStep = true;
+            break;
+
+        case "password_unlock":
+            passwordStore.awaitingTwoStep = true;
+            passwordStore.statusTwoFactor = "";
+            passwordStore.validSession = true;
+            break;
+
+        case "password_valid_session":
+            passwordStore.statusTwoFactor = "";
+            passwordStore.validSession = true;
+            break;
+
+        case "password_log_out":
+            passwordStore.statusLogout = "";
+            passwordStore.validSession = false;
+            passwordStore.awaitingTwoStep = false;
+            break;
+
+        case "password_error_message":
+            passwordStore.resetStatuses();
+            passwordStore.errorMessage = info.error;
+            break;
+
         default:
             console.log(info);
             break;

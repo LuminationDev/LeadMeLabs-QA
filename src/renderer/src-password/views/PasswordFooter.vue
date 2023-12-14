@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import GenericButton from "../../components/buttons/GenericButton.vue";
 import { useRouter } from "vue-router";
+import {usePasswordStore} from "../store/passwordStore";
+
+const passwordStore = usePasswordStore();
 const router = useRouter();
 
 const props = defineProps({
@@ -24,7 +27,7 @@ const props = defineProps({
 
     <div class="grow"></div>
 
-    <GenericButton type="blue" :disabled="next === undefined" :callback="() => { router.push(next) }" class="w-auto px-4"
+    <GenericButton type="blue" :disabled="next === undefined || !passwordStore.validSession" :callback="() => { router.push(next) }" class="w-auto px-4"
     > Next
     </GenericButton>
   </div>
