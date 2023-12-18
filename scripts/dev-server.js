@@ -14,9 +14,11 @@ let electronProcess = null;
 let electronProcessLocker = false;
 let rendererPort = 0;
 
+const processArgs = process.argv.slice(2);
+
 async function startRenderer() {
     viteServer = await Vite.createServer({
-        configFile: Path.join(__dirname, '..', 'vite.config.js'),
+        configFile: Path.join(__dirname, '..', 'config', 'vite.config.js'),
         mode: 'development',
     });
 
@@ -36,8 +38,9 @@ async function startElectron() {
         return;
     }
 
+    //Depending on the package.json script run the full QA tool or the separate tools
     const args = [
-        Path.join(__dirname, '..', 'build', 'main', 'main.js'),
+        Path.join(__dirname, '..', 'build', 'main', `main-${processArgs[0]}`, 'main.js'), //TODO check if this works
         rendererPort,
     ];
     electronProcess = ChildProcess.spawn(Electron, args);
