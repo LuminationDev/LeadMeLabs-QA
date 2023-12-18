@@ -1,8 +1,8 @@
 {
-  "name": "leadme-password",
-  "version": "1.0.0",
-  "description": "The LeadMe Labs QA Password Generator",
-  "main": "build/main/main-password/main.js",
+  "name": "leadme-qa",
+  "version": "1.0.5",
+  "description": "The LeadMe Labs QA Automation",
+  "main": "build/main/main.js",
   "scripts": {
     "dev": "npm run update-main:full && npm run dev-server:full",
     "dev-full": "npm run update-main:full && npm run dev-server:full",
