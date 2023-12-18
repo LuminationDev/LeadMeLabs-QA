@@ -106,7 +106,6 @@
     "electron-updater": "^5.3.0",
     "firebase-admin": "^11.11.0",
     "network": "^0.6.1",
-    "node-jq": "^4.2.2",
     "performance-now": "^2.1.0",
     "ping": "^0.4.4",
     "pinia": "^2.0.34",
