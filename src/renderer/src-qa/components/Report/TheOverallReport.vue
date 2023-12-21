@@ -31,7 +31,7 @@ const generateCategoryStatus = (parent: string) => {
       for (const deviceId of deviceIds) {
         const {passedStatus: status} = devices[deviceId];
 
-        if (status === 'passed') passed++;
+        if (status === 'passed' || status === 'detail') passed++;
         else if (status === 'failed') failed++;
         else if (status === 'skipped') skipped++;
       }

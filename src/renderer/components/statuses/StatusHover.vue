@@ -5,6 +5,7 @@ import checkingSrc from "../../assets/icons/checking-loading.svg";
 import failedSrc from "../../assets/icons/auto-checked-failed.svg";
 import passedSrc from "../../assets/icons/auto-checked-passed.svg";
 import warningSrc from "../../assets/icons/auto-checked-warning.svg";
+import detailSrc from "../../assets/icons/auto-checked-detail.svg";
 import emptySrc from "../../assets/icons/auto-checked-empty.svg";
 
 defineProps({
@@ -48,6 +49,7 @@ const clearHoverTimer = () => {
       <img v-else-if="passedStatus === 'failed' && checkingStatus !== 'checking'" alt="failed" :src="failedSrc"/>
       <img v-else-if="passedStatus === 'passed' && checkingStatus !== 'checking'" alt="passed" :src="passedSrc"/>
       <img v-else-if="passedStatus === 'warning' && checkingStatus !== 'checking'" alt="warning" :src="warningSrc"/>
+      <img v-else-if="passedStatus === 'detail' && checkingStatus !== 'checking'" alt="detail" :src="detailSrc"/>
       <div v-else-if="passedStatus === 'not_applicable' && checkingStatus !== 'checking'">N/A</div>
       <img v-else-if="passedStatus === 'skipped' && checkingStatus !== 'checking'" alt="skipped" :src="emptySrc"/>
       <img v-else alt="empty" :src="emptySrc"/>

@@ -558,6 +558,7 @@ export const useFullStore = defineStore({
             networkChecks.requirements = ["station_connection_checks"]
 
             const windowsChecks = new QaGroup("windows_checks", "windows")
+            const windowsVersionDetail = new QaCheckResult("windows_version_detail", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Windows Version", "What is the PCs Windows version?")
             const wakeOnLAN = new QaCheckResult("magic_packet_enabled", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Magic packet enabled", "Wake on Magic Packet is enabled")
             const envVariable = new QaCheckResult("openssl_environment", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "OPENSSL ENV set", "Is OPENSSL_ia32cap set in environment variables")
             const wallpaper = new QaCheckResult("wallpaper_is_set", "auto", 10000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Correct wallpaper", "Is the Lumination wallpaper set based on the image name")
@@ -565,7 +566,7 @@ export const useFullStore = defineStore({
             const dateTime = new QaCheckResult("correct_datetime", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Time & Date", "Is the date and time set correctly")
             windowsChecks.checks.push(wakeOnLAN, envVariable, wallpaper);
             // @ts-ignore //Only add if the labType equals online
-            if(this.reportTracker['labType'] !== "Offline") {windowsChecks.checks.push(timezone, dateTime)}
+            if(this.reportTracker['labType'] !== "Offline") {windowsChecks.checks.push(windowsVersionDetail, timezone, dateTime)}
 
             const configChecks = new QaGroup("configuration_checks", "configuration");
             const taskScheduler = new QaCheckResult("task_scheduler_created", "auto", 10000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Task scheduler", "Task scheduler is correctly setup")

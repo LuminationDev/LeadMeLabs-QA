@@ -51,7 +51,7 @@ const generateCategoryStatus = computed(() => {
   for (const deviceId of deviceIds) {
     const { passedStatus: status } = devices[deviceId];
 
-    if (status === 'passed') passed++;
+    if (status === 'passed' || status === 'detail') passed++;
     else if (status === 'warning') warning++;
     else if (status === 'failed') failed++;
     else if (status === 'not_applicable') not_applicable++;
@@ -140,7 +140,8 @@ const getCheckStatus = (status: string | undefined, required: any) => {
 
   <tr class="bg-gray-50 text-xs" v-for="(device, index) in fullStore.orderedDevices" :key="index">
     <td v-if="(device.checks[checkId]?.passedStatus === 'failed' ||
-              device.checks[checkId]?.passedStatus === 'warning') &&
+              device.checks[checkId]?.passedStatus === 'warning' ||
+              device.checks[checkId]?.passedStatus === 'detail') &&
               device.checks[checkId]?.message !== undefined"
         colspan="3" class="pl-8 p-3">
       <div>
