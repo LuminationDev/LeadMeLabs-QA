@@ -23,6 +23,7 @@ defineProps({
       <div v-else-if="checkingStatus === 'timeout' || (passedStatus === 'failed' && checkingStatus !== 'checking')" class="bg-yellow-500 h-3 w-3 rounded-xl"/>
       <div v-else-if="passedStatus === 'failed' && checkingStatus !== 'checking'" class="bg-red-500 h-3 w-3 rounded-xl"/>
       <div v-else-if="passedStatus === 'passed' && checkingStatus !== 'checking'" class="bg-green-500 h-3 w-3 rounded-xl"/>
+      <div v-else-if="passedStatus === 'detail' && checkingStatus !== 'checking'" class="bg-blue-500 h-3 w-3 rounded-xl"/>
       <div v-else-if="passedStatus === 'warning' && checkingStatus !== 'checking'" class="bg-amber-500 h-3 w-3 rounded-xl"/>
       <div v-else-if="passedStatus === 'not_applicable' && checkingStatus !== 'checking'">N/A</div>
       <div v-else class="border border-gray-800 h-3 w-3 rounded-xl"/>
