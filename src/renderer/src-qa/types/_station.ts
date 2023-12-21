@@ -1,5 +1,5 @@
 import QaCheck from "../interfaces/_qaCheck";
-import {useFullStore} from "../store/fullStore";
+import { useFullStore } from "../store/fullStore";
 
 type StationDetails = {
     ipAddress: string,
