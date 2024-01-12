@@ -8,6 +8,7 @@ class Station extends Appliance implements ApplianceInterface {
     theatre_lead: string
     mac_address: string
     led_ring_id: number
+    mode: string
 
     constructor(
         id = 0,
@@ -18,6 +19,7 @@ class Station extends Appliance implements ApplianceInterface {
         theatre_lead = '',
         room = '',
         mac_address = '',
+        mode = '',
         led_ring_id = 0
     ) {
         super(id, name, room)
@@ -28,6 +30,7 @@ class Station extends Appliance implements ApplianceInterface {
 
         this.mac_address = mac_address
         this.led_ring_id = led_ring_id
+        this.mode = mode
     }
 }
 

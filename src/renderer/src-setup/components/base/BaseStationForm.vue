@@ -8,7 +8,7 @@ import Dropdown from '../selector/Dropdown.vue'
 import { useLabStore } from '../../store/labStore'
 import { storeToRefs } from 'pinia'
 import { useOptionalValidations } from '../../../composables/requiredOptional'
-import { helpers, ipAddress } from '@vuelidate/validators'
+import {helpers, ipAddress, required} from '@vuelidate/validators'
 import warning from '../../../assets/icons/warning.svg'
 
 const { requiredOptional } = useOptionalValidations()
@@ -36,6 +36,7 @@ onBeforeMount(() => {
     state.ip_address = props.data.ip_address
     state.led_ring_id = props.data.led_ring_id
     state.mac_address = props.data.mac_address
+    state.mode = props.data.mode
     state.port = String(props.data.port)
     state.theatre_id = Number(props.data.theatre_id)
     state.theatre_lead = Boolean(props.data.theatre_lead)
@@ -46,6 +47,7 @@ const state = reactive({
     led_ring_id: 0,
     mac_address: '',
     port: '',
+    mode: '',
     theatre_id: 0,
     theatre_lead: false
 })
@@ -58,6 +60,17 @@ const led_ring_list = computed(() => {
         }
     })
 })
+
+const stationModeOptions = [
+  {
+    id: 'VR',
+    name: 'VR',
+  },
+  {
+    id: 'Content',
+    name: 'Content',
+  }
+]
 
 const warningDuplicateUseLedRing = computed(() => {
     if (state.led_ring_id === props.data.led_ring_id) return false
@@ -82,6 +95,7 @@ const customMacAddressValidator = (value): boolean => {
 
 const rules = {
     ip_address: { requiredOptional, ipAddress },
+    mode: { required: required },
     mac_address: {
         requiredOptional,
         mac_address: helpers.withMessage(
@@ -196,6 +210,17 @@ const deleteCallbackAssociatedStation = (): void => {
                             LED Ring?</span
                         >
                     </div>
+                    <Dropdown
+                        v-model="v$.mode.$model"
+                        class="my-2"
+                        :v$="v$.mode"
+                        :data="stationModeOptions"
+                        name="mode"
+                        field-id="mode"
+                        placeholder="Pick a mode"
+                        label-text="Mode"
+                    >
+                    </Dropdown>
                 </div>
             </template>
         </BaseForm>
