@@ -16,7 +16,7 @@ Sentry.init({
 autoUpdater.autoDownload = false;
 autoUpdater.setFeedURL({
   provider: 'generic',
-  url: 'https://leadme-qa-tool.herokuapp.com/static/'
+  url: 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/'
 })
 
 

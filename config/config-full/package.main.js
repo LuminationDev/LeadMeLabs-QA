@@ -1,6 +1,6 @@
 module.exports = {
     main: "build/main/main-full/main.js",
     name: "leadme-tools-qa",
-    version: "1.0.4",
+    version: "1.0.6",
     description: "The LeadMe Labs QA tools"
 };
