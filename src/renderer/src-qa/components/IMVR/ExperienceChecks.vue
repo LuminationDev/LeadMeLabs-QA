@@ -62,7 +62,7 @@ const hasStartedExperienceChecks = computed(() => {
 });
 
 const allHeadsetsConnected = computed(() => {
-  const index = fullStore.stations.findIndex(station => station.vrStatuses?.openVrStatus !== 'Connected')
+  const index = fullStore.stations.findIndex(station => (station.vrStatuses?.openVrStatus !== 'Connected' && station.stationMode !== 'vr'))
   return index === -1
 });
 
