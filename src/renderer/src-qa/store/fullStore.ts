@@ -787,7 +787,8 @@ export const useFullStore = defineStore({
                 id: stationData.id + "",
                 room: stationData.room,
                 macAddress: stationData.macAddress,
-                ledRingId: null
+                ledRingId: null,
+                stationMode: stationData.stationMode ?? "vr"
             }
         },
 
