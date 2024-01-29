@@ -11,6 +11,7 @@ type StationDetails = {
     room: string;
     macAddress: string;
     ledRingId: string|null;
+    stationMode: string;
 }
 
 class Station {
@@ -22,7 +23,6 @@ class Station {
     expectedDetails: StationDetails | null = null // from NUC
     vrStatuses: any = null
     qaChecks: Array<QaCheck> = []
-    stationMode: string = "vr"
 
     getId(): string {
         return this.expectedDetails?.id ?? ''
