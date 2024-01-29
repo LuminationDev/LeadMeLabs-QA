@@ -177,10 +177,6 @@ workflows:
       - hold:
           context: LeadMeDeployers
           type: approval
-          filters:
-            branches:
-              only:
-                - main
       - build-mac:
           buildType: "Release"
           requires:
