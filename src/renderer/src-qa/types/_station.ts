@@ -23,7 +23,6 @@ class Station {
     expectedDetails: StationDetails | null = null // from NUC
     vrStatuses: any = null
     qaChecks: Array<QaCheck> = []
-    stationMode: string = "vr"
 
     getId(): string {
         return this.expectedDetails?.id ?? ''
