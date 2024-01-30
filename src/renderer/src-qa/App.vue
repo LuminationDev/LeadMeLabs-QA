@@ -10,14 +10,15 @@ import { useStateStore } from '../store/stateStore';
 import { useConfigStore } from "../src-setup/store/configStore";
 import { storeToRefs } from "pinia";
 import { initialise, listeners } from "./apiListeners";
+import * as Sentry from "@sentry/electron";
 
 const pushRoute = (value: string) => {
   router.push(value);
 }
 
-// Sentry.init({
-//   dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
-// });
+Sentry.init({
+  dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
+});
 
 const route = useRoute()
 const configStore = useConfigStore()

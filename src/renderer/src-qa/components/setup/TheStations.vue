@@ -2,13 +2,28 @@
 import ItemHover from "../../../components/statuses/ItemHover.vue";
 import StatusHover from "../../../components/statuses/StatusHover.vue";
 import { useFullStore } from "../../store/fullStore";
-import { computed, ref } from "vue";
+import {computed, onMounted, ref, onBeforeMount, onBeforeUnmount } from "vue";
 import { QaCheck } from "../../interfaces";
 import * as CONSTANT from "../../../assets/constants";
 import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
+import * as Sentry from "@sentry/electron";
+
+Sentry.init({
+  dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
+});
 
 const fullStore = useFullStore();
 const checking = ref("done");
+
+onMounted(() => {
+  Sentry.captureMessage("onMounted")
+})
+onBeforeMount(() => {
+  Sentry.captureMessage("onBeforeMount")
+})
+onBeforeUnmount(() => {
+  Sentry.captureMessage("onBeforeUnmount")
+})
 
 const checks = computed(() => {
   let checks = {}
