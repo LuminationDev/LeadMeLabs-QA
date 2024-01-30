@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GenericButton from "../../components/buttons/GenericButton.vue";
 
-const props = defineProps({
+defineProps({
   currentPage: {
     type: Number,
     required: true
@@ -12,7 +12,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'back'): void
   (e: 'next'): void
 }>()

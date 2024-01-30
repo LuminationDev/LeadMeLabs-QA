@@ -10,14 +10,13 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { onMounted, ref } from "vue";
 import 'swiper/css';
 import NetworkDeviceSelection from "./NetworkDeviceSelection.vue";
-import NetworkDeviceConnection from "../components/screen/NetworkDeviceConnection.vue";
 import NetworkReport from "../components/screen/NetworkReport.vue";
-import {useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 import ConnectedToNetwork from '../../assets/guidesImages/ConnectedToNetwork.png'
 import RunOnStation from '../../assets/guidesImages/RunOnStation.png'
 import Ports from '../../assets/guidesImages/Ports.png'
 
-const route = useRoute();
+useRoute();
 
 function up() {
   swiperRef.value.$el.swiper.slideNext(500)
@@ -133,7 +132,7 @@ const guideContent = [
       <NetworkHeader/>
     </div>
     <div class="flex flex-row w-full h-full relative">
-      <NetworkSidebar class="w-32 pt-10" :number-of-sections="3" :current-section="swiper?.activeIndex" @select="navigateTo"/>
+      <NetworkSidebar class="w-32 pt-10" :number-of-sections="3" :current-section="swiper['activeIndex']" @select="navigateTo"/>
       <Swiper ref="swiperRef" @swiper="setSwiper" direction="vertical" :pagination="{ clickable: true }" :slides-per-view="1" class="w-full h-auto mb-44">
         <SwiperSlide>
           <NetworkDeviceSelection :guide="guideContent[0]"/>
@@ -165,7 +164,7 @@ const guideContent = [
       </Swiper>
     </div>
     <NetworkFooter
-        :current-page="swiper?.activeIndex"
+        :current-page="swiper['activeIndex']"
         :number-of-pages="3"
         @back="down"
         @next="up"
