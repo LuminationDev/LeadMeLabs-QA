@@ -11,6 +11,7 @@ type StationDetails = {
     room: string;
     macAddress: string;
     ledRingId: string|null;
+    stationMode: string|null;
 }
 
 class Station {
