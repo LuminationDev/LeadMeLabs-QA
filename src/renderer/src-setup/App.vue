@@ -4,7 +4,7 @@ import ShowState from './components/helpers/showState.vue'
 import Sidebar from '../layout/Sidebar/Sidebar.vue'
 import { onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
-import Bottombar from './components/BottomBar.vue'
+import BottomBar from './components/BottomBar.vue'
 import { useConfigStore } from './store/configStore'
 import { storeToRefs } from 'pinia'
 import router from './router/router'
@@ -31,7 +31,7 @@ const { showPreview } = storeToRefs(mainStore)
       <div
           class="sticky bottom-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white"
       >
-        <Bottombar :meta="route.meta" />
+        <BottomBar :meta="route.meta" />
       </div>
     </div>
     <div

@@ -3,7 +3,7 @@ import { useStateStore } from "../../../store/stateStore";
 import { Check } from "../../interfaces/_report";
 import { useNetworkStore } from "../../store/networkStore";
 
-const props = defineProps({
+defineProps({
   checkId: {
     type: String,
     required: true
@@ -14,7 +14,7 @@ const props = defineProps({
   }
 });
 
-const networkStore = useNetworkStore();
+useNetworkStore();
 const stateStore = useStateStore();
 </script>
 

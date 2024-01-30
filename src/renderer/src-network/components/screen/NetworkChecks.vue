@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useNetworkStore } from "../../store/networkStore";
 import { computed, watch } from "vue";
-import { DESCRIPTIONS, PORTS, WEBSITES } from "../../../assets/checks/_networkValues";
-import { Report } from "../../interfaces/_report";
+import { DESCRIPTIONS, WEBSITES } from "../../../assets/checks/_networkValues";
+// import { Report } from "../../interfaces/_report";
 import * as CONSTANT from "../../../assets/constants";
 import ItemHover from "../../../components/statuses/ItemHover.vue";
 import CategoryStatus from "../CategoryStatus.vue";
@@ -60,14 +60,8 @@ const teardownPortCheck = async () => {
   api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, { channelType: 'teardown_port_check' });
 };
 
-const requestPortCheck = async () => {
-  for (const port of PORTS) {
-    await sendNetworkRequest('port_check', port.name, 5000, port.value);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  }
-};
-
 function portTest() {
+  //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.NETWORK_CHANNEL, {
     channelType: "port_test",
     port: 55556
@@ -91,11 +85,11 @@ const startNetworkChecks = () => {
   Promise.all([requestWebsitePing()]); //Run the loops concurrently
 }
 
-const results = computed((): Report => {
-  return networkStore.reportTracker;
-});
+// const results = computed((): Report => {
+//   return networkStore.reportTracker;
+// });
 
-watch(() => networkStore.checkReportState, (newValue, oldValue) => {
+watch(() => networkStore.checkReportState, (newValue) => {
   if (newValue === "done") {
     teardownPortCheck()
   }
