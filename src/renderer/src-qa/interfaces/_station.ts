@@ -16,4 +16,5 @@ export default interface Station {
     macAddress: string;
     ledRingId: string;
     status: string;
+    stationMode?: string|null;
 }
