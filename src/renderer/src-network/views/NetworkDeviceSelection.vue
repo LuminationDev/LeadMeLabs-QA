@@ -32,7 +32,6 @@ const deviceOptions = [
 
 const selection = ref(null)
 
-
 </script>
 <template>
   <NetworkSection :guide="props.guide">

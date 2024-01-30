@@ -2,8 +2,7 @@
 import GenericButton from '@renderer/components/buttons/GenericButton.vue'
 import useVuelidate from "@vuelidate/core";
 import TextInput from "@renderer/components/inputs/TextInput.vue";
-import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";
 import { useRouter } from "vue-router";
@@ -14,14 +13,14 @@ const emit = defineEmits<{
   (e: 'success', email: string, siteName: string): void
 }>()
 
-const props = defineProps({
+defineProps({
   uploading: {
     type: Boolean,
     required: true
   }
 })
 
-const router = useRouter();
+useRouter();
 
 const rules = {
   email: {
@@ -39,7 +38,7 @@ const state = reactive({
 const v$ = useVuelidate(rules, state);
 const errorText = vueRef("");
 const showModal = vueRef(false);
-const auth = getAuth();
+getAuth();
 
 async function login(): Promise<void> {
   // @ts-ignore

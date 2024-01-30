@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Modal from "../../modals/Modal.vue";
 
-const props = defineProps({
+defineProps({
   message: {
     type: String,
     required: true
