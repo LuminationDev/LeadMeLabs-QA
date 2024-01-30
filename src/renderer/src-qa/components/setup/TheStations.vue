@@ -15,22 +15,13 @@ Sentry.init({
 const fullStore = useFullStore();
 const checking = ref("done");
 
-onMounted(() => {
-  Sentry.captureMessage("onMounted")
-})
-onBeforeMount(() => {
-  Sentry.captureMessage("onBeforeMount")
-})
-onBeforeUnmount(() => {
-  Sentry.captureMessage("onBeforeUnmount")
-})
-
-Sentry.captureMessage("prechecks creation")
-
 const checks = computed(() => {
   let checks = {}
+  console.log('computing checks')
   fullStore.stations.forEach(station => {
+    console.log(station)
     station.getComputedChecks().forEach((check) => {
+      console.log(check)
       try {
         if (!checks[check.id]) {
           //Add the check to the report
@@ -75,18 +66,15 @@ const retryStationConnection = () => {
 
 Sentry.captureMessage("done all set up")
 
-const myInt = ref(0)
-
 </script>
 
 <template>
   <div class="flex flex-col">
     <!--Loading-->
-    <button @click="() => { myInt++ }">Click me</button>
-    <CheckStatus v-if="myInt === 1" :callback="retryStationConnection" :checking="checking"/>
+    <CheckStatus :callback="retryStationConnection" :checking="checking"/>
 
     <table class="w-full border-collapse mt-4">
-      <tr class="text-left text-xs bg-gray-100 border border-gray-200" v-if="myInt === 2">
+      <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
 
         <th class="w-16 text-center p-3" v-for="station in fullStore.stations">
@@ -94,16 +82,17 @@ const myInt = ref(0)
         </th>
       </tr>
 
-      <template v-if="myInt === 3">
-        <tr v-for="(check, id) in checks" :key="id" class="text-sm border border-gray-200">
-          <ItemHover :title="check['displayName']" :message="check['extendedDescription'] ?? 'No details provided'"/>
+      <template>
+        {{ checks }}
+<!--        <tr v-for="(check, id) in checks" :key="id" class="text-sm border border-gray-200">-->
+<!--          <ItemHover :title="check['displayName']" :message="check['extendedDescription'] ?? 'No details provided'"/>-->
 
-          <template v-for="(station, _index) in check['stations'] as QaCheck[]" :key="_index">
-            <StatusHover :message="station.message ?? 'No details provided'"
-                         :checking-status="'not checked'"
-                         :passed-status="station.passedStatus ?? 'unknown'"/>
-          </template>
-        </tr>
+<!--          <template v-for="(station, _index) in check['stations'] as QaCheck[]" :key="_index">-->
+<!--            <StatusHover :message="station.message ?? 'No details provided'"-->
+<!--                         :checking-status="'not checked'"-->
+<!--                         :passed-status="station.passedStatus ?? 'unknown'"/>-->
+<!--          </template>-->
+<!--        </tr>-->
       </template>
     </table>
   </div>
