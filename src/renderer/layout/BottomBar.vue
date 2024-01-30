@@ -37,11 +37,8 @@ const goNextLink = (): void => {
     Sentry.init({
       dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
     });
-    Sentry.captureMessage("in if statement")
     populateFullReportTrackerWithManualChecks();
-    Sentry.captureMessage("post populateFullReportTrackerWithManualChecks")
     fullStore.buildQaList();
-    Sentry.captureMessage("post buildQaList")
     populateFullReportTrackerWithAutoChecks();
     Sentry.captureMessage("post populateFullReportTrackerWithAutoChecks")
   }
