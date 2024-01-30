@@ -53,7 +53,7 @@ export const listeners = (info: any) => {
         case CONSTANT.MESSAGE.LOAD_PROGRESS:
             fullStore.reportTracker = info.data;
             break;
-s
+
         default:
             break;
     }
@@ -179,7 +179,8 @@ const handleTCPMessage = (info: any) => {
                     room: station.room,
                     macAddress: station.macAddress,
                     ledRingId: station.ledRingId,
-                    labLocation: ""
+                    labLocation: "",
+                    stationMode: station?.mode ? station.mode.toLowerCase() : "vr"
                 }
                 fullStore.checkExperiencesForErrors(station.id, station.installedApplications ?? "");
                 fullStore.stations.push(s)
