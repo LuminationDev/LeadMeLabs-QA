@@ -6,11 +6,6 @@ import TheStations from "@renderer/src-qa/components/setup/TheStations.vue";
 import TheTablets from "@renderer/src-qa/components/setup/TheTablets.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import * as Sentry from "@sentry/electron";
-
-Sentry.init({
-  dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
-});
 
 const route = useRoute();
 const routeNameToIndex = {

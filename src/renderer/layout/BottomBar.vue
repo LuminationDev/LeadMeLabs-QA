@@ -10,7 +10,6 @@ import { useRoute } from "vue-router";
 import { QaCheckResult } from "../src-qa/types/_qaCheckResult";
 import { Comment } from "../src-qa/interfaces/_report";
 import { ALL_VALUES, HANDOVER } from "../assets/checks/_fullcheckValues";
-import * as Sentry from "@sentry/electron";
 
 const fullStore = useFullStore();
 const stateStore = useStateStore();
@@ -34,13 +33,9 @@ const goNextLink = (): void => {
   const { next } = props.meta;
   emit('pushRoute', next);
   if (route.name === 'full-setup-devices-tablets') {
-    Sentry.init({
-      dsn: "https://93c089fc6a28856446c8de366ce9836e@o1294571.ingest.sentry.io/4505763516973056",
-    });
     populateFullReportTrackerWithManualChecks();
     fullStore.buildQaList();
     populateFullReportTrackerWithAutoChecks();
-    Sentry.captureMessage("post populateFullReportTrackerWithAutoChecks")
   }
 }
 
