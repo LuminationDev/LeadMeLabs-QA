@@ -105,9 +105,9 @@ const checks = computed(() => {
       try {
         if (!checks[check.id]) {
           //Add the check to the report
-          fullStore.addCheckToReportTracker("connection", "station_details",
-              { key: check.id, description: check.displayName },
-              { station: true, tablet: false, nuc: false, cbus: false });
+          // fullStore.addCheckToReportTracker("connection", "station_details",
+          //     { key: check.id, description: check.displayName },
+          //     { station: true, tablet: false, nuc: false, cbus: false });
 
           checks[check.id] = {
             displayName: check.displayName,
@@ -116,8 +116,8 @@ const checks = computed(() => {
         }
 
         //Update the report
-        fullStore.updateReport("connection", "station_details",
-            { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
+        // fullStore.updateReport("connection", "station_details",
+        //     { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
 
         checks[check.id].stations.push(check)
       } catch (e) {
