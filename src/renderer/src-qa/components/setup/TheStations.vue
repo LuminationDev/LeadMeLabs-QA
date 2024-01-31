@@ -2,7 +2,7 @@
 import ItemHover from "../../../components/statuses/ItemHover.vue";
 import StatusHover from "../../../components/statuses/StatusHover.vue";
 import { useFullStore } from "../../store/fullStore";
-import {computed, onMounted, ref, onBeforeMount, onBeforeUnmount } from "vue";
+import { ref, watch} from "vue";
 import { QaCheck } from "../../interfaces";
 import * as CONSTANT from "../../../assets/constants";
 import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
@@ -14,6 +14,7 @@ Sentry.init({
 
 const fullStore = useFullStore();
 const checking = ref("done");
+const checks = ref({});
 
 var deepDiffMapper = function () {
   return {
@@ -92,44 +93,38 @@ var deepDiffMapper = function () {
 var prev = null;
 
 
-const checks = computed(() => {
-  let checks = {}
-  console.log('computing checks')
-  console.log(deepDiffMapper.map(prev, fullStore.stations))
-  console.log(JSON.stringify(deepDiffMapper.map(prev, fullStore.stations)))
-  prev = fullStore.stations
-  fullStore.stations.forEach(station => {
-    console.log(station)
-    station.getComputedChecks().forEach((check) => {
-      console.log(check)
-      try {
-        if (!checks[check.id]) {
-          //Add the check to the report
-          // fullStore.addCheckToReportTracker("connection", "station_details",
-          //     { key: check.id, description: check.displayName },
-          //     { station: true, tablet: false, nuc: false, cbus: false });
+watch(() => fullStore.stations, (newStations, oldStations) => {
+    console.log(newStations);
+    console.log(oldStations);
 
-          checks[check.id] = {
-            displayName: check.displayName,
-            stations: []
+    newStations.forEach(station => {
+      station.getComputedChecks().forEach((check) => {
+        try {
+          if (!checks.value[check.id]) {
+            //Add the check to the report
+            fullStore.addCheckToReportTracker("connection", "station_details",
+                { key: check.id, description: check.displayName },
+                { station: true, tablet: false, nuc: false, cbus: false });
+
+            checks.value[check.id] = {
+              displayName: check.displayName,
+              stations: []
+            }
           }
+
+          //Update the report
+          fullStore.updateReport("connection", "station_details",
+              { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
+
+          checks.value[check.id].stations.push(check)
+        } catch (e) {
+          Sentry.captureException(e);
         }
-
-        //Update the report
-        // fullStore.updateReport("connection", "station_details",
-        //     { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
-
-        checks[check.id].stations.push(check)
-      } catch (e) {
-        Sentry.captureException(e);
-      }
-    })
-  });
-
-  return checks
-});
-
-Sentry.captureMessage("pre retryStationConnection creation")
+      })
+    });
+  },
+  { immediate: true } // Run the watcher at least once immediately
+);
 
 const retryStationConnection = () => {
   checking.value = "testing";
@@ -143,8 +138,6 @@ const retryStationConnection = () => {
   });
   setTimeout(() => { checking.value = "done" }, 1000);
 }
-
-Sentry.captureMessage("done all set up")
 
 </script>
 
@@ -162,18 +155,15 @@ Sentry.captureMessage("done all set up")
         </th>
       </tr>
 
-      <template>
-        {{ checks }}
-<!--        <tr v-for="(check, id) in checks" :key="id" class="text-sm border border-gray-200">-->
-<!--          <ItemHover :title="check['displayName']" :message="check['extendedDescription'] ?? 'No details provided'"/>-->
+      <tr v-for="(check, id) in checks" :key="id" class="text-sm border border-gray-200">
+        <ItemHover :title="check['displayName']" :message="check['extendedDescription'] ?? 'No details provided'"/>
 
-<!--          <template v-for="(station, _index) in check['stations'] as QaCheck[]" :key="_index">-->
-<!--            <StatusHover :message="station.message ?? 'No details provided'"-->
-<!--                         :checking-status="'not checked'"-->
-<!--                         :passed-status="station.passedStatus ?? 'unknown'"/>-->
-<!--          </template>-->
-<!--        </tr>-->
-      </template>
+        <template v-for="(station, _index) in check['stations'] as QaCheck[]" :key="_index">
+          <StatusHover :message="station.message ?? 'No details provided'"
+                       :checking-status="'not checked'"
+                       :passed-status="station.passedStatus ?? 'unknown'"/>
+        </template>
+      </tr>
     </table>
   </div>
 </template>
