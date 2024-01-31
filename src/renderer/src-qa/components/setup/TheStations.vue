@@ -116,8 +116,8 @@ const checks = computed(() => {
         }
 
         //Update the report
-        // fullStore.updateReport("connection", "station_details",
-        //     { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
+        fullStore.updateReport("connection", "station_details",
+            { passedStatus: check.passedStatus, message: check.message }, check.id, station.id);
 
         checks[check.id].stations.push(check)
       } catch (e) {

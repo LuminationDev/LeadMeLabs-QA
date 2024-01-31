@@ -872,10 +872,10 @@ export const useFullStore = defineStore({
             let device = check?.devices?.[deviceId];
 
             // Update the passedStatus based on the event
-            if (device) {
-                this.reportTracker[parent][page][checkId]['date'] = useStateStore().formattedDate(false);
-                this.reportTracker[parent][page][checkId].devices[deviceId] = info;
-            }
+            // if (device) {
+            //     this.reportTracker[parent][page][checkId]['date'] = useStateStore().formattedDate(false);
+            //     this.reportTracker[parent][page][checkId].devices[deviceId] = info;
+            // }
 
             // Update the fullStore.deviceMap
             const mapDevice = this.deviceMap.find(device => device.id == deviceId);
