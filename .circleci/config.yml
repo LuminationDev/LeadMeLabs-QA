@@ -23,9 +23,6 @@ commands:
       - run:
           name: Add github to known hosts
           command: ssh-keyscan github.com >> ~/.ssh/known_hosts
-      - run:
-          name: Add github to known hosts
-          command: dir /home/circleci/.ssh
       - when:
           condition:
             and:
@@ -33,7 +30,7 @@ commands:
           steps:
             - run:
                 name: Write ssh config file
-                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_a4ea433f945916f7cdef72165a5269a0" >> ~/.ssh/config
+                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile ~/.ssh/id_rsa_a4ea433f945916f7cdef72165a5269a0" >> ~/.ssh/config
       - when:
           condition:
             and:
@@ -41,10 +38,10 @@ commands:
           steps:
             - run:
                 name: Write ssh config file
-                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile /home/circleci/.ssh/id_rsa_b8e51b0cbebbb0bfa2e8a373411861c2" >> ~/.ssh/config
+                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile ~/.ssh/id_rsa_b8e51b0cbebbb0bfa2e8a373411861c2" >> ~/.ssh/config
       - run:
           name: Clone hosting server
-          command: cd ~/ && git clone git@github.com:LuminationDev/<<parameters.repo>>.git
+          command: cd ~/circleci-working/<<pipeline.id>>/ && git clone git@github.com:LuminationDev/<<parameters.repo>>.git
 
   copy_and_push:
     parameters:
@@ -59,35 +56,28 @@ commands:
     steps:
       - run:
           name: Checkout <<parameters.branch>>
-          command: cd ~/<<parameters.repo>> && git checkout <<parameters.branch>>
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>> && git checkout <<parameters.branch>>
       - run:
           name: Delete old files
-          command: rm -rf ~/<<parameters.repo>>/applications/<<parameters.directory>>
+          command: rm -rf ~/circleci-working/<<pipeline.id>>/<<parameters.repo>>/applications/<<parameters.directory>>
       - run:
           name: Copy built files to git repository
-          command: cp -r ./project/dist-<<parameters.tool>> ~/<<parameters.repo>>/applications/<<parameters.directory>>
+          command: cp -r ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>> ~/circleci-working/<<pipeline.id>>/<<parameters.repo>>/applications/<<parameters.directory>>
       - run:
           name: Add built files to git
-          command: cd ~/<<parameters.repo>>/applications/<<parameters.directory>> && git add --all
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>>/applications/<<parameters.directory>> && git add --all
       - run:
           name: Commit
-          command: cd ~/<<parameters.repo>> && git commit -m "Update <<parameters.tool>> tool"
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>> && git commit -m "Update <<parameters.tool>> tool"
       - run:
           name: Push
-          command: cd ~/<<parameters.repo>> && git push
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>> && git push
 
   windows-npm:
     steps:
-      - run: choco install wget -y
       - run:
-         command: wget https://nodejs.org/dist/v16.17.0/node-v16.17.0-x86.msi -P C:\Users\circleci\Downloads\
-         shell: cmd.exe
-      - run: MsiExec.exe /i C:\Users\circleci\Downloads\node-v16.17.0-x86.msi /qn
-      - run: 
-          command: |
-              Start-Process powershell -verb runAs -Args "-start GeneralProfile"
-              nvm install 16.17.0
-              nvm use 16.17.0
+          command: nvm use 16.17.0
+          shell: powershell.exe
 
   mac-nvm:
     steps:
@@ -111,27 +101,32 @@ commands:
       tool:
         type: string
     steps:
-      - checkout
+      - run: mkdir -p ~/circleci-working/<<pipeline.id>>
+      - run: cd ~/circleci-working/<<pipeline.id>>
+      - checkout:
+          path: ~/circleci-working/<<pipeline.id>>
       - when:
           condition:
             and:
               - equal: [mac, <<parameters.command>>]
           steps:
-            - run: touch ~/project/src/main/static/serviceAccount.json
-            - run: echo ${SERVICE_ACCOUNT} > ~/project/src/main/static/serviceAccount.json
+            - run: touch ~/circleci-working/<<pipeline.id>>/src/main/static/serviceAccount.json
+            - run: echo $env:SERVICE_ACCOUNT > ~/circleci-working/<<pipeline.id>>/src/main/static/serviceAccount.json
       - when:
           condition:
             and:
               - equal: [win, <<parameters.command>>]
           steps:
-            - run: echo $env:SERVICE_ACCOUNT > ~/project/src/main/static/temp.json
-            - run: Get-Content ~/project/src/main/static/temp.json | Set-Content -Encoding utf8 ~/project/src/main/static/serviceAccount.json
+            - run: cd ~/circleci-working/<<pipeline.id>> && echo $env:SERVICE_ACCOUNT > ~/circleci-working/<<pipeline.id>>/src/main/static/temp.json
+            - run:
+                command: Get-Content ~/circleci-working/<<pipeline.id>>/src/main/static/temp.json | Set-Content -Encoding utf8 ~/circleci-working/<<pipeline.id>>/src/main/static/serviceAccount.json
+                shell: powershell.exe
       - run:
           name: "npm install"
-          command: "npm install"
+          command: cd ~/circleci-working/<<pipeline.id>> && npm install
       - run:
           name: "electron-build"
-          command: "npm run build:<<parameters.command>>-<<parameters.tool>>"
+          command: cd ~/circleci-working/<<pipeline.id>> && npm run build:<<parameters.command>>-<<parameters.tool>>
       - when:
           condition:
             and:
@@ -141,8 +136,8 @@ commands:
                   - not:
                       equal: [full, <<parameters.tool>>]
           steps:
-            - run: rm ~/project/dist-<<parameters.tool>>/builder-debug.yml
-            - run: rm ~/project/dist-<<parameters.tool>>/win-unpacked/leadme-<<parameters.tool>>.exe
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/builder-debug.yml
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/win-unpacked/leadme-<<parameters.tool>>.exe
       - when:
           condition:
             and:
@@ -151,8 +146,8 @@ commands:
               - and:
                   - equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: rm ~/project/dist-<<parameters.tool>>/builder-debug.yml
-            - run: rm ~/project/dist-<<parameters.tool>>/win-unpacked/leadme-tools-qa.exe
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/builder-debug.yml
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/win-unpacked/leadme-tools-qa.exe
       - when:
           condition:
             and:
@@ -162,9 +157,9 @@ commands:
                   - not:
                       equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: ls ~/project/dist-<<parameters.tool>>/mac
-            - run: rm ~/project/dist-<<parameters.tool>>/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
-            - run: rm ~/project/dist-<<parameters.tool>>/leadme-<<parameters.tool>>-*-mac.zip
+            - run: ls ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/leadme-<<parameters.tool>>-*-mac.zip
       - when:
           condition:
             and:
@@ -173,18 +168,20 @@ commands:
               - and:
                   - equal: [ full, <<parameters.tool>> ]
           steps:
-            - run: ls ~/project/dist-<<parameters.tool>>/mac
-            - run: rm ~/project/dist-<<parameters.tool>>/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
-            - run: rm ~/project/dist-<<parameters.tool>>/leadme-tools-qa-*-mac.zip
+            - run: ls ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/leadme-tools-qa-*-mac.zip
       - store_artifacts:
-          path: ~/project/dist-<<parameters.tool>>
+          path: ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>
       - persist_to_workspace:
-          root: ~/
+          root: ~/circleci-working/<<pipeline.id>>/
           paths:
-            - project/dist-<<parameters.tool>>
+            - dist-<<parameters.tool>>
 
 jobs:
   build-windows:
+    machine: true
+    resource_class: luminationdev/darragh-comp
     executor:
       name: windows/default
     parameters:
@@ -216,6 +213,10 @@ jobs:
           tool: <<parameters.tool>>
 
   commit-and-push:
+    machine: true
+    resource_class: luminationdev/darragh-comp
+    executor:
+      name: windows/default
     parameters:
       branch:
         type: string
@@ -225,8 +226,6 @@ jobs:
         type: string
       directory:
         type: string
-    docker:
-      - image: cimg/node:current
     steps:
       - clone_hosting:
           repo: <<parameters.repo>>
