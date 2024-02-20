@@ -118,10 +118,12 @@ commands:
               - equal: [win, <<parameters.command>>]
           steps:
             - run: cd ~/circleci-working/<<pipeline.id>> && echo $env:SERVICE_ACCOUNT > ~/circleci-working/<<pipeline.id>>/src/main/static/temp.json
-            - run: Get-Content ~/circleci-working/<<pipeline.id>>/src/main/static/temp.json | Set-Content -Encoding utf8 ~/circleci-working/<<pipeline.id>>/src/main/static/serviceAccount.json
+            - run:
+                command: Get-Content ~/circleci-working/<<pipeline.id>>/src/main/static/temp.json | Set-Content -Encoding utf8 ~/circleci-working/<<pipeline.id>>/src/main/static/serviceAccount.json
+                shell: powershell.exe
       - run:
           name: "npm install"
-          command: cd ~/circleci-working/<<pipeline.id>> && npm ci
+          command: cd ~/circleci-working/<<pipeline.id>> && npm install
       - run:
           name: "electron-build"
           command: cd ~/circleci-working/<<pipeline.id>> && npm run build:<<parameters.command>>-<<parameters.tool>>
