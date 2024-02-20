@@ -132,7 +132,7 @@ const guideContent = [
       <NetworkHeader/>
     </div>
     <div class="flex flex-row w-full h-full relative">
-      <NetworkSidebar class="w-32 pt-10" :number-of-sections="3" :current-section="swiper['activeIndex']" @select="navigateTo"/>
+      <NetworkSidebar v-if="swiper" class="w-32 pt-10" :number-of-sections="3" :current-section="swiper['activeIndex']" @select="navigateTo"/>
       <Swiper ref="swiperRef" @swiper="setSwiper" direction="vertical" :pagination="{ clickable: true }" :slides-per-view="1" class="w-full h-auto mb-44">
         <SwiperSlide>
           <NetworkDeviceSelection :guide="guideContent[0]"/>
@@ -164,6 +164,7 @@ const guideContent = [
       </Swiper>
     </div>
     <NetworkFooter
+        v-if="swiper"
         :current-page="swiper['activeIndex']"
         :number-of-pages="3"
         @back="down"
