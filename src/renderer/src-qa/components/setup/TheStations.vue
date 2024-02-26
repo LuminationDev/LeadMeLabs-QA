@@ -11,7 +11,7 @@ const fullStore = useFullStore();
 const checking = ref("done");
 const checks = ref({});
 
-watch(() => fullStore.stations, (newStations, oldStations) => {
+watch(() => fullStore.stations, (newStations) => {
     newStations.forEach(station => {
       station.getComputedChecks().forEach((check) => {
         if (!checks.value[check.id]) {
