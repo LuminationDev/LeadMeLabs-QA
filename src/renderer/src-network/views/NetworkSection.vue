@@ -20,6 +20,7 @@ const guideComp = computed(() => {
       <div class="bg-blue-200 border-1 border-blue-400 text-blue-700 rounded-full h-5 font-semibold text-sm px-2">
         <slot name="step">Step 0</slot>
       </div>
+      <!--@ts-ignore-->
       <GuideModal :guides="guideComp" />
     </div>
 

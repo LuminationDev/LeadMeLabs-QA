@@ -19,14 +19,17 @@ import Ports from '../../assets/guidesImages/Ports.png'
 useRoute();
 
 function up() {
+  //@ts-ignore
   swiperRef.value.$el.swiper.slideNext(500)
 }
 
 function navigateTo(index: number) {
+  //@ts-ignore
   swiperRef.value.$el.swiper.slideTo(index, 500)
 }
 
 function down() {
+  //@ts-ignore
   swiperRef.value.$el.swiper.slidePrev(500)
 }
 

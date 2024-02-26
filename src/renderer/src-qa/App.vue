@@ -2,7 +2,7 @@
 import router from './router/router';
 import NotificationModal from "@renderer/modals/NotificationModal.vue";
 import BottomBar from "@renderer/layout/BottomBar.vue";
-import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
+import Sidebar from "../layout/SideBar/Sidebar.vue";
 import ShowState from "@renderer/src-setup/components/helpers/showState.vue";
 import { RouterView, useRoute } from 'vue-router';
 import { computed, onBeforeMount } from 'vue';

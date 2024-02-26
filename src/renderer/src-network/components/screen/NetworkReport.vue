@@ -58,7 +58,9 @@ watch(() => networkStore.uploadResult, (newValue) => {
 })
 
 async function uploadReport(email: string, siteName: string) {
+  //@ts-ignore
   emailRef.value = email
+  //@ts-ignore
   siteNameRef.value = siteName
   uploading.value = true
   setTimeout(() => {
