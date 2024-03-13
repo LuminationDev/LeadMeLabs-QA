@@ -21,7 +21,7 @@ defineEmits<{
 
 <template>
   <div class="py-10 flex-shrink-0 h-20 sticky bottom-0 w-full z-10 bg-white flex flex-row justify-between items-center border-t-2 border-b-gray-200">
-    <GenericButton v-if="currentPage > 0" type="light" :callback="() => { $emit('back') }"
+    <GenericButton v-if="true" type="light" :callback="() => { $emit('back') }"
     >Back
     </GenericButton>
 

@@ -11,6 +11,27 @@ Sentry.init({
   dsn: "https://396e4f7bfb3b4ae856b9b47c829cb556@o1294571.ingest.sentry.io/4506375092633600",
 });
 
+/**
+ * Request the application be a single instance. If there is another attempt to open it the original instance will be
+ * focused instead.
+ */
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  // If another instance of the app is already running, quit the current instance.
+  app.quit();
+}
+else {
+  // Create the main window of your application
+  app.on('second-instance', () => {
+    // When a second instance is detected, bring the existing instance to the front
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show(); //Open from icon tray
+      mainWindow.focus(); //Bring to front of programs
+    }
+  });
+}
+
 autoUpdater.autoDownload = true;
 autoUpdater.setFeedURL({
   provider: 'generic',

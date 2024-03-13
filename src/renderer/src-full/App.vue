@@ -57,7 +57,7 @@ onBeforeMount(() => {
     <div class="content flex-col bg-white ml-2 rounded-xl w-full min-w-[30rem] justify-between overflow-auto pt-0">
       <RouterView class="px-4" />
 
-      <div v-if="route.name !== 'network-diagnostic'" class="sticky bottom-0 shrink-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white">
+      <div v-if="route.name !== 'network-diagnostic' && route.name !== 'password-login' && route.name !== 'password-generation'" class="sticky bottom-0 shrink-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white">
         <BottomBar :meta="route.meta" @push-route="pushRoute" />
       </div>
     </div>
