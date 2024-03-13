@@ -58,7 +58,7 @@ async function connectToNuc() {
   fullStore.sendMessage({
     action: CONSTANT.ACTION.CONNECT,
     actionData: {}
-  })
+  });
 
   setTimeout(() => {
     if (connectionState.value === 'loading') {
