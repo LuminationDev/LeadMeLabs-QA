@@ -6,7 +6,7 @@ import GenericButton from "@renderer/components/buttons/GenericButton.vue";
 import ConnectingSpinner from "@renderer/components/loading/ConnectingSpinner.vue";
 import ComputerSvg from "../../../assets/icons/ComputerSvg.vue";
 import { useStateStore } from "../../../store/stateStore";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { useFullStore } from "../../store/fullStore";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 
@@ -58,7 +58,7 @@ async function connectToNuc() {
   fullStore.sendMessage({
     action: CONSTANT.ACTION.CONNECT,
     actionData: {}
-  })
+  });
 
   setTimeout(() => {
     if (connectionState.value === 'loading') {
