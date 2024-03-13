@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory, RouterOptions } from 'vue-router';
 import { configToolRoutes } from "../../src-setup/router/configRoutes";
 import { diagnosticRoutes } from "../../src-network/router/diagnosticRoutes";
-import { quickCheckRoutes } from "../../src-quick/router/quickCheckRoutes";
+// import { quickCheckRoutes } from "../../src-quick/router/quickCheckRoutes";
+import { passwordRoutes } from "../../src-password/router/passwordRoutes";
 import { fullRoutes } from "../../src-qa/router/checkRoutes";
 
 //Generic screens
@@ -32,7 +33,7 @@ const router = createRouter(<RouterOptions>{
         ...fullRoutes, // Merge fullRoutes into the existing routes
         ...configToolRoutes, // Merge the config tool into the exiting routes
         ...diagnosticRoutes,
-        ...quickCheckRoutes
+        ...passwordRoutes
     ]
 });
 

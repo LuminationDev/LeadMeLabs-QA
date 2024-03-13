@@ -11,7 +11,7 @@ import { onMounted, ref } from "vue";
 import 'swiper/css';
 import NetworkDeviceSelection from "./NetworkDeviceSelection.vue";
 import NetworkReport from "../components/screen/NetworkReport.vue";
-import { useRoute } from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import ConnectedToNetwork from '../../assets/guidesImages/ConnectedToNetwork.png'
 import RunOnStation from '../../assets/guidesImages/RunOnStation.png'
 import Ports from '../../assets/guidesImages/Ports.png'
@@ -28,9 +28,15 @@ function navigateTo(index: number) {
   swiperRef.value.$el.swiper.slideTo(index, 500)
 }
 
+const router = useRouter()
 function down() {
-  //@ts-ignore
-  swiperRef.value.$el.swiper.slidePrev(500)
+  if (swiper.value['activeIndex'] == 0) {
+    router.push("/");
+  }
+  else {
+    //@ts-ignore
+    swiperRef.value.$el.swiper.slidePrev(500)
+  }
 }
 
 const swiperRef = ref(null)

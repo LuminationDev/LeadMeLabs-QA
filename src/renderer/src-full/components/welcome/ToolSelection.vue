@@ -38,7 +38,7 @@ const route = useRoute();
 
           <!--QA tool quick check-->
           <div class="w-full h-full pt-4">
-            <OptionButton title="Quick Check" subtitle="Run a fully automatic quick check" to="/quick-check/test"/>
+            <OptionButton title="Password Generator" subtitle="Automatically generate passwords" to="/password-login"/>
           </div>
         </div>
       </div>
