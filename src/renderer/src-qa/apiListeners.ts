@@ -3,6 +3,7 @@ import { useFullStore } from "./store/fullStore";
 import * as CONSTANT from "../assets/constants";
 import { QaCheck, TCPMessage } from "./interfaces";
 import { Station } from "./types/_station";
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 let stateStore: any;
 let fullStore: any;
@@ -52,6 +53,10 @@ export const listeners = (info: any) => {
 
         case CONSTANT.MESSAGE.LOAD_PROGRESS:
             fullStore.reportTracker = info.data;
+            break;
+
+        case CONSTANT.MESSAGE.UPLOAD_FILE:
+            uploadFile(info);
             break;
 
         default:
@@ -281,4 +286,25 @@ const openNotificationModal = (s_title: string, s_message: string) => {
     stateStore.title = s_title;
     stateStore.message = s_message;
     stateStore.openModal = true;
+}
+
+const uploadFile = (info: any) => {
+    const storage = getStorage();
+
+    // Decode the Base64-encoded file content back to binary
+    const binaryData = Uint8Array.from(atob(info.fileContents), c => c.charCodeAt(0));
+
+    // Define the storage reference
+    const storageRef = ref(storage, info.destination);
+
+    // Upload the file contents as bytes
+    uploadBytes(storageRef, binaryData)
+        .then(() => {
+            console.log('File uploaded successfully');
+            fullStore.uploadFileResult = true;
+        })
+        .catch((error) => {
+            console.error('Error uploading file:', error);
+            fullStore.uploadFileResult = false;
+        });
 }

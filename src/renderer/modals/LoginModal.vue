@@ -8,7 +8,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";
 import { useRouter } from "vue-router";
-import { useFullStore} from "@renderer/src-qa/store/fullStore";
+import { useFullStore} from "../src-qa/store/fullStore";
 
 const props = defineProps({
   online: {

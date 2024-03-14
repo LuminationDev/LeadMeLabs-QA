@@ -12,6 +12,7 @@ import { useStateStore } from "../store/stateStore";
 import { listeners as qaListeners, initialise as qaInitialise } from "../src-qa/apiListeners";
 import { listeners as networkListeners, initialise as networkInitialise } from "../src-network/apiListeners";
 import { listeners as passwordListeners, initialise as passwordInitialise } from "../src-password/apiListeners";
+import {getAuth, signOut} from "firebase/auth";
 
 const pushRoute = (value: string) => {
   router.push(value);
@@ -49,6 +50,20 @@ onBeforeMount(() => {
   networkInitialise();
   passwordInitialise();
 });
+
+/**
+ * Check if there is a current user session on start up and log them out if there is. A user should have to login each
+ * time they use the application.
+ */
+const auth = getAuth();
+signOut(auth)
+    .then(() => {
+      console.log("User logged out");
+      router.push("/");
+    })
+    .catch((error) => {
+      console.error("Error signing out:", error.message);
+    });
 </script>
 
 <template>
