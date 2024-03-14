@@ -37,9 +37,6 @@ export default class QAController {
             });
         }
         catch (error) {
-            //TODO REMOVE THIS AFTER TESTING
-            Sentry.captureMessage(join(app.getAppPath(), 'static', 'serviceAccount.json'))
-            Sentry.captureMessage(serviceAccount)
             Sentry.captureException(error)
         }
     }
