@@ -100,7 +100,7 @@ export default class PasswordController {
                 // Collect the default collection ID
                 this.collectDefaultCollectionId()
             } else {
-                console.log('Bitwarden CLI Output:', output);
+                //console.log('Bitwarden CLI Output:', output);
             }
         })
         .catch(async (error: string) => {
@@ -165,7 +165,7 @@ export default class PasswordController {
                 // Collect the default collection ID
                 this.collectDefaultCollectionId()
             } else {
-                console.log('Bitwarden CLI Output:', output);
+                //console.log('Bitwarden CLI Output:', output);
             }
         })
         .catch((error) => {
@@ -191,7 +191,7 @@ export default class PasswordController {
      */
     async generatePassword(info: any): Promise<void> {
         this.runBitwardenCommand(`bw generate -uln --length 14 --session ${this.sessionKey}`).then((output) => {
-            console.log('Bitwarden CLI Output:', output);
+            //console.log('Bitwarden CLI Output:', output);
 
             this.mainWindow.webContents.send('backend_message', {
                 channelType: 'password_generated',
@@ -233,7 +233,7 @@ export default class PasswordController {
         const command = `bw create item ${encodedJson} ${this.organizationId} --session ${this.sessionKey}`;
 
         this.runBitwardenCommand(`${command}`).then((output) => {
-            console.log('Bitwarden CLI Output:', output);
+            //console.log('Bitwarden CLI Output:', output);
 
             this.mainWindow.webContents.send('backend_message', {
                 channelType: 'saving_success'
@@ -258,7 +258,7 @@ export default class PasswordController {
      */
     async collectDefaultCollectionId(): Promise<void> {
         this.runBitwardenCommand(`bw list collections --search Dev/LeadMe/Web --session ${this.sessionKey}`).then((output) => {
-            console.log('Bitwarden CLI Output:', output);
+            //console.log('Bitwarden CLI Output:', output);
 
             // Parse the JSON string into an array of objects
             const dataArray = JSON.parse(output);
@@ -281,7 +281,7 @@ export default class PasswordController {
      */
     async searchVault(info: any): Promise<void> {
         this.runBitwardenCommand(`bw list items --search ${info.location} --session ${this.sessionKey}`).then((output) => {
-            console.log('Bitwarden CLI Output:', output);
+            //console.log('Bitwarden CLI Output:', output);
 
             this.mainWindow.webContents.send('backend_message', {
                 channelType: 'search_results',
@@ -298,7 +298,7 @@ export default class PasswordController {
      */
     async readVault(): Promise<void> {
         this.runBitwardenCommand(`bw list items --collectionid ${this.defaultCollectionId} --session ${this.sessionKey}`).then((output) => {
-            console.log('Bitwarden CLI Output:', output);
+            //console.log('Bitwarden CLI Output:', output);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -316,7 +316,7 @@ export default class PasswordController {
                     channelType: 'password_log_out'
                 });
             } else {
-                console.log('Bitwarden CLI Output:', output);
+                //console.log('Bitwarden CLI Output:', output);
             }
         })
         .catch((error) => {

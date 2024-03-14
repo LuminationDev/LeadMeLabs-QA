@@ -6,6 +6,7 @@ import { GetIPAddress } from "../shared/network/Network";
 import { optimizer } from "@electron-toolkit/utils";
 import * as Sentry from '@sentry/electron';
 import NetworkController from "../shared/controllers/NetworkController";
+import PasswordController from "../shared/controllers/PasswordController";
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
 
@@ -231,6 +232,7 @@ app.whenReady().then(async () => {
   new QAController(ipcMain, mainWindow).startup();
   new NetworkController(ipcMain, mainWindow).startup();
   new ConfigController(ipcMain, mainWindow).startup();
+  new PasswordController(ipcMain, mainWindow).startup();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
