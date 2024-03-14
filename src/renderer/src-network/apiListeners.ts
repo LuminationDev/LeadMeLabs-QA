@@ -1,5 +1,5 @@
 import { useNetworkStore } from "./store/networkStore";
-import {PORTS} from "../assets/checks/_networkValues";
+import { PORTS } from "../assets/checks/_networkValues";
 
 let networkStore: any;
 

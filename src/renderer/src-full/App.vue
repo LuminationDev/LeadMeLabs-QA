@@ -11,6 +11,7 @@ import { storeToRefs } from "pinia";
 import { useStateStore } from "../store/stateStore";
 import { listeners as qaListeners, initialise as qaInitialise } from "../src-qa/apiListeners";
 import { listeners as networkListeners, initialise as networkInitialise } from "../src-network/apiListeners";
+import { listeners as passwordListeners, initialise as passwordInitialise } from "../src-password/apiListeners";
 
 const pushRoute = (value: string) => {
   router.push(value);
@@ -40,11 +41,13 @@ const message = computed(() => {
 api.ipcRenderer.on('backend_message', (event, info) => {
   qaListeners(info);
   networkListeners(info);
+  passwordListeners(info);
 });
 
 onBeforeMount(() => {
   qaInitialise();
   networkInitialise();
+  passwordInitialise();
 });
 </script>
 
