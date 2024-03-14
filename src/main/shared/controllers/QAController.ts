@@ -3,10 +3,6 @@ import TcpClient from '../tcp/TcpClient';
 import { GetIPAddress } from "../network/Network";
 import { app } from "electron";
 import { DetermineReportType } from "../report/Report";
-import admin from 'firebase-admin';
-import { join } from "path";
-import fs from "fs";
-import * as Sentry from '@sentry/electron'
 
 /**
  * A class that initiates electron IPC controls that handle application downloads, extractions, configurations
@@ -21,24 +17,6 @@ export default class QAController {
         this.ipcMain = ipcMain;
         this.mainWindow = mainWindow;
         this.tcpServer = new TcpServer(ipcMain, this.mainWindow);
-
-        let serviceAccount: string;// | admin.ServiceAccount;
-        if (process.env.NODE_ENV === 'development') {
-            serviceAccount = fs.readFileSync(join(app.getAppPath(), '..', 'static', 'serviceAccount.json')).toString();
-        } else {
-            serviceAccount = fs.readFileSync(join(app.getAppPath(), 'static', 'serviceAccount.json')).toString();
-        }
-
-        try {
-            serviceAccount = JSON.parse(serviceAccount);
-            admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount),
-                databaseURL: "https://leadme-labs-default-rtdb.asia-southeast1.firebasedatabase.app"
-            });
-        }
-        catch (error) {
-            Sentry.captureException(error)
-        }
     }
 
     /**

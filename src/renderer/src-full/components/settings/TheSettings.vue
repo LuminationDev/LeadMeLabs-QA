@@ -31,11 +31,15 @@ const checkUserStatus = computed(() => {
 });
 
 const logout = () => {
-  const auth = getAuth();
   signOut(auth)
       .then(() => {
         console.log("User logged out");
         router.push("/");
+
+        //@ts-ignore
+        api.ipcRenderer.send("helper_function", {
+          channelType: 'firebase_logout'
+        });
       })
       .catch((error) => {
         console.error("Error signing out:", error.message);

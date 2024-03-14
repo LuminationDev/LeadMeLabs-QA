@@ -24,3 +24,6 @@ export const REQUEST_STATION_DETAILS_ALL = "QA:Station:QA:StationAll";
 //PROGRESS MESSAGES
 export const SAVE_PROGRESS = "save_progress"; //The frontend is trying to save file
 export const LOAD_PROGRESS = "load_progress"; //The backend is trying to load a saved file
+
+//FILE MESSAGES
+export const UPLOAD_FILE = "upload_file"; //A file blob sent from the backend

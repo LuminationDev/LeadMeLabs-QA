@@ -1,8 +1,7 @@
-import { BrowserWindow, dialog } from 'electron';
+import { BrowserWindow, dialog} from 'electron';
 import fetch from 'node-fetch'
 import fs from 'fs';
 import os from "os";
-import admin from "firebase-admin";
 
 let tempWindow: BrowserWindow | null;
 
@@ -68,10 +67,6 @@ const uploadFile = async (filePath: string, fileName: string, location: string, 
     let result = false;
 
     try {
-        const fileMetadata = {
-            contentType: 'application/pdf'
-        };
-
         if (fileName.startsWith("Network_Report")) {
             const response = await fetch("https://us-central1-leadme-labs.cloudfunctions.net/uploadNetworkCheckerReport", {
                 method: "POST",
@@ -92,21 +87,35 @@ const uploadFile = async (filePath: string, fileName: string, location: string, 
                 });
             }
         } else {
-            const bucket = admin.storage().bucket('leadme-labs.appspot.com');
-            const destination = `QA/${location}/${fileName}.pdf`;
-            await bucket.upload(filePath, {
-                destination,
-                metadata: fileMetadata
+            fs.readFile(filePath, (err, data) => {
+                if (err) {
+                    console.error('Error reading file:', err);
+                    return;
+                }
+
+                // Encode file contents as Base64 and send them in the response
+                const base64Data = data.toString('base64');
+
+                //Send the file contents and the destination to the front end to be uploaded
+                mainWindow.webContents.send('backend_message', {
+                    channelType: "upload_file",
+                    destination: `QA/${location}/${fileName}.pdf`,
+                    fileContents: base64Data
+                });
             });
         }
 
         console.log('File uploaded successfully.');
-        result = true;
     } catch (error) {
         console.error('Error uploading file:', error);
         result = false;
         mainWindow.webContents.send('backend_message', {
-            channelType: "network_report_failed"
+            channelType: "network_report_failed",
+        });
+
+        mainWindow.webContents.send('backend_message', {
+            channelType: 'pdf_uploaded',
+            result,
         });
     } finally {
         try {
@@ -115,10 +124,5 @@ const uploadFile = async (filePath: string, fileName: string, location: string, 
         } catch (error) {
             console.error('Error deleting file:', error);
         }
-
-        mainWindow.webContents.send('backend_message', {
-            channelType: 'pdf_uploaded',
-            result,
-        });
     }
 };
