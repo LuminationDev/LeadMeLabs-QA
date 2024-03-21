@@ -54,7 +54,7 @@ function handleUpdateValue(value, id): void {
     if (index !== -1) {
         if (props.type === 'stations') {
             localData[index].action = value
-        } else if (props.type === 'sources') {
+        } else if (props.type.includes('sources')) {
             localData[index].value = value
         } else {
             // value for projector needs to be casted to number

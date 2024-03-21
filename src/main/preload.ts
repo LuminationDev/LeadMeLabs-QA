@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import {sendCommandTcpPanasonic} from "./main-setup/actions/PanasonicActions";
 
 // Custom APIs for config tool
 const configApi = {
@@ -60,6 +61,9 @@ const configApi = {
 
   sendCommandTcpEpson: (ip: any, port: any, desc: any, message: any): Promise<any> => ipcRenderer.invoke('config_function',
       { channelType: 'send-command-epson', ip, port, desc, message }),
+
+  sendCommandTcpPanasonic: (ip: any, port: any, username: any, password: any, desc: any, message: any): Promise<any> => ipcRenderer.invoke('config_function',
+      { channelType: 'send-command-panasonic', ip, port, username, password, desc, message }),
 
   getCbusEnv: (): Promise<object> => { return ipcRenderer.invoke('config_function',
       { channelType: 'get-cbus-env' })

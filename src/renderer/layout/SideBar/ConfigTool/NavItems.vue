@@ -5,7 +5,7 @@ import emptyCircle from '../../../assets/icons/empty-circle.svg'
 import warning from '../../../assets/icons/warning.svg'
 import tick from '../../../assets/icons/tick.svg'
 import router from '../../../src-qa/router/router'
-import { useLabStore } from '@renderer/src-setup/store/labStore'
+import { useLabStore } from '../../../src-setup/store/labStore'
 import { storeToRefs } from 'pinia'
 import GenericPopup from '@renderer/src-setup/views/generic/GenericPopup.vue'
 
@@ -25,12 +25,13 @@ const { currentlyEditingAppliance } = storeToRefs(labStore)
 const navConfirmationModal = ref(false)
 
 const active = computed(() => {
+  const route = useRoute();
+  if (route === undefined) return false;
+
   const name = useRoute().name // current path
   const path = props.target.replace('/', '') // check it's this
 
-  if (name === path) {
-    return true
-  } else return false
+  return name === path;
 })
 
 const customNavigationFunction = (target): void => {

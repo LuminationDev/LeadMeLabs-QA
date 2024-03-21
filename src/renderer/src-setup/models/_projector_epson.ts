@@ -1,6 +1,6 @@
-import Epson from './_epson'
+import ProjectorAppliance from './_projector_appliance'
 
-class Projector extends Epson {
+class EpsonProjector extends ProjectorAppliance {
     options?: any
 
     constructor(id = 0, name = '', room = '', automationType = 'epson', ipAddress = '') {
@@ -8,4 +8,4 @@ class Projector extends Epson {
     }
 }
 
-export default Projector
+export default EpsonProjector

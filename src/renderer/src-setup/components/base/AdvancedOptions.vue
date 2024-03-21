@@ -4,11 +4,11 @@ import AccordionItem from '../accordion/AccordionItem.vue'
 import { types, hidden } from '../constants/_types'
 import { computed, onBeforeMount, reactive } from 'vue'
 import Dropdown from '../selector/Dropdown.vue'
-import { Blind, LedRing, Light, Projector, Splicer, Station } from '../../models'
+import { Blind, LedRing, Light, EpsonProjector, Splicer, Station } from '../../models'
 
 const props = defineProps({
     data: {
-        type: [Light, Blind, LedRing, Splicer, Projector, Station],
+        type: [Light, Blind, LedRing, Splicer, EpsonProjector, Station],
         required: true
     }
 })

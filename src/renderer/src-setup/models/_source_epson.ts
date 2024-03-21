@@ -1,7 +1,7 @@
-import Epson from './_epson'
+import ProjectorAppliance from './_projector_appliance'
 import ApplianceInterface from './_appliance_interface'
 
-class Source extends Epson implements ApplianceInterface {
+class EpsonSource extends ProjectorAppliance implements ApplianceInterface {
     options?: any
 
     constructor(
@@ -17,4 +17,4 @@ class Source extends Epson implements ApplianceInterface {
     }
 }
 
-export default Source
+export default EpsonSource

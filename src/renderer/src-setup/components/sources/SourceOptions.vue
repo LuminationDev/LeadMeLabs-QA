@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import { isEqual, debounce } from 'lodash'
-import { sourceObject } from '../constants/_labels'
+import { sourceObjectEpson, sourceObjectPanasonic } from '../constants/_labels'
 import ErrorMessages from '../inputs/ErrorMessages.vue'
 
 const props = defineProps({
-    modelValue: {
-        type: Object,
-        required: true
-    },
-    v$: {
-        type: Object,
-        required: true
-    }
+  projectorType: {
+    type: String,
+    required: true
+  },
+  modelValue: {
+    type: Object,
+    required: true
+  },
+  v$: {
+    type: Object,
+    required: true
+  }
 })
 
 interface CustomOptionEntry {
@@ -22,6 +26,7 @@ interface CustomOptionEntry {
     defaultLabel?: string
 }
 
+const sourceObject = props.projectorType === "epson" ? sourceObjectEpson : sourceObjectPanasonic;
 const localOption = ref<InstanceType<typeof Object> | null>(null)
 const customOption = ref<InstanceType<typeof Array<CustomOptionEntry>> | null>(null)
 const selectedOption = ref<InstanceType<typeof Array<string>>>([])

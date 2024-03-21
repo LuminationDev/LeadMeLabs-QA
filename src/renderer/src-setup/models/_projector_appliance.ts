@@ -1,7 +1,7 @@
-import EpsonInterface from './_epson_interface'
+import ProjectorInterface from './_projector_interface'
 import Appliance from './_appliance'
 
-export default class Epson extends Appliance implements EpsonInterface {
+export default class ProjectorAppliance extends Appliance implements ProjectorInterface {
     ipAddress: string
     automationType: string
 

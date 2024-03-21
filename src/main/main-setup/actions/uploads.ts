@@ -1,11 +1,12 @@
 import * as path from 'path'
 import * as fs from 'fs'
+import Encryption from "../../shared/encryption/Encryption";
 
-export function uploadAppliance(
+export async function uploadAppliance(
     applianceJson: string,
     outputFolder: string,
     outputFolderOld: string,
-    setSavedFileCallback: () => void): string | void
+    setSavedFileCallback: () => void): Promise<string | void>
 {
     // rename and move old file
     try {
@@ -24,12 +25,42 @@ export function uploadAppliance(
         if (!fs.existsSync(outputFolder)) {
             fs.mkdirSync(outputFolder, { recursive: true })
         }
-        fs.writeFileSync(path.join(outputFolder, 'appliance_list.json'), applianceJson, 'utf-8')
+
+        //Change the panasonic projector username and password into encrypted data
+        let appliances = JSON.parse(applianceJson);
+
+        // Decrypt username and password fields for projectors and sources
+        await Promise.all([
+            decryptAutomationType(appliances, 'projectors'),
+            decryptAutomationType(appliances, 'sources')
+        ]);
+
+        fs.writeFileSync(path.join(outputFolder, 'appliance_list.json'), JSON.stringify(appliances), 'utf-8')
         setSavedFileCallback()
         return outputFolder
     } catch (err) {
         console.log(err + ' error has occured')
         console.error('Error while trying to write new appliance_list')
+    }
+}
+
+/**
+ * Decrypts the usernames and passwords of appliances belonging to a specific automation type.
+ *
+ * @param {Array} appliances - The array of appliances containing objects with 'automationType' property.
+ * @param {string} typeName - The name of the automation type whose usernames and passwords need to be decrypted.
+ * @returns {Promise<void>} - A Promise that resolves once all decryption operations are complete.
+ */
+async function decryptAutomationType(appliances: any, typeName: string): Promise<void> {
+    const index = appliances.findIndex((item: any) => item.name === typeName);
+
+    if (index !== -1) {
+        await Promise.all(appliances[index].objects.map(async (item: any) => {
+            if (item['automationType'] === 'panasonic') {
+                item.username = await Encryption.encryptDataUTF16(item.username);
+                item.password = await Encryption.encryptDataUTF16(item.password);
+            }
+        }));
     }
 }
 

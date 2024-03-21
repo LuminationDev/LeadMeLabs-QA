@@ -195,7 +195,7 @@ const deleteCallbackAssociatedStation = (): void => {
                         data-type="number"
                         name="led_ring_id"
                         field-id="LEDRingID"
-                        placeholder="Pick an LED Ring"
+                        placeholder="Pick a LED Ring"
                         label-text="LED Ring"
                     >
                     </Dropdown>

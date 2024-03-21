@@ -1,6 +1,4 @@
-export const sourceKeys = ['30', 'A0', 'C0', '80']
-export const sourceDefaultLabels = ['HDMI1', 'HDMI2', 'HDMI3', 'HDBaseT']
-export const sourceObject = [
+export const sourceObjectEpson = [
     {
         key: '30',
         label: 'HDMI1',
@@ -20,6 +18,23 @@ export const sourceObject = [
         key: '80',
         label: 'HDBaseT',
         defaultLabel: 'HDBaseT'
+    }
+]
+export const sourceObjectPanasonic = [
+    {
+        key: 'HD1',
+        label: 'HD1',
+        defaultLabel: 'HD1'
+    },
+    {
+        key: 'DVI',
+        label: 'DVI',
+        defaultLabel: 'DVI'
+    },
+    {
+        key: 'SD1',
+        label: 'SD1',
+        defaultLabel: 'SD1'
     }
 ]
 

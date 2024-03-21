@@ -4,7 +4,16 @@ import { ref, onBeforeMount, onBeforeUnmount, computed, reactive, onMounted } fr
 import { isEqual } from 'lodash'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, requiredIf } from '@vuelidate/validators'
-import { Light, Blind, Projector, Station, Splicer, LedRing } from '../../models'
+import {
+  Light,
+  Blind,
+  EpsonProjector,
+  Station,
+  Splicer,
+  LedRing,
+  PanasonicProjector,
+  PanasonicSource, EpsonSource
+} from '../../models'
 import TextInput from '../inputs/TextInput.vue'
 import { storeToRefs } from 'pinia'
 import NumberInput from '../inputs/NumberInput.vue'
@@ -18,7 +27,7 @@ const { trimEmptyData, addOrUpdateItem, deleteItem } = labStore
 
 const props = defineProps({
     data: {
-        type: [Light, Blind, LedRing, Splicer, Projector, Station],
+        type: [Light, Blind, LedRing, Splicer, EpsonProjector, EpsonSource, PanasonicProjector, PanasonicSource, Station],
         required: true
     },
     type: {

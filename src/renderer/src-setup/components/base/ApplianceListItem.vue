@@ -16,7 +16,7 @@ import {
     useLabStore
 } from '../../store/labStore'
 import { storeToRefs } from 'pinia'
-import Epson from '../../models/_epson'
+import ProjectorAppliance from '../../models/_projector_appliance'
 import { Room, Scene, Station } from '../../models'
 import Cbus from '../../models/_cbus'
 import Appliance from '../../models/_appliance'
@@ -79,7 +79,7 @@ const isIncomplete = computed(() => {
             return isIncompleteCbusAppliance(props.appliance as Cbus)
         case 'projectors':
         case 'sources':
-            return isIncompleteEpsonAppliance(props.appliance as Epson)
+            return isIncompleteEpsonAppliance(props.appliance as ProjectorAppliance)
         case 'rooms':
             return isIncompleteRoom(props.appliance as Room)
         case 'scenes':
