@@ -2,12 +2,11 @@
 import { ref, computed, watch } from 'vue'
 import { useLabStore } from '../../store/labStore'
 import { storeToRefs } from 'pinia'
-
 import GenericButton from '../GenericButton.vue'
 import hint from '../../../assets/icons/hint_dark.svg'
 import { sourceObjectEpson } from '../constants/_labels'
 import Tooltip from '../Tooltip.vue'
-import * as EPSON from '../constants/_epson_codes'
+import * as PANASONIC from '../constants/_panasonic_codes'
 import Spinner from '../spinner/Spinner.vue'
 
 const props = defineProps({
@@ -30,6 +29,14 @@ const props = defineProps({
     ipAddress: {
         type: String,
         required: true
+    },
+    username: {
+      type: String,
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
     }
 })
 
@@ -77,24 +84,28 @@ async function toggleProjectorStatus(): Promise<void> {
         projectorTimer.value--
     }, 1000)
 
-    await window.configApi.sendCommandTcpEpson(
+    await window.configApi.sendCommandTcpPanasonic(
         props.ipAddress,
-        3629,
+        1024,
+        props.username,
+        props.password,
         props.name,
-        !props.projectorStatus ? EPSON.POWER_ON : EPSON.POWER_OFF
+        !props.projectorStatus ? PANASONIC.POWER_ON : PANASONIC.POWER_OFF
     )
     fetchingId.value = false
 }
 
 async function changeSource(source: string): Promise<void> {
-    const supportedSources = ['30', 'A0', 'C0', '80']
+    const supportedSources = ['HD1', 'DVI', 'SD1']
     if (supportedSources.find((el) => el == source) !== undefined) {
         switchingSource.value = true
-        await window.configApi.sendCommandTcpEpson(
+        await window.configApi.sendCommandTcpPanasonic(
             props.ipAddress,
-            3629,
+            1024,
+            props.username,
+            props.password,
             props.name,
-            EPSON.SOURCE_OBJ[source]
+            PANASONIC.SOURCE_OBJ[source]
         )
         switchingSource.value = false
     }

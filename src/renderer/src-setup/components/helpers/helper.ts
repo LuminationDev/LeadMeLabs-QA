@@ -2,12 +2,12 @@ import {
     Blind,
     LedRing,
     Light,
-    Projector,
+    EpsonProjector,
     Room,
     Scene,
-    Source,
+    EpsonSource,
     Station,
-    Splicer
+    Splicer, PanasonicProjector, PanasonicSource
 } from '../../models'
 import IdGen from './idGenerator'
 
@@ -34,12 +34,20 @@ export const objectGenerator = (type: string, id?: number): any => {
             newItem.automationId = LedRingIdCounter
             LedRingIdCounter++
             break
-        case 'projectors':
-            newItem = new Projector()
+        case 'projectors-epson':
+            newItem = new EpsonProjector()
             // newItem.id = this.projectors.length + 19001
             break
-        case 'sources':
-            newItem = new Source()
+        case 'projectors-panasonic':
+            newItem = new PanasonicProjector()
+            // newItem.id = this.projectors.length + 19001
+            break
+        case 'sources-epson':
+            newItem = new EpsonSource()
+            // newItem.id = this.sources.length + 201
+            break
+        case 'sources-panasonic':
+            newItem = new PanasonicSource()
             // newItem.id = this.sources.length + 201
             break
         case 'stations':

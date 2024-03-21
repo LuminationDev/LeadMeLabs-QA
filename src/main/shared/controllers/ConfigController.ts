@@ -3,7 +3,10 @@ import path from "path";
 import fs from "fs";
 import CbusConnector from "../../main-setup/connectors/CbusConnector";
 import { uploadAppliance, uploadStation } from "../../main-setup/actions/uploads";
-import { sendCommandTcpEpson } from "../../main-setup/actions/epsonActions";
+// @ts-ignore
+import { sendCommandTcpEpson } from "../../main-setup/actions/EpsonActions";
+import { sendCommandTcpPanasonic } from "../../main-setup/actions/PanasonicActions";
+import Encryption from "../encryption/Encryption";
 
 export default class ConfigController {
     ipcMain: Electron.IpcMain;
@@ -35,7 +38,7 @@ export default class ConfigController {
      * been sent. This allows just one listener to be active rather than individual function ones.
      */
     configToolListenerDelegate(): void {
-        this.ipcMain.handle('config_function', (_event, info) => {
+        this.ipcMain.handle('config_function', async (_event, info) => {
             switch(info.channelType) {
                 case 'get-cbus-env':
                     return this.collectCbusEnv();
@@ -47,7 +50,7 @@ export default class ConfigController {
                     return this.isCbusInformationSet();
 
                 case 'read-appliancejson':
-                    return this.readApplianceJson();
+                    return await this.readApplianceJson();
 
                 case 'read-stationjson':
                     return this.readStationJson();
@@ -92,6 +95,9 @@ export default class ConfigController {
 
                 case 'send-command-epson':
                     return sendCommandTcpEpson(this.mainWindow, info.ip, info.port, info.desc, info.message);
+
+                case 'send-command-panasonic':
+                    return sendCommandTcpPanasonic(this.mainWindow, info.ip, info.port, info.username, info.password, info.desc, info.message);
 
                 default:
                     console.log(`Unknown config tool call: ${JSON.stringify(info)}`)
@@ -149,13 +155,40 @@ export default class ConfigController {
     /**
      * Read the local appliance_list.json and return the contents.
      */
-    readApplianceJson = () => {
+    readApplianceJson = async () => {
         try {
-            return JSON.parse(fs.readFileSync(this.appliancesJsonPath, 'utf-8'))
-        } catch (err) {
-            // @ts-ignore error has message properties
-            console.log(err.message)
-            return 0
+            let appliances = JSON.parse(fs.readFileSync(this.appliancesJsonPath, 'utf-8'));
+
+            // Decrypt username and password fields for projectors and sources
+            await Promise.all([
+                this.decryptAutomationType(appliances, 'projectors'),
+                this.decryptAutomationType(appliances, 'sources')
+            ]);
+
+            return appliances;
+        } catch (err: any) {
+            console.log(err.message);
+            return 0;
+        }
+    }
+
+    /**
+     * Decrypts the usernames and passwords of appliances belonging to a specific automation type.
+     *
+     * @param {Array} appliances - The array of appliances containing objects with 'automationType' property.
+     * @param {string} typeName - The name of the automation type whose usernames and passwords need to be decrypted.
+     * @returns {Promise<void>} - A Promise that resolves once all decryption operations are complete.
+     */
+    decryptAutomationType = async (appliances: any, typeName: string): Promise<void> => {
+        const index = appliances.findIndex((item: any) => item.name === typeName);
+
+        if (index !== -1) {
+            await Promise.all(appliances[index].objects.map(async (item: any) => {
+                if (item['automationType'] === 'panasonic') {
+                    item.username = await Encryption.decryptDataUTF16(item.username);
+                    item.password = await Encryption.decryptDataUTF16(item.password);
+                }
+            }));
         }
     }
 

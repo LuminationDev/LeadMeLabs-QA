@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import { Blind, LedRing, Light, Projector, Room, Scene, Source, Station, Splicer } from '../models'
+import {Blind, LedRing, Light, EpsonProjector, Room, Scene, Station, Splicer, PanasonicProjector} from '../models'
 import { objectGenerator } from '../components/helpers/helper'
 import CbusInterface from '../models/_cbus_interface'
 import ApplianceInterface from '../models/_appliance_interface'
-import Epson from '../models/_epson'
+import ProjectorAppliance from '../models/_projector_appliance'
 import idGenerator from '../components/helpers/idGenerator'
 import Appliance from "../models/_appliance";
+import SourceInterface from "../models/_source_interface";
 
 export function isIncompleteGenericAppliance(appliance: ApplianceInterface): boolean {
     return !appliance.name || !appliance.room || !appliance.id || appliance.id <= 0
@@ -20,7 +21,7 @@ export function isIncompleteCbusAppliance(appliance: CbusInterface): boolean {
     ) // auto-generated id means not completed
 }
 
-export function isIncompleteEpsonAppliance(appliance: Epson): boolean {
+export function isIncompleteEpsonAppliance(appliance: ProjectorAppliance): boolean {
     return isIncompleteGenericAppliance(appliance) || !appliance.ipAddress
 }
 
@@ -50,9 +51,9 @@ export const useLabStore = defineStore({
         stations: [] as Station[],
         lights: [] as Light[],
         blinds: [] as Blind[],
-        projectors: [] as Projector[],
+        projectors: [] as ProjectorAppliance[],
         splicers: [] as Splicer[],
-        sources: [] as Source[],
+        sources: [] as SourceInterface[],
         ledRings: [] as LedRing[],
         scenes: [] as Scene[],
         trimmed: true as boolean,
@@ -386,6 +387,10 @@ export const useLabStore = defineStore({
             }
         },
         addOrUpdateItem(type: string, item?: ApplianceInterface, previousId?: number | string) {
+            //Remove any sub-category
+            let tokens: string[] = type.split("-");
+            let mainType = tokens[0];
+
             // add new item
             this.trimmed = false
             // intercept to allow usage of addOrUpdateSplicer due to different functionality and requirements
@@ -396,42 +401,45 @@ export const useLabStore = defineStore({
                 } else {
                     newItem = objectGenerator(type)
                 }
-                this[type].push(newItem)
+                this[mainType].push(newItem)
                 if (type === 'splicers') {
                     const newItemPower = objectGenerator(type)
                     newItemPower.name += ' Power'
                     newItemPower.preAppliances = []
-                    this[type].push(newItemPower)
-                } else if (type == 'sources') {
-                    const newProjector = objectGenerator('projectors')
+                    this[mainType].push(newItemPower)
+                } else if (type == 'sources-epson') {
+                    const newProjector = objectGenerator('projectors-epson')
+                    this['projectors'].push(newProjector)
+                }  else if (type == 'sources-panasonic') {
+                    const newProjector = objectGenerator('projectors-panasonic')
                     this['projectors'].push(newProjector)
                 }
             } else {
                 // simply edit item if previous Id doesnt exist. if previous Id exists, find the index of the original light and replace
                 const comparisonId = previousId != null ? previousId : item.id
-                const index = this[type].findIndex(
+                const index = this[mainType].findIndex(
                     (element) => Number(element.id) === Number(comparisonId)
                 )
                 if (type === 'rooms') {
-                    const oldName = this[type][index].name
+                    const oldName = this[mainType][index].name
                     const newName = item.name
                     this.updateAllRooms(oldName, newName)
                 }
-                const oldVersion = this[type].find(
+                const oldVersion = this[mainType].find(
                     (element) => Number(element.id) === Number(comparisonId)
                 )
                 if (index !== -1) {
-                    this[type].splice(index, 1, item)
-                    if (type == 'sources') {
+                    this[mainType].splice(index, 1, item)
+                    if (mainType === 'sources') {
                         // Remove label field from projector item
                         // @ts-ignore ignoring cast
-                        const projectorItem: Projector = Object.assign({}, item)
+                        const projectorItem: EpsonProjector = Object.assign({}, item)
                         delete projectorItem.options
                         projectorItem.id = Number(Number(item.id) + 100 + '')
                         console.log(projectorItem)
                         this['projectors'].splice(index, 1, projectorItem)
                         // @ts-ignore ignoring cast
-                        const source: Source = Object.assign({}, item)
+                        const source: SourceInterface = Object.assign({}, item)
                         this['sources'].splice(index, 1, source)
                     }
                     if (type === 'ledRings' && oldVersion) {
@@ -499,10 +507,15 @@ export const useLabStore = defineStore({
                         }
                     })
                 } else {
-                    this[type].push(item)
-                    if (type == 'sources') {
+                    this[mainType].push(item)
+                    if (type == 'sources-epson') {
                         // @ts-ignore ignoring cast
-                        const projector: Projector = Object.assign({}, item)
+                        const projector: PanasonicProjector = Object.assign({}, item)
+                        this['projectors'].push(projector)
+                    }
+                    else if (type == 'sources-panasonic') {
+                        // @ts-ignore ignoring cast
+                        const projector: PanasonicProjector = Object.assign({}, item)
                         this['projectors'].push(projector)
                     }
                 }
