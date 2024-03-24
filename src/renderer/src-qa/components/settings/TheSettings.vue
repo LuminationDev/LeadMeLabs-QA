@@ -6,20 +6,23 @@ import * as CONSTANT from "../../../assets/constants";
 import { useRouter } from "vue-router";
 import { getAuth, signOut } from "firebase/auth";
 import { computed } from "vue";
+import { useStateStore } from "../../../store/stateStore";
+import ConfirmationModal from "../../../modals/ConfirmationModal.vue";
 
+const stateStore = useStateStore();
 const auth = getAuth();
 const router = useRouter();
 const goBack = () => {
   router.back();
 }
 
-const loadCurrentProgress = async () => {
+const loadCallback = () => {
   //@ts-ignore
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.GENERATE_REPORT,
     type: CONSTANT.MESSAGE.LOAD_PROGRESS
   });
-};
+}
 
 /**
  * Check if a user is currently logged in and that the report has not already been uploaded.
@@ -73,7 +76,13 @@ const logout = () => {
           If you have a previously unfinished report, load it here.
         </div>
 
-        <div @click="loadCurrentProgress" class="w-32 h-8 flex items-center justify-center rounded-lg bg-blue-500 text-white cursor-pointer hover:bg-blue-400">Load</div>
+        <!--Modal to show loading warning-->
+        <ConfirmationModal ref="confirmationRef"
+                           :title="'Warning'"
+                           :message="'Please make sure you have connected to the Cbus, NUC, Stations & Tablet ' +
+                            'before loading, otherwise they will not be shown in the tests. The QA tool cannot ' +
+                            'automatically connect to the saved devices.'"
+                           :callback="loadCallback"/>
       </div>
 
       <hr class="my-4">
@@ -91,5 +100,7 @@ const logout = () => {
       </div>
 
     </div>
+
+
   </div>
 </template>
