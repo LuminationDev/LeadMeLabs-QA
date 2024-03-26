@@ -35,7 +35,7 @@ function triggerCallback() {
 
 <template>
   <div @click="openModal"
-       class="w-32 h-8 flex items-center justify-center rounded-lg bg-blue-500 text-white cursor-pointer hover:bg-blue-400"
+       class="w-32 h-8 flex items-center justify-center rounded-lg bg-blue-500 text-white cursor-pointer hover:bg-blue-500"
   >Load</div>
 
   <Teleport to="body">
@@ -55,12 +55,12 @@ function triggerCallback() {
       </template>
 
       <template v-slot:footer>
-        <footer class="my-2 text-right flex flex-row justify-between">
-          <button class="w-20 h-10 mr-4 text-blue-500 text-base rounded-lg hover:bg-gray-200 font-medium"
+        <footer class="my-2 text-right flex flex-row justify-center">
+          <button class="w-24 h-10 mr-20 text-white text-base rounded-lg bg-blue-500 hover:bg-blue-400 font-medium"
                   v-on:click="triggerCallback"
           >Load</button>
 
-          <button class="w-20 h-10 mr-4 text-blue-500 text-base rounded-lg hover:bg-gray-200 font-medium"
+          <button class="w-24 h-10 text-red-500 text-base rounded-lg hover:bg-gray-200 font-medium"
                   v-on:click="closeModal"
           >Cancel</button>
         </footer>

@@ -79,9 +79,9 @@ const logout = () => {
         <!--Modal to show loading warning-->
         <ConfirmationModal ref="confirmationRef"
                            :title="'Warning'"
-                           :message="'Please make sure you have connected to the Cbus, NUC, Stations & Tablet ' +
-                            'before loading, otherwise they will not be shown in the tests. The QA tool cannot ' +
-                            'automatically connect to the saved devices.'"
+                           :message="'Please make sure you have connected to the same CBus, NUC, Stations & Tablets ' +
+                            'before loading a previously saved report, otherwise they will not be shown in the tests ' +
+                            'correctly. The QA tool cannot automatically connect to the saved devices.'"
                            :callback="loadCallback"/>
       </div>
 
