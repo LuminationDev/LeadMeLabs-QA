@@ -64,6 +64,19 @@ const createHtmlContent = () => {
     <p class="text-black mb-2"><span class="font-semibold">Prepared by: </span>{{fullStore.reportTracker['technicianName']}}</p>
     <p class="text-black mb-2"><span class="font-semibold">Headset Type: </span>{{fullStore.reportTracker['headsetType']}}</p>
 
+    <p class="text-black mb-2"><span class="font-semibold">Comments:</span></p>
+    <div class="bg-gray-50 text-xs" v-for="comment in fullStore.reportTracker['comments']">
+      <div class="py-3">
+        <div>
+          {{comment.date}}
+        </div>
+        <div>
+          <span class="font-semibold mr-1">Comment:</span> {{comment.content}}
+        </div>
+      </div>
+    </div>
+
+
     <p class="text-black font-semibold">Tablet map:</p>
     <div v-for="device in fullStore.deviceMap">
       <div v-if="device.type === 'tablet'" class="flex flex-row text-sm ml-3">

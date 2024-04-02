@@ -44,11 +44,6 @@ const finishEdit = (cancelled: boolean) => {
 }
 
 watchEffect(() => {
-  // Update inputRef when the input element is rendered
-  if (editing.value) {
-    inputRef.value = document.querySelector('textarea');
-  }
-
   if (inputRef.value && editing.value === true) {
     inputRef.value.focus();
   }
