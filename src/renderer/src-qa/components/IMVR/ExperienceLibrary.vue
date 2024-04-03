@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { useFullStore } from "../../store/fullStore";
 import { computed, ref } from "vue";
 import { useStateStore } from "../../../store/stateStore";
 import StatusHover from "@renderer/components/statuses/StatusHover.vue";
@@ -42,7 +42,7 @@ const infoDetails = computed(() => {
 
 const uncollectedExperiences = computed(() => {
   return fullStore.stations.some(entry => {
-    return entry.details && entry.details.installedApplications && entry.details.installedApplications.length === 0;
+    return entry.details && entry.details.installedJsonApplications && entry.details.installedJsonApplications.length === 0;
   });
 });
 

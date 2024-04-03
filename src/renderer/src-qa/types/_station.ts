@@ -6,7 +6,7 @@ type StationDetails = {
     nucIpAddress: string,
     labLocation: string,
     name: string|null;
-    installedApplications: null | string[];
+    installedJsonApplications: null | string[];
     id: string;
     room: string;
     macAddress: string;

@@ -179,7 +179,7 @@ const handleTCPMessage = (info: any) => {
                     ipAddress: station.ipAddress,
                     nucIpAddress: "",
                     name: station.name,
-                    installedApplications: station.installedApplications ?? "",
+                    installedJsonApplications: station.installedJsonApplications ?? "",
                     id: station.id + "",
                     room: station.room,
                     macAddress: station.macAddress,
@@ -187,7 +187,7 @@ const handleTCPMessage = (info: any) => {
                     labLocation: "",
                     stationMode: station?.mode ? station.mode.toLowerCase() : "vr"
                 }
-                fullStore.checkExperiencesForErrors(station.id, station.installedApplications ?? "");
+                fullStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "");
                 fullStore.stations.push(s)
                 fullStore.addDevice(s.id, 'station');
                 fullStore.sendStationMessage(s.id, {

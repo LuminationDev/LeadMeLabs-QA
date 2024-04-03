@@ -3,7 +3,7 @@ export default interface Station {
     nucIpAddress: string,
     labLocation: string,
     name: string;
-    installedApplications: null | string[]; // Replace with the appropriate type if needed
+    installedJsonApplications: null | string[]; // Replace with the appropriate type if needed
     steamApplications: null | string[]; // Replace with the appropriate type if needed
     theatreId: number;
     state: string;
