@@ -7,6 +7,7 @@ import { QaCheckResult } from "../types/_qaCheckResult";
 import { useStateStore } from "../../store/stateStore";
 import { Report, Targets } from "../interfaces/_report";
 import { ExperienceCheck } from "../interfaces/_experiences";
+import {ExperienceDetails} from "../interfaces/_experienceDetails";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -257,6 +258,7 @@ export const useFullStore = defineStore({
         checkExperiencesForErrors(stationId: string, installedExperiences: string) {
             if (installedExperiences === null || installedExperiences.length === 0) {
                 console.log("Experiences not collected!");
+                return;
             }
 
             //Build the expected experience list
@@ -266,25 +268,27 @@ export const useFullStore = defineStore({
                 expectedExperiences.push(...this.onlineExperiences);
             }
 
+            const jsonExperiences: ExperienceDetails[] = JSON.parse(installedExperiences);
+
             //Check for unexpected experiences
-            installedExperiences.split("/").forEach(exp => {
-                if (!exp || exp.length > 0) {
+            jsonExperiences.forEach((experience: ExperienceDetails) => {
+                if (!experience) {
                     return;
                 }
-                const [expType, expId, expTitle] = exp.split("|");
-                if (expType === "Launcher") return;
 
-                const isExpected = expectedExperiences.some(expected => expected.id === parseInt(expId));
+                if (experience.WrapperType === "Launcher") return;
+
+                const isExpected = expectedExperiences.some(expected => expected.id === parseInt(experience.Id));
                 if (isExpected) return;
 
                 const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not expected" };
-                const updatedTitle = expTitle.replace(/^"(.*)"$/, '$1'); //Remove the leading and trailing quotes (")
-                this.addOrUpdateError(this.experienceErrors, parseInt(expId), updatedTitle, station);
+                const updatedTitle = experience.Name.replace(/^"(.*)"$/, '$1'); //Remove the leading and trailing quotes (")
+                this.addOrUpdateError(this.experienceErrors, parseInt(experience.Id), updatedTitle, station);
             });
 
             //Check for not installed experiences
             expectedExperiences.forEach(expected => {
-                const isInstalled = installedExperiences.split("/").some(installed => parseInt(installed.split("|")[1]) === expected.id);
+                const isInstalled = jsonExperiences.some(installed => parseInt(installed.Id) === expected.id);
                 if (isInstalled) return;
 
                 const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not installed" };
@@ -783,7 +787,7 @@ export const useFullStore = defineStore({
                 nucIpAddress: stationData.nucAddress,
                 labLocation: stationData.labLocation,
                 name: null,
-                installedApplications: null,
+                installedJsonApplications: null,
                 id: stationData.id + "",
                 room: stationData.room,
                 macAddress: stationData.macAddress,

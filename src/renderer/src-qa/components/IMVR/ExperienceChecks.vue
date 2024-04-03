@@ -3,7 +3,7 @@ import GenericButton from "@renderer/components/buttons/GenericButton.vue";
 import ItemHover from "@renderer/components/statuses/ItemHover.vue";
 import StatusHover from "@renderer/components/statuses/StatusHover.vue";
 import { computed, ref, watch } from "vue";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { useFullStore } from "../../store/fullStore";
 import { storeToRefs } from "pinia";
 import { useStateStore } from "../../../store/stateStore";
 
