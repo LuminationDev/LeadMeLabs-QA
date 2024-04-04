@@ -35,10 +35,10 @@ else {
   });
 }
 
-autoUpdater.autoDownload = false;
+autoUpdater.autoDownload = true;
 autoUpdater.setFeedURL({
   provider: 'generic',
-  url: 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/'
+  url: 'https://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/'
 })
 
 
@@ -75,6 +75,14 @@ autoUpdater.on('download-progress', (progressObj) => {
   const progress = Math.floor(progressObj.percent)/100;
 
   if(downloadWindow) {
+    downloadWindow.webContents.executeJavaScript(`
+        try {
+            const dynamicTextElement = document.getElementById('update-message');
+            dynamicTextElement.innerText = 'Downloading QA update, ${(progressObj.percent).toFixed(2)} %';
+        } catch (error) {
+            console.error('Error in executeJavaScript:', error);
+        }
+    `);
     downloadWindow.setProgressBar(progress);
   }
 
