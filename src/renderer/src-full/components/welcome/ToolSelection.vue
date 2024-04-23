@@ -33,7 +33,7 @@ const route = useRoute();
         <div class="flex flex-col w-full p-4">
           <!--QA tool-->
           <div class="w-full h-full">
-            <LoginModal/>
+            <LoginModal title="QA Tool" description="Run a Quality Assurance Test" :route="'/check/full/setup/details'"/>
           </div>
 
           <!--QA tool quick check-->

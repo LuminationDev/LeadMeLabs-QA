@@ -1,6 +1,5 @@
 import { BrowserWindow, dialog } from 'electron'
 import PanasonicConnector from "../connectors/PanasonicConnector";
-import Encryption from "../../shared/encryption/Encryption";
 
 export async function sendCommandTcpPanasonic(
     mainWin: BrowserWindow,

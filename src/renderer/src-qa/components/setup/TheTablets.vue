@@ -7,6 +7,7 @@ import * as CONSTANT from "../../../assets/constants";
 import { useFullStore } from "../../store/fullStore";
 import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import {useStateStore} from "../../../store/stateStore";
 
 const fullStore = useFullStore();
 const tabletIp = ref("");
@@ -31,7 +32,7 @@ const tabletConnectionState = computed(() => {
 
 async function connectToTablet() {
   fullStore.addUnconnectedTablet(tabletIp.value)
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: CONSTANT.ACTION.CONNECT_TABLET,
     actionData: {
       tabletIp: tabletIp.value

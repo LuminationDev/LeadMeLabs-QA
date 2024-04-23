@@ -30,8 +30,6 @@ export const useFullStore = defineStore({
         numberOfStations: 0,
         //The most progress a user has made
         maxProgress: 0,
-        //The IP address entered by a user that should be the NUC
-        nucAddress: '',
         mostRecentAutoCheck: '',
         //List of the Station detail's from the NUC
         qaChecks: Array<QaCheck>(),
@@ -45,210 +43,8 @@ export const useFullStore = defineStore({
         experienceErrors: Array<ExperienceCheck>(),
         experienceChecks: Array<ExperienceCheck>(),
         qaGroups: [] as Array<QaGroup>,
-        experiences: [
-            {
-                id: 871620,
-                title: "Volcano Eruption"
-            },
-            {
-                id: 327140,
-                title: "Tilt Brush"
-            },
-            {
-                id: 1514840,
-                title: "All-In-One Sports VR"
-            },
-            {
-                id: 861400,
-                title: "Nefertari: Journey to Eternity"
-            },
-            {
-                id: 1424190,
-                title: "Curious Alice"
-            },
-            {
-                id: 1029110,
-                title: "Trash Time"
-            },
-            {
-                id: 1494670,
-                title: "Space Dance Harmony"
-            },
-            {
-                id: 533970,
-                title: "Blocks by Google"
-            },
-            {
-                id: 607590,
-                title: "Earthquake Simulator"
-            },
-            {
-                id: 1245640,
-                title: "The Book of Distance"
-            },
-            {
-                id: 972510,
-                title: "Thingamajig"
-            },
-            {
-                id: 629040,
-                title: "Skytropolis"
-            },
-            {
-                id: 653930,
-                title: "Tiny Town VR"
-            },
-            {
-                id: 746560,
-                title: "Gadgeteer"
-            },
-            {
-                id: 880270,
-                title: "Geogebra"
-            },
-            {
-                id: 1172310,
-                title: "Mona Lisa: Beyond the Glass"
-            },
-            {
-                id: 512270,
-                title: "Home - A VR Spacewalk"
-            },
-            {
-                id: 1308470,
-                title: "Journey to the Centre of the Cell"
-            },
-            {
-                id: 1165850,
-                title: "IL DIVINO: Michaelangelo's Sistene Ceiling in VR"
-            },
-            {
-                id: 612030,
-                title: "Harvest Simulator"
-            },
-            {
-                id: 513490,
-                title: "1943 Berlin Blitz"
-            },
-            {
-                id: 476540,
-                title: "Google Spotlight Stories: Pearl"
-            },
-            {
-                id: 515020,
-                title: "The VR Museum of Fine Art"
-            },
-            {
-                id: 482390,
-                title: "The Night Cafe"
-            },
-            {
-                id: 570540,
-                title: "Amazon Odyssey"
-            },
-            {
-                id: 508250,
-                title: "Aussie Sports VR"
-            },
-            {
-                id: 1046910,
-                title: "Dissection Simulator: Frog Edition"
-            },
-            {
-                id: 1236560,
-                title: "The Dawn of Art"
-            },
-            {
-                id: 422760,
-                title: "Ocean Rift"
-            },
-            {
-                id: 1379970,
-                title: "Solar System VR"
-            },
-            {
-                id: 547280,
-                title: "Calcflow"
-            },
-            {
-                id: 970800,
-                title: "Short Ciruit VR"
-            },
-            {
-                id: 1511090,
-                title: "Great Paintings VR"
-            },
-            {
-                id: 542170,
-                title: "Edmersiv"
-            },
-            {
-                id: 1614850,
-                title: "Colosseum VR"
-            },
-            {
-                id: 957070,
-                title: "iB Cricket"
-            },
-            {
-                id: 1788300,
-                title: "Robotics in VR"
-            },
-            {
-                id: 451980,
-                title: "The Body VR: Journey Inside the Cell"
-            },
-            {
-                id: 812610,
-                title: "Escape Architect VR"
-            },
-            {
-                id: 1462520,
-                title: "BRINK Traveler"
-            },
-            {
-                id: 587580,
-                title: "Nature Treks VR"
-            },
-            {
-                id: 572630,
-                title: "Lyra VR"
-            },
-            {
-                id: 1282770,
-                title: "Virtual Presenter Pro"
-            },
-            {
-                id: 696760,
-                title: "HoloLab Champions"
-            }
-        ],
-        onlineExperiences: [
-            {
-                id: 348250,
-                title: "Google Earth VR"
-            },
-            {
-                id: 1141930,
-                title: "Mondly"
-            },
-            {
-                id: 1532110,
-                title: "Curatours"
-            },
-            {
-                id: 1053760,
-                title: "Arkio"
-            },
-            {
-                id: 878620,
-                title: "Neotrie VR"
-            },
-            {
-                id: 1564310,
-                title: "Materials VR"
-            },
-        ]
+        experiences: CONSTANT.EXPERIENCES.experiences,
+        onlineExperiences: CONSTANT.EXPERIENCES.onlineExperiences
     }),
     actions: {
         /**
@@ -260,6 +56,9 @@ export const useFullStore = defineStore({
                 console.log("Experiences not collected!");
                 return;
             }
+
+            //If the station is not in VR mode return
+            if(!this.shouldStationBeVrCompatible(stationId)) return;
 
             //Build the expected experience list
             let expectedExperiences = this.experiences;
@@ -395,6 +194,8 @@ export const useFullStore = defineStore({
 
                 let stations = Array<any>()
                 stationIds.forEach(stationId => {
+                    if(!this.isStationVrCompatible(stationId)) return;
+
                     stations.push({
                         id: stationId,
                         status: null,
@@ -421,6 +222,9 @@ export const useFullStore = defineStore({
             }
             this.experienceChecks[0].stations.forEach(station => {
                 const index = this.stations.findIndex(s => s.id === station.id)
+                //Do not attempt to run an experience if the Station is not a VR station
+                if(!this.isStationVrCompatible(station.id)) return;
+
                 if (index !== -1 && this.stations[index].vrStatuses?.openVrStatus === 'Connected') {
                     this.launchNextExperience(station.id)
                 }
@@ -469,7 +273,7 @@ export const useFullStore = defineStore({
             this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus = "checking"
 
             setTimeout(() => {
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
                     actionData: {
                         stationId: this.experienceChecks[experienceIndex].stations[stationIndex].id,
@@ -678,7 +482,7 @@ export const useFullStore = defineStore({
             if (index !== -1) {
                 this.qaGroups[index].startQa()
                 const group = this.qaGroups[index]
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.RUN_STATION_GROUP,
                     actionData: {
                         group: group.id,
@@ -688,7 +492,7 @@ export const useFullStore = defineStore({
                     }
                 });
 
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.RUN_TABLET_GROUP,
                     actionData: {
                         group: group.id,
@@ -698,7 +502,7 @@ export const useFullStore = defineStore({
                     }
                 });
 
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
                     actionData: {
                         group: group.id,
@@ -741,22 +545,6 @@ export const useFullStore = defineStore({
                     }
                 })
             }
-        },
-
-        sendMessage(messageData: { action: string, actionData: any }) {
-            const stateStore = useStateStore()
-            const processedData = {
-                qaToolAddress: stateStore.getServerDetails,
-                ...messageData
-            }
-            // @ts-ignore api is injected
-            api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-                channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-                key: stateStore.key,
-                address: this.nucAddress,
-                port: 55556,
-                data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
-            });
         },
 
         sendStationMessage(stationId: string, messageData: { action: string, actionData: any }) {
@@ -917,6 +705,32 @@ export const useFullStore = defineStore({
          */
         updateMaxProgress(progress: number) {
             this.maxProgress = progress > this.maxProgress ? progress : this.maxProgress;
+        },
+
+        /**
+         * Check if a Station is set to VR mode and has sent confirmation of it's details.
+         * @param stationId
+         */
+        isStationVrCompatible(stationId: string): boolean {
+            //If the station is not in VR mode return
+            const index = this.stations.findIndex(element => element.getId() == stationId)
+            if (index === -1) return false; //Station does not exist - do not continue regardless
+            const station = this.stations[index];
+
+            return !(station.details == null || station.details.stationMode !== "vr");
+        },
+
+        /**
+         * Check if a Station should be set to VR mode.
+         * @param stationId
+         */
+        shouldStationBeVrCompatible(stationId: string): boolean {
+            //If the station is not in VR mode return
+            const index = this.stations.findIndex(element => element.getId() == stationId)
+            if (index === -1) return false; //Station does not exist - do not continue regardless
+            const station = this.stations[index];
+
+            return !(station.expectedDetails == null || station.expectedDetails.stationMode !== "vr");
         }
     },
     getters: {

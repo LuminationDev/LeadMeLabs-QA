@@ -187,8 +187,8 @@ const handleTCPMessage = (info: any) => {
                     labLocation: "",
                     stationMode: station?.mode ? station.mode.toLowerCase() : "vr"
                 }
-                fullStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "");
                 fullStore.stations.push(s)
+                fullStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "");
                 fullStore.addDevice(s.id, 'station');
                 fullStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,

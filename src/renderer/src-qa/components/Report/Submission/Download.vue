@@ -110,7 +110,7 @@ onMounted(() => {
 <template>
   <div class="flex flex-col mt-4">
     <CheckStatus v-if="fullStore.online" :checking="status"/>
-    <LoginModal v-else :online="fullStore.online" :callback="uploadReport"/>
+    <LoginModal v-else title="QA Tool" description="Run a Quality Assurance Test" :online="fullStore.online" :callback="uploadReport"/>
 
     <div class="flex flex-col p-5 h-auto mt-8 border border-gray-300 rounded-lg">
       <p class="text-lg font-semibold mb-1">{{userMessage}}</p>

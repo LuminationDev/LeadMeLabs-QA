@@ -16,6 +16,18 @@ const props = defineProps({
     required: false,
     default: true
   },
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  route: {
+    type: String,
+    required: false
+  },
   callback: {
     type: Function,
     required: false,
@@ -89,7 +101,7 @@ const closeModal = () => {
  */
 const processCallback = () => {
   if (props.callback === undefined) {
-    router.push("/check/full/setup/details");
+    router.push(props.route);
   } else {
     props.callback();
   }
@@ -104,11 +116,11 @@ const processCallback = () => {
       @click="openModal"
   >
     <div class="font-semibold text-base mb-1">
-      QA Test
+      {{title}}
     </div>
 
     <div class="text-sm text-gray-400">
-      Run a Quality Assurance Test
+      {{description}}
     </div>
   </div>
 

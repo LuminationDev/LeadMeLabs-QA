@@ -5,8 +5,8 @@ import IDStatus from "@renderer/src-qa/components/Appliances/ApplianceIdStatus.v
 import ApplianceListModal from "@renderer/modals/ApplianceListModal.vue";
 import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
 import { computed, onBeforeMount, ref, watch } from "vue";
-import { Appliance } from "@renderer/src-qa/interfaces";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { Appliance } from "../../interfaces";
+import { useFullStore } from "../../store/fullStore";
 import { useStateStore } from "../../../store/stateStore";
 
 const stateStore = useStateStore();
@@ -151,7 +151,7 @@ const waitForResponse = async (appliance, timeout) => {
  */
 const performCbusCheck = (appliance: Appliance) => {
   if (appliance.type === 'scenes') {
-    fullStore.sendMessage({
+    useStateStore().sendMessage({
       action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
       actionData: {
         automationBase: appliance.automationBase,
@@ -163,7 +163,7 @@ const performCbusCheck = (appliance: Appliance) => {
     return;
   }
 
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: CONSTANT.ACTION.CBUS_APPLIANCE_VALIDATION,
     actionData: {
       automationBase: appliance.automationBase,
@@ -174,7 +174,7 @@ const performCbusCheck = (appliance: Appliance) => {
 }
 
 const performEpsonCheck = (appliance: Appliance) => {
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: "EpsonApplianceStatusCheck",
     actionData: {
       id: appliance.id,
@@ -186,7 +186,7 @@ const performEpsonCheck = (appliance: Appliance) => {
 const validateCbusConnection = async () => {
   fullStore.cbusConnection = "Loading"
 
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: CONSTANT.ACTION.CBUS_CONNECTION_VALIDATION,
     actionData: {}
   });
