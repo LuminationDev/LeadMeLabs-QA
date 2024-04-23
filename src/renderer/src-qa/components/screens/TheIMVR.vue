@@ -8,6 +8,7 @@ import RetrySvg from "../../../assets/icons/RetrySvg.vue";
 import CategoryTab from "@renderer/components/statuses/CategoryTab.vue";
 import ExperienceChecks from "@renderer/src-qa/components/IMVR/ExperienceChecks.vue";
 import ExperienceLibrary from "@renderer/src-qa/components/IMVR/ExperienceLibrary.vue";
+import {useStateStore} from "../../../store/stateStore";
 
 const fullStore = useFullStore();
 const animateSpin = ref(false);
@@ -35,7 +36,7 @@ function getVrStatuses() {
   setTimeout(() => {
     animateSpin.value = false
   }, 1000)
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: CONSTANT.ACTION.GET_VR_STATUSES,
     actionData: {
       stationIds: ['all']
@@ -67,11 +68,13 @@ onMounted(() => {
             <div @click="getVrStatuses" class="mr-4">
               <RetrySvg fill="#6b7280" class="cursor-pointer" :class="animateSpin ? 'animate-spin' : ''"/>
             </div>
-            <div v-for="station in fullStore.stations" :id="station.id" class="border-gray-100 border-2 rounded-xl p-2 w-10 h-10 ml-1 last-child:ml-0">
-              <img v-if="station.details?.stationMode !== 'vr'" src="../../../assets/icons/headset-na.svg" :alt="`non-vr station icon`" />
-              <img v-else-if="!station.vrStatuses || (station.vrStatuses['openVrStatus'] !== 'Connected' || station.vrStatuses['headsetStatus'] !== 'Connected')" src="../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
-              <img v-else src="../../../assets/icons/headset-connected.svg" :alt="`connected headset icon`" />
-            </div>
+            <template v-for="station in fullStore.stations" :id="station.id">
+              <div v-if="station.details !== null" class="border-gray-100 border-2 rounded-xl p-2 w-10 h-10 ml-1 last-child:ml-0">
+                <img v-if="station.details?.stationMode !== 'vr'" src="../../../assets/icons/headset-na.svg" :alt="`non-vr station icon`" />
+                <img v-else-if="!station.vrStatuses || (station.vrStatuses['openVrStatus'] !== 'Connected' || station.vrStatuses['headsetStatus'] !== 'Connected')" src="../../../assets/icons/headset-not-connected.svg" :alt="`not connected headset icon`" />
+                <img v-else src="../../../assets/icons/headset-connected.svg" :alt="`connected headset icon`" />
+              </div>
+            </template>
           </div>
         </div>
 

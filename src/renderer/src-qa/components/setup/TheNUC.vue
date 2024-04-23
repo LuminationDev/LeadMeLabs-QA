@@ -43,7 +43,7 @@ watch(connectionState, (newValue) => {
 async function connectToNuc() {
   connectionState.value = 'loading'
   stateStore.key = encryptionKey.value;
-  fullStore.nucAddress = nucAddress.value;
+  stateStore.nucAddress = nucAddress.value;
   fullStore.connected = false
 
   //@ts-ignore
@@ -55,7 +55,7 @@ async function connectToNuc() {
     command: "start"
   });
 
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: CONSTANT.ACTION.CONNECT,
     actionData: {}
   });

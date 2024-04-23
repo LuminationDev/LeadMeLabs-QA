@@ -84,7 +84,7 @@ const recollectExperiences = () => {
   inProgress.value = true;
 
   //Collect all the installed experiences
-  fullStore.sendMessage({
+  useStateStore().sendMessage({
     action: CONSTANT.ACTION.GET_EXPERIENCES,
     actionData: {
       stationIds: ['all']
@@ -152,7 +152,7 @@ const isStationPresent = (deviceId, stations: any[]) => {
     </tr>
 
     <tr v-for="(device, _index) in fullStore.deviceMap" :key="_index" class="text-sm border border-gray-200">
-      <template v-if="device.type === 'station'">
+      <template v-if="device.type === 'station' && fullStore.isStationVrCompatible(device.id)">
         <th class="text-left grow p-3">
           S{{device.id}}
         </th>
@@ -173,7 +173,7 @@ const isStationPresent = (deviceId, stations: any[]) => {
       <th class="p-3">Name</th>
 
       <template v-for="device in fullStore.deviceMap">
-        <th class="w-16 text-center p-3" v-if="device.type === 'station'">
+        <th class="w-16 text-center p-3" v-if="device.type === 'station' && fullStore.isStationVrCompatible(device.id)">
           S{{device.id}}
         </th>
       </template>
@@ -185,19 +185,18 @@ const isStationPresent = (deviceId, stations: any[]) => {
       <ItemHover :title="experience.title" :message="'No details provided'"/>
 
       <template v-for="(device, _index) in fullStore.deviceMap" :key="_index">
-        <StatusHover v-if="isStationPresent(device.id, experience.stations) !== undefined && device.type === 'station'"
-                     :message="isStationPresent(device.id, experience.stations).message ?? 'No details provided'"
-                     :checking-status="isStationPresent(device.id, experience.stations).checkingStatus ?? 'not checked'"
-                     :passed-status="isStationPresent(device.id, experience.stations).status ?? 'unknown'"/>
+        <template v-if="fullStore.isStationVrCompatible(device.id)">
+          <StatusHover v-if="isStationPresent(device.id, experience.stations) !== undefined && device.type === 'station'"
+                       :message="isStationPresent(device.id, experience.stations).message ?? 'No details provided'"
+                       :checking-status="isStationPresent(device.id, experience.stations).checkingStatus ?? 'not checked'"
+                       :passed-status="isStationPresent(device.id, experience.stations).status ?? 'unknown'"/>
 
-        <StatusHover v-else-if="device.type === 'station'"
-                     :message="'N/A'"
-                     :checking-status="'checked'"
-                     :passed-status="'pending'"/>
+          <StatusHover v-else-if="device.type === 'station'"
+                       :message="'N/A'"
+                       :checking-status="'checked'"
+                       :passed-status="'pending'"/>
+        </template>
       </template>
-
-
-
 
       <th class="pl-3 font-medium text-left">
         {{experience.stations[0].message}}

@@ -62,7 +62,7 @@ const hasStartedExperienceChecks = computed(() => {
 });
 
 const allHeadsetsConnected = computed(() => {
-  const index = fullStore.stations.findIndex(station => (station.vrStatuses?.openVrStatus !== 'Connected' && station.details.stationMode !== 'vr'))
+  const index = fullStore.stations.findIndex(station => (station.vrStatuses !== null && station.details !== null && station.vrStatuses?.openVrStatus !== 'Connected' && station.details.stationMode !== 'vr'))
   return index === -1
 });
 
@@ -138,7 +138,7 @@ watch(experienceChecksCompleted, () => {
       </tr>
 
       <tr v-for="(device, _index) in fullStore.deviceMap" :key="_index" class="text-sm border border-gray-200">
-        <template v-if="device.type === 'station'">
+        <template v-if="device.type === 'station' && fullStore.isStationVrCompatible(device.id)">
           <th class="text-left grow p-3">
             S{{device.id}}
           </th>
