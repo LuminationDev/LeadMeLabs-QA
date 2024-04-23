@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CheckTableRow from "@renderer/src-qa/components/Report/Results/CheckTableRow.vue";
+import CheckTableRow from "./CheckTableRow.vue";
 import CommentModal from "@renderer/modals/CommentModal.vue";
 import { useStateStore } from "../../../../store/stateStore";
 import { useExperienceStore } from "../../../store/experienceStore";

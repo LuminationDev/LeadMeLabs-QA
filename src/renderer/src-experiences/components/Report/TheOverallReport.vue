@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BasicReport from "@renderer/src-qa/components/Report/Results/BasicReport.vue";
+import BasicReport from "./Results/BasicReport.vue";
 import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
 import { useStateStore } from "../../../store/stateStore";
 import { useExperienceStore } from "../../store/experienceStore";

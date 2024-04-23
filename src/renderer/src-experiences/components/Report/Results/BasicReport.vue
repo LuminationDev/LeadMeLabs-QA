@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
-import ReportResults from "@renderer/src-qa/components/Report/Results/ReportResults.vue";
-import CheckTable from "@renderer/src-qa/components/Report/Results/CheckTable.vue";
+import ReportResults from "./ReportResults.vue";
+import CheckTable from "./CheckTable.vue";
 import { useExperienceStore } from "../../../store/experienceStore";
 import { useStateStore } from "../../../../store/stateStore";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import {Section} from "../../../interfaces/_report";
+import { Section } from "../../../interfaces/_report";
 
 const experienceStore = useExperienceStore();
 const stateStore = useStateStore();
