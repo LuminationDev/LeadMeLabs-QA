@@ -2,7 +2,6 @@
 import LoginModal from "../../modals/LoginModal.vue";
 import { initialiseStores, populateFullReportTrackerWithManualChecks } from "../setup";
 
-//TODO check if this works with the FULL SOFTWARE
 //Initial population
 initialiseStores();
 populateFullReportTrackerWithManualChecks();
