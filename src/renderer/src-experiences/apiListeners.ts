@@ -1,5 +1,6 @@
 import { useStateStore } from "../store/stateStore";
 import { useExperienceStore } from "./store/experienceStore";
+import { useExperienceCheckStore } from "../store/experienceCheckStore";
 import * as CONSTANT from "../assets/constants";
 import { QaCheck, TCPMessage } from "../interfaces";
 import { Station } from "../types/_station";
@@ -7,6 +8,7 @@ import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 let stateStore: any;
 let experienceStore: any;
+let experienceCheckStore: any;
 
 /**
  * Initialise the pinia stores required for the api listeners.. This needs to be done at run time otherwise
@@ -15,6 +17,7 @@ let experienceStore: any;
 export const initialise = () => {
     stateStore = useStateStore();
     experienceStore = useExperienceStore();
+    experienceCheckStore = useExperienceCheckStore();
 }
 
 /**
@@ -126,19 +129,19 @@ const handleTCPMessage = (info: any) => {
             const message = response.responseData.message
             const stationId = response.source.split(",")[1]
             const experienceId = response.responseData.experienceId
-            experienceStore.updateExperienceCheck(stationId, experienceId, status, message)
+            experienceCheckStore.updateExperienceCheck(stationId, experienceId, status, message)
             break;
         }
         case "ExperienceLaunched": {
             const stationId = response.source.split(",")[1]
             const experienceId = response.responseData.experienceId
-            experienceStore.updateExperienceCheck(stationId, experienceId, "passed", "")
+            experienceCheckStore.updateExperienceCheck(stationId, experienceId, "passed", "")
             break;
         }
         case "ExperienceLaunchFailed": {
             const stationId = response.source.split(",")[1]
             const experienceId = response.responseData.experienceId
-            experienceStore.updateExperienceCheck(stationId, experienceId, "failed", response.responseData.message ?? "")
+            experienceCheckStore.updateExperienceCheck(stationId, experienceId, "failed", response.responseData.message ?? "")
             break;
         }
         case "GetVrStatuses": {
@@ -149,9 +152,9 @@ const handleTCPMessage = (info: any) => {
         case "GetExperiences": {
             console.log(response.responseData.stations);
             response.responseData.stations.forEach(station => {
-                experienceStore.checkExperiencesForErrors(station.id, station.applications, station.noLicenses, station.blockedFamilyMode);
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.applications, station.noLicenses, station.blockedFamilyMode);
             });
-            experienceStore.updateExperienceChecksWithErrors();
+            experienceCheckStore.updateExperienceChecksWithErrors();
             break;
         }
         case "Connected": {
@@ -175,7 +178,7 @@ const handleTCPMessage = (info: any) => {
                 }
 
                 experienceStore.stations.push(s)
-                experienceStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "", station.noLicenseApplications ?? "", station.blockedFamilyModeApplications ?? "");
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "", station.noLicenseApplications ?? "", station.blockedFamilyModeApplications ?? "");
                 experienceStore.addDevice(s.id, 'station');
                 experienceStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import BasicReport from "./results/BasicReport.vue";
 import GenericLayout from "../../components/layouts/GenericLayout.vue";
+import * as CONSTANT from "../../assets/constants";
 import { useStateStore } from "../../store/stateStore";
 import { ref } from "vue";
 
 const stateStore = useStateStore();
 const tempStore = stateStore.getStore;
-const reportCategory = ref('hardware');
+const reportCategory = ref(stateStore.toolType === CONSTANT.TOOL.EXPERIENCE_LAUNCHER ? 'imvr' : 'hardware');
 
 /**
  * Show the user a quick view of if the tests were passed by all devices.

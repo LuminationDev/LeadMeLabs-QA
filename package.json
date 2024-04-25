@@ -1,8 +1,8 @@
 {
-  "name": "leadme-experiences",
-  "version": "1.0.0",
-  "description": "The LeadMe Labs QA experience launcher",
-  "main": "build/main/main-experiences/main.js",
+  "name": "leadme-tools-qa",
+  "version": "1.0.17",
+  "description": "The LeadMe Labs QA tools",
+  "main": "build/main/main-full/main.js",
   "scripts": {
     "dev": "npm run update-main:full && npm run dev-server:full",
     "dev-full": "npm run update-main:full && npm run dev-server:full",

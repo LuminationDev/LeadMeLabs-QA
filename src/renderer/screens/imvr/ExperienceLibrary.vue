@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useStateStore } from "../../store/stateStore";
+import { useExperienceCheckStore } from "../../store/experienceCheckStore";
 import StatusHover from "../../components/statuses/StatusHover.vue";
 import ItemHover from "../../components/statuses/ItemHover.vue";
 import RetrySvg from "../../assets/icons/RetrySvg.vue";
@@ -8,6 +9,7 @@ import * as CONSTANT from "../../assets/constants";
 
 const stateStore = useStateStore();
 const tempStore = stateStore.getStore;
+const experienceCheckStore = useExperienceCheckStore();
 const inProgress = ref(false);
 
 const infoDetails = computed(() => {
@@ -46,7 +48,7 @@ const uncollectedExperiences = computed(() => {
 });
 
 const getCountByKeyword = (deviceId, keyword) => {
-  return tempStore.experienceErrors.reduce((count, entry) => {
+  return experienceCheckStore.experienceErrors.reduce((count, entry) => {
     const foundStation = entry.stations.find(station => station.id == deviceId && station.message.includes(keyword));
     if (foundStation) {
       return count + 1;
@@ -177,7 +179,7 @@ const isStationPresent = (deviceId, stations: any[]) => {
     </tr>
 
     <tr v-for="(device, _index) in tempStore.deviceMap" :key="_index" class="text-sm border border-gray-200">
-      <template v-if="device.type === 'station' && tempStore.isStationVrCompatible(device.id)">
+      <template v-if="device.type === 'station' && experienceCheckStore.isStationVrCompatible(device.id)">
         <th class="text-left grow p-3">
           S{{device.id}}
         </th>
@@ -206,7 +208,7 @@ const isStationPresent = (deviceId, stations: any[]) => {
       <th class="p-3">Name</th>
 
       <template v-for="device in tempStore.deviceMap">
-        <th class="w-16 text-center p-3" v-if="device.type === 'station' && tempStore.isStationVrCompatible(device.id)">
+        <th class="w-16 text-center p-3" v-if="device.type === 'station' && experienceCheckStore.isStationVrCompatible(device.id)">
           S{{device.id}}
         </th>
       </template>
@@ -214,11 +216,11 @@ const isStationPresent = (deviceId, stations: any[]) => {
     </tr>
 
     <!--Table will not be built if NUC connection has not been made-->
-    <tr v-for="(experience, index) in tempStore.experienceErrors" :key="index" class="text-sm border border-gray-200">
+    <tr v-for="(experience, index) in experienceCheckStore.experienceErrors" :key="index" class="text-sm border border-gray-200">
       <ItemHover :title="experience.title" :message="'No details provided'"/>
 
       <template v-for="(device, _index) in tempStore.deviceMap" :key="_index">
-        <template v-if="tempStore.isStationVrCompatible(device.id)">
+        <template v-if="experienceCheckStore.isStationVrCompatible(device.id)">
           <StatusHover v-if="isStationPresent(device.id, experience.stations) !== undefined && device.type === 'station'"
                        :message="isStationPresent(device.id, experience.stations).message ?? 'No details provided'"
                        :checking-status="isStationPresent(device.id, experience.stations).checkingStatus ?? 'not checked'"

@@ -8,9 +8,11 @@ import CategoryTab from "../../components/statuses/CategoryTab.vue";
 import ExperienceChecks from "./ExperienceChecks.vue";
 import ExperienceLibrary from "./ExperienceLibrary.vue";
 import { useStateStore } from "../../store/stateStore";
+import { useExperienceCheckStore } from "../../store/experienceCheckStore";
 
 const stateStore = useStateStore();
 const tempStore = stateStore.getStore;
+const experienceCheckStore = useExperienceCheckStore();
 const animateSpin = ref(false);
 const route = useRoute();
 
@@ -59,11 +61,11 @@ function getVrStatuses() {
 onMounted(() => {
   getVrStatuses();
 
-  if (tempStore.experienceChecks.length === 0) {
-    tempStore.buildExperienceChecks()
+  if (experienceCheckStore.experienceChecks.length === 0) {
+    experienceCheckStore.buildExperienceChecks()
   }
 
-  tempStore.updateExperienceChecksWithErrors();
+  experienceCheckStore.updateExperienceChecksWithErrors();
 });
 </script>
 

@@ -11,7 +11,7 @@ import PasswordController from "../controllers/PasswordController";
 
 let applicationType: string;
 let downloadWindow: BrowserWindow;
-export let mainWindow: BrowserWindow;
+let mainWindow: BrowserWindow;
 
 /**
  * Check the lock instance for another open app and attached the auto updater processes.
@@ -273,35 +273,34 @@ async function sendApplicationDetails(): Promise<void> {
  */
 function loadControllers(): void {
     switch (applicationType) {
-        case "FullTool":
+        case CONSTANT.TOOL.FULL_TOOL:
             new QAController(ipcMain, mainWindow).startup();
             new NetworkController(ipcMain, mainWindow).startup();
             new ConfigController(ipcMain, mainWindow).startup();
             new PasswordController(ipcMain, mainWindow).startup();
             break;
 
-        case "QaTool":
+        case CONSTANT.TOOL.QA_TOOL:
             new QAController(ipcMain, mainWindow).startup();
             break;
 
-        case "NetworkTool":
+        case CONSTANT.TOOL.NETWORK_TOOL:
             new NetworkController(ipcMain, mainWindow).startup();
             break;
 
-        case "PasswordTool":
+        case CONSTANT.TOOL.PASSWORD_TOOL:
             new PasswordController(ipcMain, mainWindow).startup();
             break;
 
-        case "ExperienceTool":
-            new ConfigController(ipcMain, mainWindow).startup();
+        case CONSTANT.TOOL.EXPERIENCE_TOOL:
+            new QAController(ipcMain, mainWindow).startup();
             break;
 
-        case "SetupTool":
-            new QAController(ipcMain, mainWindow).startup();
+        case CONSTANT.TOOL.SETUP_TOOL:
+            new ConfigController(ipcMain, mainWindow).startup();
             break;
 
         default:
-            // No specific action for other application types
             break;
     }
 }

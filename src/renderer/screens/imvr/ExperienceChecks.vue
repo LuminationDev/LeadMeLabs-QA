@@ -5,11 +5,14 @@ import StatusHover from "../../components/statuses/StatusHover.vue";
 import { computed, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useStateStore } from "../../store/stateStore";
+import { useExperienceCheckStore } from "../../store/experienceCheckStore";
 
 const stateStore = useStateStore();
 const tempStore = stateStore.getStore;
+const experienceCheckStore = useExperienceCheckStore();
 const inProgress = ref(false);
-const { experienceChecksCompleted, allowRunningExperienceChecks } = storeToRefs(tempStore);
+const { allowRunningExperienceChecks } = storeToRefs(tempStore);
+const { experienceChecksCompleted } = storeToRefs(experienceCheckStore);
 
 const infoDetails = computed(() => {
   if (inProgress.value && !experienceChecksCompleted.value) {
@@ -41,12 +44,12 @@ const infoDetails = computed(() => {
 })
 
 const startTesting = () => {
-  tempStore.startExperienceChecks()
+  experienceCheckStore.startExperienceChecks()
   inProgress.value = true
 }
 
 const retryExperience = (experienceIndex) => {
-  tempStore.launchExperienceOnAll(experienceIndex)
+  experienceCheckStore.launchExperienceOnAll(experienceIndex)
 }
 
 const cancelTesting = () => {
@@ -55,7 +58,7 @@ const cancelTesting = () => {
 }
 
 const hasStartedExperienceChecks = computed(() => {
-  return tempStore.experienceChecks.filter(element => {
+  return experienceCheckStore.experienceChecks.filter(element => {
     return element.stations.filter(station => station.status !== null).length > 1
   }).length > 1
 });
@@ -76,7 +79,7 @@ const allHeadsetsConnected = computed(() => {
 });
 
 const getTotalInstalled = (deviceId: string) => {
-  const count = tempStore.experienceChecks.reduce((count, entry) => {
+  const count = experienceCheckStore.experienceChecks.reduce((count, entry) => {
     const foundStation = entry.stations.find(station => station.id == deviceId && (station.message === null || !station.message.includes("Not")));
     if (foundStation) {
       return count + 1;
@@ -139,7 +142,7 @@ watch(experienceChecksCompleted, () => {
     </GenericButton>
   </div>
 
-  <div v-if="tempStore.experienceChecks && tempStore.experienceChecks.length" class="flex flex-col">
+  <div v-if="experienceCheckStore.experienceChecks && experienceCheckStore.experienceChecks.length" class="flex flex-col">
     <table class="w-full border-collapse mt-4">
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Device</th>
@@ -147,7 +150,7 @@ watch(experienceChecksCompleted, () => {
       </tr>
 
       <tr v-for="(device, _index) in tempStore.deviceMap" :key="_index" class="text-sm border border-gray-200">
-        <template v-if="device.type === 'station' && tempStore.isStationVrCompatible(device.id)">
+        <template v-if="device.type === 'station' && experienceCheckStore.isStationVrCompatible(device.id)">
           <th class="text-left grow p-3">
             S{{device.id}}
           </th>
@@ -164,14 +167,14 @@ watch(experienceChecksCompleted, () => {
       <tr class="text-left text-xs bg-gray-100 border border-gray-200">
         <th class="p-3">Name</th>
 
-        <th class="w-16 text-center p-3" v-for="device in tempStore.experienceChecks[0].stations">
+        <th class="w-16 text-center p-3" v-for="device in experienceCheckStore.experienceChecks[0].stations">
           S{{device.id}}
         </th>
         <th/>
       </tr>
 
       <!--Table will not be built if NUC connection has not been made, fullStore.buildQA is triggered on response-->
-      <tr v-for="(check, index) in tempStore.experienceChecks" :key="index" class="text-sm border border-gray-200">
+      <tr v-for="(check, index) in experienceCheckStore.experienceChecks" :key="index" class="text-sm border border-gray-200">
         <ItemHover :title="check.title" :message="'No details provided'"/>
         <template v-for="(station, _index) in check.stations" :key="_index">
           <StatusHover
