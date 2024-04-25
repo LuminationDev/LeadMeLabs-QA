@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TrashSvg from "../assets/icons/TrashSvg.vue";
 import PencilSvg from "../assets/icons/PencilSvg.vue";
-import { Comment } from "@renderer/src-qa/interfaces/_report";
+import { Comment } from "../interfaces/_report";
 import { ref, watchEffect } from "vue";
 import CrossSvg from "../assets/icons/CrossSvg.vue";
 import CheckSvg from "../assets/icons/CheckSvg.vue";

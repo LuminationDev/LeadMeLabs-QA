@@ -17,6 +17,9 @@
     "src/renderer/src-setup/env.d.ts",
     "src/renderer/src-setup/**/*",
     "src/renderer/src-setup/**/*.vue",
+    "src/renderer/screens/**/**/*.vue",
+    "src/renderer/types/**/*.ts",
+    "src/renderer/interfaces/**/*.ts",
     "src/renderer/assets/checks/**/*.ts",
     "src/renderer/assets/constants/**/*.ts"
   ],

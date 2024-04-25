@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
+import { useFullStore } from "../../src-qa/store/fullStore";
 import { computed, onMounted } from "vue";
-import { Device } from "@renderer/src-qa/interfaces/_deviceMap";
+import { Device } from "../../interfaces/_deviceMap";
 
 const fullStore = useFullStore();
 const props = defineProps({

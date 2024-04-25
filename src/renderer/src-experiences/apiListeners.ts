@@ -1,8 +1,8 @@
 import { useStateStore } from "../store/stateStore";
 import { useExperienceStore } from "./store/experienceStore";
 import * as CONSTANT from "../assets/constants";
-import { QaCheck, TCPMessage } from "./interfaces";
-import { Station } from "./types/_station";
+import { QaCheck, TCPMessage } from "../interfaces";
+import { Station } from "../types/_station";
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 let stateStore: any;
@@ -149,7 +149,7 @@ const handleTCPMessage = (info: any) => {
         case "GetExperiences": {
             console.log(response.responseData.stations);
             response.responseData.stations.forEach(station => {
-                experienceStore.checkExperiencesForErrors(station.id, station.applications);
+                experienceStore.checkExperiencesForErrors(station.id, station.applications, station.noLicenses, station.blockedFamilyMode);
             });
             experienceStore.updateExperienceChecksWithErrors();
             break;
@@ -164,6 +164,8 @@ const handleTCPMessage = (info: any) => {
                     nucIpAddress: "",
                     name: station.name,
                     installedJsonApplications: station.installedJsonApplications ?? "",
+                    noLicenseApplications: station.noLicenseApplications ?? "",
+                    blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? "",
                     id: station.id + "",
                     room: station.room,
                     macAddress: station.macAddress,
@@ -173,7 +175,7 @@ const handleTCPMessage = (info: any) => {
                 }
 
                 experienceStore.stations.push(s)
-                experienceStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "");
+                experienceStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "", station.noLicenseApplications ?? "", station.blockedFamilyModeApplications ?? "");
                 experienceStore.addDevice(s.id, 'station');
                 experienceStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,

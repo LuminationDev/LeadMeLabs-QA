@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
-import GenericButton from "@renderer/components/buttons/GenericButton.vue";
-import CommentInfo from "@renderer/modals/CommentInfo.vue";
+import GenericButton from "../components/buttons/GenericButton.vue";
+import CommentInfo from "./CommentInfo.vue";
 import { computed, ref } from "vue";
-import { Comment } from "@renderer/src-qa/interfaces/_report";
+import { Comment } from "../interfaces/_report";
 
 defineExpose({
   openModal

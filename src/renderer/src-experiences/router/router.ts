@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouterOptions } from 'vue-router';
 import { experienceRoutes } from "./experienceRoutes";
 
 //Generic screens
-import Settings from '../views/Settings.vue';
+import TheSettings from '../../screens/settings/TheSettings.vue';
 import Welcome from "../views/Welcome.vue";
 
 const router = createRouter(<RouterOptions>{
@@ -16,7 +16,7 @@ const router = createRouter(<RouterOptions>{
         {
             path: '/settings',
             name: 'settings',
-            component: Settings,
+            component: TheSettings,
         },
         ...experienceRoutes, // Merge fullRoutes into the existing routes
     ]

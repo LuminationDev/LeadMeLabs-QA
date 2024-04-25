@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Splicers from '@renderer/src-setup/components/splicers/Splicers.vue'
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue'
+import Splicers from '../components/splicers/Splicers.vue'
+import GenericScreen from './generic/GenericScreen.vue'
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
-import { CheckGuideItem } from "../src-qa/interfaces/_routeItems";
+import { CheckGuideItem } from "../interfaces/_routeItems";
 import vernMatrix from '../assets/images/vern-matrix.png';
 
 const props = defineProps({

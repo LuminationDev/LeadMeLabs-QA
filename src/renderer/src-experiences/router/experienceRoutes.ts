@@ -1,15 +1,13 @@
-import ManualCheck from "../components/screens/ManualCheck.vue";
-import TheIMVR from "../components/screens/TheIMVR.vue";
-import BasicAutoCheck from "../components/screens/AutoCheck.vue";
-import BasicReport from "../components/Report/Results/BasicReport.vue";
-import TheOverallReport from "../components/Report/TheOverallReport.vue";
-import TheFinaliseReport from "../components/Report/TheFinaliseReport.vue";
-import TheFullCheck from "../components/screens/TheFullCheck.vue";
-import {
-    IMVR,
-} from "../../assets/checks/_fullcheckValues";
-import { CheckObject, Route } from "../interfaces/_routeItems";
-import TheDetails from "../components/screens/TheDetails.vue";
+import ManualCheck from "../../screens/checks/ManualCheck.vue";
+import TheIMVR from "../../screens/imvr/TheIMVR.vue";
+import BasicAutoCheck from "../../screens/checks/AutoCheck.vue";
+import BasicReport from "../../screens/report/results/BasicReport.vue";
+import TheOverallReport from "../../screens/report/TheOverallReport.vue";
+import TheFinaliseReport from "../components/screens/TheFinaliseReport.vue";
+import TheExperienceCheck from "../components/screens/TheExperienceCheck.vue";
+import { IMVR } from "../../assets/checks/_fullcheckValues";
+import { CheckObject, Route } from "../../interfaces/_routeItems";
+import TheDetails from "../../screens/setup/TheDetails.vue";
 
 /**
  * Generic metadata that is the same across all manual routes
@@ -21,6 +19,16 @@ const manualMetaData = () => {
         userInput: true, //Requires user input to proceed to the next page
         canSkip: true,
     };
+}
+
+/**
+ * Use this variable to track the progress over the different screens, each screen is assigned it as ++currentProgress
+ * incrementing it before the next screen.
+ */
+let currentProgress = 0;
+const calculateProgress = () => {
+    //return ++currentProgress; //Quick way to count how many checks there are.
+    return Math.floor(++currentProgress/10 * 100);
 }
 
 /**
@@ -52,6 +60,7 @@ const generateRoutesFromObjectArray = (checkArray: CheckObject[], previousRoute:
                     category: categoryName,
                     next: getNextPath(checkArray, sectionIndex, categoryIndex, nextRoute),
                     prev: getPrevPath(checkArray, sectionIndex, categoryIndex, previousRoute),
+                    progress: calculateProgress(),
                     ...manualMetaData(),
                 },
             };
@@ -150,24 +159,28 @@ export const experienceRoutes = [
         meta: {
             next: '/experiences/setup/devices/nuc',
             prev: '/',
+            userInput: true,
+            progress: calculateProgress()
         }
     },
     {
         path: '/experiences/setup/devices/nuc',
         name: 'experiences-setup-devices-nuc',
-        component: TheFullCheck,
+        component: TheExperienceCheck,
         meta: {
             next: '/experiences/setup/devices/stations',
-            prev: '/experiences/setup/details'
+            prev: '/experiences/setup/details',
+            progress: calculateProgress()
         }
     },
     {
         path: '/experiences/setup/devices/stations',
         name: 'experiences-setup-devices-stations',
-        component: TheFullCheck,
+        component: TheExperienceCheck,
         meta: {
             next: '/experiences/imvr/pre_experience_checks',
-            prev: '/experiences/setup/devices/nuc'
+            prev: '/experiences/setup/devices/nuc',
+            progress: calculateProgress()
         }
     },
 
@@ -179,24 +192,24 @@ export const experienceRoutes = [
             page: 'pre_experience_checks',
             parent: 'imvr',
             addComment: true,
-            userInput: true,
             canSkip: true,
             next: '/experiences/imvr/experience_checks',
-            prev: '/experiences/setup/devices/stations'
+            prev: '/experiences/setup/devices/stations',
+            progress: calculateProgress()
         }
     },
     {
-        path: '/experiences/imvr/experience_checks', // todo this full thing
+        path: '/experiences/imvr/experience_checks',
         name: 'experiences-imvr-experience_checks',
         component: TheIMVR,
         meta: {
             page: 'experience_checks',
             parent: 'imvr',
             addComment: true,
-            userInput: true,
             canSkip: true,
             next: '/experiences/imvr/imvr_checks',
-            prev: '/experiences/imvr/pre_experience_checks'
+            prev: '/experiences/imvr/pre_experience_checks',
+            progress: calculateProgress()
         }
     },
     {
@@ -208,7 +221,8 @@ export const experienceRoutes = [
             checkType: 'imvr_checks',
             addComment: true,
             next: getFirstRoute(IMVR),
-            prev: '/experiences/imvr/experience_checks'
+            prev: '/experiences/imvr/experience_checks',
+            progress: calculateProgress()
         }
     },
     ...generateRoutesFromObjectArray(IMVR, '/experiences/imvr/imvr_checks',  '/experiences/imvr/report'),
@@ -222,7 +236,8 @@ export const experienceRoutes = [
             page: "imvr",
             description: "TODO write something in checkRoutes",
             next: "/experiences/overall/report",
-            prev: getLastRoute(IMVR)
+            prev: getLastRoute(IMVR),
+            progress: calculateProgress()
         }
     },
 
@@ -235,7 +250,8 @@ export const experienceRoutes = [
             page: "overall",
             description: "TODO write something in checkRoutes",
             next: '/experiences/overall/submit',
-            prev: '/experiences/imvr/report'
+            prev: '/experiences/imvr/report',
+            progress: calculateProgress()
         }
     },
 

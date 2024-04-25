@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/components/buttons/GenericButton.vue'
-import SkipCheckModal from "@renderer/modals/SkipCheckModal.vue";
-import CommentModal from "@renderer/modals/CommentModal.vue";
+import GenericButton from '../components/buttons/GenericButton.vue'
+import SkipCheckModal from "../modals/SkipCheckModal.vue";
+import CommentModal from "../modals/CommentModal.vue";
 import { computed } from "vue";
 import { useStateStore } from "../store/stateStore";
 import { useRoute } from "vue-router";
 import { addReportComment, initialiseFullReport } from "../src-qa/setup";
 import { addExperienceComment, initialiseExperienceReport } from "../src-experiences/setup";
 import { TOOL } from "../assets/constants"
-import {Comment} from "../src-qa/interfaces/_report";
+import {Comment} from "../interfaces/_report";
 import * as FULL from "../assets/checks/_fullcheckValues";
 import { useExperienceStore } from "../src-experiences/store/experienceStore";
 import { useFullStore } from "../src-qa/store/fullStore";
@@ -74,7 +74,7 @@ const currentComments = computed((): Comment[] => {
  * entered the correct information. Block the next route until they do.
  */
 const canProceed = computed(() => {
-  return props.meta['userInput'] !== true || stateStore.canProceed || true;
+  return props.meta['userInput'] !== true || stateStore.canProceed;
 });
 </script>
 

@@ -1,13 +1,13 @@
 import * as CONSTANT from "../../assets/constants";
 import { defineStore } from 'pinia';
-import { Appliance, QaCheck, QaDetail, Tablet } from "../interfaces";
-import { Station as StationClass } from '../types/_station'
-import { QaGroup } from "../types/_qaGroup";
-import { QaCheckResult } from "../types/_qaCheckResult";
+import { Appliance, QaCheck, QaDetail, Tablet } from "../../interfaces";
+import { Station as StationClass } from '../../types/_station'
+import { QaGroup } from "../../types/_qaGroup";
+import { QaCheckResult } from "../../types/_qaCheckResult";
 import { useStateStore } from "../../store/stateStore";
-import { Report, Targets } from "../interfaces/_report";
-import { ExperienceCheck } from "../interfaces/_experiences";
-import {ExperienceDetails} from "../interfaces/_experienceDetails";
+import { Report, Targets } from "../../interfaces/_report";
+import { ExperienceCheck } from "../../interfaces/_experiences";
+import {ExperienceDetails} from "../../interfaces/_experienceDetails";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -51,7 +51,7 @@ export const useFullStore = defineStore({
          * Check a Station's installed experiences for errors, these can be extra experiences that are installed and not
          * on the tier list or experiences that are missing that should be installed.
          */
-        checkExperiencesForErrors(stationId: string, installedExperiences: string) {
+        checkExperiencesForErrors(stationId: string, installedExperiences: string, noLicenseApplications: string, blockedFamilyMode: string) {
             if (installedExperiences === null || installedExperiences.length === 0) {
                 console.log("Experiences not collected!");
                 return;
@@ -67,9 +67,8 @@ export const useFullStore = defineStore({
                 expectedExperiences.push(...this.onlineExperiences);
             }
 
-            const jsonExperiences: ExperienceDetails[] = JSON.parse(installedExperiences);
-
             //Check for unexpected experiences
+            const jsonExperiences: ExperienceDetails[] = JSON.parse(installedExperiences);
             jsonExperiences.forEach((experience: ExperienceDetails) => {
                 if (!experience) {
                     return;
@@ -85,12 +84,31 @@ export const useFullStore = defineStore({
                 this.addOrUpdateError(this.experienceErrors, parseInt(experience.Id), updatedTitle, station);
             });
 
+            //Check for experiences with no license or blocked by family mode before saying they are not installed
+            let jsonNoLicenses: string[] = [];
+            if (noLicenseApplications !== null && noLicenseApplications !== undefined) {
+                jsonNoLicenses = JSON.parse(noLicenseApplications);
+            }
+
+            let jsonBlockedFamilyMode: string[] = [];
+            if (blockedFamilyMode !== null && blockedFamilyMode !== undefined) {
+                jsonBlockedFamilyMode = JSON.parse(blockedFamilyMode);
+            }
+
             //Check for not installed experiences
             expectedExperiences.forEach(expected => {
                 const isInstalled = jsonExperiences.some(installed => parseInt(installed.Id) === expected.id);
                 if (isInstalled) return;
 
-                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not installed" };
+                let message = "Not installed";
+                if (jsonNoLicenses.includes(expected.id.toString())) {
+                    message = "No license";
+                }
+                if (jsonBlockedFamilyMode.includes(expected.id.toString())) {
+                    message = "Blocked by family mode"
+                }
+
+                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message };
                 this.addOrUpdateError(this.experienceErrors, expected.id, expected.title, station);
             });
 
@@ -285,7 +303,7 @@ export const useFullStore = defineStore({
                 if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
                     this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id.toString(), "failed", "Timed out waiting for response")
                 }
-            }, 35000 + 3000)
+            }, 55000 + 3000)
         },
 
         updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
@@ -567,7 +585,7 @@ export const useFullStore = defineStore({
             });
         },
 
-        stationConnected (expectedStationId: string, stationData: any) {
+        stationConnected(expectedStationId: string, stationData: any) {
             const index = this.stations.findIndex(element => element.expectedDetails?.id === expectedStationId)
             console.log(index, expectedStationId)
             this.stations[index].details = {
@@ -576,6 +594,8 @@ export const useFullStore = defineStore({
                 labLocation: stationData.labLocation,
                 name: null,
                 installedJsonApplications: null,
+                noLicenseApplications: null,
+                blockedFamilyModeApplications: null,
                 id: stationData.id + "",
                 room: stationData.room,
                 macAddress: stationData.macAddress,

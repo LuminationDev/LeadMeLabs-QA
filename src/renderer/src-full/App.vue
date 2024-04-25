@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import router from './router/router';
-import NotificationModal from "@renderer/modals/NotificationModal.vue";
-import BottomBar from "@renderer/layout/BottomBar.vue";
-import Sidebar from "@renderer/layout/SideBar/Sidebar.vue";
-import ShowState from "@renderer/src-setup/components/helpers/showState.vue";
+import NotificationModal from "../modals/NotificationModal.vue";
+import BottomBar from "../layout/BottomBar.vue";
+import Sidebar from "../layout/SideBar/Sidebar.vue";
+import ShowState from "../src-setup/components/helpers/showState.vue";
+import * as CONSTANT from "../assets/constants";
 import { RouterView, useRoute } from 'vue-router';
-import { computed, onBeforeMount } from 'vue';
+import {computed, onBeforeMount, watch} from 'vue';
 import { useConfigStore } from "../src-setup/store/configStore";
 import { storeToRefs } from "pinia";
 import { useStateStore } from "../store/stateStore";
@@ -13,6 +14,7 @@ import { listeners as qaListeners, initialise as qaInitialise } from "../src-qa/
 import { listeners as networkListeners, initialise as networkInitialise } from "../src-network/apiListeners";
 import { listeners as passwordListeners, initialise as passwordInitialise } from "../src-password/apiListeners";
 import {getAuth, signOut} from "firebase/auth";
+import {FULL_TOOL} from "../assets/constants/_tool";
 
 const pushRoute = (value: string) => {
   router.push(value);
@@ -33,6 +35,19 @@ const title = computed(() => {
 const message = computed(() => {
   return useStateStore().message;
 });
+
+//Update the users progress
+const stateStore = useStateStore();
+//Manually set the tool type
+stateStore.toolType = CONSTANT.TOOL.FULL_TOOL;
+const tempStore = stateStore.getStore;
+const updateOverallProgress = () => {
+  if (route.meta['progress']) {
+    tempStore.updateMaxProgress(<number>route.meta['progress']);
+  }
+}
+
+watch(route, updateOverallProgress);
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then

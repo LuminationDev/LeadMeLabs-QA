@@ -146,7 +146,7 @@ export default class TcpServer {
         this.mainWindow.webContents.send('backend_message', {
             channelType: "tcp_server_message",
             headerMessage:"status",
-            mainText:`ServerStatus:${status}`
+            mainText: JSON.stringify(`ServerStatus:${status}`)
         });
     }
 }

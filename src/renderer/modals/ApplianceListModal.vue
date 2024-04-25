@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Modal from "@renderer/modals/Modal.vue";
+import Modal from "../modals/Modal.vue";
 import { ref } from "vue";
-import { Appliance } from "@renderer/src-qa/interfaces";
+import { Appliance } from "../interfaces";
 import { useStateStore } from "../store/stateStore";
 
 defineProps({
@@ -54,7 +54,7 @@ function closeModal() {
                     'text-red-500': (key === 'id' && appliance['correctId'] === false) || (key === 'defaultPassword' && appliance['defaultPassword'] === true),
                   }"
                 >
-                  <span class="w-40">{{ stateStore.capitalizeFirstLetter(key) }}:</span>
+                  <span class="w-40">{{ stateStore.capitalizeFirstLetter(key as string) }}:</span>
                   <span>{{ value ?? "Not found" }}</span>
                 </span>
               </span>

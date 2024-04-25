@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { initializeApp } from "firebase/app";
 import * as CONSTANT from "../assets/constants";
+import { useFullStore } from "../src-qa/store/fullStore";
+import { useExperienceStore } from "../src-experiences/store/experienceStore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDeXIbE7PvD5b3VMwkQNhWcvzmkEqD1zEQ",
@@ -160,6 +162,22 @@ export const useStateStore = defineStore({
     getters: {
         getServerDetails: (state) => {
             return `${state.ipAddress}:${state.serverPort}`
+        },
+
+        /**
+         * Determine what tool is being used and return the appropriate pinia store.
+         * @param state
+         */
+        getStore: (state) => {
+            switch (state.toolType) {
+                case CONSTANT.TOOL.EXPERIENCE_LAUNCHER:
+                    return useExperienceStore();
+
+                case CONSTANT.TOOL.FULL_TOOL:
+                case CONSTANT.TOOL.QA_TOOL:
+                default:
+                    return useFullStore();
+            }
         }
     }
 });

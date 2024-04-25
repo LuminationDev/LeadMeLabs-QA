@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LedRings from '@renderer/src-setup/components/ledRings/ledRings.vue'
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue'
+import LedRings from '../components/ledRings/ledRings.vue'
+import GenericScreen from './generic/GenericScreen.vue'
 </script>
 
 <template>
