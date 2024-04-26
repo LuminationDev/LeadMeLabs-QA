@@ -1,15 +1,15 @@
 //Config Tool screens
-import WelcomeView from "@renderer/src-setup/views/WelcomeView.vue";
-import ChecklistView from "@renderer/src-setup/views/ChecklistView.vue";
-import LightView from "@renderer/src-setup/views/LightView.vue";
-import RoomView from "@renderer/src-setup/views/RoomView.vue";
-import BlindView from "@renderer/src-setup/views/BlindView.vue";
-import ProjectorView from "@renderer/src-setup/views/ProjectorView.vue";
-import SplicerView from "@renderer/src-setup/views/SplicerView.vue";
-import LedRingView from "@renderer/src-setup/views/LedRingView.vue";
-import StationView from "@renderer/src-setup/views/StationView.vue";
-import SceneView from "@renderer/src-setup/views/SceneView.vue";
-import FinalView from "@renderer/src-setup/views/FinalView.vue";
+import WelcomeView from "../views/WelcomeView.vue";
+import ChecklistView from "../views/ChecklistView.vue";
+import LightView from "../views/LightView.vue";
+import RoomView from "../views/RoomView.vue";
+import BlindView from "../views/BlindView.vue";
+import ProjectorView from "../views/ProjectorView.vue";
+import SplicerView from "../views/SplicerView.vue";
+import LedRingView from "../views/LedRingView.vue";
+import StationView from "../views/StationView.vue";
+import SceneView from "../views/SceneView.vue";
+import FinalView from "../views/FinalView.vue";
 
 /**
  * Routes used for the Config tool

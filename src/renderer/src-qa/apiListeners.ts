@@ -1,12 +1,14 @@
 import { useStateStore } from "../store/stateStore";
 import { useFullStore } from "./store/fullStore";
+import { useExperienceCheckStore } from "../store/experienceCheckStore";
 import * as CONSTANT from "../assets/constants";
-import { QaCheck, TCPMessage } from "./interfaces";
-import { Station } from "./types/_station";
+import { QaCheck, TCPMessage } from "../interfaces";
+import { Station } from "../types/_station";
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 let stateStore: any;
 let fullStore: any;
+let experienceCheckStore: any;
 
 /**
  * Initialise the pinia stores required for the api listeners.. This needs to be done at run time otherwise
@@ -15,6 +17,7 @@ let fullStore: any;
 export const initialise = () => {
     stateStore = useStateStore();
     fullStore = useFullStore();
+    experienceCheckStore = useExperienceCheckStore();
 }
 
 /**
@@ -140,19 +143,19 @@ const handleTCPMessage = (info: any) => {
             const message = response.responseData.message
             const stationId = response.source.split(",")[1]
             const experienceId = response.responseData.experienceId
-            fullStore.updateExperienceCheck(stationId, experienceId, status, message)
+            experienceCheckStore.updateExperienceCheck(stationId, experienceId, status, message)
             break;
         }
         case "ExperienceLaunched": {
             const stationId = response.source.split(",")[1]
             const experienceId = response.responseData.experienceId
-            fullStore.updateExperienceCheck(stationId, experienceId, "passed", "")
+            experienceCheckStore.updateExperienceCheck(stationId, experienceId, "passed", "")
             break;
         }
         case "ExperienceLaunchFailed": {
             const stationId = response.source.split(",")[1]
             const experienceId = response.responseData.experienceId
-            fullStore.updateExperienceCheck(stationId, experienceId, "failed", response.responseData.message ?? "")
+            experienceCheckStore.updateExperienceCheck(stationId, experienceId, "failed", response.responseData.message ?? "")
             break;
         }
         case "GetVrStatuses": {
@@ -163,9 +166,9 @@ const handleTCPMessage = (info: any) => {
         case "GetExperiences": {
             console.log(response.responseData.stations);
             response.responseData.stations.forEach(station => {
-                fullStore.checkExperiencesForErrors(station.id, station.applications);
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.applications, station.noLicenses, station.blockedFamilyMode);
             });
-            fullStore.updateExperienceChecksWithErrors();
+            experienceCheckStore.updateExperienceChecksWithErrors();
             break;
         }
         case "Connected": {
@@ -180,6 +183,8 @@ const handleTCPMessage = (info: any) => {
                     nucIpAddress: "",
                     name: station.name,
                     installedJsonApplications: station.installedJsonApplications ?? "",
+                    noLicenseApplications: station.noLicenseApplications ?? "",
+                    blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? "",
                     id: station.id + "",
                     room: station.room,
                     macAddress: station.macAddress,
@@ -188,7 +193,7 @@ const handleTCPMessage = (info: any) => {
                     stationMode: station?.mode ? station.mode.toLowerCase() : "vr"
                 }
                 fullStore.stations.push(s)
-                fullStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "");
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "", station.noLicenseApplications ?? "", station.blockedFamilyModeApplications ?? "");
                 fullStore.addDevice(s.id, 'station');
                 fullStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import router from './router/router';
-import NotificationModal from "@renderer/modals/NotificationModal.vue";
-import BottomBar from "@renderer/layout/BottomBar.vue";
+import NotificationModal from "../modals/NotificationModal.vue";
+import BottomBar from "../layout/BottomBar.vue";
 import Sidebar from "../layout/SideBar/Sidebar.vue";
+import * as CONSTANT from "../assets/constants";
 import { RouterView, useRoute } from 'vue-router';
-import { computed, onBeforeMount } from 'vue';
+import {computed, onBeforeMount, watch} from 'vue';
 import { useStateStore } from '../store/stateStore';
 import { initialise, listeners } from "./apiListeners";
 
@@ -25,6 +26,19 @@ const title = computed(() => {
 const message = computed(() => {
   return useStateStore().message;
 });
+
+//Update the users progress
+const stateStore = useStateStore();
+//Manually set the tool type
+stateStore.toolType = CONSTANT.TOOL.EXPERIENCE_LAUNCHER;
+const tempStore = stateStore.getStore;
+const updateOverallProgress = () => {
+  if (route.meta['progress']) {
+    tempStore.updateMaxProgress(<number>route.meta['progress']);
+  }
+}
+
+watch(route, updateOverallProgress);
 
 /**
  * Backend listener, any messages from the node backend are directed to this listener and then

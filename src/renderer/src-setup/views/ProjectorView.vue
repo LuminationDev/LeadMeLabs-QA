@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Projectors from '@renderer/src-setup/components/projectors/Projectors.vue'
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue';
+import Projectors from '../components/projectors/Projectors.vue'
+import GenericScreen from './generic/GenericScreen.vue';
 </script>
 
 <template>

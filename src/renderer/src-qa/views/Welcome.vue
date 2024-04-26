@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import LoginModal from "../../modals/LoginModal.vue";
 import { initialiseStores, populateFullReportTrackerWithManualChecks } from "../setup";
+import { useStateStore } from "../../store/stateStore";
+import * as CONSTANT from "../../assets/constants"
 
 //Initial population
 initialiseStores();
 populateFullReportTrackerWithManualChecks();
+
+useStateStore().toolType = CONSTANT.TOOL.QA_TOOL;
 </script>
 
 <template>

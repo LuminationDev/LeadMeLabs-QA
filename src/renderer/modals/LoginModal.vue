@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/components/buttons/GenericButton.vue'
+import GenericButton from '../components/buttons/GenericButton.vue'
 import Modal from "./Modal.vue";
 import useVuelidate from "@vuelidate/core";
-import TextInput from "@renderer/components/inputs/TextInput.vue";
-import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
+import TextInput from "../components/inputs/TextInput.vue";
+import CheckStatus from "../components/statuses/CheckStatus.vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";

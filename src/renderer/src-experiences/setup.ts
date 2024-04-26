@@ -1,7 +1,7 @@
 import * as FULL from '../assets/checks/_fullcheckValues';
 import { useExperienceStore } from "./store/experienceStore";
 import { useStateStore } from "../store/stateStore";
-import { QaCheckResult } from "./types/_qaCheckResult";
+import { QaCheckResult } from "../types/_qaCheckResult";
 import { IMVR } from "../assets/checks/_fullcheckValues";
 
 let stateStore: any;

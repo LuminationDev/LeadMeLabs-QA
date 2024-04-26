@@ -1,7 +1,7 @@
 import * as FULL from '../assets/checks/_fullcheckValues';
 import { useFullStore } from "./store/fullStore";
 import { useStateStore } from "../store/stateStore";
-import { QaCheckResult } from "./types/_qaCheckResult";
+import { QaCheckResult } from "../types/_qaCheckResult";
 import { ALL_VALUES, HANDOVER } from "../assets/checks/_fullcheckValues";
 
 let fullStore: any;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Scenes from '@renderer/src-setup/components/scenes/Scenes.vue';
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue';
+import Scenes from '../components/scenes/Scenes.vue';
+import GenericScreen from './generic/GenericScreen.vue';
 </script>
 
 <template>

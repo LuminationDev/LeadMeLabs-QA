@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Rooms from '@renderer/src-setup/components/rooms/Rooms.vue';
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue';
+import Rooms from '../components/rooms/Rooms.vue';
+import GenericScreen from './generic/GenericScreen.vue';
 </script>
 
 <template>

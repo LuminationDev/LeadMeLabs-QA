@@ -2,8 +2,8 @@
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
-import GenericButton from "@renderer/components/buttons/GenericButton.vue";
+import { useFullStore } from "../src-qa/store/fullStore";
+import GenericButton from "../components/buttons/GenericButton.vue";
 
 defineExpose({
   openModal

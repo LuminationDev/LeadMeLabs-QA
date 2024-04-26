@@ -2,13 +2,13 @@
 import LoginModal from "../../modals/LoginModal.vue";
 import { initialiseStores, populateExperienceReportTrackerWithManualChecks } from "../setup";
 import { useStateStore } from "../../store/stateStore";
-import { TOOL } from "../../assets/constants"
+import * as CONSTANT from "../../assets/constants";
 
 //Initial population
 initialiseStores();
 populateExperienceReportTrackerWithManualChecks();
 
-useStateStore().toolType = TOOL.EXPERIENCE_LAUNCHER;
+useStateStore().toolType = CONSTANT.TOOL.EXPERIENCE_LAUNCHER;
 </script>
 
 <template>

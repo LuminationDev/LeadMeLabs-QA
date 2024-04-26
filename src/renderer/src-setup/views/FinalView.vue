@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/src-setup/components/GenericButton.vue'
+import GenericButton from '../components/GenericButton.vue'
 import FinalPopup from "./FinalPopup.vue";
 import { ref } from "vue";
 

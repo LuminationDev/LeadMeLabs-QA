@@ -8,7 +8,7 @@
 //          - description
 //          - targets (software/appliances the check relates to)
 
-import { CheckObject } from "../../src-qa/interfaces/_routeItems";
+import { CheckObject } from "../../interfaces/_routeItems";
 import remotePlay from '../guidesImages/RemotePlay.png'
 import steamSettings from '../guidesImages/SteamSettings.png'
 import leadMeLibrary from '../guidesImages/LeadMeLibrary.jpg'
