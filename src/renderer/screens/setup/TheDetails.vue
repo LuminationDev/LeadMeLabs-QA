@@ -165,7 +165,7 @@ onBeforeMount(() => {
               <input type="text" name="technicianName" v-model="technicianName" placeholder="John Doe" class="w-80 h-10 mb-4 px-2 py-1 border-[1px] border-gray-400 rounded-lg shadow-sm"/>
 
               <label for="labType" class="text-sm font-semibold mb-2">Headset Type</label>
-              <GenericDropdown name="labType" @update="changeHeadsetType" :title="<string>headsetType" :items="['Vive Pro 1', 'Vive Pro 2', 'Vive Focus 3']"/>
+              <GenericDropdown name="labType" @update="changeHeadsetType" :title="<string>headsetType" :items="['Vive Pro 1', 'Vive Pro 2', 'Vive Focus 3', 'Vive Business Streaming']"/>
             </div>
           </div>
 
