@@ -7,7 +7,7 @@ import ComputerSvg from "../../assets/icons/ComputerSvg.vue";
 import TheCbus from "./TheCbus.vue";
 import { useStateStore } from "../../store/stateStore";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue";
+import {onBeforeMount, onMounted, ref, watch, watchEffect} from "vue";
 
 const stateStore = useStateStore();
 
@@ -79,6 +79,28 @@ async function retryStationConnection() {
     })
   })
 }
+
+/**
+ * The precedent for if a user can continue to the next segment.
+ */
+const calcProceed = () => {
+  stateStore.canProceed = tempStore.connected;
+}
+
+/**
+ * Watch for any changes in the calcProceed to re-evaluate if the user can continue.
+ */
+watchEffect(() => {
+  calcProceed();
+});
+
+/**
+ * Determine if the necessary values are currently inputted to allow a user to progress with the tool.
+ * If not, block the 'Next' button on the BottomBar until they are.
+ */
+onBeforeMount(() => {
+  calcProceed();
+});
 </script>
 
 <template>

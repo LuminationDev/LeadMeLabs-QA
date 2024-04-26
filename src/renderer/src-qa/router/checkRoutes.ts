@@ -180,6 +180,8 @@ export const fullRoutes = [
         meta: {
             next: '/check/full/setup/devices/tablets',
             prev: '/check/full/setup/details',
+            userInput: true,
+            canSkip: true,
             progress: calculateProgress()
         }
     },

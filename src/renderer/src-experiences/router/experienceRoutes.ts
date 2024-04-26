@@ -170,6 +170,8 @@ export const experienceRoutes = [
         meta: {
             next: '/experiences/setup/devices/stations',
             prev: '/experiences/setup/details',
+            userInput: true,
+            canSkip: true,
             progress: calculateProgress()
         }
     },
