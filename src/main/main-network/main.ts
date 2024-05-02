@@ -35,7 +35,7 @@ else {
 autoUpdater.autoDownload = true;
 autoUpdater.setFeedURL({
   provider: 'generic',
-  url: 'https://leadme-network-tool-f81e92d61350.herokuapp.com/static/'
+  url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-network/'
 });
 
 

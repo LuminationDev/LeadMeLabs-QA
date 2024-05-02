@@ -32,11 +32,11 @@ export const WEBSITES = [
     },
     {
         "name": "Heroku Launcher",
-        "url": "https://electronlauncher.herokuapp.com/static/electron-launcher/latest.yml"
+        "url": "https://leadme-tools.sgp1.vultrobjects.com/leadme-launcher/latest.yml"
     },
     {
         "name": "Heroku Software",
-        "url": "https://learninglablauncher.herokuapp.com/program-nuc-version"
+        "url": "https://learninglablauncher.herokuapp.com/program-nuc-version" // todo
     },
     {
         "name": "Sentry IO",

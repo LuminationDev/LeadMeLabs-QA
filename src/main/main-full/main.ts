@@ -38,7 +38,7 @@ else {
 autoUpdater.autoDownload = false;
 autoUpdater.setFeedURL({
   provider: 'generic',
-  url: 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/'
+  url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/'
 })
 
 
