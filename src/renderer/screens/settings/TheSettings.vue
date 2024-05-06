@@ -8,6 +8,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { computed } from "vue";
 import { useStateStore } from "../../store/stateStore";
 import ConfirmationModal from "../../modals/ConfirmationModal.vue";
+import WakeDevice from "../../components/wol/WakeDevice.vue";
 
 const stateStore = useStateStore();
 const auth = getAuth();
@@ -48,8 +49,14 @@ const logout = () => {
 
 <template>
   <div class="sidebar flex flex-col w-full bg-white rounded-3xl px-6 py-2">
-    <div class="w-full h-auto my-4 flex flex-col">
-      <p class="text-lg text-black">Settings Page</p>
+    <div class="w-full h-auto my-3 flex flex-col">
+      <div class="flex flex-row justify-between">
+        <p class="text-lg text-black">Settings Page</p>
+
+        <GenericButton type="primary" :callback="goBack">
+          Return
+        </GenericButton>
+      </div>
 
       <div class="w-full h-auto mb-4 flex flex-col">
         <hr class="my-4">
@@ -88,20 +95,17 @@ const logout = () => {
 
         <hr class="my-4">
 
-        <LauncherDetails />
-
         <div class="flex flex-row justify-between">
-          <TcpSetup />
+          <TcpSetup class="w-72"/>
 
-          <div class="flex items-end">
-            <GenericButton type="primary" :callback="goBack">
-              Return
-            </GenericButton>
-          </div>
+          <LauncherDetails class="w-96" />
         </div>
 
-      </div>
+        <hr class="mb-4">
 
+        <WakeDevice title="Attempt to wake a Device" button-title="Wake Device" />
+
+      </div>
     </div>
   </div>
 </template>

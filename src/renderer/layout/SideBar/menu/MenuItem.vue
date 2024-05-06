@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import base from '../../../assets/icons/nav-icon-base.svg';
-import NavIconActive from "../../../assets/icons/NavIconActive.vue";
-import NavIconComplete from "../../../assets/icons/NavIconComplete.vue";
+import NavIconActive from "../../../assets/icons/vue/NavIconActive.vue";
+import NavIconComplete from "../../../assets/icons/vue/NavIconComplete.vue";
 import { useRouter } from "vue-router";
 import { useExperienceStore } from "../../../src-experiences/store/experienceStore";
 import { computed } from "vue";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import { computed } from "vue";
 import tick from '../../assets/icons/tick.svg'
 import error from '../../assets/icons/error.svg'
 
@@ -22,6 +22,8 @@ const text = computed(() => {
       return 'Connection attempt failed'
     case 'success':
       return 'Connected'
+    case 'wol':
+      return 'Sending WOL to ' + (props.deviceName ? props.deviceName : 'device')
   }
   return 'Unknown state'
 })
@@ -29,6 +31,7 @@ const text = computed(() => {
 const colour = computed(() => {
   switch (props.state) {
     case 'loading':
+    case 'wol':
       return 'text-blue-700'
     case 'failed':
       return 'text-red-600'
@@ -44,7 +47,7 @@ const colour = computed(() => {
     <div class="w-6 h-6 mr-2">
       <img class="w-full h-full" v-if="state === 'success'" :src="tick"/>
       <img class="w-full h-full" v-if="state === 'failed'" :src="error"/>
-      <svg class="w-full h-full" v-if="state === 'loading'" fill="#1D4ED8" width="24" height="24" viewBox="0 0 24 24"
+      <svg class="w-full h-full" v-if="state === 'loading' || state === 'wol'" fill="#1D4ED8" width="24" height="24" viewBox="0 0 24 24"
            xmlns="http://www.w3.org/2000/svg">
         <g class="spinner_OSmW">
           <rect x="11" y="1" width="2" height="5" opacity=".14"/>

@@ -30,14 +30,13 @@ const refreshDetails = () => {
     </div>
 
     <div class="flex flex-row">
-      <div class="w-40 ml-2 mb-2">Version Number:</div>
+      <div class="w-40 mb-2">Version Number:</div>
       <div>{{stateStore.version}}</div>
     </div>
 
     <div class="flex flex-row">
-      <div class="w-40 ml-2">Local IP Address:</div>
+      <div class="w-40">Local IP Address:</div>
       <div>{{stateStore.ipAddress ?? 'Unable to determine IP Address'}}</div>
     </div>
-    <hr class="my-4">
   </div>
 </template>

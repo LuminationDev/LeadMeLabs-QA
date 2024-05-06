@@ -3,7 +3,7 @@ import GenericLayout from "../../components/layouts/GenericLayout.vue";
 import CategoryTab from "../../components/statuses/CategoryTab.vue";
 import GenericButton from "../../components/buttons/GenericButton.vue";
 import StatusIcon from "../../components/statuses/StatusIcon.vue";
-import ChecklistSvg from "../../assets/icons/ChecklistSvg.vue";
+import ChecklistSvg from "../../assets/icons/vue/ChecklistSvg.vue";
 import GenericDropdown from "../../components/dropdowns/GenericDropdown.vue";
 import * as CONSTANT from "../../assets/constants";
 import { useRoute } from "vue-router";

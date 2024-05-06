@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CbusSvg from "../../assets/icons/CbusSvg.vue";
+import CbusSvg from "../../assets/icons/vue/CbusSvg.vue";
 import StatusIcon from "../../components/statuses/StatusIcon.vue";
 import { useFullStore } from "../../src-qa/store/fullStore";
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import RetrySvg from "../../assets/icons/RetrySvg.vue";
+import RetrySvg from "../../assets/icons/vue/RetrySvg.vue";
 
 const props = defineProps({
   checking: {

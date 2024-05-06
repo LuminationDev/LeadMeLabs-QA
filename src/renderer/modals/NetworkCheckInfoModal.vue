@@ -2,15 +2,15 @@
 import Modal from "./Modal.vue";
 import { computed, ref } from "vue";
 import { useNetworkStore } from "../src-network/store/networkStore";
-import TickComponent from "../assets/icons/NetworkIconTick.vue";
-import FailedComponent from "../assets/icons/NetworkIconAlert.vue";
-import WifiComponent from "../assets/icons/NetworkIconWifi.vue";
-import SignalComponent from "../assets/icons/NetworkIconSignal.vue";
-import LinkComponent from "../assets/icons/NetworkIconLink.vue";
-import DownloadComponent from "../assets/icons/NetworkIconDownload.vue";
-import UploadComponent from "../assets/icons/NetworkIconUpload.vue";
-import LatencyComponent from "../assets/icons/NetworkIconLatency.vue";
-import DefaultComponent from "../assets/icons/NetworkIconTick.vue";
+import TickComponent from "../assets/icons/vue/NetworkIconTick.vue";
+import FailedComponent from "../assets/icons/vue/NetworkIconAlert.vue";
+import WifiComponent from "../assets/icons/vue/NetworkIconWifi.vue";
+import SignalComponent from "../assets/icons/vue/NetworkIconSignal.vue";
+import LinkComponent from "../assets/icons/vue/NetworkIconLink.vue";
+import DownloadComponent from "../assets/icons/vue/NetworkIconDownload.vue";
+import UploadComponent from "../assets/icons/vue/NetworkIconUpload.vue";
+import LatencyComponent from "../assets/icons/vue/NetworkIconLatency.vue";
+import DefaultComponent from "../assets/icons/vue/NetworkIconTick.vue";
 import {Check} from "../src-network/interfaces/_report";
 import {DESCRIPTIONS} from "../assets/checks/_networkValues";
 
