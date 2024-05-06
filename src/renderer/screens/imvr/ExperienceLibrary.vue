@@ -4,7 +4,7 @@ import { useStateStore } from "../../store/stateStore";
 import { useExperienceCheckStore } from "../../store/experienceCheckStore";
 import StatusHover from "../../components/statuses/StatusHover.vue";
 import ItemHover from "../../components/statuses/ItemHover.vue";
-import RetrySvg from "../../assets/icons/RetrySvg.vue";
+import RetrySvg from "../../assets/icons/vue/RetrySvg.vue";
 import * as CONSTANT from "../../assets/constants";
 
 const stateStore = useStateStore();

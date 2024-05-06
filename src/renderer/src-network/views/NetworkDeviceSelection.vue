@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import NetworkSection from "./NetworkSection.vue";
-import StationSvg from "../../assets/icons/StationSvg.vue";
-import NucSvg from "../../assets/icons/NucSvg.vue";
-import LaptopSvg from "../../assets/icons/LaptopSvg.vue";
+import StationSvg from "../../assets/icons/vue/StationSvg.vue";
+import NucSvg from "../../assets/icons/vue/NucSvg.vue";
+import LaptopSvg from "../../assets/icons/vue/LaptopSvg.vue";
 import {ref} from "vue";
 
 const props = defineProps({

@@ -3,11 +3,13 @@ import * as CONSTANT from "../../assets/constants";
 import StatusIcon from "../../components/statuses/StatusIcon.vue";
 import GenericButton from "../../components/buttons/GenericButton.vue";
 import ConnectingSpinner from "../../components/loading/ConnectingSpinner.vue";
-import ComputerSvg from "../../assets/icons/ComputerSvg.vue";
+import ComputerSvg from "../../assets/icons/vue/ComputerSvg.vue";
 import TheCbus from "./TheCbus.vue";
+import WakeDevice from "../../components/wol/WakeDevice.vue";
+import WakeStations from "../../components/wol/WakeStations.vue";
 import { useStateStore } from "../../store/stateStore";
 import { storeToRefs } from "pinia";
-import {onBeforeMount, onMounted, ref, watch, watchEffect} from "vue";
+import { computed, onBeforeMount, onMounted, ref, watch, watchEffect } from "vue";
 
 const stateStore = useStateStore();
 
@@ -80,12 +82,17 @@ async function retryStationConnection() {
   })
 }
 
+//The expected mac address of the Stations
+const macAddresses = computed(() => {
+  return tempStore.stations.map(station => ({ mac: station.expectedDetails.macAddress }));
+});
+
 /**
  * The precedent for if a user can continue to the next segment.
  */
 const calcProceed = () => {
   stateStore.canProceed = tempStore.connected;
-}
+};
 
 /**
  * Watch for any changes in the calcProceed to re-evaluate if the user can continue.
@@ -130,6 +137,10 @@ onBeforeMount(() => {
     </div>
   </div>
 
+  <div v-if="connectionState !== 'success'">
+    <WakeDevice title="Attempt to wake the NUC" button-title="Wake NUC" device-name="NUC" />
+  </div>
+
   <div v-if="connectionState === 'success'" class="flex flex-col">
     <!--    C-bus    -->
     <TheCbus v-if="stateStore.toolType !== CONSTANT.TOOL.EXPERIENCE_LAUNCHER"/>
@@ -147,11 +158,14 @@ onBeforeMount(() => {
               tempStore.stations.filter(station => station.details).length
             }}/{{ tempStore.stations.length }} stations</span>
         </div>
-        <div v-if="tempStore.stations.length !== tempStore.stations.filter(station => station.details).length"
+        <div class="cursor-pointer hover:text-gray-500" v-if="tempStore.stations.length !== tempStore.stations.filter(station => station.details).length"
           @click="retryStationConnection">
           Retry
         </div>
       </div>
     </div>
+
+    <!--    Wake Stations    -->
+    <WakeStations v-if="tempStore.stations.length !== tempStore.stations.filter(station => station.details).length" :mac-addresses="macAddresses" />
   </div>
 </template>

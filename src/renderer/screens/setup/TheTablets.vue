@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TabletSvg from "../../assets/icons/TabletSvg.vue";
+import TabletSvg from "../../assets/icons/vue/TabletSvg.vue";
 import StatusIcon from "../../components/statuses/StatusIcon.vue";
 import GenericButton from "../../components/buttons/GenericButton.vue";
 import ConnectingSpinner from "../../components/loading/ConnectingSpinner.vue";

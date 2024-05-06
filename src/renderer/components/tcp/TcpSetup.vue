@@ -29,7 +29,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div class="w-full h-auto mb-4 flex flex-col">
+  <div class="h-auto mb-4 flex flex-col">
     <TcpServer />
   </div>
 </template>

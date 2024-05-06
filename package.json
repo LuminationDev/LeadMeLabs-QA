@@ -68,6 +68,7 @@
     "@types/lodash": "^4.14.200",
     "@types/node": "16.11.22",
     "@types/vuelidate": "^0.7.20",
+    "@types/wake_on_lan": "^0.0.33",
     "@vitejs/plugin-vue": "^3.1.2",
     "@vue/cli": "^5.0.8",
     "@vue/devtools": "^7.0.17",
@@ -111,6 +112,7 @@
     "swiper": "^11.0.5",
     "tree-kill": "^1.2.2",
     "vue-router": "^4.1.6",
+    "wake_on_lan": "^1.0.0",
     "winreg": "^1.2.4"
   }
 }

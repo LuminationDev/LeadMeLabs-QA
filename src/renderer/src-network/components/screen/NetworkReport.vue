@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as CONSTANT from "../../../assets/constants";
-import NetworkIconDownload from "../../../assets/icons/NetworkIconDownload.vue";
+import NetworkIconDownload from "../../../assets/icons/vue/NetworkIconDownload.vue";
 import { useStateStore } from "../../../store/stateStore";
 import { generateHtml } from "../../../assets/html/htmlContent";
 import { useNetworkStore } from "../../store/networkStore";

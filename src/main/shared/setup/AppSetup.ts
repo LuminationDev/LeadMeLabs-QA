@@ -8,6 +8,7 @@ import ConfigController from "../controllers/ConfigController";
 import QAController from "../controllers/QAController";
 import NetworkController from "../controllers/NetworkController";
 import PasswordController from "../controllers/PasswordController";
+import DeviceController from "../controllers/DeviceController";
 
 let applicationType: string;
 let downloadWindow: BrowserWindow;
@@ -278,10 +279,12 @@ function loadControllers(): void {
             new NetworkController(ipcMain, mainWindow).startup();
             new ConfigController(ipcMain, mainWindow).startup();
             new PasswordController(ipcMain, mainWindow).startup();
+            new DeviceController(ipcMain, mainWindow).startup();
             break;
 
         case CONSTANT.TOOL.QA_TOOL:
             new QAController(ipcMain, mainWindow).startup();
+            new DeviceController(ipcMain, mainWindow).startup();
             break;
 
         case CONSTANT.TOOL.NETWORK_TOOL:
@@ -294,10 +297,12 @@ function loadControllers(): void {
 
         case CONSTANT.TOOL.EXPERIENCE_TOOL:
             new QAController(ipcMain, mainWindow).startup();
+            new DeviceController(ipcMain, mainWindow).startup();
             break;
 
         case CONSTANT.TOOL.SETUP_TOOL:
             new ConfigController(ipcMain, mainWindow).startup();
+            new DeviceController(ipcMain, mainWindow).startup();
             break;
 
         default:

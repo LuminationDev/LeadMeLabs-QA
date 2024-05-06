@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import GenericLayout from "../../components/layouts/GenericLayout.vue";
 import * as CONSTANT from "../../assets/constants";
-import RetrySvg from "../../assets/icons/RetrySvg.vue";
+import RetrySvg from "../../assets/icons/vue/RetrySvg.vue";
 import CategoryTab from "../../components/statuses/CategoryTab.vue";
 import ExperienceChecks from "./ExperienceChecks.vue";
 import ExperienceLibrary from "./ExperienceLibrary.vue";
