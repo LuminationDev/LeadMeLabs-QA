@@ -29,7 +29,7 @@ export async function checkInternetConnection(): Promise<[string, string]> {
  *                                   in megabits per second, or null if the download fails.
  */
 export async function downloadAndCalculateSpeed(mainWindow: BrowserWindow): Promise<[string, string]> {
-    const url = "https://learninglablauncherdevelopment.herokuapp.com/program-nuc"; // todo
+    const url = "https://leadme-internal.sgp1.vultrobjects.com/NUC/NUC.zip";
 
     let started = false;
     let startTime: number|undefined = undefined;

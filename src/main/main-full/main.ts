@@ -7,6 +7,7 @@ import { optimizer } from "@electron-toolkit/utils";
 import * as Sentry from '@sentry/electron';
 import NetworkController from "../shared/controllers/NetworkController";
 import PasswordController from "../shared/controllers/PasswordController";
+import {getCanAccessVultr} from "../canAccessVultr";
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
 
@@ -36,11 +37,6 @@ else {
 }
 
 autoUpdater.autoDownload = false;
-autoUpdater.setFeedURL({
-  provider: 'generic',
-  url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/'
-})
-
 
 // Listen for update download progress events
 autoUpdater.on('update-downloaded', () => {
@@ -139,9 +135,22 @@ function createWindow () {
     void sendApplicationDetails();
 
     if (process.env.NODE_ENV !== 'development') {
-      autoUpdater.checkForUpdates().then((result) => {
-        updateCheck(result);
-      }).catch(handleUpdateCheckError);
+      getCanAccessVultr().then(canAccessVultr => {
+        if (canAccessVultr) {
+          autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/'
+          })
+        } else {
+          autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/'
+          })
+        }
+        autoUpdater.checkForUpdates().then((result) => {
+          updateCheck(result);
+        }).catch(handleUpdateCheckError);
+      })
     }
   });
 

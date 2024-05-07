@@ -31,12 +31,12 @@ export const WEBSITES = [
         "url": "https://cdn.cloudflare.steamstatic.com/steam/apps/1029110/header.jpg"
     },
     {
-        "name": "Heroku Launcher",
+        "name": "LeadMe Launcher",
         "url": "https://leadme-tools.sgp1.vultrobjects.com/leadme-launcher/latest.yml"
     },
     {
-        "name": "Heroku Software",
-        "url": "https://learninglablauncher.herokuapp.com/program-nuc-version" // todo
+        "name": "LeadMe Software",
+        "url": "https://leadme-internal.sgp1.vultrobjects.com/Station/version"
     },
     {
         "name": "Sentry IO",

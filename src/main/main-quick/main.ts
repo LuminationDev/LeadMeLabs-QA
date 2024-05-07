@@ -2,6 +2,7 @@ import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { join } from 'path';
 import { GetIPAddress } from "../shared/network/Network";
 import { optimizer } from "@electron-toolkit/utils";
+import {getCanAccessVultr} from "../canAccessVultr";
 // import * as Sentry from '@sentry/electron';
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
@@ -33,10 +34,6 @@ else {
 }
 
 autoUpdater.autoDownload = false;
-autoUpdater.setFeedURL({
-  provider: 'generic',
-  url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/' //TODO need a new hosting site for the separate tool
-})
 
 
 // Listen for update download progress events
@@ -136,9 +133,22 @@ function createWindow () {
     void sendApplicationDetails();
 
     if (process.env.NODE_ENV !== 'development') {
-      autoUpdater.checkForUpdates().then((result) => {
-        updateCheck(result);
-      }).catch(handleUpdateCheckError);
+      getCanAccessVultr().then(canAccessVultr => {
+        if (canAccessVultr) {
+          autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/'
+          })
+        } else {
+          autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/'
+          })
+        }
+        autoUpdater.checkForUpdates().then((result) => {
+          updateCheck(result);
+        }).catch(handleUpdateCheckError);
+      })
     }
   });
 

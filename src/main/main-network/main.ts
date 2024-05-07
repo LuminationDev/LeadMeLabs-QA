@@ -4,6 +4,7 @@ import { GetIPAddress } from "../shared/network/Network";
 import { optimizer } from "@electron-toolkit/utils";
 import NetworkController from "../shared/controllers/NetworkController";
 import * as Sentry from '@sentry/electron';
+import {getCanAccessVultr} from "../canAccessVultr";
 
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron');
 
@@ -33,11 +34,6 @@ else {
 }
 
 autoUpdater.autoDownload = true;
-autoUpdater.setFeedURL({
-  provider: 'generic',
-  url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-network/'
-});
-
 
 // Listen for update download progress events
 autoUpdater.on('update-downloaded', () => {
@@ -136,9 +132,22 @@ function createWindow () {
     void sendApplicationDetails();
 
     if (process.env.NODE_ENV !== 'development') {
-      autoUpdater.checkForUpdates().then((result) => {
-        updateCheck(result);
-      }).catch(handleUpdateCheckError);
+      getCanAccessVultr().then(canAccessVultr => {
+        if (canAccessVultr) {
+          autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: 'https://leadme-tools.sgp1.vultrobjects.com/leadme-network/'
+          })
+        } else {
+          autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: 'https://leadme-network-tool-f81e92d61350.herokuapp.com/static/'
+          })
+        }
+        autoUpdater.checkForUpdates().then((result) => {
+          updateCheck(result);
+        }).catch(handleUpdateCheckError);
+      })
     }
   });
 
