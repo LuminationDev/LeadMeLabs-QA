@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/components/buttons/GenericButton.vue'
+import GenericButton from '../../components/buttons/GenericButton.vue'
 import useVuelidate from "@vuelidate/core";
-import TextInput from "@renderer/components/inputs/TextInput.vue";
+import TextInput from "../../components/inputs/TextInput.vue";
 import { getAuth } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";

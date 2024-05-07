@@ -10,6 +10,7 @@ import { storeToRefs } from 'pinia'
 import { useOptionalValidations } from '../../../composables/requiredOptional'
 import {helpers, ipAddress, required} from '@vuelidate/validators'
 import warning from '../../../assets/icons/warning.svg'
+import WakeStation from "../../../components/wol/WakeStation.vue";
 
 const { requiredOptional } = useOptionalValidations()
 
@@ -143,6 +144,10 @@ const deleteCallbackAssociatedStation = (): void => {
         .filter((el) => el.associatedStation == props.data.id)
         .map((el) => (el.associatedStation = 0))
 }
+
+const macAddressList = computed(() => {
+  return [{ mac: state.mac_address }];
+});
 </script>
 
 <template>
@@ -221,6 +226,8 @@ const deleteCallbackAssociatedStation = (): void => {
                         label-text="Mode"
                     >
                     </Dropdown>
+
+                  <WakeStation :mac-addresses="macAddressList"/>
                 </div>
             </template>
         </BaseForm>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/components/buttons/GenericButton.vue'
+import GenericButton from '../components/buttons/GenericButton.vue'
 import Modal from "./Modal.vue";
 import useVuelidate from "@vuelidate/core";
-import TextInput from "@renderer/components/inputs/TextInput.vue";
-import CheckStatus from "@renderer/components/statuses/CheckStatus.vue";
+import TextInput from "../components/inputs/TextInput.vue";
+import CheckStatus from "../components/statuses/CheckStatus.vue";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { required, email } from "@vuelidate/validators";
 import { reactive, ref as vueRef } from "vue";
@@ -15,6 +15,18 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  route: {
+    type: String,
+    required: false
   },
   callback: {
     type: Function,
@@ -89,7 +101,7 @@ const closeModal = () => {
  */
 const processCallback = () => {
   if (props.callback === undefined) {
-    router.push("/check/full/setup/details");
+    router.push(props.route);
   } else {
     props.callback();
   }
@@ -104,11 +116,11 @@ const processCallback = () => {
       @click="openModal"
   >
     <div class="font-semibold text-base mb-1">
-      QA Test
+      {{title}}
     </div>
 
     <div class="text-sm text-gray-400">
-      Run a Quality Assurance Test
+      {{description}}
     </div>
   </div>
 

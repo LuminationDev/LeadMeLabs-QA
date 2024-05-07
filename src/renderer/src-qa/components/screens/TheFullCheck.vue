@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GenericLayout from "@renderer/components/layouts/GenericLayout.vue";
-import CategoryTab from "@renderer/components/statuses/CategoryTab.vue";
-import TheNUC from "@renderer/src-qa/components/setup/TheNUC.vue";
-import TheStations from "@renderer/src-qa/components/setup/TheStations.vue";
-import TheTablets from "@renderer/src-qa/components/setup/TheTablets.vue";
+import GenericLayout from "../../../components/layouts/GenericLayout.vue";
+import CategoryTab from "../../../components/statuses/CategoryTab.vue";
+import TheNUC from "../../../screens/setup/TheNUC.vue";
+import TheStations from "../../../screens/setup/TheStations.vue";
+import TheTablets from "../../../screens/setup/TheTablets.vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 

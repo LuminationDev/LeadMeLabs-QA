@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import OptionButton from "@renderer/src-full/components/welcome/OptionButton.vue";
+import OptionButton from "./OptionButton.vue";
 import vern from "../../../assets/images/vern-stand.svg";
-import LoginModal from "@renderer/modals/LoginModal.vue";
+import LoginModal from "../../../modals/LoginModal.vue";
 
 const route = useRoute();
 </script>
@@ -33,7 +33,7 @@ const route = useRoute();
         <div class="flex flex-col w-full p-4">
           <!--QA tool-->
           <div class="w-full h-full">
-            <LoginModal/>
+            <LoginModal title="QA Tool" description="Run a Quality Assurance Test" :route="'/check/full/setup/details'"/>
           </div>
 
           <!--QA tool quick check-->

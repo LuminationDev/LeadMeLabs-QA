@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import GenericButton from '@renderer/components/buttons/GenericButton.vue'
-import SkipCheckModal from "@renderer/modals/SkipCheckModal.vue";
-import CommentModal from "@renderer/modals/CommentModal.vue";
-import * as FULL from '../assets/checks/_fullcheckValues';
+import GenericButton from '../components/buttons/GenericButton.vue'
+import SkipCheckModal from "../modals/SkipCheckModal.vue";
+import CommentModal from "../modals/CommentModal.vue";
 import { computed } from "vue";
-import { useFullStore } from "../src-qa/store/fullStore";
 import { useStateStore } from "../store/stateStore";
 import { useRoute } from "vue-router";
-import { QaCheckResult } from "../src-qa/types/_qaCheckResult";
-import { Comment } from "../src-qa/interfaces/_report";
-import { ALL_VALUES, HANDOVER } from "../assets/checks/_fullcheckValues";
+import { addReportComment, initialiseFullReport } from "../src-qa/setup";
+import { addExperienceComment, initialiseExperienceReport } from "../src-experiences/setup";
+import { TOOL } from "../assets/constants"
+import {Comment} from "../interfaces/_report";
+import * as FULL from "../assets/checks/_fullcheckValues";
+import { useExperienceStore } from "../src-experiences/store/experienceStore";
+import { useFullStore } from "../src-qa/store/fullStore";
 
-const fullStore = useFullStore();
 const stateStore = useStateStore();
 const route = useRoute();
 const props = defineProps({
@@ -29,112 +30,24 @@ const goPrevLink = (): void => {
   const { prev } = props.meta;
   emit('pushRoute', prev);
 }
+
 const goNextLink = (): void => {
   const { next } = props.meta;
   emit('pushRoute', next);
   if (route.name === 'full-setup-devices-tablets') {
-    populateFullReportTrackerWithManualChecks();
-    fullStore.buildQaList();
-    populateFullReportTrackerWithAutoChecks();
+    initialiseFullReport();
+  }
+
+  if (route.name === 'experiences-setup-devices-stations') {
+    initialiseExperienceReport();
   }
 }
-
-/**
- * Run through each of the automatic checks in each section. Adding the required details and target devices to the
- * fullStore.reportTracker. The specific devices are then added on the auto check page when the results come in.
- */
-const populateFullReportTrackerWithAutoChecks = () => {
-  fullStore.qaGroups
-      .forEach(group => {
-        if (group.section !== null) {
-          group.checks.forEach(check => {
-            const targetDevices = determineTargetDevices(check);
-            const checkItems = {key: check.id, description: check.extendedDescription}
-            fullStore.addCheckToReportTracker(group.section, group.id, checkItems, targetDevices);
-          });
-        }
-      });
-}
-
-const determineTargetDevices = (check: QaCheckResult) => {
-  return {
-    "station": check.targets['station'],
-    "tablet": check.targets['tablet'],
-    "nuc": check.targets['nuc'],
-    "cbus": check.targets['cbus']
-  };
-};
-
-/**
- * Populate the fullStore.reportTracker with the basic sections and categories as laid out in the _fullcheckValues.ts
- * The individual checks will be added when that page is visited. If no checks are present in a section or category it
- * is considered skipped.
- */
-const populateFullReportTrackerWithManualChecks = () => {
-  if (fullStore.reportTracker["labType"] === "Offline") {
-    HANDOVER.category[0]['Handover details'].checks["Timezone"] = {
-      description: "Has the time zone been set to the correct location.",
-      guide: [
-        {
-          imageSource: null,
-          text: '<h3>Open Settings</h3><p>Check the timezone dropdown.</p>'
-        }
-      ]
-    }
-
-    HANDOVER.category[0]['Handover details'].checks["Date time"] = {
-      description: "Is the date and time set correctly.",
-      guide: [
-        {
-          imageSource: null,
-          text: '<h3>Open Settings</h3><p>Check the current date and time section.</p>'
-        }
-      ]
-    }
-  }
-
-  for (const { parent, page, category } of ALL_VALUES.flat()) {
-    fullStore.reportTracker[parent] ??= {};
-    fullStore.reportTracker[parent][page] ??= {};
-
-    for (const subCategory of category) {
-      const checks = Object.entries(subCategory[Object.keys(subCategory)[0]].checks);
-
-      for (const [check, { description }] of checks) {
-        fullStore.reportTracker[parent][page][check] ??= {
-          description,
-          comments: [],
-          targets: subCategory[Object.keys(subCategory)[0]].targets,
-          devices: {}
-        };
-      }
-    }
-  }
-};
-populateFullReportTrackerWithManualChecks();
-
-/**
- * If the route requires user input, check the stateStore to see if the user has
- * entered the correct information. Block the next route until they do.
- */
-const canProceed = computed(() => {
-  return props.meta['userInput'] !== true || stateStore.canProceed || true;
-});
 
 const addComment = (comment: string) => {
-  const sectionName = route.meta['parent']; //Auto check
-  const pageName: string = <string>route.meta['page'] || <string>route.meta['checkType'];
-
-  if (!sectionName && !pageName) {
-    return; // Neither sectionName nor pageName is defined
-  }
-
-  const key = sectionName || FULL[pageName?.toUpperCase()]?.parent; //Manual check
-
-  if (key) {
-    const section = fullStore.reportTracker[key][<string>pageName];
-    section['comments'] ||= [];
-    section['comments'].push({ date: stateStore.formattedDate(true), content: comment });
+  if (stateStore.toolType === TOOL.EXPERIENCE_LAUNCHER) {
+    addExperienceComment(comment, <string>route.meta['parent'], <string>route.meta['page'], <string>route.meta['checkType']);
+  } else {
+    addReportComment(comment, <string>route.meta['parent'], <string>route.meta['page'], <string>route.meta['checkType']);
   }
 }
 
@@ -149,7 +62,19 @@ const currentComments = computed((): Comment[] => {
     key = FULL[pageName?.toUpperCase()]?.parent;
   }
 
-  return (key && fullStore.reportTracker[key]?.[<string>pageName]?.comments) ?? [];
+  if (stateStore.toolType === TOOL.EXPERIENCE_LAUNCHER) {
+    return (key && useExperienceStore().reportTracker[key]?.[<string>pageName]?.comments) ?? [];
+  } else {
+    return (key && useFullStore().reportTracker[key]?.[<string>pageName]?.comments) ?? [];
+  }
+});
+
+/**
+ * If the route requires user input, check the stateStore to see if the user has
+ * entered the correct information. Block the next route until they do.
+ */
+const canProceed = computed(() => {
+  return props.meta['userInput'] !== true || stateStore.canProceed;
 });
 </script>
 

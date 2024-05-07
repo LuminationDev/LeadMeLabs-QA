@@ -2,6 +2,9 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
     "src/renderer/store/*.ts",
+    "src/renderer/src-experiences/env.d.ts",
+    "src/renderer/src-experiences/**/*",
+    "src/renderer/src-experiences/**/*.vue",
     "src/renderer/src-network/env.d.ts",
     "src/renderer/src-network/**/*",
     "src/renderer/src-network/**/*.vue",
@@ -14,7 +17,11 @@
     "src/renderer/src-setup/env.d.ts",
     "src/renderer/src-setup/**/*",
     "src/renderer/src-setup/**/*.vue",
-    "src/renderer/assets/checks/**/*.ts"
+    "src/renderer/screens/**/**/*.vue",
+    "src/renderer/types/**/*.ts",
+    "src/renderer/interfaces/**/*.ts",
+    "src/renderer/assets/checks/**/*.ts",
+    "src/renderer/assets/constants/**/*.ts"
   ],
   "compilerOptions": {
     "composite": true,

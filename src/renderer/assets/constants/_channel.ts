@@ -1,6 +1,7 @@
 export const HELPER_CHANNEL = 'helper_function' //Frontend -> Backend channel
 export const NETWORK_CHANNEL = 'network_function' //Frontend -> Backend channel
 export const PASSWORD_CHANNEL = 'password_function' //Frontend -> Backend channel
+export const DEVICE_CHANNEL = 'device_function' //Frontend -> Backend channel
 
 export const APPLICATION_CHANNEL = 'application_settings'
 export const ERROR_CHANNEL = 'error'
@@ -17,3 +18,4 @@ export const GENERATE_REPORT = 'generate_report'; //Tell the backend to generate
 export const UPLOAD_REPORT = 'upload_report'; //Tell the backend to generate a pdf document
 
 export const REPORT_GENERATED = 'pdf_uploaded'; //The backend has uploaded the report
+export const WAKE_ON_LAN = 'wake_on_lan'; //Send a command to wake up computers

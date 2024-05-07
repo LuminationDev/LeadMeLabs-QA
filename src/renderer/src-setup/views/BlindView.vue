@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Blinds from '@renderer/src-setup/components/blinds/Blinds.vue';
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue';
+import Blinds from '../components/blinds/Blinds.vue';
+import GenericScreen from './generic/GenericScreen.vue';
 </script>
 
 <template>

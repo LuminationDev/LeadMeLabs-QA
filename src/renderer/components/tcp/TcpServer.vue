@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import * as CONSTANT from '../../assets/constants';
 import { useStateStore } from '../../store/stateStore';
-import TcpKey from "@renderer/components/tcp/TcpKey.vue";
+import TcpKey from "./TcpKey.vue";
 
 const stateStore = useStateStore();
 

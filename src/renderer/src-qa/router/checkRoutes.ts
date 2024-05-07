@@ -1,12 +1,12 @@
-import TheAppliances from "@renderer/src-qa/components/Appliances/TheAppliances.vue";
-import ManualCheck from "@renderer/src-qa/components/screens/ManualCheck.vue";
-import TheIMVR from "@renderer/src-qa/components/screens/TheIMVR.vue";
-import BasicAutoCheck from "@renderer/src-qa/components/screens/AutoCheck.vue";
-import BasicReport from "@renderer/src-qa/components/Report/Results/BasicReport.vue";
-import TheOverallReport from "@renderer/src-qa/components/Report/TheOverallReport.vue";
-import TheFinaliseReport from "@renderer/src-qa/components/Report/TheFinaliseReport.vue";
-import TheDetails from "@renderer/src-qa/components/screens/TheDetails.vue";
-import TheFullCheck from "@renderer/src-qa/components/screens/TheFullCheck.vue";
+import TheAppliances from "../components/appliances/TheAppliances.vue";
+import ManualCheck from "../../screens/checks/ManualCheck.vue";
+import TheIMVR from "../../screens/imvr/TheIMVR.vue";
+import BasicAutoCheck from "../../screens/checks/AutoCheck.vue";
+import BasicReport from "../../screens/report/results/BasicReport.vue";
+import TheOverallReport from "../../screens/report/TheOverallReport.vue";
+import TheFinaliseReport from "../components/screens/TheFinaliseReport.vue";
+import TheDetails from "../../screens/setup/TheDetails.vue";
+import TheFullCheck from "../components/screens/TheFullCheck.vue";
 import {
     HARDWARE,
     IMVR,
@@ -16,7 +16,7 @@ import {
     SOFTWARE,
     WINDOWS
 } from "../../assets/checks/_fullcheckValues";
-import { CheckObject, Route } from "../interfaces/_routeItems";
+import { CheckObject, Route } from "../../interfaces/_routeItems";
 
 /**
  * Generic metadata that is the same across all manual routes
@@ -25,7 +25,7 @@ const manualMetaData = () => {
     return {
         type: 'manual', //The checks on this page are all manual
         addComment: true,
-        userInput: true, //Requires user input to proceed to the next page
+        userInput: false, //Requires user input to proceed to the next page
         canSkip: true,
     };
 }
@@ -52,8 +52,6 @@ const generateRoutesFromObjectArray = (checkArray: CheckObject[], previousRoute:
 
     checkArray.forEach((section, sectionIndex) => {
         const categories = section.category;
-
-
 
         categories.forEach((categoryObj, categoryIndex) => {
             const categoryName = Object.keys(categoryObj)[0];
@@ -170,6 +168,7 @@ export const fullRoutes = [
         meta: {
             next: '/check/full/setup/devices/nuc',
             prev: '/',
+            userInput: true,
             progress: calculateProgress()
         }
     },
@@ -181,6 +180,8 @@ export const fullRoutes = [
         meta: {
             next: '/check/full/setup/devices/tablets',
             prev: '/check/full/setup/details',
+            userInput: true,
+            canSkip: true,
             progress: calculateProgress()
         }
     },
@@ -214,7 +215,6 @@ export const fullRoutes = [
         component: TheAppliances,
         meta: {
             addComment: true,
-            userInput: true, //Requires user input to proceed to the next page
             canSkip: true,
             next: '/check/full/hardware/battery/cabinet',
             prev: '/check/full/setup/devices/stations',
@@ -407,7 +407,6 @@ export const fullRoutes = [
             page: 'pre_experience_checks',
             parent: 'imvr',
             addComment: true,
-            userInput: true,
             canSkip: true,
             next: '/check/full/imvr/experience_checks',
             prev: '/check/full/software/report',
@@ -424,7 +423,6 @@ export const fullRoutes = [
             page: 'experience_checks',
             parent: 'imvr',
             addComment: true,
-            userInput: true,
             canSkip: true,
             next: '/check/full/imvr/imvr_checks',
             prev: '/check/full/imvr/pre_experience_checks',

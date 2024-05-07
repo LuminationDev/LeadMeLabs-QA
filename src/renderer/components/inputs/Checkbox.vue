@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useFullStore } from "@renderer/src-qa/store/fullStore";
 import { computed, onMounted } from "vue";
-import { Device } from "@renderer/src-qa/interfaces/_deviceMap";
+import { Device } from "../../interfaces/_deviceMap";
+import { useStateStore } from "../../store/stateStore";
 
-const fullStore = useFullStore();
+const stateStore = useStateStore();
+const tempStore = stateStore.getStore;
 const props = defineProps({
   index: {
     type: Number,
@@ -33,7 +34,7 @@ const status = computed(() => {
 
 //Update a default entry for the device map.
 onMounted(() => {
-  fullStore.updateReport(
+  tempStore.updateReport(
       props.parent,
       props.page,
       { passedStatus: status.value },
@@ -57,7 +58,7 @@ function nextOption() {
       next = 'passed'
   }
   console.log(status.value, next)
-  fullStore.updateReport(
+  tempStore.updateReport(
       props.parent,
       props.page,
       { passedStatus: next },
@@ -111,5 +112,4 @@ function nextOption() {
   border-width: 2px;
   border-style: solid;
 }
-
 </style>

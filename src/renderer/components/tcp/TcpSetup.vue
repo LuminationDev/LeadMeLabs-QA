@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TcpServer from "@renderer/components/tcp/TcpServer.vue";
+import TcpServer from "./TcpServer.vue";
 import { useStateStore } from "../../store/stateStore";
 import { onBeforeMount, watchEffect } from "vue";
 
@@ -29,7 +29,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div class="w-full h-auto mb-4 flex flex-col">
+  <div class="h-auto mb-4 flex flex-col">
     <TcpServer />
   </div>
 </template>

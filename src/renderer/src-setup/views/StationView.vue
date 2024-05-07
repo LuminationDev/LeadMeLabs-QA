@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Stations from '@renderer/src-setup/components/stations/Stations.vue';
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue';
+import Stations from '../components/stations/Stations.vue';
+import GenericScreen from './generic/GenericScreen.vue';
 </script>
 <template>
     <div class="flex-col h-full w-full overflow-hidden">

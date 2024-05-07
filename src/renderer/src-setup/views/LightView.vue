@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Lights from '@renderer/src-setup/components/lights/Lights.vue';
-import GenericScreen from '@renderer/src-setup/views/generic/GenericScreen.vue';
+import Lights from '../components/lights/Lights.vue';
+import GenericScreen from './generic/GenericScreen.vue';
 </script>
 
 <template>

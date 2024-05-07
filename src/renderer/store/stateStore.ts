@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia';
 import { initializeApp } from "firebase/app";
+import * as CONSTANT from "../assets/constants";
+import { useFullStore } from "../src-qa/store/fullStore";
+import { useExperienceStore } from "../src-experiences/store/experienceStore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDeXIbE7PvD5b3VMwkQNhWcvzmkEqD1zEQ",
@@ -27,6 +30,8 @@ export const useStateStore = defineStore({
         ipAddress: '',
         //The port used for the local TCP server
         serverPort: "55540",
+        //The IP address entered by a user that should be the NUC
+        nucAddress: '',
         //Encryption key for TCP server and client
         key: '',
         //Default blocker for if a user has not completed the required information before proceeding with a work flow
@@ -48,7 +53,9 @@ export const useStateStore = defineStore({
         //Notification modal details
         title: "",
         message: "",
-        openModal: false
+        openModal: false,
+        //Monitor what tool is being used
+        toolType: ""
     }),
     actions: {
         insertSpaceBetweenCapitalLetters(str: string): string {
@@ -135,11 +142,42 @@ export const useStateStore = defineStore({
             });
 
             return capitalizedSplit.join(" ");
-        }
+        },
+
+        sendMessage(messageData: { action: string, actionData: any }) {
+            const processedData = {
+                qaToolAddress: this.getServerDetails,
+                ...messageData
+            }
+            // @ts-ignore api is injected
+            api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+                channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
+                key: this.key,
+                address: this.nucAddress,
+                port: 55556,
+                data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
+            });
+        },
     },
     getters: {
         getServerDetails: (state) => {
             return `${state.ipAddress}:${state.serverPort}`
+        },
+
+        /**
+         * Determine what tool is being used and return the appropriate pinia store.
+         * @param state
+         */
+        getStore: (state) => {
+            switch (state.toolType) {
+                case CONSTANT.TOOL.EXPERIENCE_LAUNCHER:
+                    return useExperienceStore();
+
+                case CONSTANT.TOOL.FULL_TOOL:
+                case CONSTANT.TOOL.QA_TOOL:
+                default:
+                    return useFullStore();
+            }
         }
     }
 });

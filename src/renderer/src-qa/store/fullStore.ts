@@ -1,12 +1,11 @@
 import * as CONSTANT from "../../assets/constants";
 import { defineStore } from 'pinia';
-import { Appliance, QaCheck, QaDetail, Tablet } from "../interfaces";
-import { Station as StationClass } from '../types/_station'
-import { QaGroup } from "../types/_qaGroup";
-import { QaCheckResult } from "../types/_qaCheckResult";
+import { Appliance, QaCheck, QaDetail, Tablet } from "../../interfaces";
+import { Station as StationClass } from '../../types/_station'
+import { QaGroup } from "../../types/_qaGroup";
+import { QaCheckResult } from "../../types/_qaCheckResult";
 import { useStateStore } from "../../store/stateStore";
-import { Report, Targets } from "../interfaces/_report";
-import { ExperienceCheck } from "../interfaces/_experiences";
+import { Report, Targets } from "../../interfaces/_report";
 
 /**
  * Used to store values for the Lab's Full Check method only.
@@ -23,14 +22,11 @@ export const useFullStore = defineStore({
             { id: 'NUC', prefix: '', ipAddress: '', type: 'nuc', checks: {} },
             { id: 'C-Bus', prefix: '', ipAddress: '', type: 'cbus', checks: {}}
         ],
-        allowRunningExperienceChecks: false,
         connected: false,
         //Compared against the number of Station's contacted
         numberOfStations: 0,
         //The most progress a user has made
         maxProgress: 0,
-        //The IP address entered by a user that should be the NUC
-        nucAddress: '',
         mostRecentAutoCheck: '',
         //List of the Station detail's from the NUC
         qaChecks: Array<QaCheck>(),
@@ -41,478 +37,9 @@ export const useFullStore = defineStore({
         //List of appliance objects
         ApplianceList: Array<Appliance>(),
         tablets: Array<Tablet>(),
-        experienceErrors: Array<ExperienceCheck>(),
-        experienceChecks: Array<ExperienceCheck>(),
         qaGroups: [] as Array<QaGroup>,
-        experiences: [
-            {
-                id: 871620,
-                title: "Volcano Eruption"
-            },
-            {
-                id: 327140,
-                title: "Tilt Brush"
-            },
-            {
-                id: 1514840,
-                title: "All-In-One Sports VR"
-            },
-            {
-                id: 861400,
-                title: "Nefertari: Journey to Eternity"
-            },
-            {
-                id: 1424190,
-                title: "Curious Alice"
-            },
-            {
-                id: 1029110,
-                title: "Trash Time"
-            },
-            {
-                id: 1494670,
-                title: "Space Dance Harmony"
-            },
-            {
-                id: 533970,
-                title: "Blocks by Google"
-            },
-            {
-                id: 607590,
-                title: "Earthquake Simulator"
-            },
-            {
-                id: 1245640,
-                title: "The Book of Distance"
-            },
-            {
-                id: 972510,
-                title: "Thingamajig"
-            },
-            {
-                id: 629040,
-                title: "Skytropolis"
-            },
-            {
-                id: 653930,
-                title: "Tiny Town VR"
-            },
-            {
-                id: 746560,
-                title: "Gadgeteer"
-            },
-            {
-                id: 880270,
-                title: "Geogebra"
-            },
-            {
-                id: 1172310,
-                title: "Mona Lisa: Beyond the Glass"
-            },
-            {
-                id: 512270,
-                title: "Home - A VR Spacewalk"
-            },
-            {
-                id: 1308470,
-                title: "Journey to the Centre of the Cell"
-            },
-            {
-                id: 1165850,
-                title: "IL DIVINO: Michaelangelo's Sistene Ceiling in VR"
-            },
-            {
-                id: 612030,
-                title: "Harvest Simulator"
-            },
-            {
-                id: 513490,
-                title: "1943 Berlin Blitz"
-            },
-            {
-                id: 476540,
-                title: "Google Spotlight Stories: Pearl"
-            },
-            {
-                id: 515020,
-                title: "The VR Museum of Fine Art"
-            },
-            {
-                id: 482390,
-                title: "The Night Cafe"
-            },
-            {
-                id: 570540,
-                title: "Amazon Odyssey"
-            },
-            {
-                id: 508250,
-                title: "Aussie Sports VR"
-            },
-            {
-                id: 1046910,
-                title: "Dissection Simulator: Frog Edition"
-            },
-            {
-                id: 1236560,
-                title: "The Dawn of Art"
-            },
-            {
-                id: 422760,
-                title: "Ocean Rift"
-            },
-            {
-                id: 1379970,
-                title: "Solar System VR"
-            },
-            {
-                id: 547280,
-                title: "Calcflow"
-            },
-            {
-                id: 970800,
-                title: "Short Ciruit VR"
-            },
-            {
-                id: 1511090,
-                title: "Great Paintings VR"
-            },
-            {
-                id: 542170,
-                title: "Edmersiv"
-            },
-            {
-                id: 1614850,
-                title: "Colosseum VR"
-            },
-            {
-                id: 957070,
-                title: "iB Cricket"
-            },
-            {
-                id: 1788300,
-                title: "Robotics in VR"
-            },
-            {
-                id: 451980,
-                title: "The Body VR: Journey Inside the Cell"
-            },
-            {
-                id: 812610,
-                title: "Escape Architect VR"
-            },
-            {
-                id: 1462520,
-                title: "BRINK Traveler"
-            },
-            {
-                id: 587580,
-                title: "Nature Treks VR"
-            },
-            {
-                id: 572630,
-                title: "Lyra VR"
-            },
-            {
-                id: 1282770,
-                title: "Virtual Presenter Pro"
-            },
-            {
-                id: 696760,
-                title: "HoloLab Champions"
-            }
-        ],
-        onlineExperiences: [
-            {
-                id: 348250,
-                title: "Google Earth VR"
-            },
-            {
-                id: 1141930,
-                title: "Mondly"
-            },
-            {
-                id: 1532110,
-                title: "Curatours"
-            },
-            {
-                id: 1053760,
-                title: "Arkio"
-            },
-            {
-                id: 878620,
-                title: "Neotrie VR"
-            },
-            {
-                id: 1564310,
-                title: "Materials VR"
-            },
-        ]
     }),
     actions: {
-        /**
-         * Check a Station's installed experiences for errors, these can be extra experiences that are installed and not
-         * on the tier list or experiences that are missing that should be installed.
-         */
-        checkExperiencesForErrors(stationId: string, installedExperiences: string) {
-            if (installedExperiences === null || installedExperiences.length === 0) {
-                console.log("Experiences not collected!");
-            }
-
-            //Build the expected experience list
-            let expectedExperiences = this.experiences;
-            // @ts-ignore
-            if (this.reportTracker["labType"] === "Online") {
-                expectedExperiences.push(...this.onlineExperiences);
-            }
-
-            //Check for unexpected experiences
-            installedExperiences.split("/").forEach(exp => {
-                if (!exp || exp.length > 0) {
-                    return;
-                }
-                const [expType, expId, expTitle] = exp.split("|");
-                if (expType === "Launcher") return;
-
-                const isExpected = expectedExperiences.some(expected => expected.id === parseInt(expId));
-                if (isExpected) return;
-
-                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not expected" };
-                const updatedTitle = expTitle.replace(/^"(.*)"$/, '$1'); //Remove the leading and trailing quotes (")
-                this.addOrUpdateError(this.experienceErrors, parseInt(expId), updatedTitle, station);
-            });
-
-            //Check for not installed experiences
-            expectedExperiences.forEach(expected => {
-                const isInstalled = installedExperiences.split("/").some(installed => parseInt(installed.split("|")[1]) === expected.id);
-                if (isInstalled) return;
-
-                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not installed" };
-                this.addOrUpdateError(this.experienceErrors, expected.id, expected.title, station);
-            });
-
-            this.experienceErrors = this.sortExperiences(this.experienceErrors);
-        },
-
-        /**
-         * Add of update an entry in the experienceErrors array.
-         */
-        addOrUpdateError(errors: Array<ExperienceCheck>, id: number, title: string, station) {
-            const index = errors.findIndex(error => error.id === id);
-
-            if (index === -1) {
-                errors.push({ id, title, stations: [station] });
-            } else {
-                const stationIndex = errors[index].stations.findIndex(stationEntry => stationEntry.id === station.id);
-                if (stationIndex !== -1) {
-                    errors[index].stations[stationIndex] = station;
-                } else {
-                    errors[index].stations.push(station);
-                }
-            }
-        },
-
-        /**
-         * Update the experienceChecks array with any errors that were found when the installedAppliances for each
-         * station were received from the NUC.
-         */
-        updateExperienceChecksWithErrors() {
-            this.experienceErrors.forEach(experienceError => {
-                const checkIndex = this.experienceChecks.findIndex(entry => entry.id == experienceError.id);
-                experienceError.stations.forEach(station => {
-                    this.addCheckToReportTracker("imvr", "pre_experience_checks",
-                        {
-                            key: experienceError.title,
-                            description: ""
-                        },
-                        {
-                            "station": true,
-                            "tablet": false,
-                            "nuc": false,
-                            "cbus": false
-                        });
-
-                    this.updateReport(
-                        "imvr",
-                        "pre_experience_checks",
-                        { passedStatus: "warning", checkingStatus: "timeout", message: station.message },
-                        experienceError.title,
-                        station.id);
-
-                    if (checkIndex === -1) return;
-                    const foundStation = this.experienceChecks[checkIndex].stations.find(entry => entry.id === station.id.toString());
-                    if (!foundStation) return;
-
-                    foundStation.status = "failed";
-                    foundStation.checkingStatus = "checked";
-                    foundStation.message = station.message;
-                });
-            });
-        },
-
-        sortExperiences(experienceList: any[]) {
-            return experienceList.sort((a, b) => {
-                const titleA = a.title.toLowerCase().replace(/^the /, ''); // Convert titles to lowercase for case-insensitive sorting
-                const titleB = b.title.toLowerCase().replace(/^the /, '');
-
-                if (titleA < titleB) {
-                    return -1;
-                } else if (titleA > titleB) {
-                    return 1;
-                } else {
-                    return 0; // Titles are equal
-                }
-            });
-        },
-
-        buildExperienceChecks() {
-            let stationIds = this.stations.map(station => station.getId())
-
-            let sortedExperiences = this.experiences;
-            // @ts-ignore
-            if (this.reportTracker["labType"] === "Online") {
-                sortedExperiences.push(...this.onlineExperiences);
-            }
-            sortedExperiences = this.sortExperiences(sortedExperiences);
-
-            //Add the experiences to the reportTracker
-            sortedExperiences.forEach(experience => {
-                this.addCheckToReportTracker("imvr", "experience_checks",
-                    {
-                        key: experience.title,
-                        description: ""
-                    },
-                    {
-                    "station": true,
-                    "tablet": false,
-                    "nuc": false,
-                    "cbus": false
-                });
-
-                let stations = Array<any>()
-                stationIds.forEach(stationId => {
-                    stations.push({
-                        id: stationId,
-                        status: null,
-                        checkingStatus: "unchecked",
-                        message: null
-                    })
-                });
-
-                const index = this.experienceChecks.findIndex(entry => entry.id === experience.id);
-                if(index === -1) {
-                    this.experienceChecks.push({
-                        id: experience.id,
-                        title: experience.title,
-                        stations: stations
-                    });
-                }
-            });
-        },
-
-        startExperienceChecks() {
-            this.allowRunningExperienceChecks = true
-            if (this.experienceChecks.length === 0) {
-                this.buildExperienceChecks()
-            }
-            this.experienceChecks[0].stations.forEach(station => {
-                const index = this.stations.findIndex(s => s.id === station.id)
-                if (index !== -1 && this.stations[index].vrStatuses?.openVrStatus === 'Connected') {
-                    this.launchNextExperience(station.id)
-                }
-            })
-        },
-
-        launchNextExperience(stationId: string) {
-            //find the next unpassed one
-            let nextStationIndex = -1
-            const alreadyChecking = (this.experienceChecks.findIndex(element => {
-                nextStationIndex = element.stations.findIndex(element => element.id == stationId)
-                if (nextStationIndex === -1) return false
-
-                return element.stations[nextStationIndex].checkingStatus === "checking"
-            }) !== -1)
-            if (alreadyChecking) {
-                return
-            }
-            const nextCheckIndex = this.experienceChecks.findIndex(element => {
-                nextStationIndex = element.stations.findIndex(element => element.id == stationId)
-                if (nextStationIndex === -1) return false
-
-                return element.stations[nextStationIndex].checkingStatus === "unchecked"
-            })
-
-            const i = this.stations.findIndex(s => (s.getId() == stationId) && s.vrStatuses && s.vrStatuses.openVrStatus === "Connected" && s.vrStatuses.headsetStatus === "Connected")
-            if (i === -1) {
-                return;
-            }
-
-            this.launchExperience(nextCheckIndex, nextStationIndex)
-        },
-
-        launchExperienceOnAll(experienceIndex: number) {
-            var stationIndex = 0
-            this.experienceChecks[experienceIndex].stations.forEach(() => {
-                this.launchExperience(experienceIndex, stationIndex)
-                stationIndex++
-            })
-        },
-
-        launchExperience(experienceIndex: number, stationIndex: number) {
-            if (experienceIndex === -1 || stationIndex === -1) {
-                return;
-            }
-            this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus = "checking"
-
-            setTimeout(() => {
-                this.sendMessage({
-                    action: CONSTANT.ACTION.LAUNCH_EXPERIENCE,
-                    actionData: {
-                        stationId: this.experienceChecks[experienceIndex].stations[stationIndex].id,
-                        experienceId: this.experienceChecks[experienceIndex].id
-                    }
-                })
-            }, 3000)
-            setTimeout(() => {
-                if (this.experienceChecks[experienceIndex].stations[stationIndex].checkingStatus === 'checking') {
-                    this.updateExperienceCheck(this.experienceChecks[experienceIndex].stations[stationIndex].id, this.experienceChecks[experienceIndex].id.toString(), "failed", "Timed out waiting for response")
-                }
-            }, 35000 + 3000)
-        },
-
-        updateExperienceCheck(stationId: string, experienceId: string, status: string, message: string) {
-            const index = this.experienceChecks.findIndex(element => element.id.toString() == experienceId);
-            if (index === -1) {
-                return;
-            }
-            const stationIndex = this.experienceChecks[index].stations.findIndex(element => element.id == stationId);
-            if (index === -1) {
-                return;
-            }
-            this.experienceChecks[index].stations[stationIndex].status = status
-            this.experienceChecks[index].stations[stationIndex].message = message
-
-            //Update the report tracker
-            this.updateReport(
-                "imvr",
-                "experience_checks",
-                { passedStatus: status, message: message },
-                this.experienceChecks[index].title,
-                stationId);
-
-            if (message.includes('Timed out')) {
-                this.experienceChecks[index].stations[stationIndex].checkingStatus = "timeout";
-            } else if (status === "passed" || status === "failed" || status === "warning") {
-                this.experienceChecks[index].stations[stationIndex].checkingStatus = "checked";
-            }
-
-            if (!this.allowRunningExperienceChecks) {
-                return;
-            }
-
-            this.launchNextExperience(stationId);
-        },
-
         updateStationVrStatuses(stationId: string, statuses: any) {
             const index = this.stations.findIndex(element => element.getId() == stationId)
             if (index !== -1) {
@@ -674,7 +201,7 @@ export const useFullStore = defineStore({
             if (index !== -1) {
                 this.qaGroups[index].startQa()
                 const group = this.qaGroups[index]
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.RUN_STATION_GROUP,
                     actionData: {
                         group: group.id,
@@ -684,7 +211,7 @@ export const useFullStore = defineStore({
                     }
                 });
 
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.RUN_TABLET_GROUP,
                     actionData: {
                         group: group.id,
@@ -694,7 +221,7 @@ export const useFullStore = defineStore({
                     }
                 });
 
-                this.sendMessage({
+                useStateStore().sendMessage({
                     action: CONSTANT.ACTION.RUN_NUC_GROUP,
                     actionData: {
                         group: group.id,
@@ -739,22 +266,6 @@ export const useFullStore = defineStore({
             }
         },
 
-        sendMessage(messageData: { action: string, actionData: any }) {
-            const stateStore = useStateStore()
-            const processedData = {
-                qaToolAddress: stateStore.getServerDetails,
-                ...messageData
-            }
-            // @ts-ignore api is injected
-            api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-                channelType: CONSTANT.CHANNEL.TCP_CLIENT_CHANNEL,
-                key: stateStore.key,
-                address: this.nucAddress,
-                port: 55556,
-                data: CONSTANT.MESSAGE.QA_LEAD_TEXT + ":" + JSON.stringify(processedData)
-            });
-        },
-
         sendStationMessage(stationId: string, messageData: { action: string, actionData: any }) {
             const stateStore = useStateStore()
             const processedData = {
@@ -775,7 +286,7 @@ export const useFullStore = defineStore({
             });
         },
 
-        stationConnected (expectedStationId: string, stationData: any) {
+        stationConnected(expectedStationId: string, stationData: any) {
             const index = this.stations.findIndex(element => element.expectedDetails?.id === expectedStationId)
             console.log(index, expectedStationId)
             this.stations[index].details = {
@@ -783,7 +294,9 @@ export const useFullStore = defineStore({
                 nucIpAddress: stationData.nucAddress,
                 labLocation: stationData.labLocation,
                 name: null,
-                installedApplications: null,
+                installedJsonApplications: null,
+                noLicenseApplications: null,
+                blockedFamilyModeApplications: null,
                 id: stationData.id + "",
                 room: stationData.room,
                 macAddress: stationData.macAddress,
@@ -913,7 +426,7 @@ export const useFullStore = defineStore({
          */
         updateMaxProgress(progress: number) {
             this.maxProgress = progress > this.maxProgress ? progress : this.maxProgress;
-        }
+        },
     },
     getters: {
         getCbusConnection(state) {
@@ -934,12 +447,6 @@ export const useFullStore = defineStore({
         orderedDevices(state) {
             const typeOrder: { [key: string]: number } = { 'station': 0, 'tablet': 1, 'nuc': 2, 'cbus': 3 };
             return state.deviceMap.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
-        },
-
-        experienceChecksCompleted(state) {
-            return state.experienceChecks.filter(check => {
-                return check.stations.filter(station => station.checkingStatus !== 'checking' && station.status !== null).length === 0
-            }).length === 0
         },
 
         getReportSections(state) {

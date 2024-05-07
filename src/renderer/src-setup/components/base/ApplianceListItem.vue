@@ -20,7 +20,7 @@ import ProjectorAppliance from '../../models/_projector_appliance'
 import { Room, Scene, Station } from '../../models'
 import Cbus from '../../models/_cbus'
 import Appliance from '../../models/_appliance'
-import ApplianceInterface from "@renderer/src-setup/models/_appliance_interface";
+import ApplianceInterface from "../../models/_appliance_interface";
 
 const labStore = useLabStore()
 const { splicers } = storeToRefs(labStore)
