@@ -72,7 +72,7 @@ async function determineApplicationFeed(): Promise<string> {
             return '';
 
         case CONSTANT.TOOL.EXPERIENCE_TOOL:
-            return '';
+            return 'https://leadme-tools.sgp1.vultrobjects.com/leadme-experiences/';
 
         case CONSTANT.TOOL.SETUP_TOOL:
             return canAccessVultr ? 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/' : 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/';

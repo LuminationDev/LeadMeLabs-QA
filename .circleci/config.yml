@@ -305,3 +305,18 @@ workflows:
           requires:
             - build-mac
             - build-windows
+  build_experience:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+      - build-windows:
+          buildType: "Release"
+          tool: "experiences"
+          requires:
+            - hold
+      - vultr-upload:
+          tool: "experiences"
+          directory: "leadme-experiences"
+          requires:
+            - build-windows
