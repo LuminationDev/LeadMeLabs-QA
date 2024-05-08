@@ -9,6 +9,7 @@ import QAController from "../controllers/QAController";
 import NetworkController from "../controllers/NetworkController";
 import PasswordController from "../controllers/PasswordController";
 import DeviceController from "../controllers/DeviceController";
+import {getCanAccessVultr} from "../../canAccessVultr";
 
 let applicationType: string;
 let downloadWindow: BrowserWindow;
@@ -18,11 +19,11 @@ let mainWindow: BrowserWindow;
  * Check the lock instance for another open app and attached the auto updater processes.
  * @param application A string of the tool being initialised.
  */
-export function InitialiseApplication(application: string): void {
+export async function InitialiseApplication(application: string): Promise<void> {
     applicationType = application;
 
     checkLock();
-    attachUpdater();
+    await attachUpdater();
 
     whenReady();
 }
@@ -54,16 +55,18 @@ function checkLock(): void {
 /**
  * Based on the tool that is being used return the corresponding feed url for updating.
  */
-function determineApplicationFeed(): string {
+async function determineApplicationFeed(): Promise<string> {
+    let canAccessVultr = await getCanAccessVultr();
+
     switch (applicationType) {
         case CONSTANT.TOOL.FULL_TOOL:
-            return 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/';
+            return canAccessVultr ? 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/' : 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/';
 
         case CONSTANT.TOOL.QA_TOOL:
-            return 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/';
+            return canAccessVultr ? 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/' : 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/';
 
         case CONSTANT.TOOL.NETWORK_TOOL:
-            return 'https://leadme-network-tool-f81e92d61350.herokuapp.com/static/';
+            return canAccessVultr ? 'https://leadme-tools.sgp1.vultrobjects.com/leadme-network/' : 'https://leadme-network-tool-f81e92d61350.herokuapp.com/static/';
 
         case CONSTANT.TOOL.PASSWORD_TOOL:
             return '';
@@ -72,7 +75,7 @@ function determineApplicationFeed(): string {
             return '';
 
         case CONSTANT.TOOL.SETUP_TOOL:
-            return 'https://leadme-qa-tool.herokuapp.com/static/';
+            return canAccessVultr ? 'https://leadme-tools.sgp1.vultrobjects.com/leadme-qa/' : 'http://leadme-qa-tool-85e3c7ba88eb.herokuapp.com/static/';
 
         default:
             return '';
@@ -82,8 +85,8 @@ function determineApplicationFeed(): string {
 /**
  * Attach the auto updater to the program depending on what application type is being used.
  */
-function attachUpdater(): void {
-    let url = determineApplicationFeed();
+async function attachUpdater(): Promise<void> {
+    let url = await determineApplicationFeed();
     if (url === "") return;
 
     autoUpdater.autoDownload = true;

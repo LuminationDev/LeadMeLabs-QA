@@ -222,6 +222,26 @@ jobs:
           tool: <<parameters.tool>>
           directory: <<parameters.directory>>
 
+  vultr-upload:
+    docker:
+      - image: cimg/node:current
+    parameters:
+      directory:
+        type: string
+      tool:
+        type: string
+    steps:
+      - attach_workspace:
+          at: ~/circleci-working/<<pipeline.id>>
+      - run:
+          name: "install brew and upload"
+          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" &&
+            (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/circleci/.profile && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" &&
+            brew install s3cmd &&
+            cd ~/circleci-working/<<pipeline.id>>/ &&
+            s3cmd --access_key=$VULTR_ACCESS --limit-rate=1024k --secret_key=$VULTR_SECRET --region=us-east-1 --host=sgp1.vultrobjects.com --host-bucket=leadme-tools.sgp1.vultrobjects.com -s del --recursive s3://leadme-tools/<<parameters.directory>>/ &&
+            s3cmd --access_key=$VULTR_ACCESS --limit-rate=1024k --secret_key=$VULTR_SECRET --region=us-east-1 --host=sgp1.vultrobjects.com --host-bucket=leadme-tools.sgp1.vultrobjects.com -s sync -P ./dist-<<parameters.tool>>/ s3://leadme-tools/<<parameters.directory>>/
+
 workflows:
   build_release:
     jobs:
@@ -250,6 +270,12 @@ workflows:
           requires:
             - build-mac
             - build-windows
+      - vultr-upload:
+          tool: "full"
+          directory: "leadme-qa"
+          requires:
+            - build-mac
+            - build-windows
   build_network:
     jobs:
       - hold:
@@ -270,6 +296,12 @@ workflows:
           tool: "network"
           repo: "LeadMeLabs-Network-Hosting"
           directory: "network-tool"
+          requires:
+            - build-mac
+            - build-windows
+      - vultr-upload:
+          tool: "network"
+          directory: "leadme-network"
           requires:
             - build-mac
             - build-windows
