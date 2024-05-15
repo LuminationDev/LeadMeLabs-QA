@@ -15,6 +15,7 @@ import leadMeLibrary from '../guidesImages/LeadMeLibrary.jpg'
 import ipConfigAll from '../guidesImages/IpConfigAll.png'
 import hostname from '../guidesImages/Hostname.png'
 import batteryScreenshot from '../guidesImages/BatteryScreenshot.jpg'
+import screenTimout from '../guidesImages/ScreenTimeout.jpg'
 import windowsRecovery from '../guidesImages/WindowsRecovery.png'
 import batteryFourBars from '../guidesImages/batteryFourBars.jpg'
 import epsonRemote from '../guidesImages/epsonRemote.jpg'
@@ -75,6 +76,15 @@ export const BATTERY: CheckObject = {
                             {
                                 imageSource: batteryScreenshot,
                                 text: '<h3>For each tablet</h3><p>Swipe down from the top and check that the charging symbol is shown. Check that each tablet can reach 100%</p>'
+                            }
+                        ]
+                    },
+                    "Screen Timeout": {
+                        description: "Screen timeout should be set to two minutes.",
+                        guide: [
+                            {
+                                imageSource: screenTimout,
+                                text: '<h3>For each tablet</h3><p>Navigate to settings -> Display -> Screen timeout. This should be set to 2 minutes</p>'
                             }
                         ]
                     }
@@ -835,6 +845,7 @@ export const STEAM: CheckObject = {
 export const SOFTWARE = [STEAM];
 //endregion
 
+//TODO finish this
 //region IMVR SECTION
 //Contains two additional automatic checks
 //  - HTC Hardware
@@ -850,19 +861,6 @@ export const VIVE: CheckObject = {
                     "Headset cables": {
                         description: "The display and power cables are plugged in at the back of the wireless unit.",
                         guide: [
-                        ]
-                    },
-                    "Headsets": {
-                        description: "The headset has been paired and been given a device name.",
-                        guide: [
-                            {
-                                imageSource: null,
-                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
-                            },
-                            {
-                                imageSource: null,
-                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
-                            }
                         ]
                     },
                     "Base Stations": {
@@ -893,6 +891,33 @@ export const VIVE: CheckObject = {
                     },
                 },
                 "description": "Headset hardware setup",
+                "targets": {
+                    "station": true,
+                    "tablet": false,
+                    "nuc": false,
+                    "cbus": false
+                },
+                "devices": {}
+            }
+        },
+        {
+            "Headset Software": {
+                "checks": {
+                    "Headsets": {
+                        description: "The headset has been paired and been given a device name.",
+                        guide: [
+                            {
+                                imageSource: null,
+                                text: '<h3>Open Milesight portal</h3><p>Default IP address is 192.168.1.10</p>'
+                            },
+                            {
+                                imageSource: null,
+                                text: '<h3>Navigate to devices page</h3><p>Starting in the sidebar > Network > Interface > Settings</p>'
+                            }
+                        ]
+                    }
+                },
+                "description": "Headset software setup",
                 "targets": {
                     "station": true,
                     "tablet": false,
