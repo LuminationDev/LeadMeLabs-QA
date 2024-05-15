@@ -2,7 +2,8 @@ import * as FULL from '../assets/checks/_fullcheckValues';
 import { useFullStore } from "./store/fullStore";
 import { useStateStore } from "../store/stateStore";
 import { QaCheckResult } from "../types/_qaCheckResult";
-import { ALL_VALUES, HANDOVER } from "../assets/checks/_fullcheckValues";
+import {ALL_VALUES, HANDOVER, VIVE} from "../assets/checks/_fullcheckValues";
+import compatibilityMode from "../assets/guidesImages/CompatibilityMode.jpg";
 
 let fullStore: any;
 let stateStore: any;
@@ -67,6 +68,19 @@ export const populateFullReportTrackerWithManualChecks = () => {
                 {
                     imageSource: null,
                     text: '<h3>Open Settings</h3><p>Check the current date and time section.</p>'
+                }
+            ]
+        }
+    }
+
+    //'Vive Focus 3' is Legacy
+    if (fullStore.reportTracker["headsetType"] === 'Vive Business Streaming' || fullStore.reportTracker["headsetType"] === 'Vive Focus 3') {
+        VIVE.category[1]["Headset Software"].checks["Compatibility mode"] = {
+            description: "The compatibility mode in Vive Business Streaming is unchecked.",
+            guide: [
+                {
+                    imageSource: compatibilityMode,
+                    text: '<h3>Open Vive Business Streaming</h3><p>Navigate to Settings -> Input -> uncheck Compatibility</p>'
                 }
             ]
         }
