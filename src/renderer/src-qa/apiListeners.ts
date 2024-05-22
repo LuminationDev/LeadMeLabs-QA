@@ -182,9 +182,9 @@ const handleTCPMessage = (info: any) => {
                     ipAddress: station.ipAddress,
                     nucIpAddress: "",
                     name: station.name,
-                    installedJsonApplications: station.installedJsonApplications ?? "",
-                    noLicenseApplications: station.noLicenseApplications ?? "",
-                    blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? "",
+                    installedJsonApplications: station.installedJsonApplications ?? [],
+                    noLicenseApplications: station.noLicenseApplications ?? [],
+                    blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? [],
                     id: station.id + "",
                     room: station.room,
                     macAddress: station.macAddress,
@@ -193,7 +193,7 @@ const handleTCPMessage = (info: any) => {
                     stationMode: station?.mode ? station.mode.toLowerCase() : "vr"
                 }
                 fullStore.stations.push(s)
-                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "", station.noLicenseApplications ?? "", station.blockedFamilyModeApplications ?? "");
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? [], station.noLicenseApplications ?? [], station.blockedFamilyModeApplications ?? []);
                 fullStore.addDevice(s.id, 'station');
                 fullStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,

@@ -166,9 +166,9 @@ const handleTCPMessage = (info: any) => {
                     ipAddress: station.ipAddress,
                     nucIpAddress: "",
                     name: station.name,
-                    installedJsonApplications: station.installedJsonApplications ?? "",
-                    noLicenseApplications: station.noLicenseApplications ?? "",
-                    blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? "",
+                    installedJsonApplications: station.installedJsonApplications ?? [],
+                    noLicenseApplications: station.noLicenseApplications ?? [],
+                    blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? [],
                     id: station.id + "",
                     room: station.room,
                     macAddress: station.macAddress,
@@ -178,7 +178,7 @@ const handleTCPMessage = (info: any) => {
                 }
 
                 experienceStore.stations.push(s)
-                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "", station.noLicenseApplications ?? "", station.blockedFamilyModeApplications ?? "");
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? [], station.noLicenseApplications ?? [], station.blockedFamilyModeApplications ?? []);
                 experienceStore.addDevice(s.id, 'station');
                 experienceStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,
