@@ -18,7 +18,7 @@ export const useExperienceCheckStore = defineStore({
          * Check a Station's installed experiences for errors, these can be extra experiences that are installed and not
          * on the tier list or experiences that are missing that should be installed.
          */
-        checkExperiencesForErrors(stationId: string, installedExperiences: string, noLicenseApplications: string, blockedFamilyMode: string) {
+        checkExperiencesForErrors(stationId: string, installedExperiences: string, noLicenseApplications: string, blockedFamilyMode: string, unacceptedEulas: string) {
             if (installedExperiences === null || installedExperiences.length === 0) {
                 console.log("Experiences not collected!");
                 return;
@@ -62,12 +62,28 @@ export const useExperienceCheckStore = defineStore({
                 jsonBlockedFamilyMode = JSON.parse(blockedFamilyMode);
             }
 
+            let jsonUnacceptedEulas: string[] = [];
+            let jsonUnacceptedEulaExperienceIds: string[] = [];
+            if (unacceptedEulas !== null && unacceptedEulas !== undefined) {
+                jsonUnacceptedEulas = JSON.parse(unacceptedEulas);
+                jsonUnacceptedEulaExperienceIds = jsonUnacceptedEulas.map((item => item.split(":", 4)[0]))
+            }
+
             //Check for not installed experiences
             expectedExperiences.forEach(expected => {
                 const isInstalled = jsonExperiences.some(installed => parseInt(installed.Id) === expected.id);
-                if (isInstalled) return;
 
-                let message = "Not installed";
+                let message = "";
+                if (jsonUnacceptedEulaExperienceIds.includes(expected.id.toString())) {
+                    message = "Unaccepted eula"
+                }
+
+                if (isInstalled && message === "") return;
+
+                if (message === "") {
+                    message = "Not installed";
+                }
+
                 if (jsonNoLicenses.includes(expected.id.toString())) {
                     message = "No license";
                 }
