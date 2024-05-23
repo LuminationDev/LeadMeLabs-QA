@@ -9,6 +9,7 @@ type StationDetails = {
     installedJsonApplications: null | string[];
     noLicenseApplications: null | string[];
     blockedFamilyModeApplications: null | string[];
+    unacceptedEulas: null | string[];
     id: string;
     room: string;
     macAddress: string;

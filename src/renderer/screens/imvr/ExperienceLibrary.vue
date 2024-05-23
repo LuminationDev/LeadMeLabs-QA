@@ -6,6 +6,7 @@ import StatusHover from "../../components/statuses/StatusHover.vue";
 import ItemHover from "../../components/statuses/ItemHover.vue";
 import RetrySvg from "../../assets/icons/vue/RetrySvg.vue";
 import * as CONSTANT from "../../assets/constants";
+import PlayCircle from "../../assets/icons/vue/PlayCircle.vue";
 
 const stateStore = useStateStore();
 const tempStore = stateStore.getStore;
@@ -81,6 +82,19 @@ const noLicenseTotal = (deviceId) => {
   return count;
 };
 
+const eulaTotal = (deviceId) => {
+  const count = getCountByKeyword(deviceId, 'eula');
+
+  //Add the message as a comment, hardcoded to position 2
+  const section = tempStore.reportTracker["imvr"] ||= {};
+  const category = section["pre_experience_checks"] ||= {};
+  category['comments'] ||= [];
+  category['comments'][4] = ({ date: stateStore.formattedDate(true), content: `EULA unaccepted: ${count}`});
+
+  return count;
+};
+
+
 const unexpectedTotal = (deviceId) => {
   const count = getCountByKeyword(deviceId, 'expected');
 
@@ -117,6 +131,23 @@ const recollectExperiences = () => {
   });
 
   setTimeout(() => inProgress.value = false, 1000);
+}
+
+var eulaTimeout = ref(false)
+const acceptEulas = (stationId) => {
+  if (eulaTimeout.value === true) {
+    return
+  }
+  eulaTimeout.value = true
+  useStateStore().sendMessage({
+    action: CONSTANT.ACTION.ACCEPT_EULAS,
+    actionData: {
+      stationIds: [stationId]
+    }
+  });
+  setTimeout(() => {
+    eulaTimeout.value = false
+  }, 2000)
 }
 
 const isStationPresent = (deviceId, stations: any[]) => {
@@ -174,6 +205,7 @@ const isStationPresent = (deviceId, stations: any[]) => {
       <th class="p-3">Device</th>
       <th class="w-28 pl-3">No license</th>
       <th class="w-28 pl-3">Blocked by Family Mode</th>
+      <th class="w-28 pl-3">EULA unaccepted</th>
       <th class="w-28 pl-3">Not expected</th>
       <th class="w-28 pl-3">Not installed</th>
     </tr>
@@ -190,6 +222,11 @@ const isStationPresent = (deviceId, stations: any[]) => {
 
         <th class="p-3 font-medium text-center">
           {{blockByFamilyModeTotal(device.id)}}
+        </th>
+
+        <th class="p-3 font-medium text-center flex flex-row justify-center">
+          {{ eulaTotal(device.id) }}
+          <PlayCircle class="ml-2" :class="eulaTimeout ? 'cursor-not-allowed' : 'cursor-pointer'" fill="#166534" v-if="eulaTotal(device.id) > 0" @click="() => { acceptEulas(device.id) }" />
         </th>
 
         <th class="p-3 font-medium text-center">

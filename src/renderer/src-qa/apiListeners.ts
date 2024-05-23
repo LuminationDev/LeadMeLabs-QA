@@ -166,7 +166,7 @@ const handleTCPMessage = (info: any) => {
         case "GetExperiences": {
             console.log(response.responseData.stations);
             response.responseData.stations.forEach(station => {
-                experienceCheckStore.checkExperiencesForErrors(station.id, station.applications, station.noLicenses, station.blockedFamilyMode);
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.applications, station.noLicenses, station.blockedFamilyMode, station.unacceptedEulas);
             });
             experienceCheckStore.updateExperienceChecksWithErrors();
             break;
@@ -185,6 +185,7 @@ const handleTCPMessage = (info: any) => {
                     installedJsonApplications: station.installedJsonApplications ?? "[]",
                     noLicenseApplications: station.noLicenseApplications ?? "[]",
                     blockedFamilyModeApplications: station.blockedFamilyModeApplications ?? "[]",
+                    unacceptedEulas: station.unacceptedEulas ?? "[]",
                     id: station.id + "",
                     room: station.room,
                     macAddress: station.macAddress,
@@ -193,7 +194,7 @@ const handleTCPMessage = (info: any) => {
                     stationMode: station?.mode ? station.mode.toLowerCase() : "vr"
                 }
                 fullStore.stations.push(s)
-                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "[]", station.noLicenseApplications ?? "[]", station.blockedFamilyModeApplications ?? "[]");
+                experienceCheckStore.checkExperiencesForErrors(station.id, station.installedJsonApplications ?? "[]", station.noLicenseApplications ?? "[]", station.blockedFamilyModeApplications ?? "[]", station.unacceptedEulas ?? "[]");
                 fullStore.addDevice(s.id, 'station');
                 fullStore.sendStationMessage(s.id, {
                     action: CONSTANT.ACTION.CONNECT_STATION,
