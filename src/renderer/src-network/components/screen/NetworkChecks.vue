@@ -2,7 +2,6 @@
 import { useNetworkStore } from "../../store/networkStore";
 import { computed, watch } from "vue";
 import { DESCRIPTIONS, WEBSITES } from "../../../assets/checks/_networkValues";
-// import { Report } from "../../interfaces/_report";
 import * as CONSTANT from "../../../assets/constants";
 import ItemHover from "../../../components/statuses/ItemHover.vue";
 import CategoryStatus from "../CategoryStatus.vue";
@@ -36,6 +35,8 @@ const getCategoryFromChannelType = (channelType) => {
       return 'Firewall';
     case 'check_port':
       return 'Ports';
+    case 'steam_api':
+      return 'Steam';
     default:
       return '';
   }
@@ -49,6 +50,10 @@ const requestSpeedTest = () => {
 const requestNetworkCheck = () => {
   sendNetworkRequest('internet_online', 'Internet', 5000);
 };
+
+const requestSteamCheck = () => {
+  sendNetworkRequest('steam_api', 'Steam Api', 11000);
+}
 
 const buildPortCheck = async () => {
   //@ts-ignore
@@ -82,6 +87,7 @@ const startNetworkChecks = () => {
 
   requestNetworkCheck();
   requestSpeedTest();
+  requestSteamCheck();
   Promise.all([requestWebsitePing()]); //Run the loops concurrently
 }
 

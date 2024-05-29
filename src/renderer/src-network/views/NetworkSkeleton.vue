@@ -61,6 +61,16 @@ const populateReportTracker = async () => {
     id: "Internet",
   };
 
+  //Add the steam api check
+  networkStore.reportTracker["Steam"] ||= {};
+  networkStore.reportTracker["Steam"]["Steam Api"] ||= {
+    type: "Steam",
+    checkingStatus: "unchecked",
+    passedStatus: "skipped",
+    message: "",
+    id: "Steam Api",
+  };
+
   //Add the ports to check
   networkStore.reportTracker["Ports"] ||= {};
   for (const port of PORTS) {

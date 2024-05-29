@@ -22,6 +22,7 @@ export const listeners = async (info: any) => {
         case "internet_result":
         case "website_result":
         case "port_result":
+        case "steam_api":
             networkStore.updateReportTracker(info.section, info.id, info.passedStatus, info.message);
             break;
         case "build_port_check":
@@ -37,6 +38,7 @@ export const listeners = async (info: any) => {
                 }, 5000);
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
+            break;
 
         case "speed_test_progress":
             networkStore.progress = info.progress;
@@ -56,6 +58,7 @@ export const listeners = async (info: any) => {
             break;
 
         default:
+            console.log(info)
             break;
     }
 };

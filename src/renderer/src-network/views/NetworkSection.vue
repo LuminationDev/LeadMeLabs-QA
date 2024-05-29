@@ -32,7 +32,7 @@ const guideComp = computed(() => {
       <h2 class="text-md text-gray-600"><slot name="subheading">This is the section subheading</slot></h2>
     </div>
 
-    <div class="mt-10">
+    <div class="mt-6">
       <slot name="body">This massive section is where all of the content goes</slot>
     </div>
 
