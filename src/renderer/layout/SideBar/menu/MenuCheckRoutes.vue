@@ -13,7 +13,7 @@ const saveCurrentProgress = async () => {
   api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
     channelType: CONSTANT.CHANNEL.GENERATE_REPORT,
     type: CONSTANT.MESSAGE.SAVE_PROGRESS,
-    data: JSON.stringify(fullStore.reportTracker)
+    data: JSON.stringify(tempStore.reportTracker)
   });
 };
 </script>
