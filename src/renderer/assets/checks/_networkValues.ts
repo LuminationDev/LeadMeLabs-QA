@@ -4,6 +4,11 @@ export const DESCRIPTIONS = {
         passed: "Your device can access the internet on this network.",
         failed: `<p>Your device <span class="font-semibold">can not</span> access the internet on this network.</p>`,
     },
+    "Steam": {
+        testing: "Testing is underway",
+        passed: "The steam api can be accessed on this network.",
+        failed: `<p>The steam api <span class="font-semibold">can not</span> be accessed on this network.</p>`,
+    },
     "Ports": {
         testing: "Testing is underway",
         passed: "The required ports are open and accessible.",

@@ -1,14 +1,17 @@
-import { IpcMain, BrowserWindow } from "electron";
+import {IpcMain, BrowserWindow, app} from "electron";
 import { GetIPAddress } from "../network/Network";
-const { exec } = require('child_process')
-const network = require('network')
-var net = require('net');
 import {
     checkWebsiteAvailability,
     downloadAndCalculateSpeed,
     checkInternetConnection, pingIpAddress
 } from "../network/Network";
 import { DetermineReportType } from "../report/Report";
+import { join } from "path";
+import fs from "fs";
+import * as CONSTANTS from "../constants";
+const { exec } = require('child_process')
+const network = require('network')
+var net = require('net');
 
 export default class NetworkController {
     ipcMain: IpcMain;
@@ -38,12 +41,16 @@ export default class NetworkController {
                     this.isInternetAvailable(info);
                     break;
 
+                case "steam_api":
+                    void this.checkSteamApi(info);
+                    break;
+
                 case "website_ping":
                     this.checkWebsiteAccess(info);
                     break;
 
                 case "speed_test":
-                    void this.speedTest(info);
+                    this.speedTest(info);
                     break;
 
                 case "attempt_device_connection":
@@ -139,7 +146,7 @@ export default class NetworkController {
                 if (error) {
                     reject(new Error("Could not create rule"))
                 }
-                exec(`Start-Process cmd -Verb RunAs -ArgumentList '@cmd /k route ${addOrDelete ? 'add' : 'delete'} ${ipAddress} MASK 255.255.255.255 ${gateway}'`, {'shell':'powershell.exe'}, (err, stdout)=> {
+                exec(`Start-Process cmd -Verb RunAs -ArgumentList '@cmd /c route ${addOrDelete ? 'add' : 'delete'} ${ipAddress} MASK 255.255.255.255 ${gateway}'`, {'shell':'powershell.exe'}, (err, stdout)=> {
                     if (err) {
                         reject(new Error("Could not create rule"))
                     }
@@ -287,5 +294,114 @@ export default class NetworkController {
                 });
             }
         }, 5000)
+    }
+
+    /**
+     * Use the LeadMePython executable to check if the api.steampowered.com endpoint can be reached.
+     * @param info
+     */
+    checkSteamApi(info: any): void {
+        let passed = false;
+        void this.extractAndRunExecutable(CONSTANTS.TOOL.LEADME_PYTHON, ['network_check'], (error: any, stdout: string, stderr: string) => {
+            if (error) {
+                this.mainWindow.webContents.send('backend_message', {
+                    error: error.message
+                });
+                console.error(`Error: ${error.message}`);
+                passed = false;
+            }
+
+            if (stderr) {
+                this.mainWindow.webContents.send('backend_message', {
+                    error: stderr
+                });
+                console.error(`Stderr: ${stderr}`);
+                passed = false;
+            }
+
+            if (stdout) {
+                console.log(`Stdout: ${stdout}`);
+                passed = stdout.trim() === "Connection available";
+            }
+
+            this.mainWindow.webContents.send('backend_message', {
+                channelType: "steam_api",
+                section: "Steam",
+                id: info.id,
+                passedStatus: passed ? "passed" : "failed",
+                message: passed ? "Can access" : "Access blocked"
+            });
+        });
+    }
+
+    /**
+     * Extracts and runs the specified executable file.
+     * If in development mode, executes the executable directly.
+     * If in production mode, extracts the executable if not already extracted, then executes it.
+     * @param {string} executableName - The name of the executable file.
+     * @param {string[]} args - An array of arguments to pass to the executable.
+     * @param {Function} callback - Optional callback function to handle the result of execution.
+     */
+    async extractAndRunExecutable(executableName: string, args: string[], callback: Function) {
+        try {
+            let command: string;
+
+            if (process.env.NODE_ENV === 'development') {
+                const executablePath = join(app.getAppPath(), '../', 'static', executableName);
+                command = `"${executablePath}" ${args.join(' ')}`;
+
+            } else {
+                const executablePath = join(app.getAppPath(), 'static', executableName);
+                const tempDir = join(app.getAppPath(), '../');
+                const tempExecutablePath = join(tempDir, executableName);
+
+                if (!fs.existsSync(tempExecutablePath)) {
+                    this.copyFile(executablePath, tempExecutablePath);
+                    this.makeExecutable(tempExecutablePath);
+                }
+
+                command = `"${tempExecutablePath}" ${args.join(' ')}`;
+            }
+
+            const { stdout, stderr } = await this.executeCommand(command);
+            if (callback) callback(null, stdout, stderr);
+        } catch (error: any) {
+            if (callback) callback(error);
+        }
+    }
+
+    /**
+     * Copies a file from the source path to the destination path.
+     * @param {string} source - The path of the source file.
+     * @param {string} destination - The path of the destination file.
+     */
+    copyFile(source: string, destination: string) {
+        const data = fs.readFileSync(source);
+        fs.writeFileSync(destination, data);
+    }
+
+    /**
+     * Makes a file executable by changing its permissions.
+     * @param {string} filePath - The path of the file to make executable.
+     */
+    makeExecutable(filePath: string) {
+        fs.chmodSync(filePath, 0o755);
+    }
+
+    /**
+     * Executes a shell command and returns a Promise that resolves with the stdout and stderr of the command.
+     * @param {string} command - The shell command to execute.
+     * @returns {Promise<{stdout: string, stderr: string}>} - A Promise that resolves with the stdout and stderr of the command.
+     */
+    executeCommand(command: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            exec(command, (error: any, stdout: string, stderr: string) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve({ stdout, stderr });
+                }
+            });
+        });
     }
 }

@@ -4,3 +4,5 @@ export const NETWORK_TOOL = "NetworkTool";
 export const PASSWORD_TOOL = "PasswordTool";
 export const EXPERIENCE_TOOL = "ExperienceTool";
 export const SETUP_TOOL = "SetupTool";
+
+export const LEADME_PYTHON = "LeadMePython.exe";
