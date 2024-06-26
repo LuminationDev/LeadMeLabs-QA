@@ -126,10 +126,11 @@ export const useFullStore = defineStore({
             const steamGuardDisabled = new QaCheckResult("steam_guard_disabled", "auto", 60000, {station: true, tablet: false, nuc: false, cbus: false}, stationIds, [], "Steam guard disabled", "Steam Guard has been disabled")
             const softwareVersion = new QaCheckResult("latest_software_version", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Software Version", "Is the software up-to-date?")
             const productionMode = new QaCheckResult("production_mode", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Production Mode", "Is the launcher set to Production")
+            const autoStart = new QaCheckResult("auto_start", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Auto Start", "Is the launcher set to autostart")
             const driverEasyNotInstalled = new QaCheckResult("drivereasy_not_installed", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "DriverEasy", "DriverEasy is not installed")
             const nvidiaNotInstalled = new QaCheckResult("nvidia_not_installed", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "NVidia", "No NVidia programs are installed")
             const launcherInstallLocation = new QaCheckResult("launcher_install_location", "auto", 20000, {station: true, tablet: false, nuc: true, cbus: false}, stationIds, [], "Launcher Install Location", "Checks launcher is in correct location, and not installed in old location")
-            softwareChecks.checks.push(productionMode, setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled, launcherInstallLocation)
+            softwareChecks.checks.push(productionMode, autoStart, setvolInstalled, amdInstalled, steamGuardDisabled, steamcmdInstalled, steamcmdInitialised, steamcmdConfigured, driverEasyNotInstalled, nvidiaNotInstalled, launcherInstallLocation)
             // @ts-ignore //Only add if the labType equals online
             if(this.reportTracker['labType'] !== "Offline") {softwareChecks.checks.push(softwareVersion)}
             softwareChecks.requirements = ["station_connection_checks", "steam_config_checks.steam_username", "steam_config_checks.steam_password", "steam_config_checks.steam_initialized"]
