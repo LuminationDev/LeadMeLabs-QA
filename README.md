@@ -24,6 +24,7 @@ npm run build:linux # uses linux as build target
 ```
 
 Optional configuration options can be found in the [Electron Builder CLI docs](https://www.electron.build/cli.html).
+
 ## Project Structure
 
 ```bash
