@@ -119,6 +119,18 @@ const notInstalledTotal = (deviceId) => {
   return count
 };
 
+const notCompatibleTotal= (deviceId) => {
+  const count = getCountByKeyword(deviceId, 'compatible');
+
+  //Add the message as a comment, hardcoded to position 1
+  const section = tempStore.reportTracker["imvr"] ||= {};
+  const category = section["pre_experience_checks"] ||= {};
+  category['comments'] ||= [];
+  category['comments'][5] = ({ date: stateStore.formattedDate(true), content: `Not compatible experiences: ${count}`});
+
+  return count
+};
+
 const recollectExperiences = () => {
   inProgress.value = true;
 
@@ -208,6 +220,7 @@ const isStationPresent = (deviceId, stations: any[]) => {
       <th class="w-28 pl-3">EULA unaccepted</th>
       <th class="w-28 pl-3">Not expected</th>
       <th class="w-28 pl-3">Not installed</th>
+      <th class="w-28 pl-3">Not compatible</th>
     </tr>
 
     <tr v-for="(device, _index) in tempStore.deviceMap" :key="_index" class="text-sm border border-gray-200">
@@ -235,6 +248,10 @@ const isStationPresent = (deviceId, stations: any[]) => {
 
         <th class="p-3 font-medium text-center">
           {{notInstalledTotal(device.id)}}
+        </th>
+
+        <th class="p-3 font-medium text-center">
+          {{notCompatibleTotal(device.id)}}
         </th>
       </template>
     </tr>

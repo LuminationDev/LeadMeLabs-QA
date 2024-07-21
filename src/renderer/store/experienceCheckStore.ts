@@ -34,6 +34,13 @@ export const useExperienceCheckStore = defineStore({
                 expectedExperiences.push(...this.onlineExperiences);
             }
 
+            if (useStateStore().getStore.reportTracker["headsetType"] === "Vive Business Streaming") {
+                // remove non business streaming compatible experiences curatours, colosseum vr and virtual presenter pro
+                expectedExperiences = expectedExperiences.filter((experience) => {
+                    return ![1532110, 1614850, 1282770].includes(experience.id)
+                })
+            }
+
             //Check for unexpected experiences
             const jsonExperiences: ExperienceDetails[] = JSON.parse(installedExperiences);
             jsonExperiences.forEach((experience: ExperienceDetails) => {
@@ -46,7 +53,15 @@ export const useExperienceCheckStore = defineStore({
                 const isExpected = expectedExperiences.some(expected => expected.id === parseInt(experience.Id));
                 if (isExpected) return;
 
-                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message: "Not expected" };
+                let message = "Not expected";
+                if (useStateStore().getStore.reportTracker["headsetType"] === "Vive Business Streaming") {
+                    // check for non business streaming compatible experiences curatours, colosseum vr and virtual presenter pro
+                    if (["1532110", "1614850", "1282770"].includes(experience.Id)) {
+                        message = "Not compatible"
+                    }
+                }
+
+                const station = { id: stationId, status: "pending", checkingStatus: "timeout", message };
                 const updatedTitle = experience.Name.replace(/^"(.*)"$/, '$1'); //Remove the leading and trailing quotes (")
                 this.addOrUpdateError(this.experienceErrors, parseInt(experience.Id), updatedTitle, station);
             });
