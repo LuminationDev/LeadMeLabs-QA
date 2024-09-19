@@ -36,6 +36,10 @@ const route = useRoute();
             <LoginModal title="QA Tool" description="Run a Quality Assurance Test" :route="'/check/full/setup/details'"/>
           </div>
 
+          <div class="w-full h-full pt-4">
+            <OptionButton title="Simple QA" subtitle="Three Click-QA" to="/check/full-setup"/>
+          </div>
+
           <!--QA tool quick check-->
           <div class="w-full h-full pt-4">
             <OptionButton title="Password Generator" subtitle="Automatically generate passwords" to="/password-login"/>

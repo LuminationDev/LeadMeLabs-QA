@@ -9,6 +9,7 @@ import QAController from "../controllers/QAController";
 import NetworkController from "../controllers/NetworkController";
 import PasswordController from "../controllers/PasswordController";
 import DeviceController from "../controllers/DeviceController";
+import HelperController from "../controllers/HelperController";
 import {getCanAccessVultr} from "../../canAccessVultr";
 
 let applicationType: string;
@@ -276,6 +277,7 @@ async function sendApplicationDetails(): Promise<void> {
  * Loads controllers based on the application type.
  */
 function loadControllers(): void {
+    new HelperController(ipcMain, mainWindow).startup();
     switch (applicationType) {
         case CONSTANT.TOOL.FULL_TOOL:
             new QAController(ipcMain, mainWindow).startup();
