@@ -200,6 +200,7 @@ export function createWindow(): void {
         }
 
         // Send through the current version number
+        console.log('sending')
         void sendApplicationDetails();
 
         if (process.env.NODE_ENV !== 'development') {
@@ -288,6 +289,7 @@ function loadControllers(): void {
             break;
 
         case CONSTANT.TOOL.QA_TOOL:
+        case CONSTANT.TOOL.SIMPLE_QA:
             new QAController(ipcMain, mainWindow).startup();
             new DeviceController(ipcMain, mainWindow).startup();
             break;

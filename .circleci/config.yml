@@ -320,3 +320,18 @@ workflows:
           directory: "leadme-experiences"
           requires:
             - build-windows
+  build_simple_qa:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+      - build-windows:
+          buildType: "Release"
+          tool: "simple-qa"
+          requires:
+            - hold
+      - vultr-upload:
+          tool: "experiences"
+          directory: "leadme-simple-qa"
+          requires:
+            - build-windows

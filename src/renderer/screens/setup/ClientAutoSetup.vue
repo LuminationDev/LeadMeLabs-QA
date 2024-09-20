@@ -11,7 +11,8 @@ import { useStateStore } from "../../store/stateStore";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount, onMounted, ref, watch, watchEffect } from "vue";
 import GenericDropdown from "../../components/dropdowns/GenericDropdown.vue";
-import router from "../../src-full/router/router";
+import {useRouter} from "vue-router";
+const router = useRouter()
 
 const stateStore = useStateStore();
 
@@ -38,39 +39,40 @@ watch(connected, (newValue) => {
   }
 })
 onMounted(() => {
-  if (connected.value) {
-    connectionState.value = 'success'
-  }
-  api.ipcRenderer.invoke('get-station-or-nuc-config').then((appDataPath) => {
-    const entries = appDataPath.split('\n')
-    const keyValue = {}
-    entries.forEach(entry => {
-      const pair = entry.split('=', 2)
-      keyValue[pair[0]] = pair[1]
-    })
-    stateStore.key = keyValue.AppKey
-    stateStore.nucAddress = keyValue.NucAddress
+  setTimeout(() => {
+    if (connected.value) {
+      connectionState.value = 'success'
+    }
+    api.ipcRenderer.invoke('get-station-or-nuc-config').then((appDataPath) => {
+      const entries = appDataPath.split('\n')
+      const keyValue = {}
+      entries.forEach(entry => {
+        const pair = entry.split('=', 2)
+        keyValue[pair[0]] = pair[1]
+      })
+      stateStore.key = keyValue.AppKey
+      stateStore.nucAddress = keyValue.NucAddress
+      console.log(stateStore, stateStore.ipAddress)
+      api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
+        channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
+        key: stateStore.key,
+        address: stateStore.ipAddress,
+        port: stateStore.serverPort,
+        command: "start"
+      });
 
-    api.ipcRenderer.send(CONSTANT.CHANNEL.HELPER_CHANNEL, {
-      channelType: CONSTANT.CHANNEL.TCP_COMMAND_CHANNEL,
-      key: stateStore.key,
-      address: stateStore.ipAddress,
-      port: stateStore.serverPort,
-      command: "start"
+      useStateStore().sendMessage({
+        action: CONSTANT.ACTION.CONNECT,
+        actionData: {}
+      });
+
+      setTimeout(() => {
+        if (connectionState.value === 'loading') {
+          connectionState.value = 'failed'
+        }
+      }, 10000)
     });
-
-    useStateStore().sendMessage({
-      action: CONSTANT.ACTION.CONNECT,
-      actionData: {}
-    });
-
-    setTimeout(() => {
-      if (connectionState.value === 'loading') {
-        connectionState.value = 'failed'
-      }
-    }, 10000)
-  });
-
+  }, 1000)
 });
 
 watch(connectionState, (newValue) => {

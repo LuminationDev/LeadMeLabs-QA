@@ -175,6 +175,7 @@ export const useStateStore = defineStore({
 
                 case CONSTANT.TOOL.FULL_TOOL:
                 case CONSTANT.TOOL.QA_TOOL:
+                case CONSTANT.TOOL.SIMPLE_QA:
                 default:
                     return useFullStore();
             }
