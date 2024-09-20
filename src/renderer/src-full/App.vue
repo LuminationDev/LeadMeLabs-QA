@@ -83,19 +83,19 @@ signOut(auth)
 
 <template>
   <div class="flex flex-row w-full justify-between max-h-[95vh] h-[95vh]">
-    <div class="flex-col bg-white min-w-[220px] rounded-xl">
+    <div class="flex-col bg-white min-w-[220px] rounded-xl" v-if="route.meta.tool !== 'client-qa'">
       <Sidebar />
     </div>
 
     <div class="content flex-col bg-white ml-2 rounded-xl w-full min-w-[30rem] justify-between overflow-auto pt-0">
       <RouterView class="px-4" />
 
-      <div v-if="route.name !== 'network-diagnostic' && route.name !== 'password-login' && route.name !== 'password-generation'" class="sticky bottom-0 shrink-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white">
+      <div v-if="route.name !== 'network-diagnostic' && route.name !== 'password-login' && route.name !== 'password-generation' && route.meta.tool !== 'client-qa'" class="sticky bottom-0 shrink-0 w-full h-20 flex-row justify-between items-center border-t-2 px-4 bg-white">
         <BottomBar :meta="route.meta" @push-route="pushRoute" />
       </div>
     </div>
 
-    <div v-if="showPreview" class="content flex flex-col bg-white w-96 flex-shrink-0 max-h-[98vh] rounded-xl ml-2">
+    <div v-if="showPreview && route.meta.tool !== 'client-qa'" class="content flex flex-col bg-white w-96 flex-shrink-0 max-h-[98vh] rounded-xl ml-2">
       <ShowState />
     </div>
   </div>

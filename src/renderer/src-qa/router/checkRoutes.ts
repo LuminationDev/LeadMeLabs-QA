@@ -17,6 +17,8 @@ import {
     WINDOWS
 } from "../../assets/checks/_fullcheckValues";
 import { CheckObject, Route } from "../../interfaces/_routeItems";
+import ClientAutoCheck from "../../screens/checks/ClientAutoCheck.vue";
+import ClientAutoSetup from "../../screens/setup/ClientAutoSetup.vue";
 
 /**
  * Generic metadata that is the same across all manual routes
@@ -509,6 +511,28 @@ export const fullRoutes = [
         meta: {
             next: '',
             prev: '/check/full/overall/submit'
+        }
+    },
+
+    //FULL AUTO - for client facing
+    {
+        path: '/check/full-setup',
+        name: 'full-setup',
+        component: ClientAutoSetup,
+        meta: {
+            tool: 'client-qa',
+            next: '',
+            prev: ''
+        }
+    },
+    {
+        path: '/check/full-auto',
+        name: 'full-auto',
+        component: ClientAutoCheck,
+        meta: {
+            tool: 'client-qa',
+            next: '',
+            prev: ''
         }
     }
 ];
