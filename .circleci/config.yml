@@ -1,0 +1,337 @@
+version: 2.1
+
+orbs:
+  windows: circleci/windows@5.0.0
+  macos: circleci/macos@2.4.0
+  node: circleci/node@5.1.0
+
+commands:
+  clone_hosting:
+    parameters:
+      repo:
+        type: string
+      tool:
+        type: string
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a4:ea:43:3f:94:59:16:f7:cd:ef:72:16:5a:52:69:a0"
+            - "b8:e5:1b:0c:be:bb:b0:bf:a2:e8:a3:73:41:18:61:c2"
+      - run:
+          name: Setup git config
+          command: git config --global user.name "CircleCI" && git config --global user.email "CircleCI@lumination.com.au"
+      - run:
+          name: Add github to known hosts
+          command: ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - when:
+          condition:
+            and:
+              - equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run:
+                name: Write ssh config file
+                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile ~/.ssh/id_rsa_a4ea433f945916f7cdef72165a5269a0" >> ~/.ssh/config
+      - when:
+          condition:
+            and:
+              - equal: [ network, <<parameters.tool>> ]
+          steps:
+            - run:
+                name: Write ssh config file
+                command: echo "Host github.com" > ~/.ssh/config && echo "  IdentitiesOnly yes" >> ~/.ssh/config && echo "  IdentityFile ~/.ssh/id_rsa_b8e51b0cbebbb0bfa2e8a373411861c2" >> ~/.ssh/config
+      - run:
+          name: Clone hosting server
+          command: cd ~/circleci-working/<<pipeline.id>>/ && git clone git@github.com:LuminationDev/<<parameters.repo>>.git
+
+  copy_and_push:
+    parameters:
+      branch:
+        type: string
+      repo:
+        type: string
+      tool:
+        type: string
+      directory:
+        type: string
+    steps:
+      - run:
+          name: Checkout <<parameters.branch>>
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>> && git checkout <<parameters.branch>>
+      - run:
+          name: Delete old files
+          command: rm -rf ~/circleci-working/<<pipeline.id>>/<<parameters.repo>>/applications/<<parameters.directory>>
+      - run:
+          name: Copy built files to git repository
+          command: cp -r ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>> ~/circleci-working/<<pipeline.id>>/<<parameters.repo>>/applications/<<parameters.directory>>
+      - run:
+          name: Add built files to git
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>>/applications/<<parameters.directory>> && git add --all
+      - run:
+          name: Commit
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>> && git commit -m "Update <<parameters.tool>> tool"
+      - run:
+          name: Push
+          command: cd ~/circleci-working/<<pipeline.id>>/<<parameters.repo>> && git push
+
+  windows-npm:
+    steps:
+      - run:
+          command: nvm use 16.17.0
+          shell: powershell.exe
+
+  mac-nvm:
+    steps:
+      - run:
+          command: |
+            set +e         
+            touch $BASH_ENV    
+            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.39.3/install.sh | bash
+            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+      - run: nvm ls
+      - run: nvm install 16.17.0
+      - run: nvm use 16.17.0
+
+  build:
+    parameters:
+      buildType:
+        type: string
+      command:
+        type: string
+      tool:
+        type: string
+    steps:
+      - run: mkdir -p ~/circleci-working/<<pipeline.id>>
+      - run: cd ~/circleci-working/<<pipeline.id>>
+      - checkout:
+          path: ~/circleci-working/<<pipeline.id>>
+      - run:
+          name: "npm install"
+          command: cd ~/circleci-working/<<pipeline.id>> && npm install
+      - run:
+          name: "electron-build"
+          command: cd ~/circleci-working/<<pipeline.id>> && npm run build:<<parameters.command>>-<<parameters.tool>>
+      - when:
+          condition:
+            and:
+              - and:
+                - equal: [win, <<parameters.command>>]
+              - and:
+                  - not:
+                      equal: [full, <<parameters.tool>>]
+          steps:
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/builder-debug.yml
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/win-unpacked/leadme-<<parameters.tool>>.exe
+      - when:
+          condition:
+            and:
+              - and:
+                  - equal: [ win, <<parameters.command>> ]
+              - and:
+                  - equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/builder-debug.yml
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/win-unpacked/leadme-tools-qa.exe
+      - when:
+          condition:
+            and:
+              - and:
+                  - equal: [ mac, <<parameters.command>> ]
+              - and:
+                  - not:
+                      equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run: ls ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac/leadme-<<parameters.tool>>.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/leadme-<<parameters.tool>>-*-mac.zip
+      - when:
+          condition:
+            and:
+              - and:
+                  - equal: [ mac, <<parameters.command>> ]
+              - and:
+                  - equal: [ full, <<parameters.tool>> ]
+          steps:
+            - run: ls ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/mac/leadme-tools-qa.app/Contents/Frameworks/"Electron Framework.framework"/Versions/A/"Electron Framework"
+            - run: rm ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>/leadme-tools-qa-*-mac.zip
+      - store_artifacts:
+          path: ~/circleci-working/<<pipeline.id>>/dist-<<parameters.tool>>
+      - persist_to_workspace:
+          root: ~/circleci-working/<<pipeline.id>>/
+          paths:
+            - dist-<<parameters.tool>>
+
+jobs:
+  build-windows:
+    machine: true
+    resource_class: luminationdev/darragh-comp
+    executor:
+      name: windows/default
+    parameters:
+      buildType:
+        type: string
+      tool:
+        type: string
+    steps:
+      - windows-npm
+      - build:
+          buildType: <<parameters.buildType>>
+          command: win
+          tool: <<parameters.tool>>
+  build-mac:
+    macos:
+      xcode: 14.2.0
+    parameters:
+      buildType:
+        type: string
+      tool:
+        type: string
+    steps:
+      - node/install:
+          node-version: "16.17.0"
+      - run: node --version
+      - build:
+          buildType: <<parameters.buildType>>
+          command: mac
+          tool: <<parameters.tool>>
+
+  commit-and-push:
+    machine: true
+    resource_class: luminationdev/darragh-comp
+    executor:
+      name: windows/default
+    parameters:
+      branch:
+        type: string
+      repo:
+        type: string
+      tool:
+        type: string
+      directory:
+        type: string
+    steps:
+      - clone_hosting:
+          repo: <<parameters.repo>>
+          tool: <<parameters.tool>>
+      - attach_workspace:
+          at: ./
+      - copy_and_push:
+          branch: <<parameters.branch>>
+          repo: <<parameters.repo>>
+          tool: <<parameters.tool>>
+          directory: <<parameters.directory>>
+
+  vultr-upload:
+    docker:
+      - image: cimg/node:current
+    parameters:
+      directory:
+        type: string
+      tool:
+        type: string
+    steps:
+      - attach_workspace:
+          at: ~/circleci-working/<<pipeline.id>>
+      - run:
+          name: "install brew and upload"
+          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" &&
+            (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/circleci/.profile && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" &&
+            brew install s3cmd &&
+            cd ~/circleci-working/<<pipeline.id>>/ &&
+            s3cmd --access_key=$VULTR_ACCESS --limit-rate=1024k --secret_key=$VULTR_SECRET --region=us-east-1 --host=sgp1.vultrobjects.com --host-bucket=leadme-tools.sgp1.vultrobjects.com -s del --recursive s3://leadme-tools/<<parameters.directory>>/ &&
+            s3cmd --access_key=$VULTR_ACCESS --limit-rate=1024k --secret_key=$VULTR_SECRET --region=us-east-1 --host=sgp1.vultrobjects.com --host-bucket=leadme-tools.sgp1.vultrobjects.com -s sync -P ./dist-<<parameters.tool>>/ s3://leadme-tools/<<parameters.directory>>/
+
+workflows:
+  build_release:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+          filters:
+            branches:
+              only:
+                - main
+      - build-mac:
+          buildType: "Release"
+          tool: "full"
+          requires:
+            - hold
+      - build-windows:
+          buildType: "Release"
+          tool: "full"
+          requires:
+            - hold
+      - commit-and-push:
+          branch: "main"
+          tool: "full"
+          repo: "LeadMeLabs-QA-Hosting"
+          directory: "qa-tool"
+          requires:
+            - build-mac
+            - build-windows
+      - vultr-upload:
+          tool: "full"
+          directory: "leadme-qa"
+          requires:
+            - build-mac
+            - build-windows
+  build_network:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+      - build-mac:
+          buildType: "Release"
+          tool: "network"
+          requires:
+            - hold
+      - build-windows:
+          buildType: "Release"
+          tool: "network"
+          requires:
+            - hold
+      - commit-and-push:
+          branch: "main"
+          tool: "network"
+          repo: "LeadMeLabs-Network-Hosting"
+          directory: "network-tool"
+          requires:
+            - build-mac
+            - build-windows
+      - vultr-upload:
+          tool: "network"
+          directory: "leadme-network"
+          requires:
+            - build-mac
+            - build-windows
+  build_experience:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+      - build-windows:
+          buildType: "Release"
+          tool: "experiences"
+          requires:
+            - hold
+      - vultr-upload:
+          tool: "experiences"
+          directory: "leadme-experiences"
+          requires:
+            - build-windows
+  build_simple_qa:
+    jobs:
+      - hold:
+          context: LeadMeDeployers
+          type: approval
+      - build-windows:
+          buildType: "Release"
+          tool: "simple-qa"
+          requires:
+            - hold
+      - vultr-upload:
+          tool: "experiences"
+          directory: "leadme-simple-qa"
+          requires:
+            - build-windows
